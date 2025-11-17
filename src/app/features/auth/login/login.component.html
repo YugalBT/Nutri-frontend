@@ -1,12 +1,12 @@
 <section class="sign_in p-0">
-  <div class="container-fluid">
-    <div class="row align-items-center">
+    <div class="container-fluid">
+        <div class="row align-items-center">
 
-      <!-- LEFT SECTION -->
-      <div class="col-lg-7">
-        <div class="inner_content_one">
+            <!-- LEFT SECTION -->
+            <div class="col-lg-7">
+                <div class="inner_content_one">
 
-          <div class="back-to-home">
+                    <!-- <div class="back-to-home">
             <a routerLink="/">
               <span class="me-3">
                 <svg width="40"
@@ -19,80 +19,97 @@
               </span>
               Back To Home
             </a>
-          </div>
+          </div> -->
 
-          <div class="login-left-content login-left-card">
-            <h1>Sign In</h1>
-            <h2>Welcome!</h2>
+                    <div class="login-left-content login-left-card">
+                        <h1>Sign In</h1>
+                        <h2>Welcome!</h2>
 
-            <form [formGroup]="form" (ngSubmit)="onSubmit()" class="form_sec mt-5">
+                        <form [formGroup]="form" (ngSubmit)="onSubmit()" class="form_sec mt-5">
 
-              <div class="row">
+                            <div class="row">
 
-                <div class="col-lg-12 mb-3">
-                  <label>Email</label>
-                  <input type="text" class="form-control" placeholder="Email address" formControlName="email">
+                                <!-- Email -->
+                                <div class="col-lg-12 mb-3">
+                                      <label>Email <span class="text-danger">*</span></label>
+                                    <input type="email" class="form-control" placeholder="Email address"
+                                        formControlName="email">
+                                    <div class="text-danger mt-1"
+                                        *ngIf="form.get('email')?.touched && form.get('email')?.invalid">
+                                        <small *ngIf="form.get('email')?.errors?.['required']">Email is required</small>
+                                        <small *ngIf="form.get('email')?.errors?.['email']">Enter a valid email
+                                            address</small>
+                                    </div>
+                                </div>
+
+                                <!-- Password -->
+                                <div class="col-lg-12 mb-3">
+                                   <label>Password <span class="text-danger">*</span></label>
+                                    <input type="password" class="form-control" placeholder="Password"
+                                        formControlName="password">
+                                    <div class="text-danger mt-1"
+                                        *ngIf="form.get('password')?.touched && form.get('password')?.invalid">
+                                        <small *ngIf="form.get('password')?.errors?.['required']">Password is
+                                            required</small>
+                                    </div>
+                                </div>
+
+                                <!-- Submit Button -->
+                                <div class="col-lg-12 mt-3">
+                                    <button class="btn btn-primary w-100" [disabled]="loading">
+                                        {{ loading ? 'Signing In...' : 'Sign In' }}
+                                    </button>
+                                </div>
+
+                            </div>
+
+                        </form>
+
+                    </div>
+
                 </div>
-
-                <div class="col-lg-12 mb-3">
-                  <label>Password</label>
-                  <input type="password" class="form-control" placeholder="Password" formControlName="password">
-                </div>
-
-                <div class="col-lg-12 mt-3">
-                  <button class="btn btn-primary w-100" [disabled]="loading">
-                    {{ loading ? 'Signing In...' : 'Sign In' }}
-                  </button>
-                </div>
-
-              </div>
-
-            </form>
-          </div>
-
-        </div>
-      </div>
-
-      <!-- RIGHT SIDE -->
-      <div class="col-lg-5 gradient_bg">
-        <div class="inner_content_two">
-
-          <img class="img-fluid" src="assets/image/logo.png" alt="Logo">
-
-          <div class="login-right-content">
-            <h2 class="login-right-heading">
-              Smarter feed. Healthier herds.
-              <span> Stronger economics.</span>
-            </h2>
-
-            <p class="para_18 my-3">
-              Nutri Economics helps you manage nutrition, livestock, and farm performance with precision.
-            </p>
-
-            <div class="mt-5">
-
-              <div class="d-flex gap-3 mb-3">
-                <span><img src="assets/image/check.png" alt="Check"></span>
-                <p class="para_18">Nutrition, herd & economics in one system</p>
-              </div>
-
-              <div class="d-flex gap-3 mb-3">
-                <span><img src="assets/image/check.png" alt="Check"></span>
-                <p class="para_18">Optimized rations for better productivity</p>
-              </div>
-
-              <div class="d-flex gap-3 mb-3">
-                <span><img src="assets/image/check.png" alt="Check"></span>
-                <p class="para_18">Smart alerts for health & fertility</p>
-              </div>
-
             </div>
 
-          </div>
+            <!-- RIGHT SIDE -->
+            <div class="col-lg-5 gradient_bg">
+                <div class="inner_content_two">
+
+                    <img class="img-fluid" src="assets/image/logo.png" alt="Logo">
+
+                    <div class="login-right-content">
+                        <h2 class="login-right-heading">
+                            Smarter feed. Healthier herds.
+                            <span> Stronger economics.</span>
+                        </h2>
+
+                        <p class="para_18 my-3">
+                            Nutri Economics helps you manage nutrition, livestock, and farm performance with precision.
+                        </p>
+
+                        <div class="mt-5">
+
+                            <div class="d-flex gap-3 mb-3">
+                                <span><img src="assets/image/check.png" alt="Check"></span>
+                                <p class="para_18">Nutrition, herd & economics in one system</p>
+                            </div>
+
+                            <div class="d-flex gap-3 mb-3">
+                                <span><img src="assets/image/check.png" alt="Check"></span>
+                                <p class="para_18">Optimized rations for better productivity</p>
+                            </div>
+
+                            <div class="d-flex gap-3 mb-3">
+                                <span><img src="assets/image/check.png" alt="Check"></span>
+                                <p class="para_18">Smart alerts for health & fertility</p>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
 
         </div>
-      </div>
-
     </div>
-  </div>
 </section>
