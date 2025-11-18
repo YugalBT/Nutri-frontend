@@ -20,9 +20,6 @@ export const routes: Routes = [
         .then(m => m.LayoutComponent)
   },
 
-//   // ============================
-//   // LAYOUT ROUTES
-//   // ============================
 //   {
 //     path: '',
 //     loadComponent: () =>
@@ -42,18 +39,14 @@ export const routes: Routes = [
 //     ]
 //   },
 
-  // ============================
-  // DEFAULT REDIRECT
-  // ============================
+
   {
     path: '',
     redirectTo: 'login',
     pathMatch: 'full'
   },
 
-  // ============================
-  // 404 PAGE
-  // ============================
+ 
 //   {
 //     path: '**',
 //     loadComponent: () =>
