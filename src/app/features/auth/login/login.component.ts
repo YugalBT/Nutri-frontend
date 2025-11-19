@@ -1,8 +1,11 @@
 import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup} from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '../../../core/auth/auth.service';
+import { ICONS } from '../../../shared/svgfiles/svgicons';
+import { SharedModule } from '../../../shared/shared.module';
+import { CustomValidators } from '../../../core/helpers/validators';
+import { ToastService } from '../../../core/helpers/toast.service';
 
 
 @Component({
@@ -10,27 +13,29 @@ import { AuthService } from '../../../core/auth/auth.service';
   standalone: true,
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css'],
-  imports: [CommonModule, ReactiveFormsModule]
+  imports: [SharedModule]
 })
 export class LoginComponent {
 
   form: FormGroup;
   loading = false;
-
+  icons = ICONS;
   constructor(
     private fb: FormBuilder,
     private auth: AuthService,
-    private router: Router
+    private router: Router,
+    private toast: ToastService 
   ) {
     this.form = this.fb.group({
-      email: ['', [Validators.required, Validators.email]],
-      password: ['', Validators.required]
+      email: ['', [CustomValidators.required(), CustomValidators.email()]],
+      password: ['', [CustomValidators.required(), CustomValidators.password()]]
     });
   }
 
   onSubmit() {
      if (this.form.invalid) {
     this.form.markAllAsTouched(); 
+    this.toast.error('Please fill all required fields'); 
     return;
   }
 
@@ -38,12 +43,14 @@ export class LoginComponent {
 
     this.auth.login(this.form.value).subscribe({
       next: (res) => {
-        this.loading = false;
+        // this.loading = false;
+         this.toast.success('Login successful!', 'Welcome');
         this.router.navigate(['/dashboard']);
       },
       error: () => {
-        this.loading = false;
-        alert("Invalid Email or Password");
+        this.toast.error('Invalid Email or Password', 'Login Failed');
+        // this.loading = false;
+        
       }
     });
   }

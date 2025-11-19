@@ -34,7 +34,8 @@
               "src/assets/css/bootstrap.min.css",
               "src/assets/css/custom.css",
               "src/assets/css/media.css",
-              "src/assets/css/slick.css"
+              "src/assets/css/slick.css",
+              "node_modules/ngx-toastr/toastr.css" 
             ],
             "scripts": [
               "src/assets/js/jquery-3.3.1.min.js",
