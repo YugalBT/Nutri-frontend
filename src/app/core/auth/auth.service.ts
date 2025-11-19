@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
-import { HttpService } from '../services/http.service';
-import { TokenService } from '../services/token.service';
 import { Observable, tap } from 'rxjs';
 import { API_ENDPOINTS } from '../constants/api-endpoints';
+import { TokenService } from '../../shared/services/token.service';
+import { HttpService } from '../../shared/services/http.service';
 
 @Injectable({
   providedIn: 'root'

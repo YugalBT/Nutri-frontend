@@ -5,7 +5,7 @@ import { AuthService } from '../../../core/auth/auth.service';
 import { ICONS } from '../../../shared/svgfiles/svgicons';
 import { SharedModule } from '../../../shared/shared.module';
 import { CustomValidators } from '../../../core/helpers/validators';
-import { ToastService } from '../../../core/helpers/toast.service';
+import { ToastService } from '../../../shared/services/toast.service';
 
 
 @Component({

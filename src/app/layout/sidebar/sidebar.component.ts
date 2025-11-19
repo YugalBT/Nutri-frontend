@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { DashboardComponent } from '../../features/dashboard/dashboard.component';
 import { HeaderComponent } from "../header/header.component";
 import { Router, RouterLink } from "@angular/router";
-import { ConfirmDialogService } from '../../core/helpers/confirm-dialog.service';
+import { ConfirmDialogService } from '../../shared/services/confirm-dialog.service';
 
 @Component({
   selector: 'app-sidebar',

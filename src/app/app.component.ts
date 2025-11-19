@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { NavigationEnd, NavigationError, NavigationStart, Router, RouterOutlet } from '@angular/router';
-import { LoaderService } from './core/services/loader.service';
 import { SharedModule } from './shared/shared.module';
 import { CommonModule } from '@angular/common';
 import { ConfirmDialogComponent } from "./shared/components/confirm-dialog/confirm-dialog.component";
 import { LoaderComponent } from './shared/components/loader/loader.component';
+import { LoaderService } from './shared/services/loader.service';
 
 @Component({
   selector: 'app-root',

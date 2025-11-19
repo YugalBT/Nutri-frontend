@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ModalComponent } from './modal.component';
+import { ReusableTableComponent } from './reusable-table.component';
 
-describe('ModalComponent', () => {
-  let component: ModalComponent;
-  let fixture: ComponentFixture<ModalComponent>;
+describe('ReusableTableComponent', () => {
+  let component: ReusableTableComponent;
+  let fixture: ComponentFixture<ReusableTableComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ModalComponent]
+      imports: [ReusableTableComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(ModalComponent);
+    fixture = TestBed.createComponent(ReusableTableComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

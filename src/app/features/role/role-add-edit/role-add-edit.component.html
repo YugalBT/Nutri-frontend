@@ -1,0 +1,71 @@
+<!-- Reusable Bootstrap Modal for Add/Edit Role -->
+<div #roleModal class="modal fade" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-xl modal-dialog-centered">
+    <div class="modal-content">
+
+      <!-- Header -->
+      <div class="modal-header">
+        <h5 class="modal-title">{{ isEdit ? 'Edit Role' : 'Add Role' }}</h5>
+        <button type="button" class="btn-close" (click)="closeModal()"></button>
+      </div>
+
+      <!-- Body -->
+      <div class="modal-body">
+        <form [formGroup]="form">
+          <div class="row g-3 mb-3">
+            <div class="col-md-6">
+              <label class="form-label">Role Name</label>
+              <input type="text" formControlName="name" class="form-control" placeholder="Enter role name">
+            </div>
+
+            <div class="col-md-6">
+              <label class="form-label">Description</label>
+              <input type="text" formControlName="description" class="form-control" placeholder="Enter description">
+            </div>
+
+           
+          </div>
+
+          <!-- Permissions Table (example) -->
+          <div class="table-responsive">
+            <table class="table table-bordered align-middle text-center">
+              <thead>
+                <tr>
+                  <th class="text-start">Modules / Pages</th>
+                  <th>Add</th>
+                  <th>Edit</th>
+                  <th>View</th>
+                  <th>Delete</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr class="fw-bold bg-light">
+                  <td class="text-start">Email Configuration</td>
+                  <td><input type="checkbox" class="form-check-input"></td>
+                  <td><input type="checkbox" class="form-check-input"></td>
+                  <td><input type="checkbox" class="form-check-input"></td>
+                  <td><input type="checkbox" class="form-check-input"></td>
+                </tr>
+                <tr>
+                  <td class="ps-5 text-start">SMTP Setup</td>
+                  <td><input type="checkbox" class="form-check-input"></td>
+                  <td><input type="checkbox" class="form-check-input"></td>
+                  <td><input type="checkbox" class="form-check-input"></td>
+                  <td><input type="checkbox" class="form-check-input"></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+        </form>
+      </div>
+
+      <!-- Footer -->
+      <div class="modal-footer">
+        <button class="btn btn-light" (click)="closeModal()">Cancel</button>
+        <button class="btn btn-primary" (click)="saveRole()">Save</button>
+      </div>
+
+    </div>
+  </div>
+</div>
