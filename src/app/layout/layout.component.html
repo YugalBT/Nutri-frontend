@@ -1,7 +1,13 @@
 <div class="main-layout">
-  <app-sidebar></app-sidebar>
+  <aside class="sidebar" role="complementary" aria-label="Sidebar">
+    <app-sidebar></app-sidebar>
+    <!-- Sidebar placeholder: either render the sidebar markup here or import the Sidebar component
+         into the layout component (e.g. add SidebarComponent to the layout component's imports)
+         to use <app-sidebar></app-sidebar> without template errors. -->
+  </aside>
   <div class="content-area">
-    <main class="page-content">
+      <app-header></app-header>
+    <main class="page-content" role="main">
       <router-outlet></router-outlet>
     </main>
   </div>

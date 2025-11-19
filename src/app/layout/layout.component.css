@@ -1,0 +1,21 @@
+ .main-layout {
+    display: flex;
+    gap: 1rem;
+  }
+
+  .sidebar {
+    flex-shrink: 0;
+    width: 250px;
+    height: 100vh;
+    overflow-y: auto;
+  }
+
+  .content-area {
+    flex: 1;
+    min-width: 0;
+        margin-left: 250px;
+  }
+
+  .page-content {
+    padding: 2rem;
+  }
