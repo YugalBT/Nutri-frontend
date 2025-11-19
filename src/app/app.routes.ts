@@ -2,7 +2,6 @@ import { Routes } from '@angular/router';
 
 export const routes: Routes = [
 
- // 🔹 No-layout routes (Auth pages)
   {
     path: 'login',
     loadComponent: () =>
@@ -16,7 +15,6 @@ export const routes: Routes = [
         .then(m => m.ForgotPasswordComponent)
   },
 
-  // 🔹 Layout with Children (User / Company / Role)
   {
     path: '',
     loadComponent: () =>
@@ -46,11 +44,22 @@ export const routes: Routes = [
           import('./features/role/role.component')
             .then(m => m.RoleComponent)
       },
-      { path: '', redirectTo: 'dashboard', pathMatch: 'full' } // Default
+       {
+        path: 'notifications',
+        loadComponent: () =>
+          import('./features/notifications/notifications.component')
+            .then(m => m.NotificationsComponent)
+      },
+       {
+        path: 'profile',
+        loadComponent: () =>
+          import('./features/profile/profile.component')
+            .then(m => m.ProfileComponent)
+      },
+      { path: '', redirectTo: 'dashboard', pathMatch: 'full' } 
     ]
   },
 
-  // 🔹 Page Not Found
   {
     path: '**',
     loadComponent: () =>
