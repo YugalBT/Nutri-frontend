@@ -1,0 +1,87 @@
+.confirm-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1050;
+}
+
+.confirm-dialog {
+  background: #fff;
+  border-radius: 12px;
+  width: 400px;
+  max-width: 90%;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+  animation: slideIn 0.3s ease;
+}
+
+.confirm-header {
+  padding: 16px 20px;
+  border-bottom: 1px solid #eee;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.confirm-header h5 {
+  margin: 0;
+  font-weight: 600;
+  font-size: 1.1rem;
+}
+
+.close-btn {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  line-height: 1;
+}
+
+.confirm-body {
+  padding: 20px;
+  font-size: 0.95rem;
+  color: #333;
+}
+
+.confirm-footer {
+  padding: 16px 20px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.btn {
+  padding: 6px 16px;
+  border-radius: 8px;
+  font-size: 0.9rem;
+}
+
+.btn-outline-secondary {
+  background: #f1f1f1;
+  border: none;
+  color: #555;
+}
+
+.btn-outline-secondary:hover {
+  background: #e0e0e0;
+}
+
+.btn-primary {
+  background: #20c997;
+  border: none;
+  color: #fff;
+}
+
+.btn-primary:hover {
+  background: #1aa179;
+}
+
+@keyframes slideIn {
+  from { transform: translateY(-20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}

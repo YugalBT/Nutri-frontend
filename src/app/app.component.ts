@@ -3,12 +3,13 @@ import { NavigationEnd, NavigationError, NavigationStart, Router, RouterOutlet }
 import { LoaderService } from './core/services/loader.service';
 import { SharedModule } from './shared/shared.module';
 import { CommonModule } from '@angular/common';
-import { LoaderComponent } from './shared/loader/loader.component';
+import { ConfirmDialogComponent } from "./shared/components/confirm-dialog/confirm-dialog.component";
+import { LoaderComponent } from './shared/components/loader/loader.component';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet,CommonModule,LoaderComponent],
+  imports: [RouterOutlet, CommonModule, LoaderComponent, ConfirmDialogComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
