@@ -10,9 +10,13 @@ import { ApiResponse } from '../../core/models/api-response';
   providedIn: 'root'
 })
 export class HttpService {
+  
   private baseUrl = environment.apiUrl;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) {
+    console.log('BASE URL =>', this.baseUrl);
+
+  }
 
   private handleResponse<T>(obs: Observable<T>): Observable<ApiResponse<T>> {
     return obs.pipe(
@@ -39,8 +43,9 @@ export class HttpService {
   }
 
   post<T>(url: string, body: any, options: { headers?: HttpHeaders } = {}): Observable<ApiResponse<T>> {
+    console.log('POST URL:', `${this.baseUrl + url}`);
     return this.handleResponse(
-      this.http.post<T>(`${this.baseUrl}/${url}`, body, { ...options, observe: 'body' })
+      this.http.post<T>(`${this.baseUrl}${url}`, body, { ...options, observe: 'body' })
     );
   }
 

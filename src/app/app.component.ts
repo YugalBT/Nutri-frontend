@@ -34,5 +34,8 @@ export class AppComponent implements OnInit {
     if (token && user) {
       this.store.dispatch(AuthActions.loginSuccess({ user, token }));
     }
+    else{
+      this.store.dispatch(AuthActions.logout());
+    }
   }
 }

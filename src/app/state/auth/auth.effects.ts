@@ -1,70 +1,115 @@
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
+import { Router } from '@angular/router';
+import { catchError, map, of, switchMap, tap } from 'rxjs';
+
 import * as AuthActions from './auth.actions';
 import { AuthService } from '../../core/auth/auth.service';
-import { Router } from '@angular/router';
-import { catchError, map, mergeMap, of, tap } from 'rxjs';
-import { LoginRequest } from '../../core/models/login-request';
 import { TokenService } from '../../shared/services/token.service';
+import { LoginRequest } from '../../core/models/login-request';
+import { ToastService } from '../../shared/services/toast.service';
 
 @Injectable()
+
 export class AuthEffects {
+  /**
+   * LOGIN EFFECT
+   * - Uses switchMap to avoid concurrent login calls
+   * - Handles API validation more cleanly
+   */
+  // Effects will be created in the constructor so injected deps are available
+  login$;
+  loginSuccess$;
+  logout$;
+  loginFailure$;
+
   constructor(
     private actions$: Actions,
     private authService: AuthService,
     private router: Router,
-    private tokenService: TokenService
-  ) {}
-
-  login$ = createEffect(() =>
-    this.actions$.pipe(
-      ofType(AuthActions.login),
-      mergeMap(({ username, password, companyCode }) => {
-        const payload: LoginRequest = { username, password, companyCode: companyCode ?? 'set' };
-        return this.authService.login(payload).pipe(
-          map((res: any) => {
-            if (!res?.isSuccess || !res?.data?.token) {
-              return AuthActions.loginFailure({ error: res?.message || 'API error' });
-            }
-            const user = res.data;
-            const token = res.data.token;
-            return AuthActions.loginSuccess({ user, token });
-          }),
-          catchError((err) =>
-            of(AuthActions.loginFailure({ error: err?.message || 'Something went wrong' }))
-          )
-        );
-      })
-    )
-  );
-
-  loginSuccess$ = createEffect(
-    () =>
+    private tokenService: TokenService,
+    private toast: ToastService
+  ) {
+    // LOGIN EFFECT
+    this.login$ = createEffect(() =>
       this.actions$.pipe(
-        ofType(AuthActions.loginSuccess),
-        tap(({ user, token }) => {
-          // Save token & user info
-          this.tokenService.setToken(token);
-          this.tokenService.setUserData(JSON.stringify(user));
-          this.tokenService.setUserName(user.username);
-          // Navigate
-          this.router.navigate(['/dashboard']);
-        })
-      ),
-    { dispatch: false }
-  );
+        ofType(AuthActions.login),
+        switchMap(({ username, password, companyCode }) => {
+          const payload: LoginRequest = {
+            username,
+            password,
+            companyCode: companyCode ?? 'set',
+          };
 
-  logout$ = createEffect(
-    () =>
-      this.actions$.pipe(
-        ofType(AuthActions.logout),
-        tap(() => {
-          this.tokenService.removeToken();
-          this.tokenService.removeUserData();
-          this.tokenService.removeUserUserName();
-          this.router.navigate(['/login']);
+          return this.authService.login(payload).pipe(
+            map((res) => {
+              if (!res?.isSuccess || !res?.data?.token) {
+                return AuthActions.loginFailure({
+                  error: res?.message || 'Invalid credentials',
+                });
+              }
+
+              return AuthActions.loginSuccess({
+                user: res.data,
+                token: res.data.token,
+              });
+            }),
+            catchError((error) =>
+              of(
+                AuthActions.loginFailure({
+                  error: error?.message || 'Login request failed',
+                })
+              )
+            )
+          );
         })
-      ),
-    { dispatch: false }
-  );
+      )
+    );
+
+    // LOGIN SUCCESS → Save token + user → Navigate
+    this.loginSuccess$ = createEffect(
+      () =>
+        this.actions$.pipe(
+          ofType(AuthActions.loginSuccess),
+          tap(({ user, token }) => {
+            this.tokenService.setToken(token);
+            this.tokenService.setUserData(JSON.stringify(user)); // store object directly
+            this.tokenService.setUserName(user?.username ?? '');
+            this.toast.success('Login successful!');
+            this.router.navigate(['/dashboard']);
+          })
+        ),
+      { dispatch: false }
+    );
+
+    // LOGIN SUCCESS → Save token + user → Navigate
+    this.loginFailure$ = createEffect(
+      () =>
+        this.actions$.pipe(
+          ofType(AuthActions.loginFailure),
+          tap(({ error }) => {
+            this.toast.error('Login failed: ' + error);
+          }
+          )),
+      { dispatch: false }
+    );
+
+
+    // LOGOUT EFFECT
+    this.logout$ = createEffect(
+      () =>
+        this.actions$.pipe(
+          ofType(AuthActions.logout),
+          tap(() => {
+            this.tokenService.removeToken();
+            this.tokenService.removeUserData();
+            this.tokenService.removeUserUserName();
+
+            this.router.navigate(['/login']);
+          })
+        ),
+      { dispatch: false }
+    );
+  }
+
 }
