@@ -1,3 +1,3 @@
 export const environment = {
-    apiUrl: 'https://nutri/api'
+    apiUrl: 'https://localhost:44392/api'
 };

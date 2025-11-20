@@ -9,13 +9,14 @@
                         <form [formGroup]="form" (ngSubmit)="onSubmit()" class="form_sec mt-5">
                             <div class="row">
                                 <div class="col-lg-12 mb-lg-4 mb-md-4 mb-3"><label for="exampleInputPassword1"
-                                        class="form-label form-label-custom">Email</label><input
-                                        class="form-control form-control-custom" formControlName="email"
+                                        class="form-label form-label-custom">Email</label>
+                                    <input class="form-control form-control-custom" formControlName="username"
                                         id="exampleInputPassword1" placeholder="Email address" type="text">
                                     <div class="text-danger mt-1"
-                                        *ngIf="form.get('email')?.touched && form.get('email')?.invalid">
-                                        <small *ngIf="form.get('email')?.errors?.['required']">Email is required</small>
-                                        <small *ngIf="form.get('email')?.errors?.['email']">Enter a valid email
+                                        *ngIf="form.get('username')?.touched && form.get('username')?.invalid">
+                                        <small *ngIf="form.get('username')?.errors?.['required']">username is
+                                            required</small>
+                                        <small *ngIf="form.get('username')?.errors?.['username']">Enter a valid email
                                             address</small>
                                     </div>
                                 </div>
@@ -26,7 +27,7 @@
                                             class="form-label form-label-custom">Password</label><input
                                             class="form-control form-control-custom" formControlName="password"
                                             id="exampleInputPassword1" placeholder="Password" type="password">
-                                        <svg xmlns="http://www.w3.org/2000/svg"  width="24" height="24"
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                             viewBox="0 0 24 24" fill="none">
                                             <g clip-path="url(#clip0_2056_26496)">
                                                 <path
@@ -51,11 +52,12 @@
                                             Password?</a></div>
                                 </div>
                                 <div class="col-lg-12 mb-lg-4 mb-md-4 mt-30">
-                                    <a class="btn blue-btn w-100 text-uppercase" [class.disabled]="loading"
-                                        (click)="!loading && onSubmit()" data-discover="true">
-                                        {{ loading ? 'Signing In...' : 'Sign In' }}
-                                    </a>
+                                    <button type="submit" class="btn blue-btn w-100 text-uppercase"
+                                        [disabled]="loading$ | async">
+                                        {{ (loading$ | async) ? 'Signing In...' : 'Sign In' }}
+                                    </button>
                                 </div>
+
 
                             </div>
                         </form>

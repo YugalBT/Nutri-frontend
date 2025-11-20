@@ -1,5 +1,5 @@
 const environment = {
     production: false,
-    apiUrl: 'https://nutri-backend.onrender.com/api'
+    apiUrl: 'https://localhost:44392/api/'
 };
 export default environment;

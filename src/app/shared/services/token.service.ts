@@ -1,22 +1,42 @@
 import { Injectable } from '@angular/core';
+import { Constants } from '../utils/constants/constants';
 
 @Injectable({
   providedIn: 'root'
 })
 export class TokenService {
 
-   private tokenKey = 'authToken';
 
   setToken(token: string) {
-    localStorage.setItem(this.tokenKey, token);
+    localStorage.setItem(Constants.AUTHTOKEN, token);
+  }
+  setUserData(token: string) {
+    localStorage.setItem(Constants.USERDATA, token);
+  }
+  setUserName(token: string) {
+    localStorage.setItem(Constants.USERNAME, token);
   }
 
   getToken(): string | null {
-    return localStorage.getItem(this.tokenKey);
+    return localStorage.getItem(Constants.AUTHTOKEN);
+  }
+
+   getUserData(): string | null {
+    return localStorage.getItem(Constants.USERDATA);
+  }
+
+  getUserName(): string | null {
+    return localStorage.getItem(Constants.USERNAME);
   }
 
   removeToken() {
-    localStorage.removeItem(this.tokenKey);
+    localStorage.removeItem(Constants.AUTHTOKEN);
+  }
+  removeUserData() {
+    localStorage.removeItem(Constants.USERDATA);
+  }
+  removeUserUserName() {
+    localStorage.removeItem(Constants.USERNAME);
   }
 
   isLoggedIn(): boolean {
