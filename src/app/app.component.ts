@@ -10,10 +10,11 @@ import * as AuthActions from './state/auth/auth.actions';
 import { AuthState } from './state/auth/auth.state';
 import { User } from './state/auth/auth.models';
 import { TokenService } from './shared/services/token.service';
+import { NgxSpinnerModule, NgxSpinnerService } from 'ngx-spinner';
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, CommonModule, LoaderComponent, ConfirmDialogComponent],
+  imports: [RouterOutlet, CommonModule, LoaderComponent, NgxSpinnerModule],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
@@ -24,10 +25,12 @@ export class AppComponent implements OnInit {
     private router: Router,
     public loader: LoaderService,
     private store: Store<{ auth: AuthState }>,
-    private tokenService: TokenService
+    private tokenService: TokenService,
+    private spinner: NgxSpinnerService
   ) {}
   
     ngOnInit() {
+      this.spinner.show()
     const token = this.tokenService.getToken();
     const user: User | null = JSON.parse(this.tokenService.getUserData() || 'null');
 

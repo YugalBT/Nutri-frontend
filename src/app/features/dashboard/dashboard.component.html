@@ -1,9 +1,12 @@
 <div class="body-content">
     <!-- welcome sec -->
-    <div class="welcome-dashboard">
-        <h3 class="mb-2">Hi, Welcomeback !</h3>
-        <p class="mb-0">Just Do Somethings Better</p>
-    </div>
+    <div class="welcome-dashboard" *ngIf="user$ | async as user; else NA">
+  <h3 class="mb-2">Hi, {{ user.username }}</h3> 
+  <p class="mb-0">Just Do Something Better</p>
+</div>
+<ng-template #NA>
+  <h3>NA</h3>
+</ng-template>
     <!-- dashboard overview -->
     <div class="dashboard-overview-main">
         <div class="d-flex align-items-center justify-content-between py-4">

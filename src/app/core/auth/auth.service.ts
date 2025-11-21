@@ -33,6 +33,9 @@ export class AuthService {
         this.tokenService.setUserName(`${res.data.firstName || ''} ${res.data.lastName || ''}`);
 
       }
+      else {
+        this.logout();
+      }
     })
   );
 }

@@ -1,0 +1,129 @@
+<div #companyModal class="modal fade" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">{{ isEdit ? ('company.edit' | translate) : ('company.add' | translate) }}</h5>
+                <button type="button" class="btn-close" (click)="closeModal()"></button>
+            </div>
+            <div class="modal-body">
+                <form [formGroup]="form">
+                    <div class="container-fluid">
+                        <div class="row g-3">
+                            <div class="col-12">
+                                <h5 class="mb-3">{{ 'company.details' | translate }}</h5>
+                            </div>
+
+                            <div class="col-md-4 col-12">
+                                <label class="form-label">{{ 'company.companyName' | translate }}</label>
+                                <input type="text" class="form-control" formControlName="companyName" placeholder="Enter company name">
+                            </div>
+
+                            <div class="col-md-4 col-12">
+                                <label class="form-label">{{ 'company.code' | translate }}</label>
+                                <input type="text" class="form-control" formControlName="code" placeholder="Company code">
+                            </div>
+
+                            <div class="col-md-4 col-12">
+                                <label class="form-label">{{ 'company.suffix' | translate }}</label>
+                                <input type="text" class="form-control" formControlName="suffix" placeholder="Suffix (e.g., Ltd)">
+                            </div>
+
+                            <div class="col-md-4 col-12">
+                                <label class="form-label">{{ 'company.website' | translate }}</label>
+                                <input type="url" class="form-control" formControlName="url" placeholder="https://example.com">
+                            </div>
+
+                            <div class="col-md-4 col-12">
+                                <label class="form-label">{{ 'company.primaryColor' | translate }}</label>
+                                <input type="color" class="form-control form-control-color" formControlName="primaryColor" title="Choose primary color">
+                            </div>
+
+                            <div class="col-md-4 col-12">
+                                <label class="form-label">{{ 'company.secondaryColor' | translate }}</label>
+                                <input type="color" class="form-control form-control-color" formControlName="secondaryColor" title="Choose secondary color">
+                            </div>
+
+                            <div class="col-md-6 col-12">
+                                <label class="form-label">{{ 'company.logo' | translate }}</label>
+                                <input type="file" class="form-control" (change)="onLogoChange($event)" accept="image/*">
+                            </div>
+
+                            <div class="col-12 mt-3">
+                                <h5 class="mb-3">{{ 'company.primaryUser' | translate }}</h5>
+                            </div>
+
+                            <div class="col-md-4 col-12">
+                                <label class="form-label">{{ 'company.userFirstName' | translate }}</label>
+                                <input type="text" class="form-control" formControlName="userFirstName" placeholder="First name">
+                            </div>
+                            <div class="col-md-4 col-12">
+                                <label class="form-label">{{ 'company.userMiddleName' | translate }}</label>
+                                <input type="text" class="form-control" formControlName="userMiddleName" placeholder="Middle name">
+                            </div>
+                            <div class="col-md-4 col-12">
+                                <label class="form-label">{{ 'company.userLastName' | translate }}</label>
+                                <input type="text" class="form-control" formControlName="userLastName" placeholder="Last name">
+                            </div>
+
+                            <div class="col-md-6 col-12">
+                                <label class="form-label">{{ 'company.userEmail' | translate }}</label>
+                                <input type="email" class="form-control" formControlName="userEmail" placeholder="user@example.com">
+                            </div>
+                            <div class="col-md-6 col-12">
+                                <label class="form-label">{{ 'company.userPhone' | translate }}</label>
+                                <input type="tel" class="form-control" formControlName="userPhoneNumber" placeholder="+1 555 555 5555">
+                            </div>
+
+                            <div class="col-12 mt-3">
+                                <h5 class="mb-3">{{ 'company.address' | translate }}</h5>
+                            </div>
+
+                            <div class="col-md-6 col-12">
+                                <label class="form-label">{{ 'company.streetAddress' | translate }}</label>
+                                <input type="text" class="form-control" formControlName="streetAddress" placeholder="Street address">
+                            </div>
+                            <div class="col-md-3 col-12">
+                                <label class="form-label">{{ 'company.city' | translate }}</label>
+                                <input type="text" class="form-control" formControlName="city" placeholder="City">
+                            </div>
+                            <div class="col-md-3 col-12">
+                                <label class="form-label">{{ 'company.zipCode' | translate }}</label>
+                                <input type="text" class="form-control" formControlName="zipCode" placeholder="Zip / Postal code">
+                            </div>
+
+                            <div class="col-md-6 col-12">
+                                <label class="form-label">{{ 'company.country' | translate }}</label>
+                                <input type="text" class="form-control" formControlName="country" placeholder="Country">
+                            </div>
+
+                            <div class="col-12 mt-3">
+                                <h5 class="mb-3">{{ 'company.account' | translate }}</h5>
+                            </div>
+
+                            <div class="col-md-6 col-12">
+                                <label class="form-label">{{ 'company.adminEmail' | translate }}</label>
+                                <input type="email" class="form-control" formControlName="email" placeholder="admin@example.com">
+                            </div>
+                            <div class="col-md-6 col-12">
+                                <label class="form-label">{{ 'company.phoneNumber' | translate }}</label>
+                                <input type="tel" class="form-control" formControlName="phoneNumber" placeholder="+1 555 555 5555">
+                            </div>
+
+                            <div class="col-md-6 col-12">
+                                <label class="form-label">{{ 'company.password' | translate }}</label>
+                                <input type="password" class="form-control" formControlName="password" placeholder="Enter password">
+                            </div>
+
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn btn-outline-secondary" (click)="closeModal()">{{ 'common.cancel' | translate }}</button>
+                <button class="btn blue-btn" (click)="saveUser()">{{ 'common.save' | translate }}</button>
+            </div>
+
+        </div>
+    </div>
+</div>

@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { Store } from '@ngrx/store';
+import { TranslateService } from '../../../i18n/translate.service';
+import { TranslatePipe } from '../../../i18n/translate.pipe';
 import { Observable } from 'rxjs';
 import { ToastService } from '../../../shared/services/toast.service';
 import * as AuthActions from '../../../state/auth/auth.actions';
@@ -14,14 +16,14 @@ import { CustomValidators } from '../../../core/helpers/validators';
   standalone: true,
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css'],
-  imports: [SharedModule]
+  imports: [SharedModule, TranslatePipe]
 })
 export class LoginComponent {
   form: FormGroup;
   icons = ICONS;
   loading$: Observable<boolean>; 
 
-  constructor(private fb: FormBuilder, private store: Store, private toast: ToastService) {
+  constructor(private fb: FormBuilder, private store: Store, private toast: ToastService, private translate: TranslateService) {
     this.form = this.fb.group({
       username: ['', [CustomValidators.required()]],
       password: ['', [CustomValidators.required()]]
@@ -34,7 +36,7 @@ export class LoginComponent {
   onSubmit() {
     if (this.form.invalid) {
       this.form.markAllAsTouched();
-      this.toast.error('Please fill all required fields');
+      this.toast.error(this.translate.instant('auth.fillRequired') || 'Please fill all required fields');
       return;
     }
 

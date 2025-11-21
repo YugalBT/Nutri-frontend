@@ -1,12 +1,13 @@
 import { Component, ElementRef, ViewChild, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { SharedModule } from '../../../shared/shared.module';
+import { TranslatePipe } from '../../../i18n/translate.pipe';
 declare var bootstrap: any;
 
 @Component({
   selector: 'app-role-add-edit',
   standalone: true,
-  imports: [SharedModule],
+  imports: [SharedModule, TranslatePipe],
   templateUrl: './role-add-edit.component.html',
   styleUrls: ['./role-add-edit.component.css']
 })
@@ -46,7 +47,6 @@ export class RoleAddEditComponent implements OnInit {
 
   saveRole() {
     if (this.form.valid) {
-      console.log('Role Data:', this.form.value);
       this.closeModal();
     }
   }

@@ -1,0 +1,131 @@
+{
+  "company": {
+    "details": "Company Details",
+    "companyName": "Company Name",
+    "code": "Code",
+    "suffix": "Suffix",
+    "website": "Website URL",
+    "primaryColor": "Primary Color",
+    "secondaryColor": "Secondary Color",
+    "logo": "Logo",
+    "primaryUser": "Primary User",
+    "userFirstName": "First Name",
+    "userMiddleName": "Middle Name",
+    "userLastName": "Last Name",
+    "userEmail": "User Email",
+    "userPhone": "User Phone",
+    "address": "Address",
+    "streetAddress": "Street Address",
+    "city": "City",
+    "country": "Country",
+    "zipCode": "Zip Code",
+    "account": "Account",
+    "adminEmail": "Admin Email",
+    "phoneNumber": "Phone Number",
+    "password": "Password",
+    "cancel": "Cancel",
+    "save": "Save",
+    "manage": "Manage Company",
+    "addUser": "Add User",
+    "columns": {
+      "logo": "Logo",
+      "siteColor": "Site Color",
+      "companyName": "Company Name",
+      "name": "Name",
+      "email": "Email",
+      "phone": "Phone Number",
+      "code": "Code",
+      "status": "Status",
+      "actions": "Actions"
+    }
+  },
+  "form": {
+    "select": "Select"
+  },
+  "auth": {
+    "signIn": "Sign In",
+    "signingIn": "Signing In...",
+    "email": "Email",
+    "emailPlaceholder": "Email address",
+    "password": "Password",
+    "passwordPlaceholder": "Password",
+    "usernameRequired": "Username is required",
+    "enterValidEmail": "Enter a valid email address",
+    "passwordRequired": "Password is required",
+    "forgotPassword": "Forgot Password?",
+    "forgotTitle": "Forgot Your Password?",
+    "forgotDescription": "Don’t worry! Resetting your password is easy. Enter the email you registered with.",
+    "send": "Send",
+    "fillRequired": "Please fill all required fields"
+  },
+  "header": {
+    "searchPlaceholder": "Search...",
+    "guest": "Guest",
+    "visitor": "Visitor",
+    "myProfile": "My Profile",
+    "settings": "Settings",
+    "logout": "Logout"
+  },
+  "sidebar": {
+    "dashboard": "Dashboard",
+    "workspace": "Workspace",
+    "user": "User",
+    "company": "Company",
+    "role": "Role",
+    "profile": "Profile",
+    "notifications": "Notifications",
+    "settings": "Settings",
+    "logout": "Logout",
+    "confirmLogout": "Do you really want to logout?",
+    "logoutSuccess": "Logout successful!"
+  },
+  "users": {
+    "manage": "Manage Users",
+    "addUser": "Add User",
+    "editUser": "Edit User",
+    "firstName": "First Name",
+    "firstNamePlaceholder": "Enter first name",
+    "middleName": "Middle Name",
+    "middleNamePlaceholder": "Enter middle name",
+    "lastName": "Last Name",
+    "lastNamePlaceholder": "Enter last name",
+    "email": "Email",
+    "emailPlaceholder": "Enter email",
+    "phone": "Phone",
+    "phonePlaceholder": "Enter phone number",
+    "role": "Role",
+    "select": "Select",
+    "password": "Password",
+    "passwordPlaceholder": "Enter password",
+    "roles": { "admin": "Admin" },
+    "columns": {
+      "name": "Name",
+      "email": "Email",
+      "phone": "Phone Number",
+      "ghlUser": "GHL User Name",
+      "role": "Role Name",
+      "status": "Status",
+      "actions": "Actions"
+    }
+  },
+  "role": {
+    "addRole": "Add Role",
+    "editRole": "Edit Role",
+    "name": "Role Name",
+    "namePlaceholder": "Enter role name",
+    "table": {
+      "modules": "Modules / Pages",
+      "add": "Add",
+      "edit": "Edit",
+      "view": "View",
+      "delete": "Delete"
+    },
+    "emailConfiguration": "Email Configuration",
+    "smtpSetup": "SMTP Setup"
+  },
+  "common": {
+    "cancel": "Cancel",
+    "save": "Save",
+    "yes": "Yes"
+  }
+}

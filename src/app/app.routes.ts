@@ -31,23 +31,26 @@ export const routes: Routes = [
             .then(m => m.DashboardComponent),
       },
       {
+        path: 'company',
+        loadComponent: () =>
+          import('./features/company/company-list/company-list.component')
+            .then(m => m.CompanyListComponent),
+      },
+
+      {
         path: 'user',
         loadComponent: () =>
           import('./features/users/list/list.component')
             .then(m => m.ListComponent),
       },
-      {
-        path: 'company',
-        loadComponent: () =>
-          import('./features/company/company.component')
-            .then(m => m.CompanyComponent),
-      },
+     
       {
         path: 'role',
         loadComponent: () =>
           import('./features/role/role.component')
             .then(m => m.RoleComponent),
       },
+      
       {
         path: 'notifications',
         loadComponent: () =>

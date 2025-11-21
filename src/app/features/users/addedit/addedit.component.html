@@ -1,1 +1,75 @@
-<p>addedit works!</p>
+<div #userModal class="modal fade" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title">{{ isEdit ? ('users.editUser' | translate) : ('users.addUser' | translate) }}</h5>
+                <button type="button" class="btn-close" (click)="closeModal()"></button>
+            </div>
+
+            <div class="modal-body">
+                <form [formGroup]="form">
+
+                    <div class="row g-3">
+                        <div class="col-md-4">
+                                <label class="form-label">{{ 'users.firstName' | translate }} <sup
+                                    style="color: #f00; font-size: 12px;">*</sup></label>
+                                <input type="text" formControlName="name" class="form-control"
+                                placeholder="{{ 'users.firstNamePlaceholder' | translate }}">
+                        </div>
+
+                        <div class="col-md-4">
+                            <label class="form-label">{{ 'users.middleName' | translate }}</label>
+                            <input type="text" formControlName="description" class="form-control"
+                                placeholder="{{ 'users.middleNamePlaceholder' | translate }}">
+                        </div>
+
+                        <div class="col-md-4">
+                                <label class="form-label">{{ 'users.lastName' | translate }} <sup
+                                    style="color: #f00; font-size: 12px;">*</sup></label>
+                                <input type="text" formControlName="description" class="form-control"
+                                placeholder="{{ 'users.lastNamePlaceholder' | translate }}">
+                        </div>
+                    </div>
+                    <div class="row g-3 mt-2">
+                        <div class="col-md-4">
+
+                            <label class="form-label">{{ 'users.email' | translate }} <sup style="color: #f00; font-size: 12px;">*</sup></label>
+                            <input type="email" formControlName="email" class="form-control"
+                                placeholder="{{ 'users.emailPlaceholder' | translate }}">
+                        </div>
+                        <div class="col-md-4">
+
+                            <label class="form-label">{{ 'users.phone' | translate }} <sup style="color: #f00; font-size: 12px;">*</sup></label>
+                            <input type="email" formControlName="phone" class="form-control"
+                                placeholder="{{ 'users.phonePlaceholder' | translate }}">
+                        </div>
+
+
+                        <div class="col-md-4">
+                            <label class="form-label">{{ 'users.role' | translate }} <sup style="color: #f00; font-size: 12px;">*</sup></label>
+                            <!-- role select and options -->
+                            <select class="form-select" aria-label="Default select example">
+                                <option  selected>{{ 'users.select' | translate }}</option>
+                                <option value="1">{{ 'users.roles.admin' | translate }}</option>
+
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                                <label class="form-label">{{ 'users.password' | translate }} <sup
+                                    style="color: #f00; font-size: 12px;">*</sup></label>
+                                <input type="password" formControlName="description" class="form-control"
+                                placeholder="{{ 'users.passwordPlaceholder' | translate }}">
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn btn-outline-secondary" (click)="closeModal()">{{ 'common.cancel' | translate }}</button>
+                <button class="btn blue-btn" (click)="saveUser()">{{ 'common.save' | translate }}</button>
+            </div>
+
+        </div>
+    </div>
+</div>

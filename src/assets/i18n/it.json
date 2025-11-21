@@ -1,0 +1,133 @@
+{
+  "company": {
+    "details": "Dettagli Azienda",
+    "companyName": "Nome azienda",
+    "code": "Codice",
+    "suffix": "Suffisso",
+    "website": "URL del sito",
+    "primaryColor": "Colore primario",
+    "secondaryColor": "Colore secondario",
+    "logo": "Logo",
+    "primaryUser": "Utente principale",
+    "userFirstName": "Nome",
+    "userMiddleName": "Secondo nome",
+    "userLastName": "Cognome",
+    "userEmail": "Email utente",
+    "userPhone": "Telefono utente",
+    "address": "Indirizzo",
+    "streetAddress": "Indirizzo",
+    "city": "Città",
+    "country": "Paese",
+    "zipCode": "CAP",
+    "account": "Account",
+    "adminEmail": "Email amministratore",
+    "phoneNumber": "Numero di telefono",
+    "password": "Password",
+    "cancel": "Annulla",
+    "save": "Salva"
+  },
+  "form": {
+    "select": "Seleziona"
+  },
+  "auth": {
+    "signIn": "Accedi",
+    "signingIn": "Accesso in corso...",
+    "email": "Email",
+    "emailPlaceholder": "Indirizzo email",
+    "password": "Password",
+    "passwordPlaceholder": "Password",
+    "usernameRequired": "Il nome utente è obbligatorio",
+    "enterValidEmail": "Inserisci un indirizzo email valido",
+    "passwordRequired": "La password è obbligatoria",
+    "forgotPassword": "Hai dimenticato la password?",
+    "forgotTitle": "Hai dimenticato la password?",
+    "forgotDescription": "Non preoccuparti! Ripristinare la password è facile. Inserisci l'email con cui ti sei registrato.",
+    "send": "Invia",
+    "fillRequired": "Per favore compila tutti i campi obbligatori"
+  },
+  "header": {
+    "searchPlaceholder": "Cerca...",
+    "guest": "Ospite",
+    "visitor": "Visitatore",
+    "myProfile": "Il mio profilo",
+    "settings": "Impostazioni",
+    "logout": "Disconnetti"
+  },
+  "sidebar": {
+    "dashboard": "Dashboard",
+    "workspace": "Workspace",
+    "user": "Utente",
+    "company": "Azienda",
+    "role": "Ruolo",
+    "profile": "Profilo",
+    "notifications": "Notifiche",
+    "settings": "Impostazioni",
+    "logout": "Disconnetti",
+    "confirmLogout": "Vuoi davvero disconnetterti?",
+    "logoutSuccess": "Disconnessione avvenuta con successo!"
+  },
+  "company": {
+    "manage": "Gestisci azienda",
+    "addUser": "Aggiungi utente",
+    "columns": {
+      "logo": "Logo",
+      "siteColor": "Colore sito",
+      "companyName": "Nome azienda",
+      "name": "Nome",
+      "email": "Email",
+      "phone": "Telefono",
+      "code": "Codice",
+      "status": "Stato",
+      "actions": "Azioni"
+    }
+  },
+  "users": {
+    "manage": "Gestisci utenti",
+    "addUser": "Aggiungi utente",
+    "editUser": "Modifica utente",
+    "firstName": "Nome",
+    "firstNamePlaceholder": "Inserisci il nome",
+    "middleName": "Secondo nome",
+    "middleNamePlaceholder": "Inserisci il secondo nome",
+    "lastName": "Cognome",
+    "lastNamePlaceholder": "Inserisci il cognome",
+    "email": "Email",
+    "emailPlaceholder": "Inserisci email",
+    "phone": "Telefono",
+    "phonePlaceholder": "Inserisci numero di telefono",
+    "role": "Ruolo",
+    "select": "Seleziona",
+    "password": "Password",
+    "passwordPlaceholder": "Inserisci password",
+    "roles": { "admin": "Admin" },
+    "columns": {
+      "name": "Nome",
+      "email": "Email",
+      "phone": "Telefono",
+      "ghlUser": "Nome utente GHL",
+      "role": "Ruolo",
+      "status": "Stato",
+      "actions": "Azioni"
+    }
+  },
+  "role": {
+    "addRole": "Aggiungi ruolo",
+    "editRole": "Modifica ruolo",
+    "name": "Nome ruolo",
+    "namePlaceholder": "Inserisci il nome del ruolo",
+    "table": {
+      "modules": "Moduli / Pagine",
+      "add": "Aggiungi",
+      "edit": "Modifica",
+      "view": "Visualizza",
+      "delete": "Elimina"
+    },
+    "emailConfiguration": "Configurazione Email",
+    "smtpSetup": "Impostazioni SMTP"
+  },
+  "common": {
+    "cancel": "Annulla",
+    "save": "Salva",
+    "yes": "Sì"
+  }
+}
