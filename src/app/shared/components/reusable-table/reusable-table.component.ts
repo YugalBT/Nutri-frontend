@@ -6,7 +6,7 @@ import { Component, Input } from '@angular/core';
   standalone: true,
   imports: [CommonModule],
   templateUrl: './reusable-table.component.html',
-  styleUrl: './reusable-table.component.css'
+  styleUrls: ['./reusable-table.component.css']
 })
 export class ReusableTableComponent {
 

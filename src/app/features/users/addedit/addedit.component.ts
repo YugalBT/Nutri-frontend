@@ -5,7 +5,7 @@ import { Component } from '@angular/core';
   standalone: true,
   imports: [],
   templateUrl: './addedit.component.html',
-  styleUrl: './addedit.component.css'
+  styleUrls: ['./addedit.component.css']
 })
 export class AddeditComponent {
 

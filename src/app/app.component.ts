@@ -15,7 +15,7 @@ import { TokenService } from './shared/services/token.service';
   standalone: true,
   imports: [RouterOutlet, CommonModule, LoaderComponent, ConfirmDialogComponent],
   templateUrl: './app.component.html',
-  styleUrl: './app.component.css'
+  styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit {
   title = 'nutri-frontend';
@@ -32,7 +32,8 @@ export class AppComponent implements OnInit {
     const user: User | null = JSON.parse(this.tokenService.getUserData() || 'null');
 
     if (token && user) {
-      this.store.dispatch(AuthActions.loginSuccess({ user, token }));
+      // Restore session silently on app init — do not trigger success toast or navigation
+      this.store.dispatch(AuthActions.loginSuccess({ user, token, silent: true }));
     }
     else{
       this.store.dispatch(AuthActions.logout());

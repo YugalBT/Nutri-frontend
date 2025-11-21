@@ -5,7 +5,7 @@ import { Component } from '@angular/core';
   standalone: true,
   imports: [],
   templateUrl: './notifications.component.html',
-  styleUrl: './notifications.component.css'
+  styleUrls: ['./notifications.component.css']
 })
 export class NotificationsComponent {
 

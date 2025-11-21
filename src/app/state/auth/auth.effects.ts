@@ -71,12 +71,17 @@ export class AuthEffects {
       () =>
         this.actions$.pipe(
           ofType(AuthActions.loginSuccess),
-          tap(({ user, token }) => {
+          tap(({ user, token, silent }) => {
+            // Always persist token and user data, but only show toast / navigate
+            // when this is a real login (not a silent restore on app init).
             this.tokenService.setToken(token);
             this.tokenService.setUserData(JSON.stringify(user)); // store object directly
             this.tokenService.setUserName(user?.username ?? '');
-            this.toast.success('Login successful!');
-            this.router.navigate(['/dashboard']);
+
+            if (!silent) {
+              this.toast.success('Login successful!');
+              this.router.navigate(['/dashboard']);
+            }
           })
         ),
       { dispatch: false }

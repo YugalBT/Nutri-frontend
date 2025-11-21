@@ -5,7 +5,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
   standalone: true,
   imports: [],
   templateUrl: './common-modal.component.html',
-  styleUrl: './common-modal.component.css'
+  styleUrls: ['./common-modal.component.css']
 })
 export class CommonModalComponent {
  @Input() title = 'Modal Title';

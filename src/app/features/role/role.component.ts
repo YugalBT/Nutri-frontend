@@ -7,7 +7,7 @@ import { RoleAddEditComponent } from './role-add-edit/role-add-edit.component';
   standalone: true,
   imports: [ReusableTableComponent,RoleAddEditComponent],
   templateUrl: './role.component.html',
-  styleUrl: './role.component.css'
+  styleUrls: ['./role.component.css']
 })
 export class RoleComponent {
 roles = [

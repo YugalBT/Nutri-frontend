@@ -7,7 +7,7 @@ import { LoaderService } from '../../services/loader.service';
   standalone: true,
   imports: [CommonModule],
   templateUrl: './loader.component.html',
-  styleUrl: './loader.component.css'
+  styleUrls: ['./loader.component.css']
 })
 export class LoaderComponent {
 constructor(public loader: LoaderService) {}

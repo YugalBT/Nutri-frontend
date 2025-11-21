@@ -11,7 +11,7 @@ import { Constants } from '../../shared/utils/constants/constants';
   standalone: true,
   imports: [RouterLink],
   templateUrl: './sidebar.component.html',
-  styleUrl: './sidebar.component.css'
+  styleUrls: ['./sidebar.component.css']
 })
 export class SidebarComponent {
 
@@ -22,12 +22,10 @@ export class SidebarComponent {
     ) {}
 
   logout() {
-    debugger;
     this.confirm.confirm('Do you really want to logout?').subscribe(result => {
       if (result) {
-
         localStorage.clear();
-        this.toast.success(Constants.LOGOUT_SUCCESS, 'Welcome');
+        this.toast.success(Constants.LOGOUT_SUCCESS);
         this.router.navigate(['/login']);
       }
     });

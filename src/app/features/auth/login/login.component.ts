@@ -28,7 +28,6 @@ export class LoginComponent {
     });
 
     this.loading$ = this.store.select(selectAuthLoading);
-    // console.log('Loading Observable:', this.loading$);
     
   }
 

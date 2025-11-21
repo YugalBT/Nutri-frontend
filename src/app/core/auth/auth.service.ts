@@ -24,7 +24,6 @@ export class AuthService {
     companyCode: body.companyCode ?? 'set'
   };
 
-  console.log('Login Payload:', payload);
   return this.http.post<any>(API_ENDPOINTS.AUTH.LOGIN, payload).pipe(
     tap(res => {
       if (res?.isSuccess && res?.data?.token) {

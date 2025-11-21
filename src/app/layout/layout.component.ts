@@ -9,9 +9,9 @@ import { LoaderComponent } from '../shared/components/loader/loader.component';
 @Component({
   selector: 'app-layout',
   standalone: true,
-  imports: [DashboardComponent, SidebarComponent, HeaderComponent, RouterOutlet, LoaderComponent],
+  imports: [SidebarComponent, HeaderComponent, RouterOutlet],
   templateUrl: './layout.component.html',
-  styleUrl: './layout.component.css'
+  styleUrls: ['./layout.component.css']
 })
 export class LayoutComponent {
 

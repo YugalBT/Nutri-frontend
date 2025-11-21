@@ -6,7 +6,7 @@ import { SharedModule } from '../../../shared/shared.module';
   standalone: true,
   imports: [SharedModule],
   templateUrl: './forgot-password.component.html',
-  styleUrl: './forgot-password.component.css'
+  styleUrls: ['./forgot-password.component.css']
 })
 export class ForgotPasswordComponent {
 

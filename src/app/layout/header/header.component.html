@@ -30,13 +30,22 @@
                 <div class="dropdown profile-dropdown">
                     <div class="d-flex dropdown-toggle align-items-center gap-3" data-bs-toggle="dropdown"
                         aria-expanded="false" style="cursor:pointer;">
-                        <div class="d-flex align-items-center gap-2">
-                            <img src="/assets/image/profile-image.png" alt="" width="40" height="40" class="rounded-sm">
+                        <div class="d-flex align-items-center gap-2" *ngIf="user$ | async as user; else guest">
+                            <img [src]="user?.logo || '/assets/image/profile-image.png'" alt="" width="40" height="40" class="rounded-sm">
                             <div class="profile-right-content">
-                                <h3 class="mb-0">kate Rose</h3>
-                                <p class="mb-0">Admin</p>
+                                <h3 class="mb-0">{{ user?.firstName }} {{ user?.lastName }}</h3>
+                                <p class="mb-0">{{ user?.roles?.[0] || 'User' }}</p>
                             </div>
                         </div>
+                        <ng-template #guest>
+                          <div class="d-flex align-items-center gap-2">
+                            <img src="/assets/image/profile-image.png" alt="" width="40" height="40" class="rounded-sm">
+                            <div class="profile-right-content">
+                                <h3 class="mb-0">Guest</h3>
+                                <p class="mb-0">Visitor</p>
+                            </div>
+                          </div>
+                        </ng-template>
 
                     </div>
 
@@ -46,7 +55,7 @@
                         <li>
                             <hr class="dropdown-divider">
                         </li>
-                        <li><a class="dropdown-item" >Logout</a></li>
+                        <li><a class="dropdown-item" (click)="logout()">Logout</a></li>
                     </ul>
                 </div>
 
