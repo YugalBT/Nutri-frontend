@@ -1,0 +1,6 @@
+.global-search {
+  width: 100%;
+}
+.global-search .input-group .form-control {
+  min-width: 180px;
+}

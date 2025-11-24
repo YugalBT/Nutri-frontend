@@ -11,6 +11,9 @@ import { SharedModule } from '../../../shared/shared.module';
 import { ICONS } from '../../../shared/svgfiles/svgicons';
 import { CustomValidators } from '../../../core/helpers/validators';
 
+
+
+
 @Component({
   selector: 'app-login',
   standalone: true,
@@ -40,7 +43,15 @@ export class LoginComponent {
       return;
     }
 
+    
+
     const { username, password } = this.form.value;
     this.store.dispatch(AuthActions.login({ username, password, companyCode: 'set' })); 
+}
+
+
+showPassword: boolean = false;
+togglePassword() {
+  this.showPassword = !this.showPassword;
 }
 }

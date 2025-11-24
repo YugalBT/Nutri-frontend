@@ -22,7 +22,8 @@ export class HttpService {
       map((res: any) => ({
         isSuccess: res?.isSuccess ?? true,
         message: res?.message ?? 'Success',
-        data: res?.data ?? res ?? null
+        data: res?.data ?? res ?? null,
+        totalRecords: res?.totalRecords ?? null
       })),
       catchError((error) => {
         console.error('API Error:', error);
@@ -37,7 +38,7 @@ export class HttpService {
 
   get<T>(url: string, options: { headers?: HttpHeaders } = {}): Observable<ApiResponse<T>> {
     return this.handleResponse(
-      this.http.get<T>(`${this.baseUrl}/${url}`, { ...options, observe: 'body' })
+      this.http.get<T>(`${this.baseUrl}${url}`, { ...options, observe: 'body' })
     );
   }
 
