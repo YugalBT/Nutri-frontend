@@ -23,10 +23,10 @@
                                 <input type="text" class="form-control" formControlName="code" placeholder="Company code">
                             </div>
 
-                            <div class="col-md-4 col-12">
+                            <!-- <div class="col-md-4 col-12">
                                 <label class="form-label">{{ 'company.suffix' | translate }}</label>
                                 <input type="text" class="form-control" formControlName="suffix" placeholder="Suffix (e.g., Ltd)">
-                            </div>
+                            </div> -->
 
                             <div class="col-md-4 col-12">
                                 <label class="form-label">{{ 'company.website' | translate }}</label>
@@ -53,16 +53,16 @@
                             </div>
 
                             <div class="col-md-4 col-12">
-                                <label class="form-label">{{ 'company.userFirstName' | translate }}</label>
-                                <input type="text" class="form-control" formControlName="userFirstName" placeholder="First name">
+                                <label class="form-label">{{ 'company.firstName' | translate }}</label>
+                                <input type="text" class="form-control" formControlName="firstName" placeholder="First name">
                             </div>
                             <div class="col-md-4 col-12">
-                                <label class="form-label">{{ 'company.userMiddleName' | translate }}</label>
-                                <input type="text" class="form-control" formControlName="userMiddleName" placeholder="Middle name">
+                                <label class="form-label">{{ 'company.middleName' | translate }}</label>
+                                <input type="text" class="form-control" formControlName="middleName" placeholder="Middle name">
                             </div>
                             <div class="col-md-4 col-12">
-                                <label class="form-label">{{ 'company.userLastName' | translate }}</label>
-                                <input type="text" class="form-control" formControlName="userLastName" placeholder="Last name">
+                                <label class="form-label">{{ 'company.lastName' | translate }}</label>
+                                <input type="text" class="form-control" formControlName="lastName" placeholder="Last name">
                             </div>
 
                             <div class="col-md-6 col-12">
@@ -100,6 +100,19 @@
                                 <h5 class="mb-3">{{ 'company.account' | translate }}</h5>
                             </div>
 
+                             <div class="col-md-4 col-12">
+                                <label class="form-label">{{ 'company.userFirstName' | translate }}</label>
+                                <input type="text" class="form-control" formControlName="userFirstName" placeholder="First name">
+                            </div>
+                            <div class="col-md-4 col-12">
+                                <label class="form-label">{{ 'company.userMiddleName' | translate }}</label>
+                                <input type="text" class="form-control" formControlName="userMiddleName" placeholder="Middle name">
+                            </div>
+                            <div class="col-md-4 col-12">
+                                <label class="form-label">{{ 'company.userLastName' | translate }}</label>
+                                <input type="text" class="form-control" formControlName="userLastName" placeholder="Last name">
+                            </div>
+
                             <div class="col-md-6 col-12">
                                 <label class="form-label">{{ 'company.adminEmail' | translate }}</label>
                                 <input type="email" class="form-control" formControlName="email" placeholder="admin@example.com">
@@ -121,7 +134,7 @@
 
             <div class="modal-footer">
                 <button class="btn btn-outline-secondary" (click)="closeModal()">{{ 'common.cancel' | translate }}</button>
-                <button class="btn blue-btn" (click)="saveUser()">{{ 'common.save' | translate }}</button>
+                <button class="btn blue-btn" (click)="saveCompany()">{{ 'common.save' | translate }}</button>
             </div>
 
         </div>

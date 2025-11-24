@@ -2,6 +2,12 @@ import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { SharedModule } from '../../../shared/shared.module';
 import { TranslatePipe } from '../../../i18n/translate.pipe';
+import { Company } from '../../../core/models/company-add-edit';
+import { CompanyService } from '../../../core/services/company/company.service';
+import { ToastService } from '../../../shared/services/toast.service';
+import { ApiResponse } from '../../../core/models/api-response';
+
+
 declare var bootstrap: any;
 @Component({
   selector: 'app-company-add-edit',
@@ -16,7 +22,13 @@ export class CompanyAddEditComponent implements OnInit {
   form!: FormGroup;
   isEdit = false;
 
-  constructor(private fb: FormBuilder) {}
+  constructor(
+  private fb: FormBuilder,
+  private companyService: CompanyService,
+   private toast: ToastService
+) {}
+
+  // constructor(private fb: FormBuilder) {}
 
   ngOnInit() {
     this.form = this.fb.group({
@@ -89,4 +101,67 @@ export class CompanyAddEditComponent implements OnInit {
       this.form.patchValue({ logo: file.name });
     }
   }
+
+ saveCompany() {
+  if (this.form.invalid) {
+    this.form.markAllAsTouched();
+    return;
+  }
+
+  const payload = this.form.value as Company;
+
+  if (this.isEdit) {
+
+    this.companyService.updateCompany(payload).subscribe({
+      next: (res: ApiResponse<any>) => {
+        if (res?.isSuccess) {
+          this.toast.success(res.message || "Company updated successfully!");
+          this.closeModal();
+        } else {
+          this.toast.error(res.message || "Update failed");
+        }
+      },
+      error: (err: any) => {
+        if (err.error?.errors) {
+          Object.values(err.error.errors).forEach((msgList: any) => {
+            msgList.forEach((msg: string) => this.toast.error(msg));
+          });
+        } else {
+          this.toast.error("Something went wrong");
+        }
+      }
+    });
+
+  } else {
+  this.companyService.createCompany(payload).subscribe({
+    next: (res) => {
+
+      if (res?.isSuccess) {
+        this.toast.success(res.message || "Company created successfully!");
+        this.closeModal();
+      } else {
+        this.toast.error(res.message || "Failed to create company");
+      }
+    },
+
+    error: (err) => {
+      console.error("Create Error:", err);
+
+      // Backend validation errors (.NET model state)
+      if (err.error?.errors) {
+        Object.values(err.error.errors).forEach((messages: any) => {
+          messages.forEach((msg: string) => this.toast.error(msg));
+        });
+      } 
+      else {
+        // Generic fallback
+        this.toast.error("Something went wrong. Please try again.");
+      }
+    }
+  });
 }
+}
+
+}
+  
+
