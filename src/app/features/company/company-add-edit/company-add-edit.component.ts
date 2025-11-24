@@ -162,6 +162,35 @@ export class CompanyAddEditComponent implements OnInit {
 }
 }
 
+deleteCompany(id: string) {
+  this.companyService.deleteCompany(id).subscribe({
+    next: (res: ApiResponse<any>) => {
+      if (res.isSuccess) {
+        this.toast.success(res.message || "Company deleted successfully!");
+      } else {
+        this.toast.error(res.message || "Delete failed");
+      }
+    },
+    error: () => {
+      this.toast.error("Something went wrong");
+    }
+  });
+}
+
+activeInactiveCompany(id: string) {
+  this.companyService.ativeInactiveCompanyStatus(id, !this.form.value.isActive).subscribe({
+    next: (res: ApiResponse<any>) => {
+      if (res.isSuccess) {
+        this.toast.success(res.message || "Company Inactivated successfully!");
+      } else {
+        this.toast.error(res.message || "Inactivation failed");
+      }
+    },
+    error: () => {
+      this.toast.error("Something went wrong");
+    }
+  });
+}
 }
   
 

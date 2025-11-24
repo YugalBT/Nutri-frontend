@@ -3,6 +3,7 @@ import { CompanyAddEditComponent } from '../company-add-edit/company-add-edit.co
 import { ReusableTableComponent } from '../../../shared/components/reusable-table/reusable-table.component';
 import { TranslateService } from '../../../i18n/translate.service';
 import { TranslatePipe } from '../../../i18n/translate.pipe';
+import { CompanyService } from '../../../core/services/company/company.service';
 
 @Component({
   selector: 'app-company-list',
@@ -15,7 +16,7 @@ export class CompanyListComponent implements OnDestroy {
   columns: string[] = [];
   private langSub: any;
 
-  constructor(private translate: TranslateService) {
+  constructor(private translate: TranslateService, private companyService: CompanyService) {
     this.setColumns();
     this.langSub = this.translate.lang$.subscribe(() => this.setColumns());
   }
@@ -37,4 +38,21 @@ export class CompanyListComponent implements OnDestroy {
   ngOnDestroy(): void {
     this.langSub.unsubscribe();
   }
+
+  deleteCompany(row: any) {
+  if (confirm(`Are you sure you want to delete ${row.name}?`)) {
+    this.companyService.deleteCompany(row.tenantId).subscribe({
+      next: () => alert('Company deleted successfully'),
+      error: () => alert('Failed to delete company')
+    });
+  }
+}
+
+toggleCompanyStatus(row: any) {
+  this.companyService.ativeInactiveCompanyStatus(row.tenantId, !row.isActive).subscribe({
+    next: () => row.isActive = !row.isActive, // update local state
+    error: () => alert('Failed to update status')
+  });
+}
+
 }

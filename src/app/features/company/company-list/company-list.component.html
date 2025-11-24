@@ -11,7 +11,8 @@
       <app-reusable-table
         [columns]="columns"
         [showActions]="true"
-        (editRow)="companyAddEdit.openModal(true, $event)">
+        (editRow)="companyAddEdit.openModal(true, $event)"
+        (deleteRow)="deleteCompany($event)">
       </app-reusable-table>
     </div>
   </div>
