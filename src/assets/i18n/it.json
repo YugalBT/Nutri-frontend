@@ -24,7 +24,20 @@
     "phoneNumber": "Numero di telefono",
     "password": "Password",
     "cancel": "Annulla",
-    "save": "Salva"
+    "save": "Salva",
+     "manage": "Gestisci azienda",
+    "addCompany": "Aggiungi azienda",
+    "columns": {
+      "logo": "Logo",
+      "siteColor": "Colore sito",
+      "companyName": "Nome azienda",
+      "name": "Nome",
+      "email": "Email",
+      "phone": "Telefono",
+      "code": "Codice",
+      "status": "Stato",
+      "actions": "Azioni"
+    }
   },
   "form": {
     "select": "Seleziona"
@@ -66,21 +79,7 @@
     "confirmLogout": "Vuoi davvero disconnetterti?",
     "logoutSuccess": "Disconnessione avvenuta con successo!"
   },
-  "company": {
-    "manage": "Gestisci azienda",
-    "addUser": "Aggiungi utente",
-    "columns": {
-      "logo": "Logo",
-      "siteColor": "Colore sito",
-      "companyName": "Nome azienda",
-      "name": "Nome",
-      "email": "Email",
-      "phone": "Telefono",
-      "code": "Codice",
-      "status": "Stato",
-      "actions": "Azioni"
-    }
-  },
+ 
   "users": {
     "manage": "Gestisci utenti",
     "addUser": "Aggiungi utente",
