@@ -1,37 +1,50 @@
-<div class="global-search container-fluid">
-  <div class="row align-items-center g-3">
+<div class="global-search container-fluid py-2">
+  <div class="row align-items-end g-3">
 
+    <!-- Label -->
     <div class="col-auto" *ngIf="label">
-      <label class="fw-bold" [attr.for]="'global-search-input'">Search</label>
+      <label class="gs-label fw-semibold small" for="global-search-input">
+        {{ label }}
+      </label>
     </div>
 
+    <!-- Search Input -->
     <div class="col-md-6 col-sm-12">
-      <div class="input-group">
-        <input
-          id="global-search-input"
-          class="form-control"
-          type="text"
-          name="search"
-          [placeholder]="placeholder"
-          [formControl]="searchControl"
-          [attr.aria-label]="placeholder"
-        />
-        <button class="btn btn-outline-secondary" (click)="doClear()" aria-label="Clear search">
-          <!-- inline clear (x) SVG -->
-          <svg width="14" height="14" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M3.72 3.72a.75.75 0 0 1 1.06 0L8 6.94l3.22-3.22a.75.75 0 1 1 1.06 1.06L9.06 8l3.22 3.22a.75.75 0 0 1-1.06 1.06L8 9.06l-3.22 3.22a.75.75 0 0 1-1.06-1.06L6.94 8 3.72 4.78a.75.75 0 0 1 0-1.06z" fill="#495057"/>
-          </svg>
+      <div class="input-group gs-input-group shadow-sm rounded-2">
+
+       <span class="input-group-text gs-icon bg-white border-end-0">
+  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 16 16" class="text-muted">
+    <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001l3.85 3.85a1 1 0 0 0 
+    1.415-1.414l-3.85-3.85zm-5.242 1.156a5 5 0 1 1 
+    0-10 5 5 0 0 1 0 10z"/>
+  </svg>
+</span>
+
+        <input id="global-search-input" class="form-control form-control-sm gs-input border-start-0" type="text"
+          name="search" [placeholder]="placeholder" [formControl]="searchControl" [attr.aria-label]="placeholder" />
+
+        <button class="btn btn-light btn-sm gs-clear border-start-0" (click)="doClear()" aria-label="Clear search">
+          ×
         </button>
+
+
       </div>
     </div>
 
+    <!-- Status Select -->
     <div class="col-md-3 col-sm-6" *ngIf="showStatus">
-      <select class="form-select" [formControl]="statusControl">
-        <option value="">All Status</option>
-        <option value="1">Active</option>
-        <option value="0">Inactive</option>
-      </select>
+      <div class="position-relative">
+
+        <select class="form-select form-select-sm gs-select shadow-sm rounded-2" [formControl]="statusControl">
+          <option value="">{{ 'common.all' | translate }}</option>
+          <option value="1">{{ 'common.active' | translate }}</option>
+          <option value="0">{{ 'common.inactive' | translate }}</option>
+        </select>
+
+        <span class="select-arrow">▾</span>
+      </div>
     </div>
+
 
   </div>
 </div>

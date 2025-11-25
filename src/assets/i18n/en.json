@@ -80,6 +80,9 @@
     "logoutSuccess": "Logout successful!"
   },
   "users": {
+    "searchFilters" : "Search Filters",
+    "searchPlaceholder": "Search by name, email or phone",
+    "Heading": "User Management",
     "manage": "Manage Users",
     "addUser": "Add User",
     "editUser": "Edit User",
@@ -126,6 +129,22 @@
   "common": {
     "cancel": "Cancel",
     "save": "Save",
-    "yes": "Yes"
+    "yes": "Yes",
+    "no": "No",
+    "close": "Close",
+    "delete": "Delete",
+    "edit": "Edit",
+    "add": "Add",
+    "all": "All",
+    "create": "Create",
+    "update": "Update",
+    "actions": "Actions",
+    "status": "Status",
+    "active": "Active",
+    "inactive": "Inactive",
+    "search": "Search",
+    "reset": "Reset",
+    "loading": "Loading..."
+
   }
 }

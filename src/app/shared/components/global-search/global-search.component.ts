@@ -3,16 +3,19 @@ import { CommonModule } from '@angular/common';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
+import { TranslateService } from '../../../i18n/translate.service';
+import { TranslatePipe } from '../../../i18n/translate.pipe';
 
 @Component({
   selector: 'app-global-search',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, TranslatePipe],
   templateUrl: './global-search.component.html',
   styleUrls: ['./global-search.component.css']
 })
 export class GlobalSearchComponent implements OnInit, OnDestroy {
 
+  constructor(private translate: TranslateService) {}
   @Input() label: string = 'Search';
   @Input() placeholder = 'Enter keyword';
   @Input() showStatus = false;

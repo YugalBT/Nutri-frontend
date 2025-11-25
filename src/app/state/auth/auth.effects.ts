@@ -79,6 +79,21 @@ export class AuthEffects {
             this.tokenService.setUserData(JSON.stringify(user));
             this.tokenService.setUserName(user?.username ?? '');
 
+            // Apply dynamic theme colors from user profile
+            try {
+              if (typeof document !== 'undefined' && user) {
+                const root = document.documentElement;
+                if (user.primaryColor) {
+                  root.style.setProperty('--primary-color', user.primaryColor);
+                }
+                if (user.secondaryColor) {
+                  root.style.setProperty('--secondary-color', user.secondaryColor);
+                }
+              }
+            } catch (e) {
+              // ignore DOM errors (e.g., SSR)
+            }
+
             if (!silent) {
               this.toast.success('Login successful!');
               this.router.navigate(['/dashboard']);

@@ -24,7 +24,7 @@ import { CustomValidators } from '../../../core/helpers/validators';
 export class LoginComponent {
   form: FormGroup;
   icons = ICONS;
-  loading$: Observable<boolean>; 
+  loading$: Observable<boolean>;
 
   constructor(private fb: FormBuilder, private store: Store, private toast: ToastService, private translate: TranslateService) {
     this.form = this.fb.group({
@@ -33,7 +33,7 @@ export class LoginComponent {
     });
 
     this.loading$ = this.store.select(selectAuthLoading);
-    
+
   }
 
   onSubmit() {
@@ -43,15 +43,15 @@ export class LoginComponent {
       return;
     }
 
-    
+
 
     const { username, password } = this.form.value;
-    this.store.dispatch(AuthActions.login({ username, password, companyCode: 'set' })); 
-}
+    this.store.dispatch(AuthActions.login({ username, password, companyCode: 'set' }));
+  }
 
 
-showPassword: boolean = false;
-togglePassword() {
-  this.showPassword = !this.showPassword;
-}
+  showPassword: boolean = false;
+  togglePassword() {
+    this.showPassword = !this.showPassword;
+  }
 }

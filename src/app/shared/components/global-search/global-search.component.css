@@ -1,6 +1,54 @@
 .global-search {
-  width: 100%;
+  background: #fff;
+}
+
+.gs-label {
+  font-size: 0.85rem;
+  color: #6c757d;
+}
+
+.gs-input-group .form-control:focus,
+.gs-select:focus {
+  box-shadow: none;
+  border-color: #86b7fe;
+}
+
+.gs-icon {
+  background: transparent;
+  border-right: 0;
+}
+
+.gs-clear {
+  background: transparent;
+  border-left: 0;
+}
+
+.gs-clear:hover i {
+  color: #000;
 }
 .global-search .input-group .form-control {
   min-width: 180px;
+}
+
+/* Compact styling for the enhanced search */
+.gs-input-group { display:flex; align-items:center; }
+.gs-icon { display:inline-flex; align-items:center; justify-content:center; padding:6px 8px; color:var(--font-gray); }
+.gs-input { border-radius:8px 0 0 8px; }
+.gs-clear { border-radius:0 8px 8px 0; background:transparent; border:none; color:var(--font-gray); }
+.gs-select { border-radius:8px; padding:6px 12px; }
+
+/* Dark mode overrides (in case not caught globally) */
+:root.dark-mode .gs-icon, :root.dark-mode .gs-clear { color: var(--muted-text) !important; }
+:root.dark-mode .gs-input, :root.dark-mode .gs-select { background-color: var(--surface-color) !important; color:var(--text-color) !important; border:1px solid rgba(255,255,255,0.06) !important; }
+  padding-right: 2rem;
+}
+
+.select-arrow {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 0.7rem;
+  color: #6c757d;
+  pointer-events: none;
 }

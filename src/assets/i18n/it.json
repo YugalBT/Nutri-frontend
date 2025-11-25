@@ -81,6 +81,9 @@
   },
  
   "users": {
+    "Heading": "Gestione utenti",
+    "searchPlaceholder" : "Cerca per nome, email o telefono",
+    "searchFilters" : "Filtri di ricerca",
     "manage": "Gestisci utenti",
     "addUser": "Aggiungi utente",
     "editUser": "Modifica utente",
@@ -127,6 +130,20 @@
   "common": {
     "cancel": "Annulla",
     "save": "Salva",
-    "yes": "Sì"
+    "yes": "Sì",
+    "no": "No",
+    "deleteConfirm": "Sei sicuro di voler eliminare questo elemento?",
+    "close": "Chiudi",
+    "delete": "Elimina",
+    "all": "Tutti",
+    "edit": "Modifica",
+    "add": "Aggiungi",
+    "update": "Aggiorna",
+    "actions": "Azioni",
+    "status": "Stato",
+    "active": "Attivo",
+    "inactive": "Inattivo",
+    "search": "Cerca",
+    "loading": "Caricamento..."
   }
 }

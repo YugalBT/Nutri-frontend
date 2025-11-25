@@ -23,11 +23,335 @@
   a{text-decoration: none;}
 body{   font-family: "Archivo", sans-serif;font-size: var(--font-14);background-color: #F5FFFE;}
 p{color: var(--font-gray);}
+
+/* Dark mode variables and overrides */
+/* When `dark-mode` is applied to the document element, these values apply */
+:root.dark-mode {
+  --background-color: #071021;
+  --surface-color: #0b1a25;
+  --text-color: #E6EEF6;
+  --muted-text: #9FB0C0;
+}
+
+/* Apply page-level overrides when dark-mode class is present */
+html.dark-mode, body.dark-mode, :root.dark-mode body {
+  background-color: var(--background-color) !important;
+  color: var(--text-color) !important;
+}
+
+/* Theme toggle button */
+.theme-toggle{background: transparent;border: none;padding:6px 8px;border-radius:6px;cursor:pointer}
+.theme-toggle:hover{background: rgba(0,0,0,0.06)}
+.dark-mode .theme-toggle:hover{background: rgba(255,255,255,0.04)}
+
+/* Dark mode surface adjustments */
+.dark-mode .card, .dark-mode .white-with-shadow, .dark-mode .welcome-dashboard {
+  background-color: var(--surface-color) !important;
+  box-shadow: none !important;
+}
+
+.dark-mode header{
+  background-color: var(--surface-color) !important;
+  border-bottom-color: rgba(255,255,255,0.04) !important;
+}
+
+.dark-mode .profile-right-content h3, .dark-mode p, .dark-mode .text-muted {
+  color: var(--text-color) !important;
+}
+
+/* Broad dark-mode text and control overrides to ensure readability */
+.dark-mode, html.dark-mode, body.dark-mode {
+  color: var(--text-color) !important;
+}
+
+/* Sidebar text and links */
+.dark-mode .side-menu-item a,
+.dark-mode .side-menu-heading p,
+.dark-mode .side-logo h3,
+.dark-mode .sidebar-footer p,
+.dark-mode .sidebar-footer a {
+  color: var(--text-color) !important;
+}
+
+/* Header / profile */
+.dark-mode header,
+.dark-mode .header-inner,
+.dark-mode .profile-right-content h3,
+.dark-mode .profile-right-content p {
+  color: var(--text-color) !important;
+}
+
+/* Cards, white surfaces */
+.dark-mode .card,
+.dark-mode .card-body,
+.dark-mode .card-header,
+.dark-mode .white-with-shadow,
+.dark-mode .welcome-dashboard {
+  background-color: var(--surface-color) !important;
+  color: var(--text-color) !important;
+}
+
+/* Ensure utility background classes flip correctly in dark mode */
+.dark-mode .bg-white, .dark-mode .bg-light {
+  background-color: var(--surface-color) !important;
+  color: var(--text-color) !important;
+}
+
+/* Make heading elements readable in dark mode */
+.dark-mode h1, .dark-mode h2, .dark-mode h3, .dark-mode h4, .dark-mode h5, .dark-mode h6 {
+  color: var(--text-color) !important;
+}
+
+/* Comprehensive dark-mode overrides for form controls and general elements */
+.dark-mode input,
+.dark-mode input[type="text"],
+.dark-mode input[type="password"],
+.dark-mode input[type="email"],
+.dark-mode input[type="number"],
+.dark-mode textarea,
+.dark-mode .form-control,
+.dark-mode .form-control-sm,
+.dark-mode .form-select,
+.dark-mode .form-select-sm,
+.dark-mode .input-group .form-control,
+.dark-mode .search-wrapper .form-control {
+  background-color: var(--surface-color) !important;
+  color: var(--text-color) !important;
+  border: 1px solid rgba(255,255,255,0.06) !important;
+}
+
+.dark-mode ::placeholder {
+  color: rgba(230,238,246,0.6) !important;
+}
+
+/* Select arrow and custom selects in dark mode: use an inline SVG arrow that inherits color */
+.dark-mode .form-select, .dark-mode .form-select-sm {
+  /* show a down-caret SVG that uses currentColor so it adapts to theme */
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' width='14' height='14'><polyline points='6 9 12 15 18 9' stroke='currentColor' stroke-width='2' fill='none' stroke-linecap='round' stroke-linejoin='round'/></svg>") !important;
+  background-repeat: no-repeat !important;
+  background-position: right 0.75rem center !important;
+  background-size: 14px 14px !important;
+  padding-right: 2.6rem !important;
+  -webkit-appearance: none !important;
+  -moz-appearance: none !important;
+  appearance: none !important;
+  color: var(--text-color) !important;
+}
+
+/* Tables */
+.dark-mode table thead th {
+  background-color: rgba(255,255,255,0.03) !important;
+  color: var(--text-color) !important;
+  border-bottom: 1px solid rgba(255,255,255,0.04) !important;
+}
+.dark-mode table tbody tr td {
+  border-bottom: 1px solid rgba(255,255,255,0.02) !important;
+}
+
+/* Dropdown menus, context menus */
+.dark-mode .dropdown-menu,
+.dark-mode .dropdown-item {
+  background-color: var(--surface-color) !important;
+  color: var(--text-color) !important;
+}
+.dark-mode .dropdown-item:hover {
+  background-color: rgba(255,255,255,0.03) !important;
+}
+
+/* Modals */
+.dark-mode .modal-content,
+.dark-mode .modal-header,
+.dark-mode .modal-body,
+.dark-mode .modal-footer {
+  background-color: var(--surface-color) !important;
+  color: var(--text-color) !important;
+}
+
+/* Buttons - ensure contrast */
+.dark-mode .btn {
+  color: var(--text-color) !important;
+}
+.dark-mode .btn.btn-light,
+.dark-mode .btn.btn-white {
+  background-color: rgba(255,255,255,0.03) !important;
+  color: var(--text-color) !important;
+}
+
+/* Outline buttons */
+.dark-mode .btn-outline-secondary {
+  border-color: rgba(255,255,255,0.08) !important;
+  color: var(--text-color) !important;
+}
+
+/* Breadcrumbs and small utility text */
+.dark-mode .breadcrumb,
+.dark-mode .breadcrumb-item a,
+.dark-mode .small,
+.dark-mode .form-text {
+  color: var(--muted-text) !important;
+}
+
+/* Cards headings and headers */
+.dark-mode .card-header,
+.dark-mode .card-title,
+.dark-mode .card-subtitle {
+  color: var(--text-color) !important;
+}
+
+/* Icons & svg strokes (best-effort) */
+.dark-mode svg {
+  color: var(--text-color) !important;
+}
+
+/* Ensure both stroke and fill of SVG shapes inherit the current color in dark mode */
+.dark-mode svg *,
+.dark-mode svg {
+  stroke: currentColor !important;
+  fill: currentColor !important;
+}
+
+/* Utility backgrounds override: any utility forcing white should adapt */
+.dark-mode .bg-white, .dark-mode .bg-light, .dark-mode .bg-primary {
+  background-color: var(--surface-color) !important;
+  color: var(--text-color) !important;
+}
+
+/* Ensure links remain visible */
+.dark-mode a, .dark-mode a:hover, .dark-mode a:focus {
+  color: var(--secondary-color) !important;
+}
+
+/* Notifications/badges */
+.dark-mode .badge,
+.dark-mode .notification-number {
+  background-color: var(--secondary-color) !important;
+  color: #000 !important;
+}
+
+/* Ensure form labels are readable */
+.dark-mode label,
+.dark-mode .form-label-custom {
+  color: var(--text-color) !important;
+}
+
+/* Tooltips & popovers */
+.dark-mode .tooltip-inner,
+.dark-mode .popover-body {
+  background-color: var(--surface-color) !important;
+  color: var(--text-color) !important;
+}
+
+/* Borders and overlays: make borders light on dark backgrounds */
+.dark-mode .card,
+.dark-mode .card-header,
+.dark-mode .card-body,
+.dark-mode .white-with-shadow,
+.dark-mode .welcome-dashboard,
+.dark-mode .modal-content,
+.dark-mode .modal-header,
+.dark-mode .modal-body,
+.dark-mode .modal-footer,
+.dark-mode .dropdown-menu,
+.dark-mode .table,
+.dark-mode .table th,
+.dark-mode .table td,
+.dark-mode .form-control,
+.dark-mode .form-select,
+.dark-mode .input-group .form-control,
+.dark-mode .sidebar,
+.dark-mode header {
+  border: 1px solid rgba(255,255,255,0.06) !important;
+}
+
+/* Inputs/selects adjusted to show subtle light border */
+.dark-mode .form-control,
+.dark-mode .form-select,
+.dark-mode textarea,
+.dark-mode input {
+  border: 1px solid rgba(255,255,255,0.06) !important;
+  background-color: var(--surface-color) !important;
+  color: var(--text-color) !important;
+  box-shadow: none !important;
+}
+
+/* Tables: clear row dividers with light borders */
+.dark-mode table thead th {
+  border-bottom: 1px solid rgba(255,255,255,0.06) !important;
+}
+.dark-mode table tbody tr td {
+  border-bottom: 1px solid rgba(255,255,255,0.02) !important;
+}
+
+/* Dropdowns and menus */
+.dark-mode .dropdown-menu {
+  border: 1px solid rgba(255,255,255,0.06) !important;
+  background-color: var(--surface-color) !important;
+}
+
+/* Modal backdrop darker and overlay consistent */
+.dark-mode .modal-backdrop.show {
+  background-color: rgba(0,0,0,0.6) !important;
+}
+
+/* Outline / ghost buttons */
+.dark-mode .btn-outline-secondary {
+  border-color: rgba(255,255,255,0.12) !important;
+  color: var(--text-color) !important;
+}
+
+/* Remove bright box-shadows which look odd on dark */
+.dark-mode .box-shadow,
+.dark-mode .white-with-shadow,
+.dark-mode .card {
+  box-shadow: none !important;
+}
+
+/* Ensure dialog-like components (dialogs / popovers) use dark surface and light border */
+.dark-mode .dialog,
+.dark-mode .modal-dialog,
+.dark-mode .popover {
+  background-color: var(--surface-color) !important;
+  color: var(--text-color) !important;
+  border: 1px solid rgba(255,255,255,0.06) !important;
+}
+
+/* Tables and reusable table content */
+.dark-mode table,
+.dark-mode th,
+.dark-mode td,
+.dark-mode .table-responsive,
+.dark-mode .reusable-table {
+  color: var(--text-color) !important;
+}
+
+/* Form controls */
+.dark-mode .form-control,
+.dark-mode .form-control-sm,
+.dark-mode .form-select,
+.dark-mode .form-select-sm,
+.dark-mode .input-group .form-control {
+  background-color: #0b1a25 !important;
+  color: var(--text-color) !important;
+  border-color: rgba(255,255,255,0.06) !important;
+}
+
+/* Buttons contrast */
+.dark-mode .blue-btn {
+  background-color: var(--primary-color) !important;
+  color: var(--secondary-color) !important;
+}
+
+/* Small text adjustments */
+.dark-mode .text-muted { color: var(--muted-text) !important; }
+.dark-mode a { color: var(--secondary-color) !important; }
+
+/* Notification badge */
+.dark-mode .notification-number { background-color: var(--secondary-color) !important; color: #000 !important; }
 .mt-30{margin-top: 30px;}
 .mb-30{margin-bottom: 30px;}
 .para_18{font-size: var(--font-18);}
-.blue-btn {background-color: var(--primary-color);color:#F4F5F9!important;font-size: var(--font-16);    border-radius: 6px;padding: 16px 20px;font-weight: var(--font-600);}
-.blue-btn:hover{background-color: var(--secondary-color);}
+.blue-btn {background-color: var(--primary-color);color: var(--secondary-color) !important; font-size: var(--font-16); border-radius: 6px; padding: 16px 20px; font-weight: var(--font-600);}
+.blue-btn:hover{filter: brightness(0.95);}
 /* login page */
 .login-left-card{    background-color: #fff;
     border-radius: 20px;
@@ -64,7 +388,7 @@ background-size: cover;position: relative;}
 .forget-pass-content p{font-size: var(--font-16);color: #949292;}
 
 /* dashboard page */
-.sidebar {background-color: #0D2848;max-width: 264px;height: 100vh;position: fixed;width: 100%;left: 0;top: 0;z-index: 99;}
+.sidebar {background-color: var(--primary-color);max-width: 250px;height: 100vh;position: fixed;width: 100%;left: 0;top: 0;z-index: 99;}
 .sidebar-footer{padding:10px;position: absolute;width: 100%;bottom: 0; }
 .sidebar-footer a{font-weight:var(--font-600);color: #ffffff;}
 .sidebar-footer p{color: #ffffff;}
@@ -107,8 +431,16 @@ padding-left: 40px;min-width: 300px;}
 .notification-number{width: 19px;height: 19px;border-radius: 50%;background-color: #1F7E9F;font-size: 12px;font-weight: var(--font-600);color: #fff;display: flex;align-items: center;justify-content: center;position: absolute;top: -2px;right: -3px;}
 .profile-right-content h3{font-size: var(--font-14);font-weight: var(--font-500);color: #000000;}
 .profile-right-content p{font-size: var(--font-13);}
-.profile-dropdown .dropdown-toggle::after {background-image: url('../image/down.svg');background-repeat: no-repeat;    border: none;width: 16px;
-height: 16px;}
+.profile-dropdown .dropdown-toggle::after {
+  /* Replace image caret with a font glyph so it inherits color and scales */
+  content: "\25BE"; /* ▼ small down-pointing triangle */
+  display: inline-block;
+  margin-left: 6px;
+  font-size: 12px;
+  line-height: 1;
+  vertical-align: middle;
+  color: currentColor;
+}
 .profile img{width: 100%;height: 100%;object-fit: cover;object-position: center;}
 .body_heading{position: relative;padding-left: 12px;}
 .body_heading h2{font-size: var(--font-18);font-weight: var(--font-500);color: #070619;}
@@ -140,4 +472,46 @@ border-radius: 20px;padding: 30px;background-image: url('../image/welcome-img\ 1
 .act-content h3{font-size: var(--font-16);color: #000000;}
 .act-content p{font-size: var(--font-13);}
 .act-time{font-size: var(--font-14);font-weight: var(--font-500);color: var(--font-gray);}
+
+/* Ensure notification SVG and icon backgrounds adapt in dark mode */
+.dark-mode .header-icon.Notification{background: rgba(255,255,255,0.03) !important;}
+.dark-mode .header-icon.Notification svg { color: var(--text-color) !important; }
+.dark-mode .notification-number { background-color: var(--secondary-color) !important; color: #000 !important; }
+
+/* Toggles, icons and filter controls styling in dark mode */
+.dark-mode .form-check-input {
+  background-color: rgba(255,255,255,0.02) !important;
+  border: 1px solid rgba(255,255,255,0.06) !important;
+}
+.dark-mode .form-check-input:checked {
+  background-color: var(--secondary-color) !important;
+  border-color: var(--secondary-color) !important;
+}
+.dark-mode .form-check-label {
+  color: var(--text-color) !important;
+}
+
+/* Icons and small control glyphs */
+.dark-mode .gs-icon,
+.dark-mode .header-icon,
+.dark-mode .side-item-icon,
+.dark-mode .fa,
+.dark-mode .icon {
+  color: var(--text-color) !important;
+}
+
+/* Global-search specific tweaks (filters) */
+.global-search .gs-input-group { align-items: center; }
+.global-search .gs-icon { color: var(--muted-text); padding: 6px; }
+.global-search .gs-clear { background: transparent; border: none; color: var(--muted-text); padding: 6px 8px; }
+.global-search .gs-select { color: var(--text-color); background: transparent; border: 1px solid rgba(255,255,255,0.06); }
+.global-search .select-arrow { position: absolute; right: 10px; top: 50%; transform: translateY(-50%); pointer-events: none; color: var(--muted-text); }
+
+/* Ensure filter pills/active states look correct */
+.dark-mode .btn-filter-active,
+.dark-mode .filter-pill {
+  background-color: rgba(255,255,255,0.04) !important;
+  color: var(--text-color) !important;
+}
+
 
