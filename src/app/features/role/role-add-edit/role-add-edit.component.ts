@@ -79,6 +79,17 @@ export class UserRoleAddEditComponent implements OnInit, OnDestroy {
     });
   }
 
+  getPerm(perms: any[], type: string) {
+  if (!perms) return null;
+
+  type = type.toLowerCase();
+
+  return perms.find(p =>
+    p.modulePermissionDisplay?.toLowerCase().includes(type)
+  );
+}
+
+
 
   private loadModules(): void {
     this.modulesLoading = true;

@@ -109,6 +109,8 @@
     "passwordPlaceholder": "Enter password",
     "roles": { "admin": "Admin" },
     "columns": {
+      "firstName": "First Name",
+      "lastName": "Last Name",
       "name": "Name",
       "email": "Email",
       "phone": "Phone Number",

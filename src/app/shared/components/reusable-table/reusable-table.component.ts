@@ -78,49 +78,48 @@ export class ReusableTableComponent implements OnChanges {
    * Returns a structured result for a cell so template can render colors/images/text.
    * Result shape: { type: 'text'|'color'|'images'|'boolean', value: any }
    */
-  formatCell(row: any, field: string) {
-    if (!row) return { type: 'text', value: '' };
-    if (!field) return { type: 'text', value: '' };
-    const val = row[field];
+ getCell(row: any, field: string) {
+  if (!row || !field) return { type: 'text', value: '' };
 
-    if (typeof val === 'boolean') {
-      return { type: 'boolean', value: val };
-    }
+  const val = row[field];
 
-    // strings: check for hex color or URLs
-    if (typeof val === 'string') {
-      const s = val.trim();
-      if (/^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$/.test(s)) {
-        return { type: 'color', value: s };
-      }
-      const urls = this.parseUrls(s);
-      if (urls.length > 0) {
-        return { type: 'images', value: urls };
-      }
-      return { type: 'text', value: s };
-    }
-
-    // arrays that may contain URLs
-    if (Array.isArray(val)) {
-      const asStrings = val.map((v: any) => String(v));
-      const urls = this.parseUrls(asStrings.join(' '));
-      if (urls.length > 0) return { type: 'images', value: urls };
-      return { type: 'text', value: JSON.stringify(val) };
-    }
-
-    // fallback
-    return { type: 'text', value: val ?? '' };
+  // LOGO
+  if (field === 'logo') {
+    return { type: 'logo', value: val || '/assets/image/no-image.png' };
   }
 
-  // --- helpers (kept private) ---
-  private parseUrls(val: any): string[] {
-    if (!val) return [];
-    if (Array.isArray(val)) return val.map(String).slice(0, 9);
-    if (typeof val !== 'string') return [];
-    const parts = val.split(/[,;|\s]+/).map(p => p.trim()).filter(p => p);
-    const urls = parts.filter(p => /^(https?:\/\/)|(^\/)|(^data:)/i.test(p));
-    return urls.slice(0, 9);
+  // SWITCH FIELD (isActive)
+  if (field === 'isactive' || field.toLowerCase() === 'isactive') {
+    return { type: 'switch', value: !!val };
   }
+
+  // COLOR HEX
+  if (typeof val === 'string' && /^#([A-F0-9]{3}|[A-F0-9]{6})$/i.test(val)) {
+    return { type: 'color', value: val };
+  }
+
+  // IMAGES ARRAY OR STRING
+  if (Array.isArray(val) && val.some(v => this.isUrl(v))) {
+    return { type: 'images', value: val };
+  }
+
+  if (typeof val === 'string' && this.isUrl(val)) {
+    return { type: 'images', value: [val] };
+  }
+
+  // BOOLEAN
+  if (typeof val === 'boolean') {
+    return { type: 'boolean', value: val };
+  }
+
+  // Default text
+  return { type: 'text', value: val ?? '' };
+}
+
+isUrl(v: any) {
+  return typeof v === 'string' && /^(https?:\/\/|\/|data:)/i.test(v);
+}
+
 
   // Fallback handler for broken images: replace with local placeholder
   onImgError(event: Event) {

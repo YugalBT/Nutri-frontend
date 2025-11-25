@@ -281,7 +281,7 @@ export class CompanyListComponent implements OnInit, OnDestroy {
       next: () => {
         row.isActive = newStatus;
         this.toast.success('Status updated successfully');
-        this.loadCompanies(1, this.pageSize);
+         this.loadCompanies(this.pageIndex + 1, this.pageSize);
       },
       error: () => this.toast.error("Failed to update status")
     });

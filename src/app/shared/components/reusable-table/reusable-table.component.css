@@ -19,10 +19,130 @@
 	.image-cell { width: 40px; height: 40px; }
 }
 
-.logo-img {
+.table-wrapper {
+  background: #ffffff;
+  border-radius: 14px;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+  padding: 0;
+}
+
+/* HEADER */
+.modern-table thead th {
+  background: #f9fafb !important;
+  padding: 14px 12px;
+  font-weight: 600;
+  font-size: .9rem;
+  color: #374151;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+/* BODY */
+.modern-table tbody td {
+  padding: 14px 12px !important;
+  font-size: .9rem;
+  border-bottom: 1px solid #f3f4f6;
+}
+
+.modern-table tbody tr:hover {
+  background: #f9fafc;
+}
+
+/* LOGO */
+.cell-logo {
   width: 40px;
   height: 40px;
+  object-fit: cover;
+  border-radius: 6px;
+  background: #f3f4f6;
+}
+
+/* COLOR DOT */
+.color-swatch {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 1px solid #ddd;
+  display: inline-block;
+}
+
+/* IMAGES */
+.image-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.image-cell img {
+  width: 34px;
+  height: 34px;
   border-radius: 6px;
   object-fit: cover;
-  background: #f8f8f8;
 }
+
+/* BOOLEAN BADGES */
+.badge.active {
+  background: #d1fae5;
+  color: #065f46;
+}
+
+.badge.inactive {
+  background: #fee2e2;
+  color: #b91c1c;
+}
+
+/* SWITCH */
+.switch {
+  position: relative;
+  width: 42px;
+  height: 22px;
+  display: inline-block;
+}
+.switch input {
+  display: none;
+}
+.slider {
+  position: absolute;
+  inset: 0;
+  background: #d1d5db;
+  border-radius: 22px;
+  transition: .3s;
+}
+.slider:before {
+  content: "";
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #fff;
+  position: absolute;
+  left: 2px;
+  top: 2px;
+  transition: .3s;
+}
+input:checked + .slider {
+  background: #3b82f6;
+}
+input:checked + .slider:before {
+  transform: translateX(20px);
+}
+
+/* ACTION BUTTON */
+.action-btn {
+  border: none;
+  background: transparent;
+  font-size: 18px;
+  color: #6b7280;
+}
+.action-btn:hover {
+  color: #111827;
+}
+
+/* PAGINATION */
+.pagination .page-link {
+  border-radius: 6px !important;
+}
+.pagination .active .page-link {
+  background: #2563eb;
+  color: white;
+}
+

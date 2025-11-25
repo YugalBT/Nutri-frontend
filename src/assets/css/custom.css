@@ -32,6 +32,63 @@ p{color: var(--font-gray);}
   --text-color: #E6EEF6;
   --muted-text: #9FB0C0;
 }
+/* LIGHT MODE (default) */
+:root {
+  --bg-surface: #ffffff;
+  --bg-hover: #f9fafc;
+  --bg-header: #f9fafb;
+  --bg-secondary: #f3f4f6;
+  --border-color: #e5e7eb;
+  --border-light: #f3f4f6;
+
+  --text-primary: #111827;
+  --text-secondary: #374151;
+  --text-muted: #6b7280;
+
+  --action-icon: #374151;
+  --action-icon-hover: #111827;
+
+  --badge-active-bg: #d1fae5;
+  --badge-active-text: #065f46;
+
+  --badge-inactive-bg: #fee2e2;
+  --badge-inactive-text: #b91c1c;
+
+  --switch-off: #d1d5db;
+  --switch-on: #3b82f6;
+
+  --dropdown-bg: #ffffff;
+  --dropdown-hover: #f3f4f6;
+}
+
+/* DARK MODE */
+.dark-mode {
+  --bg-surface: #1e1f22;
+  --bg-hover: #2a2c31;
+  --bg-header: #27292d;
+  --bg-secondary: #303236;
+  --border-color: #3b3d42;
+  --border-light: #2f3135;
+
+  --text-primary: #f1f5f9;
+  --text-secondary: #d1d5db;
+  --text-muted: #9ca3af;
+
+  --action-icon: #d1d5db;
+  --action-icon-hover: #ffffff;
+
+  --badge-active-bg: #064e3b;
+  --badge-active-text: #6ee7b7;
+
+  --badge-inactive-bg: #7f1d1d;
+  --badge-inactive-text: #fecaca;
+
+  --switch-off: #4b5563;
+  --switch-on: #3b82f6;
+
+  --dropdown-bg: #26272b;
+  --dropdown-hover: #323338;
+}
 
 /* Apply page-level overrides when dark-mode class is present */
 html.dark-mode, body.dark-mode, :root.dark-mode body {

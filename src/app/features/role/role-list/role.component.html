@@ -7,7 +7,7 @@
       <p class="page-subtitle">{{ 'role.manageDesc' | translate }}</p>
     </div>
 
-    <button class="btn add-btn" (click)="roleAddEdit.openModal(true)">
+    <button class="btn add-btn" (click)="roleAddEdit.openModal(false)">
       <i class="bi bi-plus-lg me-2"></i>
       {{ 'role.addRole' | translate }}
     </button>
@@ -27,9 +27,15 @@
   <!-- Table Section -->
   <div class="table-card">
     <app-reusable-table
-      [columns]="['Company', 'Name', 'Description', 'Active']"
-      [data]="roles"
+[columns]="columns"
       [showActions]="true"
+      [data]="roles"
+      [columnFields]="columnFields"
+      [pageable]="true"
+      [totalRecords]="totalRecords"
+      [pageSize]="pageSize"
+      [pageIndex]="pageIndex"
+      (pageChange)="onPageChange($event)"
       (editRow)="roleAddEdit.openModal(true, $event)">
     </app-reusable-table>
   </div>

@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { RoleAddEditComponent } from './role-add-edit.component';
+import { UserRoleAddEditComponent } from './role-add-edit.component';
 
 describe('RoleAddEditComponent', () => {
-  let component: RoleAddEditComponent;
-  let fixture: ComponentFixture<RoleAddEditComponent>;
+  let component: UserRoleAddEditComponent;
+  let fixture: ComponentFixture<UserRoleAddEditComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [RoleAddEditComponent]
+      imports: [UserRoleAddEditComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(RoleAddEditComponent);
+    fixture = TestBed.createComponent(UserRoleAddEditComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
