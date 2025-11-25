@@ -42,6 +42,22 @@ export class CompanyService {
     );
   }
 
+getAllCompanies(): Observable<ApiResponse<any>> {
+  const filter = {
+    pageNo: 1,
+    recordPerPage: 10,
+    searchValue: "",
+    tenantId: "",
+    columnFilters: []
+  };
+
+  return this.http.post<ApiResponse<any>>(
+    `${this.baseUrl}/GetAll`,
+    filter
+  );
+}
+
+
 }
 
 

@@ -10,6 +10,7 @@
     <div class="card-body">
       <app-reusable-table
         [columns]="columns"
+        [data]="companies"
         [showActions]="true"
         (editRow)="companyAddEdit.openModal(true, $event)"
         (deleteRow)="deleteCompany($event)">

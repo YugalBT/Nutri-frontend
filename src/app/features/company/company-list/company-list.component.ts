@@ -4,6 +4,7 @@ import { ReusableTableComponent } from '../../../shared/components/reusable-tabl
 import { TranslateService } from '../../../i18n/translate.service';
 import { TranslatePipe } from '../../../i18n/translate.pipe';
 import { CompanyService } from '../../../core/services/company/company.service';
+import { CompanyList } from '../../../core/models/company-list';
 
 @Component({
   selector: 'app-company-list',
@@ -14,6 +15,7 @@ import { CompanyService } from '../../../core/services/company/company.service';
 })
 export class CompanyListComponent implements OnDestroy {
   columns: string[] = [];
+  companies: CompanyList[] = [];
   private langSub: any;
 
   constructor(private translate: TranslateService, private companyService: CompanyService) {
@@ -38,6 +40,23 @@ export class CompanyListComponent implements OnDestroy {
   ngOnDestroy(): void {
     this.langSub.unsubscribe();
   }
+
+ngOnInit(): void {
+  this.getAllCompanies();
+}
+
+getAllCompanies() {
+  this.companyService.getAllCompanies().subscribe({
+    next: (res) => {
+      this.companies = res.data as CompanyList[]; 
+    },
+    error: (err) => {
+      console.error('Error fetching companies:', err);
+    }
+  });
+}
+
+
 
   deleteCompany(row: any) {
   if (confirm(`Are you sure you want to delete ${row.name}?`)) {
