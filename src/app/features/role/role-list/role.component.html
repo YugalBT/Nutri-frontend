@@ -1,27 +1,43 @@
-<div class="container-fluid mt-4">
-  <div class="d-flex justify-content-between align-items-center mb-3">
-    <h2 class="fw-semibold">{{ 'role.manage' | translate }}</h2>
-    <button *appHasPermission="'AddRole'" class="btn btn-primary d-flex align-items-center" (click)="onAddRole()">
-      <i class="bi bi-plus-circle me-2"></i> {{ 'common.add' | translate }} {{ 'role.role' | translate }}
+<div class="pagecls">
+
+  <!-- Page Header -->
+  <div class="page-header">
+    <div>
+      <h3 class="page-title">{{ 'role.Heading' | translate }}</h3>
+      <p class="page-subtitle">{{ 'role.manageDesc' | translate }}</p>
+    </div>
+
+    <button class="btn add-btn" (click)="roleAddEdit.openModal(true)">
+      <i class="bi bi-plus-lg me-2"></i>
+      {{ 'role.addRole' | translate }}
     </button>
   </div>
 
-  <div class="card shadow-sm border-0">
-    <div class="card-body">
-      <app-reusable-table
-        [columns]="columns"
-        [columnFields]="columnFields"
-        [data]="roles"
-        [totalRecords]="totalRecords"
-        [pageSize]="pageSize"
-        [pageIndex]="pageIndex"
-        [showActions]="canManageRoles"
-        (editRow)="onEditRole($event)"
-        (deleteRow)="onDeleteRole($event)"
-        (pageChange)="onPageChange($event)">
-      </app-reusable-table>
-    </div>
+  <!-- Filters Section -->
+  <div class="filters-card">
+    <app-global-search
+      [label]="'role.searchFilters' | translate"
+      [placeholder]="'role.searchPlaceholder' | translate"
+      [showStatus]="true"
+      (search)="onSearch($event)"
+      (clear)="clearFilters()">
+    </app-global-search>
   </div>
+
+  <!-- Table Section -->
+  <div class="table-card">
+    <app-reusable-table
+      [columns]="['Company', 'Name', 'Description', 'Active']"
+      [data]="roles"
+      [showActions]="true"
+      (editRow)="roleAddEdit.openModal(true, $event)">
+    </app-reusable-table>
+  </div>
+
+  <!-- Add/Edit Modal -->
+  <app-user-role-addedit #roleAddEdit></app-user-role-addedit>
+
 </div>
 
-<app-user-role-addedit #roleAddEdit (saved)="loadRoles()"></app-user-role-addedit>
+
+

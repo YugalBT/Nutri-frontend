@@ -15,12 +15,13 @@ import { ToastService } from '../../../shared/services/toast.service';
 import { ConfirmDialogService } from '../../../shared/services/confirm-dialog.service';
 import { selectCanManageRoles, selectCanDeleteRoles } from '../../../state/auth/auth.selectors';
 import { NgxSpinnerService } from 'ngx-spinner';
+import { GlobalSearchComponent } from '../../../shared/components/global-search/global-search.component';
 
 
 @Component({
   selector: 'app-role',
   standalone: true,
-  imports: [ReusableTableComponent, CommonModule, TranslatePipe, HasPermissionDirective, UserRoleAddEditComponent],
+  imports: [ReusableTableComponent, CommonModule, TranslatePipe, HasPermissionDirective, UserRoleAddEditComponent, GlobalSearchComponent],
   templateUrl: './role.component.html',
   styleUrls: ['./role.component.css']
 })
@@ -29,6 +30,8 @@ export class RoleComponent implements OnInit, OnDestroy {
   roles: RoleItem[] = [];
   columns: string[] = [];
   columnFields: string[] = [];
+  searchValue = '';
+  filterStatus: number | null = null;
   totalRecords = 0;
   pageSize = 5;
   pageIndex = 0;
@@ -142,6 +145,22 @@ export class RoleComponent implements OnInit, OnDestroy {
     });
   }
 
+   onSearch(value: string) {    // 🔥 FIX 2: Strict string input
+    this.searchValue = value;
+
+    // if (this.searchDebounce) clearTimeout(this.searchDebounce);
+
+    // this.searchDebounce = setTimeout(() => {
+    //   this.pageIndex = 0;
+    //  // this.loadCompanies(1, this.pageSize);
+    // }, 400);
+  }
+ clearFilters() {
+    this.searchValue = '';
+    this.filterStatus = null;
+    this.pageIndex = 0;
+    //this.loadCompanies(1, this.pageSize);
+  }
   onPageChange(event: { pageIndex: number; pageSize: number }): void {
     this.pageIndex = event.pageIndex;
     this.pageSize = event.pageSize;
