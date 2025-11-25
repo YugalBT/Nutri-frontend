@@ -21,7 +21,7 @@ export class AuthService {
    login(body: LoginRequest): Observable<ApiResponse<any>> {
   const payload: LoginRequest = {
     ...body,
-    companyCode: body.companyCode ?? 'set'
+    companyCode: body.companyCode ?? 'login'
   };
 
   return this.http.post<any>(API_ENDPOINTS.AUTH.LOGIN, payload).pipe(

@@ -31,21 +31,21 @@ export const routes: Routes = [
             .then(m => m.DashboardComponent),
       },
       {
-        path: 'company',
+        path: 'companies',
         loadComponent: () =>
           import('./features/company/company-list/company-list.component')
             .then(m => m.CompanyListComponent),
       },
 
       {
-        path: 'user',
+        path: 'users',
         loadComponent: () =>
           import('./features/users/list/list.component')
             .then(m => m.ListComponent),
       },
      
       {
-        path: 'role',
+        path: 'roles',
         loadComponent: () =>
           import('./features/role/role.component')
             .then(m => m.RoleComponent),
@@ -68,7 +68,6 @@ export const routes: Routes = [
     ],
   },
 
-  // Catch-all must be last
   {
     path: '**',
     loadComponent: () =>

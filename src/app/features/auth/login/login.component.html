@@ -21,11 +21,11 @@
 
                                 <div class="col-lg-12">
                                     <div class="position-relative password_svg">
-                                        <label for="exampleInputPassword1"
+                                        <label for="exampleInputPassword2"
                                             class="form-label form-label-custom">{{ 'auth.password' | translate }}</label><input
                                             class="form-control form-control-custom" formControlName="password"
-                                            id="exampleInputPassword1" placeholder="{{ 'auth.passwordPlaceholder' | translate }}" type="password">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                            id="exampleInputPassword2" placeholder="{{ 'auth.passwordPlaceholder' | translate }}" [type]="showPassword ? 'text' : 'password'">
+                                        <svg xmlns="http://www.w3.org/2000/svg"  (click)="togglePassword()" width="24" height="24"
                                             viewBox="0 0 24 24" fill="none">
                                             <g clip-path="url(#clip0_2056_26496)">
                                                 <path

@@ -1,4 +1,5 @@
 const environment = {
     production: false,
-    apiUrl: 'https://localhost:44392/api/'
-};
+    // apiUrl: 'https://shtteruat.btprojects.in/apis'
+    apiUrl: 'https://localhost:44392/api'
+}

@@ -34,6 +34,8 @@ export class HeaderComponent {
   }
  
   logout() {
+    
+
     this.store.dispatch(AuthActions.logout());
   }
 

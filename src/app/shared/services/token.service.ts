@@ -39,6 +39,11 @@ export class TokenService {
     localStorage.removeItem(Constants.USERNAME);
   }
 
+
+  clearAll() {
+    localStorage.clear();
+  }
+
   isLoggedIn(): boolean {
     return !!this.getToken();
   }
