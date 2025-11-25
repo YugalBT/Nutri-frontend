@@ -18,7 +18,7 @@ export class CompanyService {
     return this.http.post(`${this.baseUrl}/Create`, model);
   }
 
-   updateCompany(model: Company): Observable<ApiResponse<any>> {
+  updateCompany(model: Company): Observable<ApiResponse<any>> {
      return this.http.post<ApiResponse<any>>(
        `${this.baseUrl}/Update`,
         model
@@ -42,20 +42,13 @@ export class CompanyService {
     );
   }
 
-getAllCompanies(): Observable<ApiResponse<any>> {
-  const filter = {
-    pageNo: 1,
-    recordPerPage: 10,
-    searchValue: "",
-    tenantId: "",
-    columnFilters: []
-  };
-
+getAllCompaniesPaginated(payload: any): Observable<ApiResponse<any>> {
   return this.http.post<ApiResponse<any>>(
     `${this.baseUrl}/GetAll`,
-    filter
+    payload
   );
 }
+
 
 
 }

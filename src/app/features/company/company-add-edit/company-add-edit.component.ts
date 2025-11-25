@@ -33,6 +33,7 @@ export class CompanyAddEditComponent implements OnInit {
   ngOnInit() {
     this.form = this.fb.group({
       // Company details
+      tenantId: [''],
       firstName: [''],
       middleName: [''],
       lastName: [''],
@@ -45,14 +46,12 @@ export class CompanyAddEditComponent implements OnInit {
       primaryColor: ['#1d7e8b'],
       secondaryColor: [''],
       companyName: [''],
-
       // Primary user details
       userFirstName: [''],
       userMiddleName: [''],
       userLastName: [''],
       userEmail: [''],
       userPhoneNumber: [''],
-
       // Address
       streetAddress: [''],
       city: [''],
