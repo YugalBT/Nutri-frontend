@@ -34,10 +34,15 @@ export class AppComponent implements OnInit {
     const user: User | null = JSON.parse(this.tokenService.getUserData() || 'null');
 
     if (token && user) {
-      // Restore session silently on app init — do not trigger success toast or navigation
-      this.store.dispatch(AuthActions.loginSuccess({ user, token, silent: true }));
-    }
-    else{
+      // If token expired, clear and logout
+      if (this.tokenService.isTokenExpired()) {
+        this.tokenService.clearAll();
+        this.store.dispatch(AuthActions.logout());
+      } else {
+        // Restore session silently on app init — do not trigger success toast or navigation
+        this.store.dispatch(AuthActions.loginSuccess({ user, token, silent: true }));
+      }
+    } else {
       this.store.dispatch(AuthActions.logout());
     }
   }

@@ -38,14 +38,13 @@ export class GlobalSearchComponent implements OnInit, OnDestroy {
         })
     );
 
-    this.subs.push(
-      this.statusControl.valueChanges.subscribe((status) => {
-        const s = (status === null || status === '' || status === undefined) ? null : Number(status);
-        this.statusChange.emit(s);
-        // also emit current search text so parent can react to combined change if needed
-        this.search.emit(this.searchControl.value || '');
-      })
-    );
+   this.subs.push(
+    this.statusControl.valueChanges.subscribe((status) => {
+    const s = status === '' ? null : Number(status);
+    this.statusChange.emit(s);
+  })
+);
+
   }
 
   doClear() {

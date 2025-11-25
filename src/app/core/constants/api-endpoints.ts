@@ -2,9 +2,11 @@
 export const API_ENDPOINTS = {
   AUTH: {
     LOGIN: '/Auth/login',
-    REGISTER: '/api/Auth/register',
-    FORGET_PASSWORD: '/api/Auth/ForgetPassword',
-    VERIFY_FORGET_PASSWORD: '/api/Auth/VerifyForgetPassword',
+    REGISTER: '/Auth/register',
+    FORGET_PASSWORD: '/Auth/ForgetPassword',
+    VERIFY_FORGET_PASSWORD: '/Auth/VerifyForgetPassword',
+    PROFILE_UPDATE: '/Auth/ProfileUpdate',
+
   },
 
   USERS: {
@@ -14,7 +16,20 @@ export const API_ENDPOINTS = {
     ACTIVE_INACTIVE: '/User/ActiveInActive',
     GET_ALL: '/User/GetAll',
   },
+
+ ROLE: {
+    CREATE: '/Role/Create',
+    UPDATE: '/Role/Update',
+    DELETE: '/Role/Delete',
+    ACTIVE_INACTIVE: '/Role/ActiveInActive',
+    GET_ALL: '/Role/GetAll',
+  },
+
   COMMON_API: {
     GET_ALL_ROLES: '/Common/GetAllRoles'
-  }
+  },
+  
+  Module: {
+    GET_ALL: '/Module/modules',
+  },
 };

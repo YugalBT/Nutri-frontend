@@ -21,6 +21,33 @@ export class TokenService {
     return localStorage.getItem(Constants.AUTHTOKEN);
   }
 
+  /**
+   * Decode JWT payload (no validation) and return parsed object or null
+   */
+  private decodePayload(token: string): any | null {
+    try {
+      const parts = token.split('.');
+      if (parts.length !== 3) return null;
+      const payload = parts[1];
+      const json = atob(payload.replace(/-/g, '+').replace(/_/g, '/'));
+      return JSON.parse(decodeURIComponent(escape(json)));
+    } catch (e) {
+      return null;
+    }
+  }
+
+  /**
+   * Returns true if token is expired (or invalid). Returns false when token is valid.
+   */
+  isTokenExpired(): boolean {
+    const token = this.getToken();
+    if (!token) return true;
+    const payload = this.decodePayload(token);
+    if (!payload || !payload.exp) return true;
+    const now = Math.floor(Date.now() / 1000);
+    return payload.exp <= now;
+  }
+
    getUserData(): string | null {
     return localStorage.getItem(Constants.USERDATA);
   }

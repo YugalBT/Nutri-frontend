@@ -9,7 +9,7 @@ export interface PaginationRequest {
   expiryDate: string | null;
   toDate: string | null;
   formDate: string | null;
-  status: number;
+  status: string | "";
   vendor: string;
   isOptionExpression: boolean;
   isPartnerEstimateInvoice: boolean;

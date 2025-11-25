@@ -1,63 +1,49 @@
-<div class="container mt-4 mb-4">
+<div class="container mt-4 mb-4" *ngIf="profileForm">
   <div class="card shadow-sm border-0 rounded-4 p-4">
 
-    <!-- Header -->
     <div class="d-flex align-items-center mb-4">
       <i class="bi bi-person-circle fs-2 me-3"></i>
-      <div>
-        <h4 class="mb-0 fw-bold">Update Profile</h4>
-      </div>
+      <h4 class="mb-0 fw-bold">Update Profile</h4>
     </div>
 
-    <!-- Personal Info Section -->
-    <div class="mb-4">
-     
+    <form [formGroup]="profileForm" (ngSubmit)="onSubmit()">
+
       <div class="row mt-3">
         <div class="col-md-4">
-          <label class="form-label">First Name <sup
-                                    style="color: #f00; font-size: 12px;">*</sup></label>
-          <input type="text" class="form-control" placeholder="Enter first name">
+          <label class="form-label">First Name *</label>
+          <input type="text" class="form-control" formControlName="firstName">
         </div>
-        <div class="col-md-4">
-          <label class="form-label">Middle Name <sup
-                                    style="color: #f00; font-size: 12px;">*</sup></label>
-          <input type="text" class="form-control" placeholder="Enter middle name">
-        </div>
-          <div class="col-md-4">
-          <label class="form-label">Last Name <sup
-                                    style="color: #f00; font-size: 12px;">*</sup></label>
-          <input type="text" class="form-control" placeholder="Enter last name">
-        </div>
-       
-      </div>
-    </div>
 
-    <!-- Contact Info Section -->
-    <div>
-     
+        <div class="col-md-4">
+          <label class="form-label">Middle Name</label>
+          <input type="text" class="form-control" formControlName="middleName">
+        </div>
+
+        <div class="col-md-4">
+          <label class="form-label">Last Name *</label>
+          <input type="text" class="form-control" formControlName="lastName">
+        </div>
+      </div>
 
       <div class="row mt-3">
         <div class="col-md-6">
-          <label class="form-label">Email <sup
-                                    style="color: #f00; font-size: 12px;">*</sup></label>
-          <input type="email" class="form-control" placeholder="example@domain.com">
+          <label class="form-label">Email (Not Editable) *</label>
+          <input type="email" class="form-control" formControlName="email" readonly>
         </div>
+
         <div class="col-md-6">
-          <label class="form-label">Phone Number <sup
-                                    style="color: #f00; font-size: 12px;">*</sup></label>
-          <input type="text" class="form-control" placeholder="+1(123) 456-7890">
+          <label class="form-label">Phone Number *</label>
+          <input type="text" class="form-control" formControlName="phone">
         </div>
       </div>
-    </div>
 
-    <!-- Buttons -->
-    <div class="d-flex justify-content-end mt-4">
-    
+      <div class="d-flex justify-content-end mt-4">
+        <button class="btn blue-btn px-4" type="submit">
+          <i class="bi bi-save2 me-2"></i> Update Profile
+        </button>
+      </div>
 
-      <button class="btn blue-btn px-4">
-        <i class="bi bi-save2 me-2"></i> Update Profile
-      </button>
-    </div>
+    </form>
 
   </div>
 </div>
