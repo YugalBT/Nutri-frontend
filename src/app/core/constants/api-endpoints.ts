@@ -8,7 +8,13 @@ export const API_ENDPOINTS = {
   },
 
   USERS: {
-    GET_ALL: '/api/Users',
-    GET_BY_ID: (id: number) => `/api/Users/${id}`,
+    CREATE: '/User/Create',
+    UPDATE: '/User/Update',
+    DELETE: '/User/Delete',
+    ACTIVE_INACTIVE: '/User/ActiveInActive',
+    GET_ALL: '/User/GetAll',
+  },
+  COMMON_API: {
+    GET_ALL_ROLES: '/Common/GetAllRoles'
   }
 };

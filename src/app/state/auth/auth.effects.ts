@@ -1,7 +1,9 @@
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { Router } from '@angular/router';
-import { catchError, map, of, switchMap, tap } from 'rxjs';
+import { catchError, map, of, switchMap, tap, finalize } from 'rxjs';
+import { from } from 'rxjs';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 import * as AuthActions from './auth.actions';
 import { AuthService } from '../../core/auth/auth.service';
@@ -23,12 +25,13 @@ export class AuthEffects {
   logout$;
   loginFailure$;
 
-  constructor(
+    constructor(
     private actions$: Actions,
     private authService: AuthService,
     private router: Router,
     private tokenService: TokenService,
-    private toast: ToastService
+    private toast: ToastService,
+    private spinner: NgxSpinnerService
   ) {
     // LOGIN EFFECT
     this.login$ = createEffect(() =>
@@ -50,8 +53,8 @@ export class AuthEffects {
               }
 
               return AuthActions.loginSuccess({
-                user: res.data,
-                token: res.data.token,
+                user: res?.data,
+                token: res?.data?.token,
               });
             }),
             catchError((error) =>
@@ -72,10 +75,8 @@ export class AuthEffects {
         this.actions$.pipe(
           ofType(AuthActions.loginSuccess),
           tap(({ user, token, silent }) => {
-            // Always persist token and user data, but only show toast / navigate
-            // when this is a real login (not a silent restore on app init).
             this.tokenService.setToken(token);
-            this.tokenService.setUserData(JSON.stringify(user)); // store object directly
+            this.tokenService.setUserData(JSON.stringify(user));
             this.tokenService.setUserName(user?.username ?? '');
 
             if (!silent) {
@@ -105,12 +106,16 @@ export class AuthEffects {
       () =>
         this.actions$.pipe(
           ofType(AuthActions.logout),
-          tap(() => {
-            this.tokenService.removeToken();
-            this.tokenService.removeUserData();
-            this.tokenService.removeUserUserName();
-
-            this.router.navigate(['/login']);
+          switchMap(() => {
+            // Show global spinner while logging out
+            this.spinner.show();
+            this.tokenService.clearAll();
+            
+            return from(this.router.navigate(['/login'])).pipe(
+              finalize(() => {
+                this.spinner.hide();
+              })
+            );
           })
         ),
       { dispatch: false }

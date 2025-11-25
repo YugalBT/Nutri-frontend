@@ -30,8 +30,7 @@ export class AppComponent implements OnInit {
   ) {}
   
     ngOnInit() {
-      this.spinner.show()
-    const token = this.tokenService.getToken();
+      const token = this.tokenService.getToken();
     const user: User | null = JSON.parse(this.tokenService.getUserData() || 'null');
 
     if (token && user) {

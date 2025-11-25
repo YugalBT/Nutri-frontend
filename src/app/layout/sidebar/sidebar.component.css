@@ -1,0 +1,54 @@
+/* Sidebar footer compact styling */
+.sidebar-footer {
+	position: absolute;
+	left: 16px;
+	right: 16px;
+	bottom: 16px;
+}
+
+.sidebar-footer-inner {
+	background: rgba(255,255,255,0.03);
+	border-radius: 10px;
+	padding: 6px;
+	display: flex;
+	align-items: center;
+}
+
+.sidebar-footer .btn-transparent {
+	background: transparent;
+	border: 0;
+	width: 100%;
+	text-align: left;
+}
+
+.sidebar-footer img.rounded-sm {
+	border-radius: 8px;
+	object-fit: cover;
+}
+
+.profile-right-content .small-name {
+	font-size: 13px;
+	font-weight: 600;
+	margin: 0;
+}
+
+.profile-right-content .small-role {
+	font-size: 11px;
+	color: #9aa3b2;
+	margin: 0;
+}
+
+.sidebar-footer .dropdown-menu {
+	min-width: 150px;
+	border-radius: 8px;
+	box-shadow: 0 10px 30px rgba(20,30,40,0.12);
+	padding: 6px 0;
+}
+
+.sidebar-footer .dropdown-item {
+	padding: 8px 14px;
+	font-size: 14px;
+}
+
+.sidebar-footer .drop-caret { opacity: 0.9 }
+
