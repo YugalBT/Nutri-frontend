@@ -151,6 +151,7 @@ export class CompanyListComponent implements OnInit, OnDestroy {
   private searchDebounce: any;
   private langSub: any;
   private subs: Subscription[] = [];
+  toastr: any;
 
   constructor(
     private translate: TranslateService,
@@ -256,15 +257,26 @@ export class CompanyListComponent implements OnInit, OnDestroy {
     this.loadCompanies(this.pageIndex + 1, this.pageSize);
   }
 
-  deleteCompany(row: any) {
-    if (confirm(`Are you sure you want to delete ${row.companyName}?`)) {
-      this.companyService.deleteCompany(row.tenantId).subscribe({
-        next: () => alert('Company deleted successfully'),
-        error: () => alert('Failed to delete company')
-      });
-    }
-  }
+  // deleteCompany(row: any) {
+  //   if (confirm(`Are you sure you want to delete ${row.companyName}?`)) {
+  //     this.companyService.deleteCompany(row.tenantId).subscribe({
+  //       next: () => alert('Company deleted successfully'),
+  //       error: () => alert('Failed to delete company')
+  //     });
+  //   }
+  // }
 
+deleteCompany(row: any) {
+  if (confirm(`Are you sure you want to delete ${row.companyName}?`)) {
+    this.companyService.deleteCompany(row.tenantId).subscribe({
+      next: () => {
+        this.toastr.success('Company deleted successfully');
+        this.loadCompanies(this.pageIndex + 1, this.pageSize);
+      },
+      error: () => this.toastr.error('Failed to delete company')
+    });
+  }
+}
   toggleCompanyStatus(event: any) {
     const row = event.row;
     const newStatus = event.isActive;

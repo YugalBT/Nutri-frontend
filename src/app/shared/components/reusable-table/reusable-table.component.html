@@ -14,7 +14,32 @@
       <tr *ngFor="let row of data">
         <td *ngFor="let col of columns; let i = index">
           <ng-container *ngIf="columnFields && columnFields[i]; else defaultCell">
-            <ng-container [ngSwitch]="columnFields[i]">
+           <!-- Master Switch -->
+     <ng-container [ngSwitch]="columnFields[i]">
+
+      <!-- Logo -->
+      <ng-container *ngSwitchCase="'logo'">
+        <img 
+          [src]="row?.logo"
+          style="width:40px; height:40px; border-radius:6px; object-fit:cover; background:#f3f3f3;" 
+        />
+      </ng-container>
+
+      <!-- Primary Color -->
+      <ng-container *ngSwitchCase="'primaryColor'">
+        <div
+          [style.backgroundColor]="row?.primaryColor"
+          style="
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            border: 1px solid #ccc;
+            display: inline-block;
+          ">
+        </div>
+  
+
+         </ng-container>
               <ng-container *ngSwitchCase="'isActive'">
                 <div class="form-check form-switch">
                   <input class="form-check-input" type="checkbox" [checked]="row?.isActive" (change)="toggleActive.emit({ row: row, isActive: $any($event.target).checked })">

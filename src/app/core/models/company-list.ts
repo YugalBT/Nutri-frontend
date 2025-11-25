@@ -6,6 +6,8 @@ export interface CompanyList {
   firstName: string;
   lastName: string;
   companyEmail: string;
+  companyPhoneNumber: string;
+  userEmail: string;
   userPhoneNumber: string;
   code: string;
   isActive: boolean;

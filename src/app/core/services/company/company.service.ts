@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { Company } from '../../models/company-add-edit';
 import { ApiResponse } from '../../models/api-response';
 import { HttpService } from '../../../shared/services/http.service';
@@ -49,6 +49,12 @@ getAllCompaniesPaginated(payload: any): Observable<ApiResponse<any>> {
   );
 }
 
+private companiesChangedSource = new Subject<void>();
+companiesChanged$ = this.companiesChangedSource.asObservable();
+
+notifyCompaniesChanged() {
+  this.companiesChangedSource.next();
+}
 
 
 }
