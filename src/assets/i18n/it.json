@@ -165,6 +165,14 @@
     "deleted": "Eliminato con successo!",
     "confirmDelete": "Sei sicuro di voler eliminare questo elemento?",
     "accessDenied": "Accesso negato",
-    "noPermission": "Non hai il permesso di eseguire questa azione"
+    "noPermission": "Non hai il permesso di eseguire questa azione",
+    "deleteConfirm": "Sei sicuro di voler eliminare questo elemento?",
+    "close": "Chiudi",
+    "all": "Tutti",
+    "actions": "Azioni",
+    "active": "Attivo",
+    "inactive": "Inattivo",
+    "search": "Cerca",
+    "loading": "Caricamento..."
   }
 }
