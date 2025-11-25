@@ -19,7 +19,7 @@ export class GlobalSearchComponent implements OnInit, OnDestroy {
   @Input() debounceTime = 300;
 
   @Output() search = new EventEmitter<string>();
-  @Output() statusChange = new EventEmitter<number | null>();
+  @Output() statusChange = new EventEmitter<string | null>();  
   @Output() clear = new EventEmitter<void>();
 
   searchControl = new FormControl('');
@@ -35,13 +35,11 @@ export class GlobalSearchComponent implements OnInit, OnDestroy {
         })
     );
 
-   this.subs.push(
-    this.statusControl.valueChanges.subscribe((status) => {
-    const s = status === '' ? null : Number(status);
-    this.statusChange.emit(s);
-  })
-);
-
+    this.subs.push(
+      this.statusControl.valueChanges.subscribe(val => {
+        this.statusChange.emit(val === '' ? null : val);
+      })
+    );
   }
 
   doClear() {
@@ -49,7 +47,7 @@ export class GlobalSearchComponent implements OnInit, OnDestroy {
     this.statusControl.setValue('');
     this.clear.emit();
     this.search.emit('');
-    this.statusChange.emit(null);
+    this.statusChange.emit(null);  // now valid
   }
 
   ngOnDestroy(): void {

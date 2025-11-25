@@ -6,7 +6,9 @@
       <h4 class="fw-semibold">Manage Users</h4>
       <app-global-search [label]="'users.searchFilters' | translate"
         [placeholder]="'users.searchPlaceholder' | translate" [showStatus]="true" (search)="onSearch($event)"
-        (clear)="clearFilters()">
+        (clear)="clearFilters()"
+         (statusChange)="onStatusChange($event)"
+        >
       </app-global-search>
 
     </div>

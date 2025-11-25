@@ -80,7 +80,7 @@ export class ListComponent implements OnInit, OnDestroy {
   this.subs.push(sub);
 }
 
-  // 🔹 Search
+
   onSearch(value: string): void {
     this.searchValue = value;
     this.pageIndex = 0;
@@ -88,12 +88,15 @@ export class ListComponent implements OnInit, OnDestroy {
   }
 
 
-  onStatusChange(value: any): void {
-    debugger;
-  this.filterStatus = (value === null || value === '') ? null : Number(value);
-  this.pageIndex = 0;
-  this.loadUsers(1, this.pageSize); 
+onStatusChange(status: string | null) {
+  if (status === '') {
+    this.filterStatus = null;
+  } else {
+    this.filterStatus = Number(status);
+  }
+  this.loadUsers(1, this.pageSize);
 }
+
 
 
 
