@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { Router } from '@angular/router';
-import { catchError, map, of, switchMap, tap, finalize } from 'rxjs';
-import { from } from 'rxjs';
+import { of, from } from 'rxjs';
+import { catchError, map, switchMap, tap, finalize } from 'rxjs/operators';
 import { NgxSpinnerService } from 'ngx-spinner';
 
 import * as AuthActions from './auth.actions';
@@ -10,20 +10,19 @@ import { AuthService } from '../../core/auth/auth.service';
 import { TokenService } from '../../shared/services/token.service';
 import { LoginRequest } from '../../core/models/login-request';
 import { ToastService } from '../../shared/services/toast.service';
+import { UpdateProfileService } from '../../core/services/profile/update-profile.service';
 
 @Injectable()
 
 export class AuthEffects {
-  /**
-   * LOGIN EFFECT
-   * - Uses switchMap to avoid concurrent login calls
-   * - Handles API validation more cleanly
-   */
-  // Effects will be created in the constructor so injected deps are available
+ 
   login$;
   loginSuccess$;
   logout$;
   loginFailure$;
+  updateProfile$;
+  refreshAuthUser$;
+  updateProfileSuccess$;
 
     constructor(
     private actions$: Actions,
@@ -31,7 +30,8 @@ export class AuthEffects {
     private router: Router,
     private tokenService: TokenService,
     private toast: ToastService,
-    private spinner: NgxSpinnerService
+    private spinner: NgxSpinnerService,
+    private updateProfileService: UpdateProfileService
   ) {
     // LOGIN EFFECT
     this.login$ = createEffect(() =>
@@ -110,7 +110,7 @@ export class AuthEffects {
             // Show global spinner while logging out
             this.spinner.show();
             this.tokenService.clearAll();
-            
+
             return from(this.router.navigate(['/login'])).pipe(
               finalize(() => {
                 this.spinner.hide();
@@ -120,6 +120,56 @@ export class AuthEffects {
         ),
       { dispatch: false }
     );
+
+
+        this.updateProfile$ = createEffect(() =>
+  this.actions$.pipe(
+    ofType(AuthActions.updateProfile),
+    switchMap(({ payload }) =>
+      this.updateProfileService.updateProfile(payload).pipe(
+        map((res) => {
+          if (res?.isSuccess) {
+            return AuthActions.updateProfileSuccess({ user: res.data });
+          }
+          return AuthActions.updateProfileFailure({ error: res.message });
+        }),
+        catchError((err) => of(AuthActions.updateProfileFailure({ error: err })))
+      )
+    )
+  )
+);
+
+
+    this.updateProfileSuccess$ = createEffect(
+  () =>
+    this.actions$.pipe(
+      ofType(AuthActions.updateProfileSuccess),
+      tap(({ user }) => {
+        this.tokenService.setUserData(JSON.stringify(user)); 
+        this.toast.success('Profile updated successfully!');
+      })
+    ),
+  { dispatch: false }
+);
+
+    this.refreshAuthUser$ = createEffect(() =>
+      this.actions$.pipe(
+        ofType(AuthActions.refreshAuthUser),
+        map(() => {
+          try {
+            const raw = this.tokenService.getUserData();
+            if (!raw) {
+              return AuthActions.refreshAuthUserFailure({ error: 'No user data available' });
+            }
+            const user = JSON.parse(raw);
+            return AuthActions.refreshAuthUserSuccess({ user });
+          } catch (e) {
+            return AuthActions.refreshAuthUserFailure({ error: e });
+          }
+        })
+      )
+    );
+
   }
 
 }

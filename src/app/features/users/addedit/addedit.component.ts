@@ -5,9 +5,9 @@ import { SharedModule } from '../../../shared/shared.module';
 import { TranslatePipe } from '../../../i18n/translate.pipe';
 import { RoleList } from '../../../core/models/rolelist';
 import { Subscription } from 'rxjs';
-import { UsersService } from '../../../core/services/users/user.service';
 import { CommonService } from '../../../shared/services/common.service';
 import { ToastService } from '../../../shared/services/toast.service';
+import { UsersService } from '../../../core/services/users/user.service';
 
 declare var bootstrap: any;
 
@@ -98,8 +98,11 @@ export class AddeditComponent implements OnInit, OnDestroy {
         isActive: data.isActive
       });
       this.currentUserId = data.userId;
+       this.form.get('password')?.clearValidators();
+    this.form.get('password')?.updateValueAndValidity();
     } else {
       this.currentUserId = null;
+      
     }
 
     this.modalInstance = new bootstrap.Modal(this.userModal.nativeElement);
@@ -114,6 +117,8 @@ export class AddeditComponent implements OnInit, OnDestroy {
 
  saveUser() {
   if (!this.form.valid) {
+      const payload = this.form.getRawValue();
+      delete payload.password;
     this.toast.warning('Please fill all required fields');
     return;
   }
@@ -144,8 +149,8 @@ export class AddeditComponent implements OnInit, OnDestroy {
 
   } else {
     const sub = this.usersService.createUser(payload).subscribe(res => {
-      if (res.isSuccess) {
-        this.toast.success('User created successfully');
+      if (res?.isSuccess) {
+        this.toast.success(res.message);
         this.afterSuccess();
       } else {
         this.toast.error(res.message || 'Creation failed');

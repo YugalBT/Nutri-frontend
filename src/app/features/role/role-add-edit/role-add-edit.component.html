@@ -1,64 +1,77 @@
-<!-- Reusable Bootstrap Modal for Add/Edit Role -->
 <div #roleModal class="modal fade" tabindex="-1" aria-hidden="true">
-  <div class="modal-dialog modal-xl modal-dialog-centered">
-    <div class="modal-content">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
 
-      <!-- Header -->
-      <div class="modal-header">
-        <h5 class="modal-title">{{ isEdit ? ('role.editRole' | translate) : ('role.addRole' | translate) }}</h5>
-        <button type="button"  class="btn-close" (click)="closeModal()"></button>
-      </div>
-
-      <!-- Body -->
-      <div class="modal-body">
-        <form [formGroup]="form">
-          <div class="row g-3 mb-3">
-            <div class="col-md-6">
-              <label class="form-label">{{ 'role.name' | translate }}</label>
-              <input type="text" formControlName="name" class="form-control" placeholder="{{ 'role.namePlaceholder' | translate }}">
+            <div class="modal-header">
+                <h5 class="modal-title">{{ isEditMode ? ('role.editRole' | translate) : ('role.addRole' | translate) }}</h5>
+                <button type="button" class="btn-close" (click)="closeModal()"></button>
             </div>
-          </div>
-        <div class="row g-3 mb-3">
-          <!-- Permissions Table (example) -->
-          <div class="table-responsive">
-            <table class="table table-bordered align-middle text-center">
-              <thead>
-                <tr>
-                  <th class="text-start">{{ 'role.table.modules' | translate }}</th>
-                  <th>{{ 'role.table.add' | translate }}</th>
-                  <th>{{ 'role.table.edit' | translate }}</th>
-                  <th>{{ 'role.table.view' | translate }}</th>
-                  <th>{{ 'role.table.delete' | translate }}</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr class="fw-bold bg-light">
-                  <td class="text-start">{{ 'role.emailConfiguration' | translate }}</td>
-                  <td><input type="checkbox" class="form-check-input"></td>
-                  <td><input type="checkbox" class="form-check-input"></td>
-                  <td><input type="checkbox" class="form-check-input"></td>
-                  <td><input type="checkbox" class="form-check-input"></td>
-                </tr>
-                <tr>
-                  <td class="ps-5 text-start">{{ 'role.smtpSetup' | translate }}</td>
-                  <td><input type="checkbox" class="form-check-input"></td>
-                  <td><input type="checkbox" class="form-check-input"></td>
-                  <td><input type="checkbox" class="form-check-input"></td>
-                  <td><input type="checkbox" class="form-check-input"></td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-</div>
-        </form>
-      </div>
 
-      <!-- Footer -->
-      <div class="modal-footer">
-        <button class="btn btn-light" (click)="closeModal()">{{ 'common.cancel' | translate }}</button>
-        <button class="btn blue-btn" (click)="saveRole()">{{ 'common.save' | translate }}</button>
-      </div>
+            <div class="modal-body">
+                <form [formGroup]="form">
 
+                    <div class="row g-3">
+                        <div class="col-12">
+                            <label class="form-label">{{ 'role.roleName' | translate }} <sup style="color: #f00; font-size: 12px;">*</sup></label>
+                            <input type="text" formControlName="roleName" class="form-control"
+                                placeholder="{{ 'role.roleNamePlaceholder' | translate }}"
+                                [disabled]="!canManageRoles">
+                        </div>
+                    </div>
+                    
+                    <div class="mt-4">
+                        <label class="fw-semibold">{{ 'role.permissions' | translate }}</label>
+                        
+                        <div *ngIf="modulesLoading" class="mt-3">
+                            <div class="spinner-border spinner-border-sm" role="status">
+                                <span class="visually-hidden">{{ 'common.loading' | translate }}</span>
+                            </div>
+                            <span class="ms-2">{{ 'common.loading' | translate }}</span>
+                        </div>
+
+                        <div *ngIf="modulesError && !modulesLoading" class="alert alert-danger mt-3">
+                            {{ modulesError }}
+                        </div>
+
+                        <div *ngIf="!modulesLoading && modules.length > 0" class="mt-3">
+                            <div class="module-permissions" *ngFor="let module of modules" class="mb-3">
+                                <div class="fw-bold text-primary mb-2">{{ module.moduleDisplayName || module.moduleName }}</div>
+                                <div class="ps-3" *ngFor="let permission of module.permissions">
+                                    <div class="form-check">
+                                        <input 
+                                            type="checkbox"
+                                            class="form-check-input"
+                                            [id]="'perm_' + permission.permissionId"
+                                            [checked]="isPermissionChecked(permission.permissionId)"
+                                            (change)="togglePermission(permission.permissionId)"
+                                            [disabled]="!canManageRoles || modulesLoading">
+                                        <label class="form-check-label" [for]="'perm_' + permission.permissionId">
+                                            {{ permission.modulePermissionDisplay }}
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div *ngIf="!modulesLoading && modules.length === 0" class="alert alert-warning mt-3">
+                            {{ 'role.noPermissionsAvailable' | translate }}
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn btn-outline-secondary" (click)="closeModal()">{{ 'common.cancel' | translate }}</button>
+                <button *appHasPermission="['AddRole','EditRole']" class="btn blue-btn" (click)="saveRole()" [disabled]="!canManageRoles || isLoading">
+                    <span *ngIf="!isLoading">{{ 'common.save' | translate }}</span>
+                    <span *ngIf="isLoading">
+                        <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                        {{ 'common.saving' | translate }}
+                    </span>
+                </button>
+            </div>
+
+        </div>
     </div>
-  </div>
 </div>

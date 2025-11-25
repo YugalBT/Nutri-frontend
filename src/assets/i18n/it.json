@@ -111,10 +111,24 @@
     }
   },
   "role": {
+    "role": "Ruolo",
+    "manage": "Gestisci ruoli",
     "addRole": "Aggiungi ruolo",
     "editRole": "Modifica ruolo",
-    "name": "Nome ruolo",
+    "roleName": "Nome del ruolo",
+    "roleNamePlaceholder": "Inserisci il nome del ruolo",
+    "name": "Nome del ruolo",
+    "description": "Descrizione",
+    "descriptionPlaceholder": "Inserisci la descrizione del ruolo",
     "namePlaceholder": "Inserisci il nome del ruolo",
+    "permissions": "Permessi",
+    "noPermissionsAvailable": "Nessun permesso disponibile",
+    "created": "Ruolo creato con successo!",
+    "updated": "Ruolo aggiornato con successo!",
+    "perm_view_users": "Visualizza utenti",
+    "perm_edit_users": "Modifica utenti",
+    "perm_delete_users": "Elimina utenti",
+    "perm_manage_roles": "Gestisci ruoli",
     "table": {
       "modules": "Moduli / Pagine",
       "add": "Aggiungi",
@@ -128,6 +142,20 @@
   "common": {
     "cancel": "Annulla",
     "save": "Salva",
-    "yes": "Sì"
+    "update": "Aggiorna",
+    "add": "Aggiungi",
+    "edit": "Modifica",
+    "delete": "Elimina",
+    "yes": "Sì",
+    "no": "No",
+    "status": "Stato",
+    "required": "Questo campo è obbligatorio",
+    "formInvalid": "Per favore compila tutti i campi obbligatori",
+    "saved": "Salvato con successo!",
+    "updated": "Aggiornato con successo!",
+    "deleted": "Eliminato con successo!",
+    "confirmDelete": "Sei sicuro di voler eliminare questo elemento?",
+    "accessDenied": "Accesso negato",
+    "noPermission": "Non hai il permesso di eseguire questa azione"
   }
 }

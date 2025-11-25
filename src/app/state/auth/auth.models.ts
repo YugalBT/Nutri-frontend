@@ -20,9 +20,16 @@ export interface User {
   isPasswordHash?: boolean | null;
   roles?: string[];
   menu?: any[];
+  permissions: Permission[]
+}
+export interface Permission {
+  permissionId: string
+  modulePermission: any
+  modulePermissionDisplay: string
 }
 
 export interface AuthResponse {
   token: string;
   user: User;
+  permissions: Permission[];
 }
