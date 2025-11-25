@@ -26,7 +26,9 @@ export const API_ENDPOINTS = {
   },
 
   COMMON_API: {
-    GET_ALL_ROLES: '/Common/GetAllRoles'
+    GET_ALL_ROLES: '/Common/GetAllRoles',
+    GET_ALL_NOTIFICATION: '/Common/GetAllNotification'
+
   },
   
   Module: {

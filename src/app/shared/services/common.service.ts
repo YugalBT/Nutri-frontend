@@ -21,5 +21,6 @@ export class CommonService {
   getModules(): Observable<ApiResponse<GetAllModulesResponse>> {
     return this.http.get<GetAllModulesResponse>(API_ENDPOINTS.Module.GET_ALL);
   }
+  
 
 }
