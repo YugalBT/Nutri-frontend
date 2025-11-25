@@ -153,6 +153,7 @@ export class CompanyListComponent implements OnInit, OnDestroy {
   private searchDebounce: any;
   private langSub: any;
   private subs: Subscription[] = [];
+  toastr: any;
 
   constructor(
     private translate: TranslateService,
