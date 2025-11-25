@@ -20,12 +20,70 @@
                   <input class="form-check-input" type="checkbox" [checked]="row?.isActive" (change)="toggleActive.emit({ row: row, isActive: $any($event.target).checked })">
                 </div>
               </ng-container>
-              <ng-container *ngSwitchDefault>
-                {{ formatCell(row, columnFields[i]) }}
+              <ng-container *ngIf="formatCell(row, columnFields[i]) as cell">
+                <ng-container [ngSwitch]="cell.type">
+                  <ng-container *ngSwitchCase="'color'">
+                    <div class="color-cell d-flex align-items-center gap-2">
+                      <span class="color-swatch" [style.background]="cell.value" aria-hidden="true"></span>
+                      <!-- <span class="color-hex">{{ cell.value }}</span> -->
+                    </div>
+                  </ng-container>
+                  <ng-container *ngSwitchCase="'images'">
+                    <ng-container *ngIf="cell.value && cell.value.length > 0; else noImage1">
+                      <div class="image-grid">
+                        <ng-container *ngFor="let img of cell.value">
+                          <div class="image-cell"><img [src]="img" alt="image" loading="lazy" (error)="onImgError($event)"/></div>
+                        </ng-container>
+                      </div>
+                    </ng-container>
+                    <ng-template #noImage1>
+                      <div class="image-grid">
+                        <div class="image-cell"><img src="/assets/image/no-image.png" alt="no image"/></div>
+                      </div>
+                    </ng-template>
+                  </ng-container>
+                  <ng-container *ngSwitchCase="'boolean'">
+                    <!-- {{ cell.value ? 'Active' : 'Inactive' }} -->
+                  </ng-container>
+                  <ng-container *ngSwitchDefault>
+                    {{ cell.value }}
+                  </ng-container>
+                </ng-container>
               </ng-container>
             </ng-container>
           </ng-container>
-          <ng-template #defaultCell>{{ row[col.toLowerCase()] }}</ng-template>
+          <ng-template #defaultCell>
+            <ng-container *ngIf="formatCell(row, col.toLowerCase()) as cell">
+              <ng-container [ngSwitch]="cell.type">
+                <ng-container *ngSwitchCase="'color'">
+                  <div class="color-cell d-flex align-items-center gap-2">
+                    <span class="color-swatch" [style.background]="cell.value" aria-hidden="true"></span>
+                    <span class="color-hex">{{ cell.value }}</span>
+                  </div>
+                </ng-container>
+                <ng-container *ngSwitchCase="'images'">
+                  <ng-container *ngIf="cell.value && cell.value.length > 0; else noImage2">
+                    <div class="image-grid">
+                      <ng-container *ngFor="let img of cell.value">
+                        <div class="image-cell"><img [src]="img" alt="image" loading="lazy" (error)="onImgError($event)"/></div>
+                      </ng-container>
+                    </div>
+                  </ng-container>
+                  <ng-template #noImage2>
+                    <div class="image-grid">
+                      <div class="image-cell"><img src="/assets/image/no-image.png" alt="no image"/></div>
+                    </div>
+                  </ng-template>
+                </ng-container>
+                <ng-container *ngSwitchCase="'boolean'">
+                  {{ cell.value ? 'Active' : 'Inactive' }}
+                </ng-container>
+                <ng-container *ngSwitchDefault>
+                  {{ cell.value }}
+                </ng-container>
+              </ng-container>
+            </ng-container>
+          </ng-template>
         </td>
         
         <!-- Action Buttons -->

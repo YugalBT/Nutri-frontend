@@ -1,54 +1,83 @@
-.global-search {
-  background: #fff;
+/* --- Modern Container --- */
+.global-search-modern {
+  background: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(10px);
+  border-radius: 14px;
 }
 
-.gs-label {
+/* --- Label --- */
+.gs-label-modern {
   font-size: 0.85rem;
   color: #6c757d;
+  letter-spacing: .3px;
 }
 
-.gs-input-group .form-control:focus,
-.gs-select:focus {
-  box-shadow: none;
-  border-color: #86b7fe;
+/* --- Search Wrapper --- */
+.search-wrapper-modern {
+  position: relative;
+  background: #fff;
+  border: 1px solid #e8e8e8;
+  border-radius: 12px;
+  padding: 8px 12px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  transition: box-shadow .25s ease;
 }
 
-.gs-icon {
+.search-wrapper-modern:hover,
+.search-wrapper-modern:focus-within {
+  box-shadow: 0 4px 15px rgba(0, 0, 0, .08);
+  border-color: #d0d0d0;
+}
+
+/* --- Search Input --- */
+.search-input-modern {
+  border: none;
+  outline: none;
+  flex: 1;
+  font-size: .92rem;
   background: transparent;
-  border-right: 0;
 }
 
-.gs-clear {
+/* --- Icons --- */
+.search-icon-modern {
+  font-size: 1rem;
+  color: #9aa0a6;
+}
+
+.clear-btn-modern {
   background: transparent;
-  border-left: 0;
+  border: none;
+  padding: 0;
+  cursor: pointer;
 }
 
-.gs-clear:hover i {
-  color: #000;
-}
-.global-search .input-group .form-control {
-  min-width: 180px;
+.clear-btn-modern i {
+  color: #c5c5c5;
+  font-size: .85rem;
 }
 
-/* Compact styling for the enhanced search */
-.gs-input-group { display:flex; align-items:center; }
-.gs-icon { display:inline-flex; align-items:center; justify-content:center; padding:6px 8px; color:var(--font-gray); }
-.gs-input { border-radius:8px 0 0 8px; }
-.gs-clear { border-radius:0 8px 8px 0; background:transparent; border:none; color:var(--font-gray); }
-.gs-select { border-radius:8px; padding:6px 12px; }
-
-/* Dark mode overrides (in case not caught globally) */
-:root.dark-mode .gs-icon, :root.dark-mode .gs-clear { color: var(--muted-text) !important; }
-:root.dark-mode .gs-input, :root.dark-mode .gs-select { background-color: var(--surface-color) !important; color:var(--text-color) !important; border:1px solid rgba(255,255,255,0.06) !important; }
-  padding-right: 2rem;
+.clear-btn-modern:hover i {
+  color: #ff4d4d;
 }
 
-.select-arrow {
-  position: absolute;
-  right: 10px;
-  top: 50%;
-  transform: translateY(-50%);
-  font-size: 0.7rem;
-  color: #6c757d;
-  pointer-events: none;
+/* --- Modern Select --- */
+.select-wrapper-modern {
+  position: relative;
+}
+
+.select-modern {
+  background: #fff;
+  border: 1px solid #e8e8e8;
+  border-radius: 12px;
+  padding: 7px 14px;
+  font-size: .9rem;
+  transition: box-shadow .2s ease;
+}
+
+.select-modern:hover,
+.select-modern:focus {
+  box-shadow: 0 4px 15px rgba(0, 0, 0, .08);
+  border-color: #cfcfcf;
 }

@@ -1,22 +1,40 @@
-<div class="container-fluid mt-4">
-  <div class="d-flex justify-content-between align-items-center mb-3">
-    <h2 class="fw-semibold">Manage Roles</h2>
-    <button class="btn blue-btn  d-flex align-items-center" (click)="roleAddEdit.openModal()">
-      <i class="bi bi-plus-circle me-2"></i> Add Role
+<div class="pagecls">
+
+  <!-- Page Header -->
+  <div class="page-header">
+    <div>
+      <h3 class="page-title">{{ 'role.Heading' | translate }}</h3>
+      <p class="page-subtitle">{{ 'role.manageDesc' | translate }}</p>
+    </div>
+
+    <button class="btn add-btn" (click)="roleAddEdit.openModal()">
+      <i class="bi bi-plus-lg me-2"></i>
+      {{ 'role.addRole' | translate }}
     </button>
   </div>
 
-  <div class="card shadow-sm border-0">
-    <div class="card-body">
-      <app-reusable-table
-        [columns]="['Company','Name','Description','Active']"
-        [data]="roles"
-        [showActions]="true"
-        (editRow)="roleAddEdit.openModal(true, $event)">
-      </app-reusable-table>
-    </div>
+  <!-- Filters Section -->
+  <div class="filters-card">
+    <app-global-search
+      [label]="'role.searchFilters' | translate"
+      [placeholder]="'role.searchPlaceholder' | translate"
+      [showStatus]="true"
+      (search)="onSearch($event)"
+      (clear)="clearFilters()">
+    </app-global-search>
   </div>
 
-  <!-- Reference Add/Edit Component -->
+  <!-- Table Section -->
+  <div class="table-card">
+    <app-reusable-table
+      [columns]="['Company', 'Name', 'Description', 'Active']"
+      [data]="roles"
+      [showActions]="true"
+      (editRow)="roleAddEdit.openModal(true, $event)">
+    </app-reusable-table>
+  </div>
+
+  <!-- Add/Edit Modal -->
   <app-role-add-edit #roleAddEdit></app-role-add-edit>
+
 </div>

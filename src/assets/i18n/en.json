@@ -1,5 +1,9 @@
 {
   "company": {
+    "searchFilters" : "Search Filters",
+    "searchPlaceholder": "Search by company name, code or phone",
+    "Heading": "Company Management",
+    "editCompany": "Edit Company",
     "details": "Company Details",
     "companyName": "Company Name",
     "code": "Code",
@@ -115,6 +119,9 @@
     }
   },
   "role": {
+    "searchFilters" : "Search Filters",
+    "searchPlaceholder": "Search by role name",
+    "Heading": "Role Management",
     "addRole": "Add Role",
     "editRole": "Edit Role",
     "name": "Role Name",
