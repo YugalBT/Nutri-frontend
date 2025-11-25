@@ -43,7 +43,8 @@ export class UserRoleAddEditComponent implements OnInit, OnDestroy {
   existingPermissionIds: Set<string> = new Set<string>();
   
   private subs: Subscription[] = [];
-  @Output() saved: EventEmitter<void> = new EventEmitter<void>();
+ @Output() roleSaved: EventEmitter<{ role: RoleItem, isEdit: boolean }> = new EventEmitter();
+
 
   constructor(
     private fb: FormBuilder,
@@ -182,7 +183,7 @@ export class UserRoleAddEditComponent implements OnInit, OnDestroy {
     const payload: any = {
       nameEn: this.form.get('roleName')?.value,
       nameIt: this.form.get('roleName')?.value,
-      rolePermissionId: checkedPermissions || []
+       rolePermissionId: this.getCheckedPermissions() 
     };
     if (this.isEditMode && this.roleId) {
       payload.roleId = this.roleId;
@@ -201,7 +202,14 @@ export class UserRoleAddEditComponent implements OnInit, OnDestroy {
           : this.translate.instant('role.created') || 'Role created successfully';
         this.toast.success(message);
         this.closeModal();
-        this.saved.emit();
+
+        const savedRole: RoleItem = {
+          roleId: response.roleId,
+          nameEn: payload.nameEn,
+          nameIt: payload.nameIt,
+          rolePermissionId: payload.rolePermissionId
+        };
+        this.roleSaved.emit({ role: null as any, isEdit: this.isEditMode }); 
       },
       error: (err) => {
         this.isLoading = false;
@@ -215,19 +223,20 @@ export class UserRoleAddEditComponent implements OnInit, OnDestroy {
 
 
   private getCheckedPermissions(): string[] {
-    const checkedPerms: string[] = [];
-    this.modules.forEach((module: Module) => {
-      if (module.permissions) {
-        module.permissions.forEach((permission) => {
-          const checkbox = document.getElementById(`perm_${permission.permissionId}`) as HTMLInputElement;
-          if (checkbox && checkbox.checked) {
-            checkedPerms.push(permission.permissionId);
-          }
-        });
-      }
-    });
-    return checkedPerms;
-  }
+  const checkedPerms: string[] = [];
+  this.modules.forEach((module: Module) => {
+    if (module.permissions) {
+      module.permissions.forEach((permission) => {
+        const checkbox = document.getElementById(`perm_${permission.permissionId}`) as HTMLInputElement;
+        if (checkbox && checkbox.checked) {
+          checkedPerms.push(permission.permissionId);
+        }
+      });
+    }
+  });
+  return checkedPerms;
+}
+
 
   private loadRole(roleId: string): void {
     const sub = this.roleService.getRoleById(roleId).subscribe({
@@ -247,7 +256,6 @@ export class UserRoleAddEditComponent implements OnInit, OnDestroy {
 
         setTimeout(() => {
           this.modules.forEach((module: Module) => {
-            debugger;
             module.permissions?.forEach((permission) => {
               const checkbox = document.getElementById(`perm_${permission.permissionId}`) as HTMLInputElement;
               if (checkbox) checkbox.checked = this.existingPermissionIds.has(permission.permissionId);

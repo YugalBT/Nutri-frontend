@@ -1,4 +1,4 @@
-<div #roleModal class="modal fade" tabindex="-1" aria-hidden="true" >
+<div #roleModal class="modal fade" tabindex="-1" aria-hidden="true">
     <!-- <div class="permission-matrix"> -->
     <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content">
@@ -16,7 +16,8 @@
 
                             <div class="col-md-12 col-12">
                                 <label class="form-label">{{ 'role.roleName' | translate }}</label>
-                                <input type="text" class="form-control mb-3" formControlName="roleName" placeholder="Enter role name">
+                                <input type="text" class="form-control mb-3" formControlName="roleName"
+                                    placeholder="Enter role name">
                                 <!-- Table Header -->
                                 <div class="pm-row pm-header">
                                     <div class="pm-module">Module</div>
@@ -65,8 +66,11 @@
                                     <div class="pm-action">
                                         <ng-container *ngIf="getPerm(module.permissions, 'delete') as p">
                                             <input type="checkbox" class="form-check-input pm-check"
+                                                [id]="'perm_' + p.permissionId"
                                                 [checked]="isPermissionChecked(p.permissionId)"
                                                 (change)="togglePermission(p.permissionId)" />
+
+
                                         </ng-container>
                                     </div>
 

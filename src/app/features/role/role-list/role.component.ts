@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ViewChild, AfterViewInit } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, AfterViewInit, output, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
@@ -25,7 +25,7 @@ import { GlobalSearchComponent } from '../../../shared/components/global-search/
   templateUrl: './role.component.html',
   styleUrls: ['./role.component.css']
 })
-export class RoleComponent implements OnInit, OnDestroy {
+export class RoleComponent implements OnInit, OnDestroy ,AfterViewInit{
   @ViewChild(UserRoleAddEditComponent) roleAddEditComp!: UserRoleAddEditComponent;
   roles: RoleItem[] = [];
   columns: string[] = [];
@@ -38,9 +38,10 @@ export class RoleComponent implements OnInit, OnDestroy {
   canManageRoles = false;
   canDeleteRoles = false;
   private subs: Subscription[] = [];
-  private langSub: any;
-  private childSubs: any[] = [];
-
+  //private langSub: any;
+  //private childSubs: any[] = [];
+ private langSub: Subscription | undefined; 
+  private childSubs: Subscription[] = []; 
   constructor(
     private store: Store,
     private translate: TranslateService,
@@ -68,6 +69,16 @@ export class RoleComponent implements OnInit, OnDestroy {
     this.loadRoles();
   }
 
+   ngAfterViewInit(): void {
+  if (this.roleAddEditComp) {
+    const sub = this.roleAddEditComp.roleSaved.subscribe(() => {
+      this.loadRoles();  
+    });
+    this.childSubs.push(sub);
+  }
+}
+
+
   private setColumns(): void {
     this.columns = [
       this.translate.instant('role.name') || 'Name',
@@ -82,7 +93,7 @@ export class RoleComponent implements OnInit, OnDestroy {
       pageNo: this.pageIndex + 1,
       recordPerPage: this.pageSize,
       status: 2,
-      searchValue: ''
+       searchValue: this.searchValue 
     };
 
     const sub = this.roleService.getRoles(payload).subscribe({
@@ -145,27 +156,33 @@ export class RoleComponent implements OnInit, OnDestroy {
     });
   }
 
-   onSearch(value: string) {    // 🔥 FIX 2: Strict string input
+  onSearch(value: string): void {
     this.searchValue = value;
-
-    // if (this.searchDebounce) clearTimeout(this.searchDebounce);
-
-    // this.searchDebounce = setTimeout(() => {
-    //   this.pageIndex = 0;
-    //  // this.loadCompanies(1, this.pageSize);
-    // }, 400);
+    this.pageIndex = 0;
+    this.loadRoles(); 
   }
- clearFilters() {
+  clearFilters(): void {
     this.searchValue = '';
     this.filterStatus = null;
     this.pageIndex = 0;
-    //this.loadCompanies(1, this.pageSize);
+    this.loadRoles(); 
   }
   onPageChange(event: { pageIndex: number; pageSize: number }): void {
     this.pageIndex = event.pageIndex;
     this.pageSize = event.pageSize;
     this.loadRoles();
   }
+  private updateRoleList(role: RoleItem, isEdit: boolean): void { 
+    if (isEdit) {
+      const index = this.roles.findIndex(r => r.roleId === role.roleId);
+      if (index !== -1) this.roles[index] = role;
+    } else {
+      this.roles.unshift(role);
+      this.totalRecords++;
+    }
+  }
+
+
 
   ngOnDestroy(): void {
     if (this.langSub) this.langSub.unsubscribe();
