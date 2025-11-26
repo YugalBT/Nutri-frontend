@@ -66,7 +66,8 @@ export class SidebarComponent implements OnInit {
           logo: authUser.logo || authUser.data?.logo || authUser?.user?.logo,
           firstName: authUser.firstName || authUser.data?.firstName || authUser?.user?.firstName,
           lastName: authUser.lastName || authUser.data?.lastName || authUser?.user?.lastName,
-          roles: authUser.roles || authUser.data?.roles || authUser?.user?.roles
+          roles: authUser.roles || authUser.data?.roles || authUser?.user?.roles,
+          email: authUser.email || authUser.data?.email || authUser?.user?.email
         };
         return;
       }

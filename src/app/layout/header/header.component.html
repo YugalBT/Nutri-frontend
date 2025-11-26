@@ -57,14 +57,14 @@
                             <div class="profile-right-content">
                                 <h3 class="mb-0">{{ user?.firstName }} {{ user?.lastName }}</h3>
                                 <!-- <p class="mb-0">{{ user?.roles?.[0] || 'User' }}</p> -->
-                                <p class="mb-0">Admin</p>
+                                <p class="mb-0">{{ user?.email }}</p>
 
                             </div>
                         </div>
                         <ng-template #guest>
-                            <div class="d-flex align-items-center gap-2">
+                            <div class="d-flex align-items-center gap-2 ">
                                 <img src="/assets/image/profile-image.png" alt="" width="40" height="40"
-                                    class="rounded-sm">
+                                    class="rounded-sm img-fluid">
                                 <div class="profile-right-content">
                                     <h3 class="mb-0">{{ 'header.guest' | translate }}</h3>
                                     <p class="mb-0">{{ 'header.visitor' | translate }}</p>

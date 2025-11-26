@@ -7,7 +7,7 @@
                             src="assets/image/small-logo.png">
 
                     </div>
-                    <!-- <div class="side-menus">
+                    <div class="side-menus">
                         <div class="side-menu-item">
                             <a routerLink="/dashboard" routerLinkActive="active" data-discover="true"><span
                                     class="side-item-icon">
@@ -21,7 +21,7 @@
 
                                 </span>{{ 'sidebar.dashboard' | translate }}</a>
                         </div> 
-                    </div> -->
+                    </div>
                 </div>
                 <div class="menu-scrollable">
                     <div class="side-menus mt-30">
@@ -32,14 +32,14 @@
                             <ng-container *ngIf="menuItems.length">
                                 <li class="side-menu-item" *ngFor="let item of menuItems">
                                     <a [routerLink]="item.url || '/'" data-discover="true">
-                                        <span class="side-item-icon" [innerHTML]="item.icon"> </span>
+                                        <span class="side-item-icon" [innerHTML]="item.safeIcon"> </span>
                                         {{ (('sidebar.' + (( item.roleDisplayName) | lowercase)) | translate)
                                         || (('menu.' + ((item.roleDisplayName) | lowercase)) | translate)
                                         || item.roleDisplayName || item.roleName }}
                                     </a>
                                 </li>
                             </ng-container>
-                            <li class="side-menu-item">
+                            <li class="side-menu-item" style="cursor: pointer;">
                                 <a (click)="logout()" data-discover="true"><span class="side-item-icon">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22"
                                             viewBox="0 0 24 24" fill="none" stroke="#D2D2D2" stroke-width="1.8"
@@ -63,7 +63,7 @@
 
             </div> -->
             <!-- Sidebar footer: profile dropdown -->
-            <div class="sidebar-footer">
+            <div class="sidebar-footer" (click)="logout()">
                 <div class="sidebar-footer-inner">
                     <div class="profile-footer w-100">
                         <button class="btn btn-logout w-100 d-flex align-items-center justify-content-between p-2"
@@ -73,8 +73,7 @@
                                     height="36" class="rounded-sm">
                                 <div class="profile-right-content">
                                     <h4 class="mb-0 small-name">{{ user?.firstName }} {{ user?.lastName }}</h4>
-                                    <p class="mb-0 small-role">{{ (user?.roles?.[0]) || ('header.visitor' | translate)
-                                        }}</p>
+                                    <p class="mb-0 small-role">{{ user?.email }}</p>
                                 </div>
                             </div>
                             <button class="btn btn-profile" (click)="openProfile($event)" title="My Profile"
