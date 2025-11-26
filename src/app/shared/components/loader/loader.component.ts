@@ -11,5 +11,5 @@ import { NgxSpinnerModule } from 'ngx-spinner';
   styleUrls: ['./loader.component.css']
 })
 export class LoaderComponent {
-constructor(public loader: LoaderService) {}
+  constructor(public loader: LoaderService) {}
 }
