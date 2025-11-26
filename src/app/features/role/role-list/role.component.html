@@ -20,6 +20,7 @@
       [placeholder]="'role.searchPlaceholder' | translate"
       [showStatus]="true"
       (search)="onSearch($event)"
+      (statusChange)="onStatusChange($event)"
       (clear)="clearFilters()">
     </app-global-search>
   </div>
@@ -36,7 +37,8 @@
       [pageSize]="pageSize"
       [pageIndex]="pageIndex"
       (pageChange)="onPageChange($event)"
-      (editRow)="roleAddEdit.openModal(true, $event)">
+      (editRow)="roleAddEdit.openModal(true, $event)"
+      (deleteRow)="onDeleteRole($event)">
     </app-reusable-table>
   </div>
 

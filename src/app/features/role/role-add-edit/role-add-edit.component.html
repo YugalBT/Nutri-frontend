@@ -39,6 +39,7 @@
                                     <div class="pm-action">
                                         <ng-container *ngIf="getPerm(module.permissions, 'view') as p">
                                             <input type="checkbox" class="form-check-input pm-check"
+                                                [id]="'perm_' + p.permissionId"
                                                 [checked]="isPermissionChecked(p.permissionId)"
                                                 (change)="togglePermission(p.permissionId)" />
                                         </ng-container>
@@ -48,6 +49,7 @@
                                     <div class="pm-action">
                                         <ng-container *ngIf="getPerm(module.permissions, 'add') as p">
                                             <input type="checkbox" class="form-check-input pm-check"
+                                                [id]="'perm_' + p.permissionId"
                                                 [checked]="isPermissionChecked(p.permissionId)"
                                                 (change)="togglePermission(p.permissionId)" />
                                         </ng-container>
@@ -57,6 +59,7 @@
                                     <div class="pm-action">
                                         <ng-container *ngIf="getPerm(module.permissions, 'edit') as p">
                                             <input type="checkbox" class="form-check-input pm-check"
+                                                [id]="'perm_' + p.permissionId"
                                                 [checked]="isPermissionChecked(p.permissionId)"
                                                 (change)="togglePermission(p.permissionId)" />
                                         </ng-container>

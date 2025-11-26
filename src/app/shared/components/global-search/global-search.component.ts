@@ -22,11 +22,11 @@ export class GlobalSearchComponent implements OnInit, OnDestroy {
   @Input() debounceTime = 300;
 
   @Output() search = new EventEmitter<string>();
-  @Output() statusChange = new EventEmitter<string | null>();  
+  @Output() statusChange = new EventEmitter<number | null>();
   @Output() clear = new EventEmitter<void>();
 
   searchControl = new FormControl('');
-  statusControl = new FormControl('');
+  statusControl = new FormControl<string | null>('');
   private subs: Subscription[] = [];
 
   ngOnInit(): void {
@@ -40,7 +40,12 @@ export class GlobalSearchComponent implements OnInit, OnDestroy {
 
     this.subs.push(
       this.statusControl.valueChanges.subscribe(val => {
-        this.statusChange.emit(val === '' ? null : val);
+        // Convert string to number or null
+        if (val === '' || val === null) {
+          this.statusChange.emit(null);
+        } else {
+          this.statusChange.emit(parseInt(val, 10));
+        }
       })
     );
   }
@@ -50,7 +55,7 @@ export class GlobalSearchComponent implements OnInit, OnDestroy {
     this.statusControl.setValue('');
     this.clear.emit();
     this.search.emit('');
-    this.statusChange.emit(null);  // now valid
+    this.statusChange.emit(null);
   }
 
   ngOnDestroy(): void {

@@ -3,8 +3,8 @@ import { FormArray, FormBuilder, FormGroup, Validators, ReactiveFormsModule } fr
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { Store } from '@ngrx/store';
-import { Subscription } from 'rxjs';
-import { take } from 'rxjs/operators';
+import { Subscription, interval, of } from 'rxjs';
+import { take, switchMap, filter, first } from 'rxjs/operators';
 import { TranslatePipe } from '../../../i18n/translate.pipe';
 import { HasPermissionDirective } from '../../../shared/has-permission.directive';
 import { TranslateService } from '../../../i18n/translate.service';
@@ -122,12 +122,20 @@ export class UserRoleAddEditComponent implements OnInit, OnDestroy {
         roleName: roleData.nameEn || roleData.nameIt || '',
         description: roleData.nameIt || ''
       });
-      if (this.roleId) {
-        this.loadRole(this.roleId);
+      
+      // If modules are already loaded, populate permissions immediately from roleData
+      if (this.modules && this.modules.length > 0) {
+        this.populatePermissionsFromRole(roleData);
+      } else {
+        // Wait for modules to finish loading, then populate permissions
+        const modulesSub = this.waitForModules().subscribe(() => {
+          this.populatePermissionsFromRole(roleData);
+        });
+        this.subs.push(modulesSub);
       }
-
     } else {
       this.form.reset();
+      this.existingPermissionIds.clear();
     }
     
     const element = this.roleModal?.nativeElement;
@@ -138,6 +146,30 @@ export class UserRoleAddEditComponent implements OnInit, OnDestroy {
   }
 
 
+  private populatePermissionsFromRole(roleData: RoleItem): void {
+    if (!roleData) return;
+    
+    this.existingPermissionIds.clear();
+    const perms = roleData.rolePermissionId || [];
+    perms.forEach((p: string) => {
+      if (p) this.existingPermissionIds.add(p);
+    });
+  }
+
+  
+  private waitForModules(): any {
+    if (this.modules && this.modules.length > 0) {
+      return of(null);
+    }
+    
+
+    return interval(50).pipe(
+      filter(() => this.modules && this.modules.length > 0),
+      first()
+    );
+  }
+
+
   closeModal(): void {
     if (this.modalInstance) {
       this.modalInstance.hide();
@@ -145,6 +177,7 @@ export class UserRoleAddEditComponent implements OnInit, OnDestroy {
     this.form.reset();
     this.roleId = null;
     this.isEditMode = false;
+    this.existingPermissionIds.clear();
   }
 
 
@@ -164,6 +197,7 @@ export class UserRoleAddEditComponent implements OnInit, OnDestroy {
     }
 
   saveRole(): void {
+   
     if (!this.canManageRoles) {
       this.toast.error(this.translate.instant('common.noPermission') || 'You do not have permission');
       return;
@@ -180,11 +214,13 @@ export class UserRoleAddEditComponent implements OnInit, OnDestroy {
 
     const checkedPermissions = this.getCheckedPermissions();
 
-    const payload: any = {
+    const payload: CreateUpdateRolePayload = {
       nameEn: this.form.get('roleName')?.value,
-      nameIt: this.form.get('roleName')?.value,
-       rolePermissionId: this.getCheckedPermissions() 
+      nameIt: this.form.get('description')?.value || this.form.get('roleName')?.value,
+      rolePermissionId: checkedPermissions || []
+
     };
+     console.log('Saving role...',payload);
     if (this.isEditMode && this.roleId) {
       payload.roleId = this.roleId;
     }
@@ -197,19 +233,20 @@ export class UserRoleAddEditComponent implements OnInit, OnDestroy {
       next: (response: any) => {
         this.isLoading = false;
         this.spinner.hide();
-        const message = this.isEditMode 
+        const message = this.isEditMode
           ? this.translate.instant('role.updated') || 'Role updated successfully'
           : this.translate.instant('role.created') || 'Role created successfully';
         this.toast.success(message);
         this.closeModal();
-
+        // extract actual role data from response
+        const respData = (response as any)?.data || response;
         const savedRole: RoleItem = {
-          roleId: response.roleId,
+          roleId: respData?.roleId || respData?.roleId || this.roleId || '',
           nameEn: payload.nameEn,
           nameIt: payload.nameIt,
-          rolePermissionId: payload.rolePermissionId
+          rolePermissionId: payload.rolePermissionId || []
         };
-        this.roleSaved.emit({ role: null as any, isEdit: this.isEditMode }); 
+        this.roleSaved.emit({ role: savedRole, isEdit: this.isEditMode });
       },
       error: (err) => {
         this.isLoading = false;
@@ -223,55 +260,8 @@ export class UserRoleAddEditComponent implements OnInit, OnDestroy {
 
 
   private getCheckedPermissions(): string[] {
-  const checkedPerms: string[] = [];
-  this.modules.forEach((module: Module) => {
-    if (module.permissions) {
-      module.permissions.forEach((permission) => {
-        const checkbox = document.getElementById(`perm_${permission.permissionId}`) as HTMLInputElement;
-        if (checkbox && checkbox.checked) {
-          checkedPerms.push(permission.permissionId);
-        }
-      });
-    }
-  });
-  return checkedPerms;
-}
-
-
-  private loadRole(roleId: string): void {
-    const sub = this.roleService.getRoleById(roleId).subscribe({
-      next: (res: any) => {
-        const data = (res as any)?.data as RoleItem || res as RoleItem;
-        if (!data) return;
-        this.form.patchValue({
-          roleName: data.nameEn || data.nameIt || '',
-        });
-
-        this.existingPermissionIds.clear();
-        const perms = data.rolePermissionId || [];
-        perms.forEach((p: string) => {
-          if (p) this.existingPermissionIds.add(p);
-        });
-
-
-        setTimeout(() => {
-          this.modules.forEach((module: Module) => {
-            module.permissions?.forEach((permission) => {
-              const checkbox = document.getElementById(`perm_${permission.permissionId}`) as HTMLInputElement;
-              if (checkbox) checkbox.checked = this.existingPermissionIds.has(permission.permissionId);
-            });
-          });
-        }, 20);
-      },
-      error: (err) => {
-        this.toast.error(this.translate.instant('common.error') || 'Error loading role');
-      }
-    });
-    this.subs.push(sub);
+    return Array.from(this.existingPermissionIds);
   }
-
- 
- 
 
   ngOnDestroy(): void {
     this.subs.forEach(s => s.unsubscribe());

@@ -1,12 +1,10 @@
-import { Component, OnInit, OnDestroy, ViewChild, AfterViewInit, output, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, AfterViewInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { Subscription } from 'rxjs';
 import { take } from 'rxjs/operators';
 import { ReusableTableComponent } from '../../../shared/components/reusable-table/reusable-table.component';
 import { TranslatePipe } from '../../../i18n/translate.pipe';
-import { HasPermissionDirective } from '../../../shared/has-permission.directive';
 import { UserRoleAddEditComponent } from '../role-add-edit/role-add-edit.component';
 import { AddEditRoleService } from '../../../core/services/role/add-edit-role.service';
 import { RoleItem } from '../../../core/models/add-edit-role';
@@ -21,7 +19,7 @@ import { GlobalSearchComponent } from '../../../shared/components/global-search/
 @Component({
   selector: 'app-role',
   standalone: true,
-  imports: [ReusableTableComponent, CommonModule, TranslatePipe, HasPermissionDirective, UserRoleAddEditComponent, GlobalSearchComponent],
+  imports: [ReusableTableComponent, CommonModule, TranslatePipe, UserRoleAddEditComponent, GlobalSearchComponent],
   templateUrl: './role.component.html',
   styleUrls: ['./role.component.css']
 })
@@ -31,16 +29,14 @@ export class RoleComponent implements OnInit, OnDestroy ,AfterViewInit{
   columns: string[] = [];
   columnFields: string[] = [];
   searchValue = '';
-  filterStatus: number | null = null;
+  statusFilter: number | null = null;
   totalRecords = 0;
   pageSize = 5;
   pageIndex = 0;
   canManageRoles = false;
   canDeleteRoles = false;
   private subs: Subscription[] = [];
-  //private langSub: any;
-  //private childSubs: any[] = [];
- private langSub: Subscription | undefined; 
+  private langSub: Subscription | undefined;
   private childSubs: Subscription[] = []; 
   constructor(
     private store: Store,
@@ -92,8 +88,8 @@ export class RoleComponent implements OnInit, OnDestroy ,AfterViewInit{
     const payload = {
       pageNo: this.pageIndex + 1,
       recordPerPage: this.pageSize,
-      status: 2,
-       searchValue: this.searchValue 
+      status: this.statusFilter ?? 2,
+      searchValue: this.searchValue
     };
 
     const sub = this.roleService.getRoles(payload).subscribe({
@@ -132,6 +128,7 @@ export class RoleComponent implements OnInit, OnDestroy ,AfterViewInit{
   }
 
   onDeleteRole(row: RoleItem): void {
+    debugger;
     if (!this.canDeleteRoles) {
       this.toast.error(this.translate.instant('common.noPermission') || 'No permission');
       return;
@@ -141,14 +138,22 @@ export class RoleComponent implements OnInit, OnDestroy ,AfterViewInit{
       this.translate.instant('common.confirmDelete') || `Delete role "${row.nameEn}"?`
     ).subscribe((result) => {
       if (result) {
-
+        this.spinner.show();
         const sub = this.roleService.deleteRole(row.roleId).subscribe({
-          next: () => {
-            this.toast.success(this.translate.instant('common.deleted') || 'Role deleted');
-            this.loadRoles();
+          next: (res: any) => {
+            this.spinner.hide();
+            if (res?.isSuccess || res?.isSuccess !== false) {
+              this.toast.success(this.translate.instant('common.deleted') || 'Role deleted successfully');
+              this.loadRoles();
+            } else {
+              this.toast.error(res?.message || this.translate.instant('common.error') || 'Delete failed');
+            }
           },
-          error: () => {
-            this.toast.error(this.translate.instant('common.error') || 'Delete failed');
+          error: (err: any) => {
+            this.spinner.hide();
+            const errMsg = err?.error?.message || err?.message || this.translate.instant('common.error') || 'Delete failed';
+            this.toast.error(errMsg);
+            console.error('Delete error:', err);
           }
         });
         this.subs.push(sub);
@@ -159,30 +164,25 @@ export class RoleComponent implements OnInit, OnDestroy ,AfterViewInit{
   onSearch(value: string): void {
     this.searchValue = value;
     this.pageIndex = 0;
-    this.loadRoles(); 
+    this.loadRoles();
   }
+
+  onStatusChange(status: number | null): void {
+    this.statusFilter = status;
+    this.pageIndex = 0;
+    this.loadRoles();
+  }
+
   clearFilters(): void {
     this.searchValue = '';
-    this.filterStatus = null;
     this.pageIndex = 0;
-    this.loadRoles(); 
+    this.loadRoles();
   }
   onPageChange(event: { pageIndex: number; pageSize: number }): void {
     this.pageIndex = event.pageIndex;
     this.pageSize = event.pageSize;
     this.loadRoles();
   }
-  private updateRoleList(role: RoleItem, isEdit: boolean): void { 
-    if (isEdit) {
-      const index = this.roles.findIndex(r => r.roleId === role.roleId);
-      if (index !== -1) this.roles[index] = role;
-    } else {
-      this.roles.unshift(role);
-      this.totalRecords++;
-    }
-  }
-
-
 
   ngOnDestroy(): void {
     if (this.langSub) this.langSub.unsubscribe();

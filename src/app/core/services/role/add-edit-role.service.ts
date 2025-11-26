@@ -12,30 +12,20 @@ export class AddEditRoleService {
 
   constructor(private http: HttpService) { }
 
-  getRoles(payload?: any): Observable<ApiResponse<any>> {
+  getRoles(payload?: any): Observable<ApiResponse<GetAllRolesResponse>> {
     return this.http.post<GetAllRolesResponse>(`${API_ENDPOINTS.ROLE?.GET_ALL}`, payload || {});
   }
-
-
-getRoleById(roleId: string): Observable<ApiResponse<GetAllRolesResponse>> {
-  const payload = { searchValue: roleId };
-  return this.http.post<GetAllRolesResponse>(`${API_ENDPOINTS.ROLE.GET_ALL}`, payload);
-}
-
-
-
 
   createRole(data: CreateUpdateRolePayload): Observable<ApiResponse<RoleItem>> {
     return this.http.post<RoleItem>(`${API_ENDPOINTS.ROLE?.CREATE}`, data);
   }
 
-
   updateRole(data: CreateUpdateRolePayload): Observable<ApiResponse<RoleItem>> {
     return this.http.post<RoleItem>(`${API_ENDPOINTS.ROLE?.UPDATE}`, data);
   }
 
- 
   deleteRole(roleId: string): Observable<ApiResponse<any>> {
-    return this.http.post<any>(`${API_ENDPOINTS.ROLE?.DELETE}?RoleId=${roleId}`, {});
+    const url = `${API_ENDPOINTS.ROLE?.DELETE}?RoleId=${encodeURIComponent(roleId)}`;
+    return this.http.post<any>(url, {});
   }
 }

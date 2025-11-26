@@ -32,7 +32,7 @@ export class ListComponent implements OnInit, OnDestroy {
   pageSize = 5;
   pageIndex = 0;
   searchValue = '';
-  filterStatus: number | null = 1;
+  filterStatus: number | null = 2;
 
   private subs: Subscription[] = [];
   private langSub: Subscription | undefined;
@@ -58,44 +58,44 @@ export class ListComponent implements OnInit, OnDestroy {
   }
 
   private loadUsers(pageNo: number, recordPerPage: number): void {
-  this.spinner.show();
+    this.spinner.show();
 
-  const payload: Partial<PaginationRequest> = {
-    searchValue: this.searchValue || '',
-    pageNo,
-    recordPerPage,
-    status: this.filterStatus === null ? '' : String(this.filterStatus)
-  };
+    const payload: any = {
+      pageNo,
+      recordPerPage,
+      filter: this.searchValue || '',
+      status: this.filterStatus
+    };
 
-  const sub = this.usersService.getUsers(payload)
-    .pipe(finalize(() => this.spinner.hide()))
-    .subscribe({
-      next: (res) => {
-        this.users = res?.data ?? [];
-        this.totalRecords = res?.totalRecords ?? 0;
-      },
-      error: () => this.users = []
-    });
+    const sub = this.usersService.getUsers(payload)
+      .pipe(finalize(() => this.spinner.hide()))
+      .subscribe({
+        next: (res) => {
+          this.users = res?.data ?? [];
+          this.totalRecords = res?.totalRecords ?? 0;
+        },
+        error: () => this.users = []
+      });
 
-  this.subs.push(sub);
-}
+    this.subs.push(sub);
+  }
 
 
   onSearch(value: string): void {
     this.searchValue = value;
     this.pageIndex = 0;
+    this.users = [];
     this.loadUsers(1, this.pageSize);
   }
 
 
-onStatusChange(status: string | null) {
-  if (status === '') {
-    this.filterStatus = null;
-  } else {
-    this.filterStatus = Number(status);
+  onStatusChange(status: number | null): void {
+    // Convert null (All) to 2 to match API expectation
+    this.filterStatus = status === null ? 2 : status;
+    this.pageIndex = 0;
+    this.users = [];
+    this.loadUsers(1, this.pageSize);
   }
-  this.loadUsers(1, this.pageSize);
-}
 
 
 
@@ -109,8 +109,9 @@ onStatusChange(status: string | null) {
 
   clearFilters(): void {
     this.searchValue = '';
-    this.filterStatus = null;
+    this.filterStatus = 2;
     this.pageIndex = 0;
+    this.users = [];
     this.loadUsers(1, this.pageSize);
   }
 
