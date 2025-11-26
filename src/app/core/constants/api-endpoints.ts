@@ -33,7 +33,6 @@ export const API_ENDPOINTS = {
   
   Module: {
     GET_ALL: '/Module/modules',
-  },
     GET_ALL_ROLES: '/Common/GetAllRoles'
   },
   

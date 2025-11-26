@@ -22,7 +22,6 @@ export class CompanyAddEditComponent implements OnInit {
   private modalInstance: any;
   form!: FormGroup;
   isEdit = false;
-  @Output() refreshList = new EventEmitter<void>();
 
   constructor(
   private fb: FormBuilder,
@@ -36,32 +35,33 @@ export class CompanyAddEditComponent implements OnInit {
     this.form = this.fb.group({
       // Company details
       tenantId: [''],
-      firstName: [''],
+      firstName: ['',Validators.required],
       middleName: [''],
-      lastName: [''],
-      code: [''],
-      suffix: [''],
-      url: [''],
-      email: [''],
-      phoneNumber: [''],
-      logo: [''],
-      primaryColor: ['#1d7e8b'],
+      lastName: ['', Validators.required],
+      code: ['', [Validators.required, Validators.minLength(3)]],
+      suffix: ['', Validators.required],
+      url: ['', Validators.required],
+    //  url: ['', [Validators.required, Validators.pattern(/^(https?:\/\/)?([\w.-]+)+[\w-]+(\/[\w-]*)*\/?$/)]],
+      email: ['', [Validators.required, Validators.email]],
+      PhoneNumber: ['', [Validators.required, Validators.pattern(/^[0-9]{10,15}$/)]],
+      logo: ['', Validators.required],
+      primaryColor: ['#1d7e8b', Validators.required],
       secondaryColor: [''],
-      companyName: [''],
+      companyName: ['', [Validators.required, Validators.pattern(/^[A-Za-z\s]+$/)]],
       // Primary user details
-      userFirstName: [''],
+      userFirstName: ['', Validators.required],
       userMiddleName: [''],
-      userLastName: [''],
-      userEmail: [''],
-      userPhoneNumber: [''],
+      userLastName: ['', Validators.required],
+      userEmail: ['', [Validators.required, Validators.email]],
+      userPhoneNumber: ['', [Validators.required, Validators.pattern(/^[0-9]{10,15}$/)]],
       // Address
-      streetAddress: [''],
-      city: [''],
-      country: [''],
-      zipCode: [''],
+      streetAddress: ['', Validators.required],
+      city: ['', Validators.required],
+      country: ['', Validators.required],
+      zipCode: ['', Validators.required],
 
       // Account
-      password: [''],
+      password: ['', [Validators.required, Validators.minLength(8)]],
 
       // legacy fields
       name: [''],

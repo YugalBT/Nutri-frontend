@@ -132,7 +132,6 @@ import { ToastService } from '../../../shared/services/toast.service';
     ReusableTableComponent,
     TranslatePipe,
     GlobalSearchComponent  ,
-        // ✅ FIX 1: Added missing import
   ],
   templateUrl: './company-list.component.html',
   styleUrls: ['./company-list.component.css']
@@ -173,17 +172,19 @@ export class CompanyListComponent implements OnInit, OnDestroy {
   });
 }
 
+
   private setColumns() {
     this.columns = [
-      'Logo',
-      'Site Color',
-      'Company Name',
-      'Name',
-      'Email',
-      'Phone',
-      'Code',
-      'Status'
-    ];
+    this.translate.instant('company.columns.logo') || 'Logo',
+    this.translate.instant('company.columns.siteColor') || 'Site Color',
+    this.translate.instant('company.columns.companyName') || 'Company Name',
+    this.translate.instant('company.columns.firstName') || 'Name',
+    this.translate.instant('company.columns.email') || 'Email',
+    this.translate.instant('company.columns.phone') || 'Phone Number',
+    this.translate.instant('company.columns.code') || 'Code',
+    this.translate.instant('company.columns.status') || 'Status',
+    //this.translate.instant('company.columns.actions') || 'Actions'
+  ];
 
     this.columnFields = [
       'logo',
@@ -231,10 +232,8 @@ export class CompanyListComponent implements OnInit, OnDestroy {
     this.subs.push(sub);
   }
 
-  // ------------------------------------
-  // SEARCH (FIXED to accept string only)
-  // ------------------------------------
-  onSearch(value: string) {    // 🔥 FIX 2: Strict string input
+
+  onSearch(value: string) {   
     this.searchValue = value;
 
     if (this.searchDebounce) clearTimeout(this.searchDebounce);
