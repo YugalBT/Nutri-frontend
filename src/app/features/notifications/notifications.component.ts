@@ -1,27 +1,68 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { ReusableTableComponent } from '../../shared/components/reusable-table/reusable-table.component';
+import { NotificationService } from '../../core/services/notification/notification.service';
+import { NotificationList } from '../../core/models/notification-list';
+import { GlobalSearchComponent } from '../../shared/components/global-search/global-search.component';
 
 @Component({
   selector: 'app-notifications',
   standalone: true,
-  imports: [ReusableTableComponent],
+  imports: [CommonModule, FormsModule, ReusableTableComponent, GlobalSearchComponent],
   templateUrl: './notifications.component.html',
   styleUrls: ['./notifications.component.css']
 })
-export class NotificationsComponent {
+export class NotificationsComponent implements OnInit {
 
-   columns: string[] = [
-    'Title',
-    'Description',
-    'Create Date'
-  ];
+  columns: string[] = ['Title', 'Description', 'Create Date', 'Type'];
+  columnFields: string[] = ['title', 'description', 'createdDate', 'type']; // for reusable table
+  notificationsData: any[] = [];
+  filteredData: any[] = [];
+  loading = false;
 
-  notificationsData = [
-    { title: 'Tenant', description: 'Tenant Pichai created.', date: '11-12-2025' },
-    { title: 'Estimate', description: 'Estimate Created.', date: '10-01-2025' },
-    { title: 'Tenant', description: 'Tenant profile updated.', date: '10-10-2025' },
-    { title: 'Tenant', description: 'GHL User Created.', date: '07-09-2025' },
-    { title: 'Estimate', description: 'Estimate Created.', date: '08-04-2025' },
-    { title: 'Tenant', description: 'Tester GHL Tenant Created.', date: '07-05-2025' },
-  ];
+  constructor(private notificationService: NotificationService) { }
+
+  ngOnInit(): void {
+    this.loadNotifications();
+  }
+
+  loadNotifications(): void {
+    this.loading = true;
+    this.notificationService.getNotificationList().subscribe({
+      next: (res) => {
+        if (res.isSuccess && Array.isArray(res.data)) {
+          this.notificationsData = res.data.map((n: NotificationList) => ({
+            title: n.subject,
+            description: n.body,
+            createdDate: n.createdDate ? new Date(n.createdDate).toLocaleDateString() : '',
+            type: n.type
+          }));
+        } else {
+          this.notificationsData = [];
+        }
+        this.filteredData = [...this.notificationsData];
+        this.loading = false;
+      },
+      error: (err) => {
+        console.error('Error fetching notifications:', err);
+        this.loading = false;
+      }
+    });
+  }
+
+  onSearch(searchText: string): void {
+    const search = searchText.toLowerCase();
+    if (!search) {
+      this.filteredData = [...this.notificationsData];
+    } else {
+      this.filteredData = this.notificationsData.filter(n =>
+        Object.values(n).some(val => val?.toString().toLowerCase().includes(search))
+      );
+    }
+  }
+
+  clearFilters(): void {
+    this.filteredData = [...this.notificationsData];
+  }
 }

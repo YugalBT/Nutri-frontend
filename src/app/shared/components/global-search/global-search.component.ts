@@ -3,23 +3,26 @@ import { CommonModule } from '@angular/common';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
+import { TranslateService } from '../../../i18n/translate.service';
+import { TranslatePipe } from '../../../i18n/translate.pipe';
 
 @Component({
   selector: 'app-global-search',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, TranslatePipe],
   templateUrl: './global-search.component.html',
   styleUrls: ['./global-search.component.css']
 })
 export class GlobalSearchComponent implements OnInit, OnDestroy {
 
+  constructor(private translate: TranslateService) {}
   @Input() label: string = 'Search';
   @Input() placeholder = 'Enter keyword';
   @Input() showStatus = false;
   @Input() debounceTime = 300;
 
   @Output() search = new EventEmitter<string>();
-  @Output() statusChange = new EventEmitter<number | null>();
+  @Output() statusChange = new EventEmitter<string | null>();  
   @Output() clear = new EventEmitter<void>();
 
   searchControl = new FormControl('');
@@ -36,11 +39,8 @@ export class GlobalSearchComponent implements OnInit, OnDestroy {
     );
 
     this.subs.push(
-      this.statusControl.valueChanges.subscribe((status) => {
-        const s = (status === null || status === '' || status === undefined) ? null : Number(status);
-        this.statusChange.emit(s);
-        // also emit current search text so parent can react to combined change if needed
-        this.search.emit(this.searchControl.value || '');
+      this.statusControl.valueChanges.subscribe(val => {
+        this.statusChange.emit(val === '' ? null : val);
       })
     );
   }
@@ -50,7 +50,7 @@ export class GlobalSearchComponent implements OnInit, OnDestroy {
     this.statusControl.setValue('');
     this.clear.emit();
     this.search.emit('');
-    this.statusChange.emit(null);
+    this.statusChange.emit(null);  // now valid
   }
 
   ngOnDestroy(): void {

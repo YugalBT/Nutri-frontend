@@ -48,6 +48,11 @@
                                 <input type="file" class="form-control" (change)="onLogoChange($event)" accept="image/*">
                             </div>
 
+                            <div class="col-md-6 col-12">
+                                <label class="form-label"></label>
+                                <img class="form-control" [src]="this.form.get('logo')?.value || '/assets/image/placeholder-image.png'" alt="Logo Preview" style="max-height: 80px; max-width: 150px; object-fit: contain;">
+                            </div>
+
                             <div class="col-12 mt-3">
                                 <h5 class="mb-3">{{ 'company.primaryUser' | translate }}</h5>
                             </div>

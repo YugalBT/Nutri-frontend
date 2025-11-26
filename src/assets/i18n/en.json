@@ -1,5 +1,9 @@
 {
   "company": {
+    "searchFilters" : "Search Filters",
+    "searchPlaceholder": "Search by company name, code or phone",
+    "Heading": "Company Management",
+    "editCompany": "Edit Company",
     "details": "Company Details",
     "companyName": "Company Name",
     "code": "Code",
@@ -83,6 +87,9 @@
     "logoutSuccess": "Logout successful!"
   },
   "users": {
+    "searchFilters" : "Search Filters",
+    "searchPlaceholder": "Search by name, email or phone",
+    "Heading": "User Management",
     "manage": "Manage Users",
     "addUser": "Add User",
     "editUser": "Edit User",
@@ -102,6 +109,8 @@
     "passwordPlaceholder": "Enter password",
     "roles": { "admin": "Admin" },
     "columns": {
+      "firstName": "First Name",
+      "lastName": "Last Name",
       "name": "Name",
       "email": "Email",
       "phone": "Phone Number",
@@ -112,10 +121,27 @@
     }
   },
   "role": {
+    "searchFilters" : "Search Filters",
+    "searchPlaceholder": "Search by role name",
+    "Heading": "Role Management",
+    "role": "Role",
+    "manage": "Manage Roles",
     "addRole": "Add Role",
     "editRole": "Edit Role",
+    "roleName": "Role Name",
+    "roleNamePlaceholder": "Enter role name",
     "name": "Role Name",
+    "description": "Description",
+    "descriptionPlaceholder": "Enter role description",
     "namePlaceholder": "Enter role name",
+    "permissions": "Permissions",
+    "noPermissionsAvailable": "No permissions available",
+    "created": "Role created successfully!",
+    "updated": "Role updated successfully!",
+    "perm_view_users": "View Users",
+    "perm_edit_users": "Edit Users",
+    "perm_delete_users": "Delete Users",
+    "perm_manage_roles": "Manage Roles",
     "table": {
       "modules": "Modules / Pages",
       "add": "Add",
@@ -129,6 +155,29 @@
   "common": {
     "cancel": "Cancel",
     "save": "Save",
-    "yes": "Yes"
+    "update": "Update",
+    "add": "Add",
+    "edit": "Edit",
+    "delete": "Delete",
+    "yes": "Yes",
+    "no": "No",
+    "status": "Status",
+    "required": "This field is required",
+    "formInvalid": "Please fill all required fields",
+    "saved": "Saved successfully!",
+    "updated": "Updated successfully!",
+    "deleted": "Deleted successfully!",
+    "confirmDelete": "Are you sure you want to delete this item?",
+    "accessDenied": "Access denied",
+    "noPermission": "You do not have permission to perform this action",
+    "close": "Close",
+    "all": "All",
+    "create": "Create",
+    "actions": "Actions",
+    "active": "Active",
+    "inactive": "Inactive",
+    "search": "Search",
+    "reset": "Reset",
+    "loading": "Loading..."
   }
 }

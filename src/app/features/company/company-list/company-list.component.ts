@@ -122,6 +122,7 @@ import { finalize } from 'rxjs/operators';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ApiResponse } from '../../../core/models/api-response';
 import { GlobalSearchComponent } from '../../../shared/components/global-search/global-search.component';
+import { ToastService } from '../../../shared/services/toast.service';
 
 @Component({
   selector: 'app-company-list',
@@ -130,7 +131,8 @@ import { GlobalSearchComponent } from '../../../shared/components/global-search/
     CompanyAddEditComponent,
     ReusableTableComponent,
     TranslatePipe,
-    GlobalSearchComponent      // ✅ FIX 1: Added missing import
+    GlobalSearchComponent  ,
+        // ✅ FIX 1: Added missing import
   ],
   templateUrl: './company-list.component.html',
   styleUrls: ['./company-list.component.css']
@@ -156,7 +158,8 @@ export class CompanyListComponent implements OnInit, OnDestroy {
   constructor(
     private translate: TranslateService,
     private companyService: CompanyService,
-    private spinner: NgxSpinnerService
+    private spinner: NgxSpinnerService,
+    private toast: ToastService
   ) {
     this.setColumns();
     this.langSub = this.translate.lang$.subscribe(() => this.setColumns());
@@ -261,26 +264,19 @@ export class CompanyListComponent implements OnInit, OnDestroy {
     this.loadCompanies(this.pageIndex + 1, this.pageSize);
   }
 
-  // deleteCompany(row: any) {
-  //   if (confirm(`Are you sure you want to delete ${row.companyName}?`)) {
-  //     this.companyService.deleteCompany(row.tenantId).subscribe({
-  //       next: () => alert('Company deleted successfully'),
-  //       error: () => alert('Failed to delete company')
-  //     });
-  //   }
-  // }
-
-deleteCompany(row: any) {
-  if (confirm(`Are you sure you want to delete ${row.companyName}?`)) {
-    this.companyService.deleteCompany(row.tenantId).subscribe({
-      next: () => {
-        this.toastr.success('Company deleted successfully');
-        this.loadCompanies(this.pageIndex + 1, this.pageSize);
-      },
-      error: () => this.toastr.error('Failed to delete company')
-    });
+  deleteCompany(row: any) {
+    if (confirm(`Are you sure you want to delete ${row.companyName}?`)) {
+      this.companyService.deleteCompany(row.tenantId).subscribe({
+        next: () => {
+          this.toast.success('Company deleted successfully');
+          this.loadCompanies(1, this.pageSize);
+        },
+        
+        error: () => this.toast.error('Failed to delete company')
+      });
+    }
   }
-}
+
   toggleCompanyStatus(event: any) {
     const row = event.row;
     const newStatus = event.isActive;
@@ -288,8 +284,10 @@ deleteCompany(row: any) {
     this.companyService.ativeInactiveCompanyStatus(row.tenantId, newStatus).subscribe({
       next: () => {
         row.isActive = newStatus;
+        this.toast.success('Status updated successfully');
+         this.loadCompanies(this.pageIndex + 1, this.pageSize);
       },
-      error: () => alert("Failed to update status")
+      error: () => this.toast.error("Failed to update status")
     });
   }
 

@@ -1,109 +1,48 @@
-<!-- <div class="container-fluid mt-4">
-    <div class="d-flex justify-content-between align-items-center mb-3">
-    <h4 class="fw-semibold">{{ 'company.manage' | translate }}</h4>
-    <button class="btn blue-btn d-flex align-items-center" (click)="companyAddEdit.openModal()">
-      <i class="bi bi-plus-circle me-2"></i> {{ 'company.addCompany' | translate }}
+<div class="pagecls">
+
+  <!-- Page Header -->
+  <div class="page-header">
+    <div>
+      <h3 class="page-title">{{ 'company.Heading' | translate }}</h3>
+      <p class="page-subtitle">{{ 'company.manageDesc' | translate }}</p>
+    </div>
+
+    <button class="btn add-btn" (click)="companyAddEdit.openModal()">
+      <i class="bi bi-plus-lg me-2"></i>
+      {{ 'company.addCompany' | translate }}
     </button>
   </div>
 
-  <div class="card shadow-sm border-0">
-    <div class="card-body">
-      <app-reusable-table
-        [columns]="columns"
-        [columnFields]="columnFields"
-        [data]="companies"
-        [showActions]="true"
-        (toggleActive)="toggleCompanyStatus($event)"
-        (editRow)="companyAddEdit.openModal(true, $event)"
-        (deleteRow)="deleteCompany($event)">
-      </app-reusable-table>
-    </div>
+  <!-- Filters Section -->
+  <div class="filters-card">
+    <app-global-search
+      [label]="'company.searchFilters' | translate"
+      [placeholder]="'company.searchPlaceholder' | translate"
+      [showStatus]="true"
+      (search)="onSearch($event)"
+      (clear)="clearFilters()">
+    </app-global-search>
   </div>
 
-    <div class="card shadow-sm border-0">
-    <div class="card-body">
-      <app-reusable-table [columns]="columns" [showActions]="true" [data]="users" [columnFields]="columnFields"
-        [pageable]="true" (toggleActive)="onToggleActive($event)" (deleteRow)="onDelete($event)"
-        [totalRecords]="totalRecords" [pageSize]="pageSize" [pageIndex]="pageIndex" (pageChange)="onPageChange($event)"
-        (editRow)="companyAddEdit.openModal(true, $event)">
-      </app-reusable-table>
-    </div>
-  </div>
-  <app-company-add-edit #companyAddEdit></app-company-add-edit>
-</div> -->
-
-<!-- <div class="container-fluid mt-4">
-  <div class="d-flex justify-content-between align-items-center mb-3">
-    <h4 class="fw-semibold">{{ 'company.manage' | translate }}</h4>
-    <button class="btn blue-btn d-flex align-items-center" (click)="companyAddEdit.openModal()">
-      <i class="bi bi-plus-circle me-2"></i> {{ 'company.addCompany' | translate }}
-    </button>
+  <!-- Table Section -->
+  <div class="table-card">
+    <app-reusable-table
+      [columns]="columns"
+      [columnFields]="columnFields"
+      [data]="companies"
+      [showActions]="true"
+      [pageable]="true"
+      [totalRecords]="totalRecords"
+      [pageSize]="pageSize"
+      [pageIndex]="pageIndex"
+      (pageChange)="onPageChange($event)"
+      (toggleActive)="toggleCompanyStatus($event)"
+      (editRow)="companyAddEdit.openModal(true, $event)"
+      (deleteRow)="deleteCompany($event)">
+    </app-reusable-table>
   </div>
 
-  <div class="card shadow-sm border-0">
-    <div class="card-body">
-      <app-reusable-table
-        [columns]="columns"
-        [columnFields]="columnFields"
-        [data]="companies"
-        [showActions]="true"
-        [pageable]="true"
-        [totalRecords]="totalRecords"
-        [pageSize]="pageSize"
-        [pageIndex]="pageIndex"
-        (pageChange)="onPageChange($event)"
-        (toggleActive)="toggleCompanyStatus($event)"
-        (editRow)="companyAddEdit.openModal(true, $event)"
-        (deleteRow)="deleteCompany($event)">
-      </app-reusable-table>
-    </div>
-  </div>
-
-  <app-company-add-edit #companyAddEdit></app-company-add-edit>
-</div> -->
-
-<div class="container-fluid mt-4">
-
-  <!-- Search + Add Button -->
-  <div class="row mb-3">
-    <div class="col-8">
-      <app-global-search
-        [label]="'company.searchFilters' | translate"
-        [placeholder]="'company.searchPlaceholder' | translate"
-        [showStatus]="true"
-        (search)="onSearch($event)"
-        (clear)="clearFilters()">
-      </app-global-search>
-    </div>
-
-    <div class="col-4 text-end">
-      <button class="btn blue-btn" (click)="companyAddEdit.openModal()">
-        {{ 'company.addCompany' | translate }}
-      </button>
-    </div>
-  </div>
-
-  <!-- Company Table -->
-  <div class="card shadow-sm border-0">
-    <div class="card-body">
-      <app-reusable-table
-        [columns]="columns"
-        [columnFields]="columnFields"
-        [data]="companies"
-        [showActions]="true"
-        [pageable]="true"
-        [totalRecords]="totalRecords"
-        [pageSize]="pageSize"
-        [pageIndex]="pageIndex"
-        (pageChange)="onPageChange($event)"
-        (toggleActive)="toggleCompanyStatus($event)"
-        (editRow)="companyAddEdit.openModal(true, $event)"
-        (deleteRow)="deleteCompany($event)">
-      </app-reusable-table>
-    </div>
-  </div>
-
-  <!-- Add/Edit Modal -->
+  <!-- Modal -->
   <app-company-add-edit #companyAddEdit></app-company-add-edit>
 
 </div>

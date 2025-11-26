@@ -10,6 +10,7 @@ import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from
 })
 export class ReusableTableComponent implements OnChanges {
 
+  NoImagePath: string = '/assets/image/no-image.png';
    @Input() columns: string[] = [];
   /** Optional array of data field keys corresponding to `columns` (same length). If provided, the table
    * will read values using these keys instead of deriving from column header text. Use 'name' to
@@ -73,14 +74,59 @@ export class ReusableTableComponent implements OnChanges {
     return Array.from({ length: tp }, (_, i) => i);
   }
 
-  formatCell(row: any, field: string) {
-    if (!row) return '';
-    if (!field) return '';
-    // Do not invent synthetic fields here; use backend-provided keys.
-    const val = row[field];
-    if (typeof val === 'boolean') {
-      return val ? 'Active' : 'Inactive';
-    }
-    return val ?? '';
+  /**
+   * Returns a structured result for a cell so template can render colors/images/text.
+   * Result shape: { type: 'text'|'color'|'images'|'boolean', value: any }
+   */
+ getCell(row: any, field: string) {
+  if (!row || !field) return { type: 'text', value: '' };
+
+  const val = row[field];
+
+  // LOGO
+  if (field === 'logo') {
+    return { type: 'logo', value: val || '/assets/image/no-image.png' };
+  }
+
+  // SWITCH FIELD (isActive)
+  if (field === 'isactive' || field.toLowerCase() === 'isactive') {
+    return { type: 'switch', value: !!val };
+  }
+
+  // COLOR HEX
+  if (typeof val === 'string' && /^#([A-F0-9]{3}|[A-F0-9]{6})$/i.test(val)) {
+    return { type: 'color', value: val };
+  }
+
+  // IMAGES ARRAY OR STRING
+  if (Array.isArray(val) && val.some(v => this.isUrl(v))) {
+    return { type: 'images', value: val };
+  }
+
+  if (typeof val === 'string' && this.isUrl(val)) {
+    return { type: 'images', value: [val] };
+  }
+
+  // BOOLEAN
+  if (typeof val === 'boolean') {
+    return { type: 'boolean', value: val };
+  }
+
+  // Default text
+  return { type: 'text', value: val ?? '' };
+}
+
+isUrl(v: any) {
+  return typeof v === 'string' && /^(https?:\/\/|\/|data:)/i.test(v);
+}
+
+
+  // Fallback handler for broken images: replace with local placeholder
+  onImgError(event: Event) {
+    const img = event.target as HTMLImageElement;
+    if (!img) return;
+    // avoid infinite loop if placeholder cannot be found
+    img.onerror = null;
+    img.src = this.NoImagePath;
   }
 }

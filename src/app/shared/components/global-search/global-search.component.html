@@ -1,35 +1,43 @@
-<div class="global-search container-fluid">
-  <div class="row align-items-center g-3">
+<div class="global-search-modern container-fluid py-3" role="search">
 
-    <div class="col-auto" *ngIf="label">
-      <label class="fw-bold" [attr.for]="'global-search-input'">Search</label>
+  <!-- Label Row -->
+  <div class="row mb-1" *ngIf="label">
+    <div class="col-12">
+      <label class="gs-label-modern fw-semibold" for="global-search-input">
+        {{ label }}
+      </label>
     </div>
+  </div>
 
-    <div class="col-md-6 col-sm-12">
-      <div class="input-group">
-        <input
-          id="global-search-input"
-          class="form-control"
+  <!-- Search + Status Row -->
+  <div class="row g-3">
+
+    <!-- Search Input -->
+    <div class="col-md-7 col-sm-12">
+      <div class="search-wrapper-modern">
+
+        <i class="bi bi-search search-icon-modern"></i>
+
+        <input id="global-search-input"
           type="text"
-          name="search"
+          class="search-input-modern"
           [placeholder]="placeholder"
           [formControl]="searchControl"
-          [attr.aria-label]="placeholder"
-        />
-        <button class="btn btn-outline-secondary" (click)="doClear()" aria-label="Clear search">
-          <!-- inline clear (x) SVG -->
-          <svg width="14" height="14" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M3.72 3.72a.75.75 0 0 1 1.06 0L8 6.94l3.22-3.22a.75.75 0 1 1 1.06 1.06L9.06 8l3.22 3.22a.75.75 0 0 1-1.06 1.06L8 9.06l-3.22 3.22a.75.75 0 0 1-1.06-1.06L6.94 8 3.72 4.78a.75.75 0 0 1 0-1.06z" fill="#495057"/>
-          </svg>
+          [attr.aria-label]="placeholder" />
+
+        <button class="clear-btn-modern" *ngIf="searchControl.value" (click)="doClear()">
+          <i class="bi bi-x-lg"></i>
         </button>
+
       </div>
     </div>
 
+    <!-- Status Select -->
     <div class="col-md-3 col-sm-6" *ngIf="showStatus">
-      <select class="form-select" [formControl]="statusControl">
-        <option value="">All Status</option>
-        <option value="1">Active</option>
-        <option value="0">Inactive</option>
+      <select class="form-select select-modern" [formControl]="statusControl">
+        <option value="">{{ 'common.all' | translate }}</option>
+        <option value="1">{{ 'common.active' | translate }}</option>
+        <option value="0">{{ 'common.inactive' | translate }}</option>
       </select>
     </div>
 

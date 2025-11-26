@@ -1,64 +1,95 @@
-<!-- Reusable Bootstrap Modal for Add/Edit Role -->
 <div #roleModal class="modal fade" tabindex="-1" aria-hidden="true">
-  <div class="modal-dialog modal-xl modal-dialog-centered">
-    <div class="modal-content">
+    <!-- <div class="permission-matrix"> -->
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
 
-      <!-- Header -->
-      <div class="modal-header">
-        <h5 class="modal-title">{{ isEdit ? ('role.editRole' | translate) : ('role.addRole' | translate) }}</h5>
-        <button type="button"  class="btn-close" (click)="closeModal()"></button>
-      </div>
-
-      <!-- Body -->
-      <div class="modal-body">
-        <form [formGroup]="form">
-          <div class="row g-3 mb-3">
-            <div class="col-md-6">
-              <label class="form-label">{{ 'role.name' | translate }}</label>
-              <input type="text" formControlName="name" class="form-control" placeholder="{{ 'role.namePlaceholder' | translate }}">
+            <div class="modal-header">
+                <h5 class="modal-title">{{ isEditMode ? ('role.editRole' | translate) : ('role.addRole' | translate) }}
+                </h5>
+                <button type="button" class="btn-close" (click)="closeModal()"></button>
             </div>
-          </div>
-        <div class="row g-3 mb-3">
-          <!-- Permissions Table (example) -->
-          <div class="table-responsive">
-            <table class="table table-bordered align-middle text-center">
-              <thead>
-                <tr>
-                  <th class="text-start">{{ 'role.table.modules' | translate }}</th>
-                  <th>{{ 'role.table.add' | translate }}</th>
-                  <th>{{ 'role.table.edit' | translate }}</th>
-                  <th>{{ 'role.table.view' | translate }}</th>
-                  <th>{{ 'role.table.delete' | translate }}</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr class="fw-bold bg-light">
-                  <td class="text-start">{{ 'role.emailConfiguration' | translate }}</td>
-                  <td><input type="checkbox" class="form-check-input"></td>
-                  <td><input type="checkbox" class="form-check-input"></td>
-                  <td><input type="checkbox" class="form-check-input"></td>
-                  <td><input type="checkbox" class="form-check-input"></td>
-                </tr>
-                <tr>
-                  <td class="ps-5 text-start">{{ 'role.smtpSetup' | translate }}</td>
-                  <td><input type="checkbox" class="form-check-input"></td>
-                  <td><input type="checkbox" class="form-check-input"></td>
-                  <td><input type="checkbox" class="form-check-input"></td>
-                  <td><input type="checkbox" class="form-check-input"></td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-</div>
-        </form>
-      </div>
 
-      <!-- Footer -->
-      <div class="modal-footer">
-        <button class="btn btn-light" (click)="closeModal()">{{ 'common.cancel' | translate }}</button>
-        <button class="btn blue-btn" (click)="saveRole()">{{ 'common.save' | translate }}</button>
-      </div>
+            <div class="modal-body">
+                <form [formGroup]="form">
+                    <div class="container-fluid">
+                        <div class="row g-3">
 
+                            <div class="col-md-12 col-12">
+                                <label class="form-label">{{ 'role.roleName' | translate }}</label>
+                                <input type="text" class="form-control mb-3" formControlName="roleName"
+                                    placeholder="Enter role name">
+                                <!-- Table Header -->
+                                <div class="pm-row pm-header">
+                                    <div class="pm-module">Module</div>
+                                    <div class="pm-action">View</div>
+                                    <div class="pm-action">Add</div>
+                                    <div class="pm-action">Edit</div>
+                                    <div class="pm-action">Delete</div>
+                                </div>
+
+                                <!-- Module Rows -->
+                                <div class="pm-row" *ngFor="let module of modules">
+
+                                    <!-- Module Name -->
+                                    <div class="pm-module">
+                                        {{ module.moduleDisplayName || module.moduleName }}
+                                    </div>
+
+                                    <!-- View checkbox -->
+                                    <div class="pm-action">
+                                        <ng-container *ngIf="getPerm(module.permissions, 'view') as p">
+                                            <input type="checkbox" class="form-check-input pm-check"
+                                                [checked]="isPermissionChecked(p.permissionId)"
+                                                (change)="togglePermission(p.permissionId)" />
+                                        </ng-container>
+                                    </div>
+
+                                    <!-- Add checkbox -->
+                                    <div class="pm-action">
+                                        <ng-container *ngIf="getPerm(module.permissions, 'add') as p">
+                                            <input type="checkbox" class="form-check-input pm-check"
+                                                [checked]="isPermissionChecked(p.permissionId)"
+                                                (change)="togglePermission(p.permissionId)" />
+                                        </ng-container>
+                                    </div>
+
+                                    <!-- Edit checkbox -->
+                                    <div class="pm-action">
+                                        <ng-container *ngIf="getPerm(module.permissions, 'edit') as p">
+                                            <input type="checkbox" class="form-check-input pm-check"
+                                                [checked]="isPermissionChecked(p.permissionId)"
+                                                (change)="togglePermission(p.permissionId)" />
+                                        </ng-container>
+                                    </div>
+
+                                    <!-- Delete checkbox -->
+                                    <div class="pm-action">
+                                        <ng-container *ngIf="getPerm(module.permissions, 'delete') as p">
+                                            <input type="checkbox" class="form-check-input pm-check"
+                                                [id]="'perm_' + p.permissionId"
+                                                [checked]="isPermissionChecked(p.permissionId)"
+                                                (change)="togglePermission(p.permissionId)" />
+
+
+                                        </ng-container>
+                                    </div>
+
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" (click)="closeModal()">
+                    {{ 'common.cancel' | translate }}
+                </button>
+                <button type="button" class="btn btn-primary" (click)="saveRole()" [disabled]="form.invalid">
+                    {{ 'common.save' | translate }}
+                </button>
+            </div>
+        </div>
     </div>
-  </div>
+    <!-- </div> -->
 </div>

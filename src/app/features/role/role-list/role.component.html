@@ -3,45 +3,47 @@
   <!-- Page Header -->
   <div class="page-header">
     <div>
-      <h3 class="page-title">{{ 'users.Heading' | translate }}</h3>
-      <p class="page-subtitle">{{ 'users.manageDesc' | translate }}</p>
+      <h3 class="page-title">{{ 'role.Heading' | translate }}</h3>
+      <p class="page-subtitle">{{ 'role.manageDesc' | translate }}</p>
     </div>
 
-    <button class="btn add-btn" (click)="userAddEdit.openModal()">
+    <button class="btn add-btn" (click)="roleAddEdit.openModal(false)">
       <i class="bi bi-plus-lg me-2"></i>
-      {{ 'users.addUser' | translate }}
+      {{ 'role.addRole' | translate }}
     </button>
   </div>
 
-  <!-- Search Filters Section -->
+  <!-- Filters Section -->
   <div class="filters-card">
     <app-global-search
-      [label]="'users.searchFilters' | translate"
-      [placeholder]="'users.searchPlaceholder' | translate"
+      [label]="'role.searchFilters' | translate"
+      [placeholder]="'role.searchPlaceholder' | translate"
       [showStatus]="true"
       (search)="onSearch($event)"
       (clear)="clearFilters()">
     </app-global-search>
   </div>
 
-  <!-- Users Table -->
+  <!-- Table Section -->
   <div class="table-card">
     <app-reusable-table
-      [columns]="columns"
+[columns]="columns"
       [showActions]="true"
-      [data]="users"
+      [data]="roles"
       [columnFields]="columnFields"
       [pageable]="true"
       [totalRecords]="totalRecords"
       [pageSize]="pageSize"
       [pageIndex]="pageIndex"
       (pageChange)="onPageChange($event)"
-      (toggleActive)="onToggleActive($event)"
-      (deleteRow)="onDelete($event)"
-      (editRow)="userAddEdit.openModal(true, $event)">
+      (editRow)="roleAddEdit.openModal(true, $event)">
     </app-reusable-table>
   </div>
 
-  <app-addedit #userAddEdit></app-addedit>
+  <!-- Add/Edit Modal -->
+  <app-user-role-addedit #roleAddEdit></app-user-role-addedit>
 
 </div>
+
+
+

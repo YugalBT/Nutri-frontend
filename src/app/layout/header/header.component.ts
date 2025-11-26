@@ -20,6 +20,7 @@ export class HeaderComponent {
 
   user$: Observable<User | null>;
   currentLang = 'en';
+  darkMode = false;
 
   constructor(private store: Store, private translate: TranslateService) {
     this.user$ = this.store.select(selectAuthUser);
@@ -31,6 +32,10 @@ export class HeaderComponent {
     } else {
       this.translate.use(this.currentLang).subscribe();
     }
+    // initialize theme from localStorage
+    const theme = localStorage.getItem('theme');
+    this.darkMode = theme === 'dark';
+    this.applyTheme();
   }
  
   logout() {
@@ -44,5 +49,24 @@ export class HeaderComponent {
     this.currentLang = lang;
     localStorage.setItem('lang', lang);
     this.translate.use(lang).subscribe();
+  }
+
+  toggleDarkMode() {
+    this.darkMode = !this.darkMode;
+    localStorage.setItem('theme', this.darkMode ? 'dark' : 'light');
+    this.applyTheme();
+  }
+
+  private applyTheme() {
+    try {
+      const root = document.documentElement;
+      if (this.darkMode) {
+        root.classList.add('dark-mode');
+      } else {
+        root.classList.remove('dark-mode');
+      }
+    } catch (e) {
+      // noop (avoid errors in SSR)
+    }
   }
 }

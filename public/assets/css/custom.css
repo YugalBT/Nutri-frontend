@@ -64,7 +64,7 @@ background-size: cover;position: relative;}
 .forget-pass-content p{font-size: var(--font-16);color: #949292;}
 
 /* dashboard page */
-.sidebar {background-color: #0D2848;max-width: 264px;height: 100vh;position: fixed;width: 100%;left: 0;top: 0;z-index: 99;}
+.sidebar {background-color: #0D2848;max-width: 250px;height: 100vh;position: fixed;width: 100%;left: 0;top: 0;z-index: 99;}
 .sidebar-footer{padding:10px;position: absolute;width: 100%;bottom: 0; }
 .sidebar-footer a{font-weight:var(--font-600);color: #ffffff;}
 .sidebar-footer p{color: #ffffff;}

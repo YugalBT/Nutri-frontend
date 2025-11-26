@@ -73,7 +73,8 @@ export class CompanyAddEditComponent implements OnInit {
   openModal(edit = false, data?: any) {
     this.isEdit = edit;
     if (edit && data) {
-      this.form.patchValue(data);
+      this.form.patchValue({ ...data, logo: data.logo || '' });
+      // this.form.patchValue(data);
     } else {
       this.form.reset({ isActive: true });
     }
