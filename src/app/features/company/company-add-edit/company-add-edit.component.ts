@@ -6,6 +6,7 @@ import { Company } from '../../../core/models/company-add-edit';
 import { CompanyService } from '../../../core/services/company/company.service';
 import { ToastService } from '../../../shared/services/toast.service';
 import { ApiResponse } from '../../../core/models/api-response';
+import { Output, EventEmitter } from '@angular/core';
 
 
 declare var bootstrap: any;
@@ -21,6 +22,7 @@ export class CompanyAddEditComponent implements OnInit {
   private modalInstance: any;
   form!: FormGroup;
   isEdit = false;
+  @Output() refreshList = new EventEmitter<void>();
 
   constructor(
   private fb: FormBuilder,
@@ -122,7 +124,9 @@ onLogoChange(event: Event) {
       next: (res: ApiResponse<any>) => {
         if (res?.isSuccess) {
           this.toast.success(res.message || "Company updated successfully!");
+          this.companyService.notifyCompaniesChanged();
           this.closeModal();
+           
         } else {
           this.toast.error(res.message || "Update failed");
         }
@@ -144,6 +148,7 @@ onLogoChange(event: Event) {
 
       if (res?.isSuccess) {
         this.toast.success(res.message || "Company created successfully!");
+        this.companyService.notifyCompaniesChanged();
         this.closeModal();
       } else {
         this.toast.error(res.message || "Failed to create company");

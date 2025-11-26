@@ -16,5 +16,13 @@ export const API_ENDPOINTS = {
   },
   COMMON_API: {
     GET_ALL_ROLES: '/Common/GetAllRoles'
-  }
+  },
+  
+  Tenant: {
+    GET_ALL: '/Tenant/GetAll',
+    CREATE: '/Tenant/Create',
+    UPDATE: '/Tenant/Update',
+    DELETE: '/Tenant/Delete',
+    ACTIVE_INACTIVE: '/Tenant/ActiveInActive',
+  } 
 };

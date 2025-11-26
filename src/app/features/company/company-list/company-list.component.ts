@@ -162,9 +162,13 @@ export class CompanyListComponent implements OnInit, OnDestroy {
     this.langSub = this.translate.lang$.subscribe(() => this.setColumns());
   }
 
-  ngOnInit(): void {
-    this.loadCompanies(1, this.pageSize);
-  }
+  ngOnInit() {
+  this.loadCompanies(this.pageIndex, this.pageSize);
+
+  this.companyService.companiesChanged$.subscribe(() => {
+    this.reloadCompanies();
+  });
+}
 
   private setColumns() {
     this.columns = [
@@ -288,6 +292,10 @@ deleteCompany(row: any) {
       error: () => alert("Failed to update status")
     });
   }
+
+  reloadCompanies() {
+  this.loadCompanies(this.pageIndex + 1, this.pageSize);
+}
 
   ngOnDestroy(): void {
     this.langSub.unsubscribe();
