@@ -132,7 +132,6 @@ import { ToastService } from '../../../shared/services/toast.service';
     ReusableTableComponent,
     TranslatePipe,
     GlobalSearchComponent  ,
-        // ✅ FIX 1: Added missing import
   ],
   templateUrl: './company-list.component.html',
   styleUrls: ['./company-list.component.css']
@@ -165,25 +164,31 @@ export class CompanyListComponent implements OnInit, OnDestroy {
     this.langSub = this.translate.lang$.subscribe(() => this.setColumns());
   }
 
-  ngOnInit(): void {
-    this.loadCompanies(1, this.pageSize);
-  }
+  ngOnInit() {
+  this.loadCompanies(this.pageIndex, this.pageSize);
+
+  this.companyService.companiesChanged$.subscribe(() => {
+    this.reloadCompanies();
+  });
+}
+
 
   private setColumns() {
     this.columns = [
-      'Logo',
-      'Site Color',
-      'Company Name',
-      'Name',
-      'Email',
-      'Phone',
-      'Code',
-      'Status'
-    ];
+    this.translate.instant('company.columns.logo') || 'Logo',
+   // this.translate.instant('company.columns.siteColor') || 'Site Color',
+    this.translate.instant('company.columns.companyName') || 'Company Name',
+    this.translate.instant('company.columns.firstName') || 'Name',
+    this.translate.instant('company.columns.email') || 'Email',
+    this.translate.instant('company.columns.phone') || 'Phone Number',
+    this.translate.instant('company.columns.code') || 'Code',
+    this.translate.instant('company.columns.status') || 'Status',
+    //this.translate.instant('company.columns.actions') || 'Actions'
+  ];
 
     this.columnFields = [
       'logo',
-      'primaryColor',
+   // 'primaryColor',
       'companyName',
       'fullName',
       'userEmail',
@@ -227,10 +232,8 @@ export class CompanyListComponent implements OnInit, OnDestroy {
     this.subs.push(sub);
   }
 
-  // ------------------------------------
-  // SEARCH (FIXED to accept string only)
-  // ------------------------------------
-  onSearch(value: string) {    // 🔥 FIX 2: Strict string input
+
+  onSearch(value: string) {   
     this.searchValue = value;
 
     if (this.searchDebounce) clearTimeout(this.searchDebounce);
@@ -286,6 +289,10 @@ export class CompanyListComponent implements OnInit, OnDestroy {
       error: () => this.toast.error("Failed to update status")
     });
   }
+
+  reloadCompanies() {
+  this.loadCompanies(this.pageIndex + 1, this.pageSize);
+}
 
   ngOnDestroy(): void {
     this.langSub.unsubscribe();
