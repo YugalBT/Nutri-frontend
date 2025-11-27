@@ -60,9 +60,9 @@
                                 <label class="form-label">{{ 'company.logo' | translate }}<sup style="color: #f00; font-size: 12px;">*</sup></label>
                                 <input type="file" class="form-control" (change)="onLogoChange($event)" accept="image/*">
                           
-                                <!-- <div *ngIf="form.get('logo')?.touched && form.get('logo')?.invalid" class="text-danger">
+                                <div *ngIf="form.get('logo')?.touched && form.get('logo')?.invalid" class="text-danger">
                                 Logo is required
-                              </div> -->
+                              </div>
                             </div>
 
                             <div class="col-md-6 col-12">
@@ -110,6 +110,10 @@
                                 <!-- Minimum length -->
                                 <div *ngIf="form.get('phoneNumber')?.errors?.['minlength']">
                                 Phone Number must be at least 10 digits.
+                                </div>
+                                 <!-- Maximum length -->
+                                <div *ngIf="form.get('phoneNumber')?.errors?.['maxlength']">
+                                Phone Number must be at most 10 digits.
                                 </div>
                                 <!-- Only numbers allowed -->
                                 <div *ngIf="form.get('phoneNumber')?.errors?.['pattern']">
@@ -186,19 +190,24 @@
                             <div class="col-md-6 col-12">
                                 <label class="form-label">{{ 'company.phoneNumber' | translate }}<sup style="color: #f00; font-size: 12px;">*</sup></label>
                                 <input type="tel" class="form-control" formControlName="userPhoneNumber" placeholder="555 555 5555">
-                               <div *ngIf="form.get('phoneNumber')?.touched" class="text-danger">
+                               <div *ngIf="form.get('userPhoneNumber')?.touched" class="text-danger">
 
                                 <!-- Required -->
-                                <div *ngIf="form.get('phoneNumber')?.errors?.['required']">
+                                <div *ngIf="form.get('userPhoneNumber')?.errors?.['required']">
                                 Phone Number is required.
                                 </div>
 
                                 <!-- Minimum length -->
-                                <div *ngIf="form.get('phoneNumber')?.errors?.['minlength']">
+                                <div *ngIf="form.get('userPhoneNumber')?.errors?.['minlength']">
                                 Phone Number must be at least 10 digits.
                                 </div>
+
+                                 <!-- Maximum length -->
+                                <div *ngIf="form.get('userPhoneNumber')?.errors?.['maxlength']">
+                                Phone Number must be at most 10 digits.
+                                </div>
                                 <!-- Only numbers allowed -->
-                                <div *ngIf="form.get('phoneNumber')?.errors?.['pattern']">
+                                <div *ngIf="form.get('userPhoneNumber')?.errors?.['pattern']">
                                 Phone Number must contain digits only.
                                 </div>
 

@@ -46,7 +46,7 @@ export class CompanyAddEditComponent implements OnInit {
       phoneNumber: ['', [
     Validators.required,
     Validators.minLength(10),
-    Validators.maxLength(15),
+    Validators.maxLength(10),
     Validators.pattern(/^[0-9]+$/)
   ]],
       logo: ['', Validators.required],
@@ -61,7 +61,7 @@ export class CompanyAddEditComponent implements OnInit {
       userPhoneNumber: ['',  [
     Validators.required,
     Validators.minLength(10),
-    Validators.maxLength(15),
+    Validators.maxLength(10),
     Validators.pattern(/^[0-9]+$/)
   ]],
       // Address
