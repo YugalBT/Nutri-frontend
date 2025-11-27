@@ -39,21 +39,31 @@ export class CompanyAddEditComponent implements OnInit {
       middleName: [''],
       lastName: ['', Validators.required],
       code: ['', [Validators.required, Validators.minLength(3)]],
-      suffix: ['', Validators.required],
+     // suffix: ['', Validators.required],
       url: ['', Validators.required],
     //  url: ['', [Validators.required, Validators.pattern(/^(https?:\/\/)?([\w.-]+)+[\w-]+(\/[\w-]*)*\/?$/)]],
       email: ['', [Validators.required, Validators.email]],
-      PhoneNumber: ['', [Validators.required, Validators.pattern(/^[0-9]{10,15}$/)]],
+      phoneNumber: ['', [
+    Validators.required,
+    Validators.minLength(10),
+    Validators.maxLength(15),
+    Validators.pattern(/^[0-9]+$/)
+  ]],
       logo: ['', Validators.required],
-      primaryColor: ['#1d7e8b', Validators.required],
-      secondaryColor: [''],
+      // primaryColor: ['#1d7e8b', Validators.required],
+      // secondaryColor: [''],
       companyName: ['', [Validators.required, Validators.pattern(/^[A-Za-z\s]+$/)]],
       // Primary user details
       userFirstName: ['', Validators.required],
       userMiddleName: [''],
       userLastName: ['', Validators.required],
       userEmail: ['', [Validators.required, Validators.email]],
-      userPhoneNumber: ['', [Validators.required, Validators.pattern(/^[0-9]{10,15}$/)]],
+      userPhoneNumber: ['',  [
+    Validators.required,
+    Validators.minLength(10),
+    Validators.maxLength(15),
+    Validators.pattern(/^[0-9]+$/)
+  ]],
       // Address
       streetAddress: ['', Validators.required],
       city: ['', Validators.required],

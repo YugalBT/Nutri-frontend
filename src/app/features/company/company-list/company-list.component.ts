@@ -176,7 +176,7 @@ export class CompanyListComponent implements OnInit, OnDestroy {
   private setColumns() {
     this.columns = [
     this.translate.instant('company.columns.logo') || 'Logo',
-    this.translate.instant('company.columns.siteColor') || 'Site Color',
+   // this.translate.instant('company.columns.siteColor') || 'Site Color',
     this.translate.instant('company.columns.companyName') || 'Company Name',
     this.translate.instant('company.columns.firstName') || 'Name',
     this.translate.instant('company.columns.email') || 'Email',
@@ -188,7 +188,7 @@ export class CompanyListComponent implements OnInit, OnDestroy {
 
     this.columnFields = [
       'logo',
-      'primaryColor',
+   // 'primaryColor',
       'companyName',
       'fullName',
       'userEmail',
