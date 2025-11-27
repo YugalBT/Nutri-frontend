@@ -169,7 +169,7 @@
                                 <input type="text" class="form-control" formControlName="userMiddleName" placeholder="Middle name">
                             </div>
                             <div class="col-md-4 col-12">
-                                <label class="form-label">{{ 'company.userLastName' | translate }}</label>
+                                <label class="form-label">{{ 'company.userLastName' | translate }}<sup style="color: #f00; font-size: 12px;">*</sup></label>
                                 <input type="text" class="form-control" formControlName="userLastName" placeholder="Last name">
                                 <div *ngIf="form.get('userLastName')?.touched && form.get('userLastName')?.invalid" class="text-danger">
                                 User Last Name is required
