@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { DashboardComponent } from '../../features/dashboard/dashboard.component';
 import { HeaderComponent } from "../header/header.component";
-import { Router, RouterLink } from "@angular/router";
+import { Router, RouterLink, RouterModule } from "@angular/router";
 import { NgFor, NgIf, LowerCasePipe } from '@angular/common';
 import { ConfirmDialogService } from '../../shared/services/confirm-dialog.service';
 import { ToastService } from '../../shared/services/toast.service';
@@ -25,7 +25,7 @@ interface MenuItem {
 @Component({
   selector: 'app-sidebar',
   standalone: true,
-  imports: [RouterLink, TranslatePipe, NgFor, NgIf, LowerCasePipe],
+  imports: [RouterLink, TranslatePipe, NgFor, NgIf, LowerCasePipe,RouterModule],
   templateUrl: './sidebar.component.html',
   styleUrls: ['./sidebar.component.css']
 })

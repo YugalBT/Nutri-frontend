@@ -31,7 +31,7 @@
                         <div class="side-menu-ul">
                             <ng-container *ngIf="menuItems.length">
                                 <li class="side-menu-item" *ngFor="let item of menuItems">
-                                    <a [routerLink]="item.url || '/'" data-discover="true">
+                                    <a [routerLink]="item.url || '/'" data-discover="true" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" >
                                         <span class="side-item-icon" [innerHTML]="item.safeIcon"> </span>
                                         {{ (('sidebar.' + (( item.roleDisplayName) | lowercase)) | translate)
                                         || (('menu.' + ((item.roleDisplayName) | lowercase)) | translate)

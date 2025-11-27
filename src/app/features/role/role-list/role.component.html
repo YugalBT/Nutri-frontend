@@ -37,6 +37,7 @@
       [pageSize]="pageSize"
       [pageIndex]="pageIndex"
       (pageChange)="onPageChange($event)"
+      (toggleActive)="onToggleActive($event)"
       (editRow)="roleAddEdit.openModal(true, $event)"
       (deleteRow)="onDeleteRole($event)">
     </app-reusable-table>

@@ -19,8 +19,10 @@ export const appConfig: ApplicationConfig = {
     provideZoneChangeDetection({ eventCoalescing: true }), 
     provideRouter(routes),
     
-    provideHttpClient(withInterceptors([authInterceptor])),
-    provideHttpClient(withInterceptors([spinnerInterceptor])),
+    provideHttpClient(
+  withInterceptors([authInterceptor, spinnerInterceptor])
+),
+
     provideAnimations(),
     importProvidersFrom(SpinnerModule),
     provideToastr({

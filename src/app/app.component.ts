@@ -14,7 +14,7 @@ import { NgxSpinnerModule, NgxSpinnerService } from 'ngx-spinner';
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, CommonModule, LoaderComponent, NgxSpinnerModule],
+  imports: [RouterOutlet, CommonModule, LoaderComponent],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
@@ -45,5 +45,13 @@ export class AppComponent implements OnInit {
     } else {
       this.store.dispatch(AuthActions.logout());
     }
+     // Show loader on route change
+  this.router.events.subscribe(event => {
+    if (event instanceof NavigationStart) {
+      this.loader.show();
+    } else if (event instanceof NavigationEnd || event instanceof NavigationError) {
+      this.loader.hide();
+    }
+  });
   }
 }

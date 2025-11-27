@@ -58,12 +58,13 @@ export class ListComponent implements OnInit, OnDestroy {
   }
 
   private loadUsers(pageNo: number, recordPerPage: number): void {
+     this.users = [];
     this.spinner.show();
 
     const payload: any = {
       pageNo,
       recordPerPage,
-      filter: this.searchValue || '',
+      searchValue: this.searchValue || '',
       status: this.filterStatus
     };
 
@@ -84,7 +85,6 @@ export class ListComponent implements OnInit, OnDestroy {
   onSearch(value: string): void {
     this.searchValue = value;
     this.pageIndex = 0;
-    this.users = [];
     this.loadUsers(1, this.pageSize);
   }
 
@@ -124,8 +124,16 @@ export class ListComponent implements OnInit, OnDestroy {
 
     const sub = this.usersService.activeInActive(event.row.userId).subscribe({
       next: (res) => {
-        this.toast.success(res.message);
-        this.usersService.notifyUsersChanged();
+        if (res.isSuccess) {
+          this.toast.success(res.message);
+           const index = this.users.findIndex(u => u.userId === event.row.userId);
+          if (index !== -1) {
+            this.users[index].isActive = !this.users[index].isActive; 
+          }
+          // this.usersService.notifyUsersChanged();
+        } else {
+          this.toast.error(res.message);
+        }
       },
       error: (err) => {
         this.toast.error(err?.error?.message);

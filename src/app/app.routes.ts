@@ -58,6 +58,12 @@ export const routes: Routes = [
             .then(m => m.NotificationsComponent),
       },
       {
+        path: 'change-password',
+        loadComponent: () =>
+          import('./features/auth/change-password/change-password.component')
+            .then(m => m.ChangePasswordComponent),
+      },
+      {
         path: 'profile',
         loadComponent: () =>
           import('./features/profile/profile.component')

@@ -28,4 +28,11 @@ export class AddEditRoleService {
     const url = `${API_ENDPOINTS.ROLE?.DELETE}?RoleId=${encodeURIComponent(roleId)}`;
     return this.http.post<any>(url, {});
   }
+
+  activeInActive(roleId: string): Observable<ApiResponse<any>> {
+    const url = `${API_ENDPOINTS.ROLE?.ACTIVE_INACTIVE}?RoleId=${encodeURIComponent(roleId)}`;
+    return this.http.post<any>(url, {});
+  }
+
+   
 }

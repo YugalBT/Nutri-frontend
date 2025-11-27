@@ -14,6 +14,7 @@ import { ConfirmDialogService } from '../../../shared/services/confirm-dialog.se
 import { selectCanManageRoles, selectCanDeleteRoles } from '../../../state/auth/auth.selectors';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { GlobalSearchComponent } from '../../../shared/components/global-search/global-search.component';
+import { ApiResponse } from '../../../core/models/api-response';
 
 
 @Component({
@@ -143,7 +144,7 @@ export class RoleComponent implements OnInit, OnDestroy ,AfterViewInit{
           next: (res: any) => {
             this.spinner.hide();
             if (res?.isSuccess || res?.isSuccess !== false) {
-              this.toast.success(this.translate.instant('common.deleted') || 'Role deleted successfully');
+              this.toast.success(this.translate.instant(res?.message??"Role deleted successfully") || 'Role deleted successfully');
               this.loadRoles();
             } else {
               this.toast.error(res?.message || this.translate.instant('common.error') || 'Delete failed');
@@ -183,6 +184,35 @@ export class RoleComponent implements OnInit, OnDestroy ,AfterViewInit{
     this.pageSize = event.pageSize;
     this.loadRoles();
   }
+
+  onToggleActive(event: { row: any; isActive: boolean }): void {
+  if (!event?.row?.roleId) {
+    this.toast.error(this.translate.instant('role.invalidId') ?? "");
+    return;
+  }
+
+  const sub = this.roleService.activeInActive(event.row.roleId).subscribe({
+    next: (res : ApiResponse<any>) => {
+      if (res.isSuccess) {
+        this.toast.success(res.message);
+        const index = this.roles.findIndex(u => u.roleId === event.row.roleId);
+        if (index !== -1) {
+          this.roles[index].isActive = !this.roles[index].isActive; 
+        }
+      } else {
+        this.toast.error(res.message);
+        
+      }
+    },
+    error: (err) => {
+      this.toast.error(err?.error?.message || 'Something went wrong');
+    }
+  });
+
+  this.subs.push(sub);
+}
+
+
 
   ngOnDestroy(): void {
     if (this.langSub) this.langSub.unsubscribe();

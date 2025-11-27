@@ -1,3 +1,13 @@
-<ngx-spinner *ngIf="loader.isLoading$ | async" name="primary" bdColor="rgba(0,0,0,0.3)" size="medium" color="#fff" type="ball-scale-multiple" [fullScreen]="true">
-  <p style="color: white"> Loading... </p>
+<ngx-spinner
+  name="primary"
+  bdColor="rgba(0,0,0,0.3)"
+  size="medium"
+  color="#fff"
+  type="ball-scale-multiple"
+  [fullScreen]="true">
 </ngx-spinner>
+
+<p *ngIf="loader.isLoading$ | async"
+   style="color:white; text-align:center; margin-top:10px;">
+  Loading...
+</p>
