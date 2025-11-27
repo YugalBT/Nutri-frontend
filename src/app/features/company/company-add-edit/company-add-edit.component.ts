@@ -6,6 +6,7 @@ import { Company } from '../../../core/models/company-add-edit';
 import { CompanyService } from '../../../core/services/company/company.service';
 import { ToastService } from '../../../shared/services/toast.service';
 import { ApiResponse } from '../../../core/models/api-response';
+import { Output, EventEmitter } from '@angular/core';
 
 
 declare var bootstrap: any;
@@ -34,32 +35,43 @@ export class CompanyAddEditComponent implements OnInit {
     this.form = this.fb.group({
       // Company details
       tenantId: [''],
-      firstName: [''],
+      firstName: ['',Validators.required],
       middleName: [''],
-      lastName: [''],
-      code: [''],
-      suffix: [''],
-      url: [''],
-      email: [''],
-      phoneNumber: [''],
-      logo: [''],
-      primaryColor: ['#1d7e8b'],
-      secondaryColor: [''],
-      companyName: [''],
+      lastName: ['', Validators.required],
+      code: ['', [Validators.required, Validators.minLength(3)]],
+     // suffix: ['', Validators.required],
+      url: ['', Validators.required],
+    //  url: ['', [Validators.required, Validators.pattern(/^(https?:\/\/)?([\w.-]+)+[\w-]+(\/[\w-]*)*\/?$/)]],
+      email: ['', [Validators.required, Validators.email]],
+      phoneNumber: ['', [
+    Validators.required,
+    Validators.minLength(10),
+    Validators.maxLength(10),
+    Validators.pattern(/^[0-9]+$/)
+  ]],
+      logo: ['', Validators.required],
+      // primaryColor: ['#1d7e8b', Validators.required],
+      // secondaryColor: [''],
+      companyName: ['', [Validators.required, Validators.pattern(/^[A-Za-z\s]+$/)]],
       // Primary user details
-      userFirstName: [''],
+      userFirstName: ['', Validators.required],
       userMiddleName: [''],
-      userLastName: [''],
-      userEmail: [''],
-      userPhoneNumber: [''],
+      userLastName: ['', Validators.required],
+      userEmail: ['', [Validators.required, Validators.email]],
+      userPhoneNumber: ['',  [
+    Validators.required,
+    Validators.minLength(10),
+    Validators.maxLength(10),
+    Validators.pattern(/^[0-9]+$/)
+  ]],
       // Address
-      streetAddress: [''],
-      city: [''],
-      country: [''],
-      zipCode: [''],
+      streetAddress: ['', Validators.required],
+      city: ['', Validators.required],
+      country: ['', Validators.required],
+      zipCode: ['', Validators.required],
 
       // Account
-      password: [''],
+      password: ['', [Validators.required, Validators.minLength(8)]],
 
       // legacy fields
       name: [''],
@@ -123,7 +135,9 @@ onLogoChange(event: Event) {
       next: (res: ApiResponse<any>) => {
         if (res?.isSuccess) {
           this.toast.success(res.message || "Company updated successfully!");
+          this.companyService.notifyCompaniesChanged();
           this.closeModal();
+           
         } else {
           this.toast.error(res.message || "Update failed");
         }
@@ -145,6 +159,7 @@ onLogoChange(event: Event) {
 
       if (res?.isSuccess) {
         this.toast.success(res.message || "Company created successfully!");
+        this.companyService.notifyCompaniesChanged();
         this.closeModal();
       } else {
         this.toast.error(res.message || "Failed to create company");

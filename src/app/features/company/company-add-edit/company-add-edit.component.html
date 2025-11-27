@@ -5,7 +5,7 @@
                 <h5 class="modal-title">{{ isEdit ? ('company.edit' | translate) : ('company.add' | translate) }}</h5>
                 <button type="button" class="btn-close" (click)="closeModal()"></button>
             </div>
-            <div class="modal-body">
+           <div class="modal-body" style="max-height: 70vh; overflow-y: auto;">
                 <form [formGroup]="form">
                     <div class="container-fluid">
                         <div class="row g-3">
@@ -14,13 +14,19 @@
                             </div>
 
                             <div class="col-md-4 col-12">
-                                <label class="form-label">{{ 'company.companyName' | translate }}</label>
+                                <label class="form-label">{{ 'company.companyName' | translate }}<sup style="color: #f00; font-size: 12px;">*</sup></label>
                                 <input type="text" class="form-control" formControlName="companyName" placeholder="Enter company name">
+                                <div *ngIf="form.get('companyName')?.touched && form.get('companyName')?.invalid" class="text-danger">
+                                Company Name is required
+                              </div>
                             </div>
 
                             <div class="col-md-4 col-12">
-                                <label class="form-label">{{ 'company.code' | translate }}</label>
+                                <label class="form-label">{{ 'company.code' | translate }}<sup style="color: #f00; font-size: 12px;">*</sup></label>
                                 <input type="text" class="form-control" formControlName="code" placeholder="Company code">
+                                <div *ngIf="form.get('code')?.touched && form.get('code')?.invalid" class="text-danger">
+                                Code is required
+                              </div>
                             </div>
 
                             <!-- <div class="col-md-4 col-12">
@@ -29,28 +35,39 @@
                             </div> -->
 
                             <div class="col-md-4 col-12">
-                                <label class="form-label">{{ 'company.website' | translate }}</label>
+                                <label class="form-label">{{ 'company.website' | translate }}<sup style="color: #f00; font-size: 12px;">*</sup></label>
                                 <input type="url" class="form-control" formControlName="url" placeholder="https://example.com">
+                                <div *ngIf="form.get('url')?.touched && form.get('url')?.invalid" class="text-danger">
+                                Website URL is required
+                              </div>
                             </div>
 
-                            <div class="col-md-4 col-12">
+                            <!-- <div class="col-md-4 col-12">
                                 <label class="form-label">{{ 'company.primaryColor' | translate }}</label>
                                 <input type="color" class="form-control form-control-color" formControlName="primaryColor" title="Choose primary color">
+                          
+                                <div *ngIf="form.get('primaryColor')?.touched && form.get('primaryColor')?.invalid" class="text-danger">
+                                Primary Color is required
+                              </div>
                             </div>
 
                             <div class="col-md-4 col-12">
                                 <label class="form-label">{{ 'company.secondaryColor' | translate }}</label>
                                 <input type="color" class="form-control form-control-color" formControlName="secondaryColor" title="Choose secondary color">
-                            </div>
+                            </div> -->
 
                             <div class="col-md-6 col-12">
-                                <label class="form-label">{{ 'company.logo' | translate }}</label>
+                                <label class="form-label">{{ 'company.logo' | translate }}<sup style="color: #f00; font-size: 12px;">*</sup></label>
                                 <input type="file" class="form-control" (change)="onLogoChange($event)" accept="image/*">
+                          
+                                <div *ngIf="form.get('logo')?.touched && form.get('logo')?.invalid" class="text-danger">
+                                Logo is required
+                              </div>
                             </div>
 
                             <div class="col-md-6 col-12">
                                 <label class="form-label"></label>
-                                <img class="form-control" [src]="this.form.get('logo')?.value || '/assets/image/placeholder-image.png'" alt="Logo Preview" style="max-height: 80px; max-width: 150px; object-fit: contain;">
+                                <img class="form-control" [src]="this.form.get('logo')?.value || '/assets/image/placeholder-image.png'" style="max-height: 80px; max-width: 150px; object-fit: contain;">
                             </div>
 
                             <div class="col-12 mt-3">
@@ -58,25 +75,52 @@
                             </div>
 
                             <div class="col-md-4 col-12">
-                                <label class="form-label">{{ 'company.firstName' | translate }}</label>
+                                <label class="form-label">{{ 'company.firstName' | translate }}<sup style="color: #f00; font-size: 12px;">*</sup></label>
                                 <input type="text" class="form-control" formControlName="firstName" placeholder="First name">
+                         
+                                <div *ngIf="form.get('firstName')?.touched && form.get('firstName')?.invalid" class="text-danger">
+                                First Name is required
+                              </div>
                             </div>
                             <div class="col-md-4 col-12">
-                                <label class="form-label">{{ 'company.middleName' | translate }}</label>
-                                <input type="text" class="form-control" formControlName="middleName" placeholder="Middle name">
-                            </div>
-                            <div class="col-md-4 col-12">
-                                <label class="form-label">{{ 'company.lastName' | translate }}</label>
+                                <label class="form-label">{{ 'company.lastName' | translate }}<sup style="color: #f00; font-size: 12px;">*</sup></label>
                                 <input type="text" class="form-control" formControlName="lastName" placeholder="Last name">
+                                <div *ngIf="form.get('lastName')?.touched && form.get('lastName')?.invalid" class="text-danger">
+                                Last Name is required
+                              </div>
                             </div>
 
                             <div class="col-md-6 col-12">
-                                <label class="form-label">{{ 'company.userEmail' | translate }}</label>
-                                <input type="email" class="form-control" formControlName="userEmail" placeholder="user@example.com">
+                                <label class="form-label">{{ 'company.userEmail' | translate }}<sup style="color: #f00; font-size: 12px;">*</sup></label>
+                                <input type="email" class="form-control" formControlName="email" placeholder="user@example.com">
+                                <div *ngIf="form.get('email')?.touched && form.get('email')?.invalid" class="text-danger">
+                                User Email is required
+                              </div>
                             </div>
                             <div class="col-md-6 col-12">
-                                <label class="form-label">{{ 'company.userPhone' | translate }}</label>
-                                <input type="tel" class="form-control" formControlName="userPhoneNumber" placeholder="+1 555 555 5555">
+                                <label class="form-label">{{ 'company.phoneNumber' | translate }}<sup style="color: #f00; font-size: 12px;">*</sup></label>
+                                <input type="tel" class="form-control" formControlName="phoneNumber" placeholder="555 555 5555">
+                                <div *ngIf="form.get('phoneNumber')?.touched" class="text-danger">
+
+                                <!-- Required -->
+                                <div *ngIf="form.get('phoneNumber')?.errors?.['required']">
+                                Phone Number is required.
+                                </div>
+
+                                <!-- Minimum length -->
+                                <div *ngIf="form.get('phoneNumber')?.errors?.['minlength']">
+                                Phone Number must be at least 10 digits.
+                                </div>
+                                 <!-- Maximum length -->
+                                <div *ngIf="form.get('phoneNumber')?.errors?.['maxlength']">
+                                Phone Number must be at most 10 digits.
+                                </div>
+                                <!-- Only numbers allowed -->
+                                <div *ngIf="form.get('phoneNumber')?.errors?.['pattern']">
+                                Phone Number must contain digits only.
+                                </div>
+
+                            </div>
                             </div>
 
                             <div class="col-12 mt-3">
@@ -84,21 +128,33 @@
                             </div>
 
                             <div class="col-md-6 col-12">
-                                <label class="form-label">{{ 'company.streetAddress' | translate }}</label>
+                                <label class="form-label">{{ 'company.streetAddress' | translate }}<sup style="color: #f00; font-size: 12px;">*</sup></label>
                                 <input type="text" class="form-control" formControlName="streetAddress" placeholder="Street address">
+                                <div *ngIf="form.get('streetAddress')?.touched && form.get('streetAddress')?.invalid" class="text-danger">
+                                Street Address is required
+                                </div>
                             </div>
                             <div class="col-md-3 col-12">
-                                <label class="form-label">{{ 'company.city' | translate }}</label>
+                                <label class="form-label">{{ 'company.city' | translate }}<sup style="color: #f00; font-size: 12px;">*</sup></label>
                                 <input type="text" class="form-control" formControlName="city" placeholder="City">
+                                <div *ngIf="form.get('city')?.touched && form.get('city')?.invalid" class="text-danger">
+                                City is required
+                                </div>
                             </div>
                             <div class="col-md-3 col-12">
-                                <label class="form-label">{{ 'company.zipCode' | translate }}</label>
+                                <label class="form-label">{{ 'company.zipCode' | translate }}<sup style="color: #f00; font-size: 12px;">*</sup></label>
                                 <input type="text" class="form-control" formControlName="zipCode" placeholder="Zip / Postal code">
+                                <div *ngIf="form.get('zipCode')?.touched && form.get('zipCode')?.invalid" class="text-danger">
+                                Zip Code is required
+                                </div>
                             </div>
 
                             <div class="col-md-6 col-12">
-                                <label class="form-label">{{ 'company.country' | translate }}</label>
+                                <label class="form-label">{{ 'company.country' | translate }}<sup style="color: #f00; font-size: 12px;">*</sup></label>
                                 <input type="text" class="form-control" formControlName="country" placeholder="Country">
+                                <div *ngIf="form.get('country')?.touched && form.get('country')?.invalid" class="text-danger">
+                                Country is required
+                                </div>
                             </div>
 
                             <div class="col-12 mt-3">
@@ -106,30 +162,64 @@
                             </div>
 
                              <div class="col-md-4 col-12">
-                                <label class="form-label">{{ 'company.userFirstName' | translate }}</label>
+                                <label class="form-label">{{ 'company.userFirstName' | translate }}<sup style="color: #f00; font-size: 12px;">*</sup></label>
                                 <input type="text" class="form-control" formControlName="userFirstName" placeholder="First name">
+                                <div *ngIf="form.get('userFirstName')?.touched && form.get('userFirstName')?.invalid" class="text-danger">
+                                User First Name is required
+                                </div>
                             </div>
                             <div class="col-md-4 col-12">
                                 <label class="form-label">{{ 'company.userMiddleName' | translate }}</label>
                                 <input type="text" class="form-control" formControlName="userMiddleName" placeholder="Middle name">
                             </div>
                             <div class="col-md-4 col-12">
-                                <label class="form-label">{{ 'company.userLastName' | translate }}</label>
+                                <label class="form-label">{{ 'company.userLastName' | translate }}<sup style="color: #f00; font-size: 12px;">*</sup></label>
                                 <input type="text" class="form-control" formControlName="userLastName" placeholder="Last name">
+                                <div *ngIf="form.get('userLastName')?.touched && form.get('userLastName')?.invalid" class="text-danger">
+                                User Last Name is required
+                                </div>
                             </div>
 
                             <div class="col-md-6 col-12">
-                                <label class="form-label">{{ 'company.adminEmail' | translate }}</label>
-                                <input type="email" class="form-control" formControlName="email" placeholder="admin@example.com">
+                                <label class="form-label">{{ 'company.adminEmail' | translate }}<sup style="color: #f00; font-size: 12px;">*</sup></label>
+                                <input type="email" class="form-control" formControlName="userEmail" placeholder="admin@example.com">
+                                <div *ngIf="form.get('userEmail')?.touched && form.get('userEmail')?.invalid" class="text-danger">
+                                Admin Email is required
+                                </div>
                             </div>
                             <div class="col-md-6 col-12">
-                                <label class="form-label">{{ 'company.phoneNumber' | translate }}</label>
-                                <input type="tel" class="form-control" formControlName="phoneNumber" placeholder="+1 555 555 5555">
+                                <label class="form-label">{{ 'company.phoneNumber' | translate }}<sup style="color: #f00; font-size: 12px;">*</sup></label>
+                                <input type="tel" class="form-control" formControlName="userPhoneNumber" placeholder="555 555 5555">
+                               <div *ngIf="form.get('userPhoneNumber')?.touched" class="text-danger">
+
+                                <!-- Required -->
+                                <div *ngIf="form.get('userPhoneNumber')?.errors?.['required']">
+                                Phone Number is required.
+                                </div>
+
+                                <!-- Minimum length -->
+                                <div *ngIf="form.get('userPhoneNumber')?.errors?.['minlength']">
+                                Phone Number must be at least 10 digits.
+                                </div>
+
+                                 <!-- Maximum length -->
+                                <div *ngIf="form.get('userPhoneNumber')?.errors?.['maxlength']">
+                                Phone Number must be at most 10 digits.
+                                </div>
+                                <!-- Only numbers allowed -->
+                                <div *ngIf="form.get('userPhoneNumber')?.errors?.['pattern']">
+                                Phone Number must contain digits only.
+                                </div>
+
+                            </div>
                             </div>
 
                             <div class="col-md-6 col-12">
-                                <label class="form-label">{{ 'company.password' | translate }}</label>
+                                <label class="form-label">{{ 'company.password' | translate }}<sup style="color: #f00; font-size: 12px;">*</sup></label>
                                 <input type="password" class="form-control" formControlName="password" placeholder="Enter password">
+                                <div *ngIf="form.get('password')?.touched && form.get('password')?.invalid" class="text-danger">
+                                Password is required
+                                </div>
                             </div>
 
                         </div>
