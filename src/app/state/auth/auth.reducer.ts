@@ -42,7 +42,10 @@ export const authReducer = createReducer(
 
 on(AuthActions.updateProfileSuccess, (state, { user }) => ({
   ...state,
-  user,   
+ user: {
+    ...state.user,
+    ...user 
+  }, 
   loading: false,
   error: null,
 })),

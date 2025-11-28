@@ -15,7 +15,7 @@ import { UpdateProfileService } from '../../core/services/profile/update-profile
 @Injectable()
 
 export class AuthEffects {
- 
+
   login$;
   loginSuccess$;
   logout$;
@@ -24,7 +24,7 @@ export class AuthEffects {
   refreshAuthUser$;
   updateProfileSuccess$;
 
-    constructor(
+  constructor(
     private actions$: Actions,
     private authService: AuthService,
     private router: Router,
@@ -137,35 +137,35 @@ export class AuthEffects {
     );
 
 
-        this.updateProfile$ = createEffect(() =>
-  this.actions$.pipe(
-    ofType(AuthActions.updateProfile),
-    switchMap(({ payload }) =>
-      this.updateProfileService.updateProfile(payload).pipe(
-        map((res) => {
-          if (res?.isSuccess) {
-            return AuthActions.updateProfileSuccess({ user: res.data });
-          }
-          return AuthActions.updateProfileFailure({ error: res.message });
-        }),
-        catchError((err) => of(AuthActions.updateProfileFailure({ error: err })))
+    this.updateProfile$ = createEffect(() =>
+      this.actions$.pipe(
+        ofType(AuthActions.updateProfile),
+        switchMap(({ payload }) =>
+          this.updateProfileService.updateProfile(payload).pipe(
+            map((res) => {
+              if (res?.isSuccess) {
+                return AuthActions.updateProfileSuccess({ user: res?.data });
+              }
+              return AuthActions.updateProfileFailure({ error: res?.message });
+            }),
+            catchError((err) => of(AuthActions.updateProfileFailure({ error: err })))
+          )
+        )
       )
-    )
-  )
-);
+    );
 
 
     this.updateProfileSuccess$ = createEffect(
-  () =>
-    this.actions$.pipe(
-      ofType(AuthActions.updateProfileSuccess),
-      tap(({ user }) => {
-        this.tokenService.setUserData(JSON.stringify(user)); 
-        this.toast.success('Profile updated successfully!');
-      })
-    ),
-  { dispatch: false }
-);
+      () =>
+        this.actions$.pipe(
+          ofType(AuthActions.updateProfileSuccess),
+          tap(({ user }) => {
+            this.tokenService.setUserData(JSON.stringify(user));
+            this.toast.success('Profile updated successfully!');
+          })
+        ),
+      { dispatch: false }
+    );
 
     this.refreshAuthUser$ = createEffect(() =>
       this.actions$.pipe(

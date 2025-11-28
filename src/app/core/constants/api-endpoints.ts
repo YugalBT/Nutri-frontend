@@ -6,6 +6,7 @@ export const API_ENDPOINTS = {
     FORGET_PASSWORD: '/Auth/ForgetPassword',
     VERIFY_FORGET_PASSWORD: '/Auth/VerifyForgetPassword',
     PROFILE_UPDATE: '/Auth/ProfileUpdate',
+    PROFILE_DETAILS: '/Auth/ProfileDetails',
     CHANGE_PASSWORD: '/Auth/ResetPassword',
 
 

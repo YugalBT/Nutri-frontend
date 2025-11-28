@@ -22,5 +22,10 @@ export class UpdateProfileService {
   updateProfile(payload: any): Observable<ApiResponse<any>> {
     return this.http.post<any>(API_ENDPOINTS.AUTH.PROFILE_UPDATE, payload);
   }
+
+  profileDetails(): Observable<ApiResponse<any>> {
+  return this.http.post<any>(API_ENDPOINTS.AUTH.PROFILE_DETAILS, {});
+}
+
   
 }

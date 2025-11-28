@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { Observable } from 'rxjs';
 import { take } from 'rxjs/operators';
 import { User } from '../../state/auth/auth.models';
@@ -10,11 +10,13 @@ import { UpdateProfileService } from '../../core/services/profile/update-profile
 import { ToastrService } from 'ngx-toastr';
 import { refreshAuthUser } from '../../state/auth/auth.actions';
 import { SharedModule } from '../../shared/shared.module';
+import { CustomValidators } from '../../core/helpers/validators';
+import * as AuthActions from '../../state/auth/auth.actions';  
 
 @Component({
   selector: 'app-profile',
   standalone: true,
-  imports: [ReactiveFormsModule,SharedModule],
+  imports: [ReactiveFormsModule, SharedModule],
   templateUrl: './profile.component.html',
   styleUrls: ['./profile.component.css']
 })
@@ -22,46 +24,114 @@ export class ProfileComponent implements OnInit {
 
   user$: Observable<User | null>;
   profileForm!: FormGroup;
+  @ViewChild('fileInput') fileInput!: ElementRef;
 
   constructor(
     private toast: ToastrService,
     private store: Store,
     private fb: FormBuilder,
     private profileService: UpdateProfileService,
-        
+
   ) {
     this.user$ = this.store.select(selectAuthUser);
   }
 
   ngOnInit() {
-    this.user$.pipe(take(1)).subscribe((user) => {
-      if (user) {
+    this.profileService.profileDetails().pipe(take(1)).subscribe((res) => {
+      if (res.isSuccess && res.data) {
+
+        const user = res.data;
+
         this.profileForm = this.fb.group({
-          firstName: [user.firstName, [Validators.required,Validators.minLength(3), Validators.maxLength(50)]],
+          firstName: [user.firstName, [Validators.required, Validators.minLength(3), Validators.maxLength(50)]],
           middleName: [user.middleName || ''],
-          lastName: [user.lastName, [Validators.required,Validators.minLength(3), Validators.maxLength(50)]],
-          email: [{ value: user.email, disabled: true }, Validators.required],
-          phone: [user.phone || '', [Validators.required,Validators.pattern('^[0-9]{10}$')]],
+          lastName: [user.lastName, [Validators.required, Validators.minLength(3), Validators.maxLength(50)]],
+          email: [{ value: user.email, disabled: true }, CustomValidators.required],
+          phone: [user.phone || '', [Validators.required, Validators.pattern('^[0-9]{10}$')]],
+          logo: [null]
         });
+
+      } else {
+        this.toast.error(res.message);
+      }
+    });
+  }
+  imagePreview: string | null = null;
+
+  onProfileImageChange(event: any) {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    const allowedTypes = ['image/png', 'image/jpeg', 'image/jpg'];
+    if (!allowedTypes.includes(file.type)) {
+      this.toast.error("Only PNG/JPEG files allowed");
+      this.fileInput.nativeElement.value = '';
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = () => {
+      this.imagePreview = reader.result as string;
+      this.profileForm.patchValue({ logo: reader.result });
+    };
+    reader.readAsDataURL(file);
+  }
+
+
+
+  removeImage() {
+    this.imagePreview = null;
+    this.profileForm.patchValue({ logo: null });
+
+    if (this.fileInput) {
+      this.fileInput.nativeElement.value = '';
+    }
+  }
+
+  onSubmit() {
+    if (this.profileForm.invalid) {
+      this.toast.error('Please correct the errors in the form before submitting.');
+      return;
+    }
+
+    const payload = this.profileForm.getRawValue();
+    delete payload.email;
+
+    this.profileService.updateProfile(payload).subscribe((res) => {
+      if (res.isSuccess) {
+        this.toast.success(res.message);
+      //    const updatedUser: User = {
+      //   ...payload,
+      //   email: this.profileForm.get('email')?.value,
+      // };
+      
+          this.getLatestProfileDetails();
+      } else {
+        this.toast.error(res.message);
+        //this.store.dispatch(AuthActions.updateProfileFailure({ error: res.message }));
       }
     });
   }
 
- onSubmit() {
-  if (this.profileForm.invalid) return;
+ getLatestProfileDetails() {
+  this.profileService.profileDetails().pipe(take(1)).subscribe(res => {
+    if (res.isSuccess && res.data) {
 
-  const payload = this.profileForm.getRawValue();
-  delete payload.email;
+      this.store.select(selectAuthUser).pipe(take(1)).subscribe((currentUser) => {
+        if (currentUser) {
+          const updatedUser: User = {
+            ...currentUser,   
+            ...res.data  
+          };
 
-  this.profileService.updateProfile(payload).subscribe((res) => {
-    if (res.isSuccess) {
-      this.toast.success(res.message);
-      this.store.dispatch(refreshAuthUser());
-    } else {
-      this.toast.error(res.message);
+          this.store.dispatch(AuthActions.updateProfileSuccess({ user: updatedUser }));
+        }
+      });
     }
   });
 }
+
+
 
 
 }
