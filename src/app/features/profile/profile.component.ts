@@ -37,11 +37,11 @@ export class ProfileComponent implements OnInit {
     this.user$.pipe(take(1)).subscribe((user) => {
       if (user) {
         this.profileForm = this.fb.group({
-          firstName: [user.firstName, Validators.required],
+          firstName: [user.firstName, [Validators.required,Validators.minLength(3), Validators.maxLength(50)]],
           middleName: [user.middleName || ''],
-          lastName: [user.lastName, Validators.required],
+          lastName: [user.lastName, [Validators.required,Validators.minLength(3), Validators.maxLength(50)]],
           email: [{ value: user.email, disabled: true }, Validators.required],
-          phone: [user.phone || '', Validators.required]
+          phone: [user.phone || '', [Validators.required,Validators.pattern('^[0-9]{10}$')]],
         });
       }
     });

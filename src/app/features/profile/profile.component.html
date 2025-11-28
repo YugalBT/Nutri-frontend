@@ -12,6 +12,8 @@
         <div class="col-md-4">
           <label class="form-label">First Name *</label>
           <input type="text" class="form-control" formControlName="firstName">
+          <div class="text-danger mt-1" *ngIf="profileForm.get('firstName')?.touched && profileForm.get('firstName')?.invalid">
+            First Name is required.
         </div>
 
         <div class="col-md-4">
@@ -22,6 +24,8 @@
         <div class="col-md-4">
           <label class="form-label">Last Name *</label>
           <input type="text" class="form-control" formControlName="lastName">
+          <div class="text-danger mt-1" *ngIf="profileForm.get('lastName')?.touched && profileForm.get('lastName')?.invalid">
+            Last Name is required.
         </div>
       </div>
 
@@ -34,7 +38,25 @@
         <div class="col-md-6">
           <label class="form-label">Phone Number *</label>
           <input type="text" class="form-control" formControlName="phone">
-        </div>
+          <div *ngIf="form.get('phoneNumber')?.touched" class="text-danger">
+
+                                <!-- Required -->
+                                <div *ngIf="form.get('phoneNumber')?.errors?.['required']">
+                                Phone Number is required.
+                                </div>
+
+                                <!-- Minimum length -->
+                                <div *ngIf="form.get('phoneNumber')?.errors?.['minlength']">
+                                Phone Number must be at least 10 digits.
+                                </div>
+                                 <!-- Maximum length -->
+                                <div *ngIf="form.get('phoneNumber')?.errors?.['maxlength']">
+                                Phone Number must be at most 10 digits.
+                                </div>
+                                <!-- Only numbers allowed -->
+                                <div *ngIf="form.get('phoneNumber')?.errors?.['pattern']">
+                                Phone Number must contain digits only.
+                                </div>
       </div>
 
       <div class="d-flex justify-content-end mt-4">
