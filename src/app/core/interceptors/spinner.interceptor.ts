@@ -5,9 +5,19 @@ import { finalize } from 'rxjs/operators';
 
 export const spinnerInterceptor: HttpInterceptorFn = (req, next) => {
   const spinner = inject(NgxSpinnerService);
-  spinner.show(); 
+
+  try {
+    console.log('[SpinnerInterceptor] show spinner for', req.url);
+  } catch (e) {}
+
+  spinner.show('primary');
 
   return next(req).pipe(
-    finalize(() => spinner.hide())
+    finalize(() => {
+      try {
+        console.log('[SpinnerInterceptor] hide spinner for', req.url);
+      } catch (e) {}
+      spinner.hide('primary');
+    })
   );
 };

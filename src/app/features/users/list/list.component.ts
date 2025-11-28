@@ -59,7 +59,7 @@ export class ListComponent implements OnInit, OnDestroy {
 
   private loadUsers(pageNo: number, recordPerPage: number): void {
      this.users = [];
-    this.spinner.show();
+    // this.spinner.show();
 
     const payload: any = {
       pageNo,

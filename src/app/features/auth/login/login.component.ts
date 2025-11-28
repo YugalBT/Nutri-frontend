@@ -46,7 +46,7 @@ export class LoginComponent {
 
 
     const { username, password } = this.form.value;
-    this.store.dispatch(AuthActions.login({ username, password, companyCode: 'set' }));
+    this.store.dispatch(AuthActions.login({ username, password, companyCode: 'login' }));
   }
 
 

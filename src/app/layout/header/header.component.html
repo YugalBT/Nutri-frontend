@@ -79,8 +79,12 @@
                         <li><a class="dropdown-item" style="cursor: pointer;" (click)="logout()">{{ 'header.logout' | translate }}</a></li>
                     </ul>
                 </div>
+                
 
             </div>
         </div>
     </div>
 </header>
+<app-confirm-dialog
+  (confirm)="onConfirm($event)"
+></app-confirm-dialog>
