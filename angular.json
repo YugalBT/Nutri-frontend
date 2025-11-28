@@ -40,7 +40,8 @@
               "src/assets/css/custom.css",
               "src/assets/css/media.css",
               "src/assets/css/slick.css",
-              "node_modules/ngx-spinner/animations/ball-scale-multiple.css",
+              "node_modules/ngx-spinner/ngx-spinner.css",
+              "node_modules/ngx-spinner/animations/ball-spin-clockwise.css",
               "node_modules/ngx-toastr/toastr.css" 
             ],
             "scripts": [
