@@ -116,32 +116,38 @@ export class ListComponent implements OnInit, OnDestroy {
   }
 
 
-  onToggleActive(event: { row: any; isActive: boolean }): void {
-    if (!event?.row?.userId) {
-      this.toast.error(this.translate.instant('users.invalidId')??"");
-      return;
-    }
+ onToggleActive(event: { row: any; isActive: boolean }): void {
+  event.row.isToggling = true;
 
-    const sub = this.usersService.activeInActive(event.row.userId).subscribe({
-      next: (res) => {
-        if (res.isSuccess) {
-          this.toast.success(res.message);
-           const index = this.users.findIndex(u => u.userId === event.row.userId);
-          if (index !== -1) {
-            this.users[index].isActive = !this.users[index].isActive; 
-          }
-          // this.usersService.notifyUsersChanged();
-        } else {
-          this.toast.error(res.message);
-        }
-      },
-      error: (err) => {
-        this.toast.error(err?.error?.message);
-      }
-    });
-
-    this.subs.push(sub);
+  if (!event?.row?.userId) {
+    this.toast.error(this.translate.instant('users.invalidId') ?? "");
+    return;
   }
+
+  const sub = this.usersService.activeInActive(event.row.userId).subscribe({
+    next: (res) => {
+      if (res.isSuccess) {
+        this.toast.success(res.message);
+
+        const index = this.users.findIndex(u => u.userId === event.row.userId);
+        if (index !== -1) {
+          this.users[index].isActive = !this.users[index].isActive;
+        }
+      } else {
+        this.toast.error(res.message);
+      }
+    },
+    error: (err) => {
+      this.toast.error(err?.error?.message);
+    },
+    complete: () => {
+      event.row.isToggling = false;  
+    }
+  });
+
+  this.subs.push(sub);
+}
+
 
 
   onDelete(row: any): void {

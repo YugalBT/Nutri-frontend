@@ -129,4 +129,12 @@ isUrl(v: any) {
     img.onerror = null;
     img.src = this.NoImagePath;
   }
+
+  onToggle(row: any, event: any) {
+  this.toggleActive.emit({
+    row,
+    isActive: event.target.checked
+  });
+}
+
 }

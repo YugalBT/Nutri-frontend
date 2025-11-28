@@ -50,7 +50,7 @@
             <!-- TOGGLE SWITCH (isActive) -->
             <ng-container *ngIf="cell.type === 'switch'">
               <label class="switch">
-                <input type="checkbox" [checked]="cell.value"
+                <input type="checkbox" [checked]="cell.value"  [checked]="cell.value"
                   (change)="toggleActive.emit({ row, isActive: $any($event.target).checked })">
                 <span class="slider"></span>
               </label>

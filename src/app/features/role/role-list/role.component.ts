@@ -185,32 +185,38 @@ export class RoleComponent implements OnInit, OnDestroy ,AfterViewInit{
     this.loadRoles();
   }
 
-  onToggleActive(event: { row: any; isActive: boolean }): void {
+ onToggleActive(event: { row: any; isActive: boolean }): void {
   if (!event?.row?.roleId) {
     this.toast.error(this.translate.instant('role.invalidId') ?? "");
     return;
   }
 
+  if (event.row.isToggling) return; // prevent double toggle
+  event.row.isToggling = true;
+
   const sub = this.roleService.activeInActive(event.row.roleId).subscribe({
-    next: (res : ApiResponse<any>) => {
+    next: (res: ApiResponse<any>) => {
       if (res.isSuccess) {
         this.toast.success(res.message);
         const index = this.roles.findIndex(u => u.roleId === event.row.roleId);
         if (index !== -1) {
-          this.roles[index].isActive = !this.roles[index].isActive; 
+          this.roles[index].isActive = !this.roles[index].isActive;
         }
       } else {
         this.toast.error(res.message);
-        
       }
     },
     error: (err) => {
       this.toast.error(err?.error?.message || 'Something went wrong');
+    },
+    complete: () => {
+      event.row.isToggling = false; 
     }
   });
 
   this.subs.push(sub);
 }
+
 
 
 
