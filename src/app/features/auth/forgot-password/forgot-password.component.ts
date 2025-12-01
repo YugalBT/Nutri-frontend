@@ -32,6 +32,7 @@ export class ForgotPasswordComponent {
             ) {}
 
   ngOnInit() {
+
     this.forgotForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
     });
@@ -40,7 +41,9 @@ export class ForgotPasswordComponent {
       this.companyCode = params.get('companyCode') || '';
       if (this.companyCode) {
         this.loadHomePageContent();
-      }
+      }else{
+        this.toast.error('Invalid company code.');
+        this.router.navigate(['/404']);}
     });
   }
 
