@@ -52,7 +52,7 @@ export class CompanyAddEditComponent implements OnInit {
       logo: ['', Validators.required],
       // primaryColor: ['#1d7e8b', Validators.required],
       // secondaryColor: [''],
-      companyName: ['', [Validators.required, Validators.pattern(/^[\p{L} .'-]+$/u),
+      companyName: ['', [Validators.required,Validators.minLength(3),Validators.maxLength(50), Validators.pattern(/^[\p{L} .'-]+$/u),
 ]],
       // Primary user details
       userFirstName: ['', [Validators.required, Validators.pattern(/^[A-Za-z]+$/)]],
