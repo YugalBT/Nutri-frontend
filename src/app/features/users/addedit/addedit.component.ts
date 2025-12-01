@@ -47,13 +47,14 @@ export class AddeditComponent implements OnInit, OnDestroy {
 
   private initializeForm() {
     this.form = this.fb.group({
-      name: ['', Validators.required],
-      middleName: [''],
-      lastName: ['', Validators.required],
+      name: ['', [Validators.required, Validators.pattern(/^[A-Za-z]+$/)]],
+      middleName: ['', [Validators.pattern(/^[A-Za-z]+$/)]],
+      lastName: ['', [Validators.required, Validators.pattern(/^[A-Za-z]+$/)]],
       email: ['', [Validators.required, Validators.email]],
-      phone: [''],
+      phone: ['', [Validators.pattern(/^[0-9]+$/), Validators.minLength(10), Validators.maxLength(10),
+        Validators.required]],
       roleId: [null, Validators.required],
-      password: ['',Validators.required],
+      password: ['', [Validators.required, Validators.minLength(8), Validators.pattern(/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*#?&]{8,}$/)]],
       isActive: [true]
     });
   }

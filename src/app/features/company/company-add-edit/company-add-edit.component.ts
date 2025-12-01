@@ -35,9 +35,9 @@ export class CompanyAddEditComponent implements OnInit {
     this.form = this.fb.group({
       // Company details
       tenantId: [''],
-      firstName: ['',Validators.required],
-      middleName: [''],
-      lastName: ['', Validators.required],
+      firstName: ['', [Validators.required, Validators.pattern(/^[A-Za-z]+$/)]],
+      middleName: ['', [Validators.pattern(/^[A-Za-z]+$/)]],
+      lastName: ['', [Validators.required, Validators.pattern(/^[A-Za-z]+$/)]],
       code: ['', [Validators.required, Validators.minLength(3)]],
      // suffix: ['', Validators.required],
       url: ['', Validators.required],
@@ -52,11 +52,12 @@ export class CompanyAddEditComponent implements OnInit {
       logo: ['', Validators.required],
       // primaryColor: ['#1d7e8b', Validators.required],
       // secondaryColor: [''],
-      companyName: ['', [Validators.required, Validators.pattern(/^[A-Za-z\s]+$/)]],
+      companyName: ['', [Validators.required, Validators.pattern(/^[\p{L} .'-]+$/u),
+]],
       // Primary user details
-      userFirstName: ['', Validators.required],
-      userMiddleName: [''],
-      userLastName: ['', Validators.required],
+      userFirstName: ['', [Validators.required, Validators.pattern(/^[A-Za-z]+$/)]],
+      userMiddleName: ['', [Validators.pattern(/^[A-Za-z]+$/)]],
+      userLastName: ['', [Validators.required, Validators.pattern(/^[A-Za-z]+$/)]],
       userEmail: ['', [Validators.required, Validators.email]],
       userPhoneNumber: ['',  [
     Validators.required,
@@ -68,10 +69,10 @@ export class CompanyAddEditComponent implements OnInit {
       streetAddress: ['', Validators.required],
       city: ['', Validators.required],
       country: ['', Validators.required],
-      zipCode: ['', Validators.required],
+      zipCode: ['', [Validators.required, Validators.pattern(/^[0-9]{5,6}$/)]],
 
       // Account
-      password: ['', [Validators.required, Validators.minLength(8)]],
+      password: ['', [Validators.required, Validators.minLength(8),Validators.pattern(/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*#?&]{8,}$/)]],
 
       // legacy fields
       name: [''],
