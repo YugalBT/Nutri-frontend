@@ -47,5 +47,19 @@ export const API_ENDPOINTS = {
     UPDATE: '/Tenant/Update',
     DELETE: '/Tenant/Delete',
     ACTIVE_INACTIVE: '/Tenant/ActiveInActive',
-  } 
+  },
+
+  FARM: {
+    CREATE: '/Farm/Create',
+    UPDATE: '/Farm/Update',
+    DELETE: '/Farm/Delete',
+    ACTIVE_INACTIVE: '/Farm/ActiveInActive',
+    GET_ALL: '/Farm/GetAll',
+  },
+
+   COMPANY: {
+
+    UPDATE: 'Common/UpdateSettingById',
+    GET_BY_ID: 'Common/SettingById',
+  },
 };

@@ -15,7 +15,7 @@ export class CompanyService {
   private companiesChangedSource = new Subject<void>();
   companiesChanged$ = this.companiesChangedSource.asObservable();
 
-  constructor(private http: HttpService) {}
+  constructor(private http: HttpService) { }
 
   // Correct notify
   notifyCompaniesChanged() {
@@ -29,7 +29,7 @@ export class CompanyService {
   updateCompany(model: Company): Observable<ApiResponse<any>> {
     return this.http.post<ApiResponse<any>>(
       `${this.baseUrl}/Update`,
-       model
+      model
     );
   }
 

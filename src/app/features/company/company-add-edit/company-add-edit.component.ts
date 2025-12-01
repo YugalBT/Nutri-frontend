@@ -88,7 +88,7 @@ export class CompanyAddEditComponent implements OnInit {
       // legacy fields
       name: [''],
       description: [''],
-      roleId: ['', Validators.required],
+      roleId: [''],
       isActive: [true]
     });
     this.loadRoles();

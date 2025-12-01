@@ -71,6 +71,18 @@ export const routes: Routes = [
           import('./features/profile/profile.component')
             .then(m => m.ProfileComponent),
       },
+      {
+        path: 'setting',
+        loadComponent: () =>
+          import('./features/companysetting/companysetting.component')
+            .then(m => m.CompanysettingComponent),
+      },
+      {
+        path: 'farm',
+        loadComponent: () =>
+          import('./features/farm/farm-list/farm-list.component')
+            .then(m => m.FarmListComponent),
+      },
 
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
     ],
