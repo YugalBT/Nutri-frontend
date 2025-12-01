@@ -43,20 +43,21 @@ export class ProfileComponent implements OnInit {
         const user = res.data;
 
         this.profileForm = this.fb.group({
-          firstName: [user.firstName, [Validators.required, Validators.minLength(3), Validators.maxLength(50)]],
-          middleName: [user.middleName || ''],
-          lastName: [user.lastName, [Validators.required, Validators.minLength(3), Validators.maxLength(50)]],
+          firstName: [user.firstName, [Validators.required, Validators.minLength(3), Validators.maxLength(50), Validators.pattern('^[A-Za-z]+$')]],
+          middleName: [user.middleName || '',[Validators.minLength(3), Validators.maxLength(50), Validators.pattern('^[A-Za-z]+$')]],
+          lastName: [user.lastName, [Validators.required, Validators.minLength(3), Validators.maxLength(50), Validators.pattern('^[A-Za-z]+$')]],
           email: [{ value: user.email, disabled: true }, CustomValidators.required],
           phone: [user.phone || '', [Validators.required, Validators.pattern('^[0-9]{10}$')]],
-          logo: [null]
-        });
+          logo: [user.logo || null],
+        }); 
+        this.imagePreview = user.logo || null;
 
       } else {
         this.toast.error(res.message);
       }
     });
   }
-  imagePreview: string | null = null;
+  imagePreview: string | null =  null;
 
   onProfileImageChange(event: any) {
     const file = event.target.files[0];

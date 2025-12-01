@@ -55,6 +55,7 @@
             <small *ngIf="profileForm.get('firstName')?.errors?.['required']">First name is required.</small>
             <small *ngIf="profileForm.get('firstName')?.errors?.['minlength']">Minimum 3 characters required.</small>
             <small *ngIf="profileForm.get('firstName')?.errors?.['maxlength']">Maximum length is 50 characters.</small>
+            <small *ngIf="profileForm.get('firstName')?.errors?.['pattern']">Only alphabets are allowed.</small>
           </div>
         </div>
 
@@ -66,6 +67,7 @@
             *ngIf="profileForm.get('middleName')?.touched && profileForm.get('middleName')?.invalid">
             <small *ngIf="profileForm.get('middleName')?.errors?.['minlength']">Minimum 3 characters required.</small>
             <small *ngIf="profileForm.get('middleName')?.errors?.['maxlength']">Maximum length is 50 characters.</small>
+            <small *ngIf="profileForm.get('middleName')?.errors?.['pattern']">Only alphabets are allowed.</small>
           </div>
         </div>
 
@@ -78,6 +80,7 @@
             <small *ngIf="profileForm.get('lastName')?.errors?.['required']">Last name is required.</small>
             <small *ngIf="profileForm.get('lastName')?.errors?.['minlength']">Minimum 3 characters required.</small>
             <small *ngIf="profileForm.get('lastName')?.errors?.['maxlength']">Maximum length is 50 characters.</small>
+            <small *ngIf="profileForm.get('lastName')?.errors?.['pattern']">Only alphabets are allowed.</small>
           </div>
         </div>
 
