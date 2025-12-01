@@ -5,6 +5,11 @@ import { TokenService } from '../../shared/services/token.service';
 import { HttpService } from '../../shared/services/http.service';
 import { LoginRequest } from '../models/login-request';
 import { ApiResponse } from '../models/api-response';
+import { TranslateService } from '../../i18n/translate.service';
+import { ConfirmDialogService } from '../../shared/services/confirm-dialog.service';
+import { ToastService } from '../../shared/services/toast.service';
+import { Router } from '@angular/router';
+import { Constants } from '../../shared/utils/constants/constants';
 
 
 
@@ -15,6 +20,10 @@ export class AuthService {
 
   constructor(
     private http: HttpService,
+    // private translate: TranslateService,
+    private confirm: ConfirmDialogService,
+    private toast: ToastService,
+    private router: Router,
     private tokenService: TokenService
   ) { }
 
@@ -33,26 +42,51 @@ export class AuthService {
           this.tokenService.setUserName(`${res.data.firstName || ''} ${res.data.lastName || ''}`);
 
         }
-        else {
-          this.logout();
-        }
+        // else {
+        //   this.logout();
+        // }
       })
     );
   }
-
-
   logout() {
-    this.tokenService.removeToken();
-    this.tokenService.removeUserData();
-    this.tokenService.removeUserUserName();
-
+    this.confirm.confirm('Do you really want to logout?').subscribe(result => {
+      if (result) {
+        let companyCode = '';
+        const rawCompany = sessionStorage.getItem('companyInfo');
+        if (rawCompany) {
+          try {
+            const parsed = JSON.parse(rawCompany);
+            if (Array.isArray(parsed)) {
+              companyCode = parsed[0]?.companyCode ?? parsed[0]?.code ?? '';
+            } else {
+              companyCode = parsed?.companyCode ?? parsed?.code ?? '';
+            }
+          } catch {
+            // if not JSON, treat stored value as plain string
+            companyCode = rawCompany;
+          }
+        }
+        sessionStorage.clear();
+        this.toast.success(Constants.LOGOUT_SUCCESS);
+        const normalizedCompany = companyCode ? companyCode.toString().replace(/^\/+|\/+$/g, '') : '';
+        const target = normalizedCompany ? `/${normalizedCompany}/login` : '/login';
+        this.router.navigateByUrl(target);
+      }
+    });
   }
 
- getHomePageContent(companyCode: string): Observable<ApiResponse<any>> {
-  return this.http.get<any>(
-    `${API_ENDPOINTS.AUTH.HOMEPAGE_CONTENT}?CompanyCode=${companyCode}`
-  );
-}
+  // logout() {
+  //   this.tokenService.removeToken();
+  //   this.tokenService.removeUserData();
+  //   this.tokenService.removeUserUserName();
+
+  // }
+
+  getHomePageContent(companyCode: string): Observable<ApiResponse<any>> {
+    return this.http.get<any>(
+      `${API_ENDPOINTS.AUTH.HOMEPAGE_CONTENT}?CompanyCode=${companyCode}`
+    );
+  }
 
 
   isLoggedIn(): boolean {

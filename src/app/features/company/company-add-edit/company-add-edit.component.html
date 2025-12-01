@@ -310,8 +310,13 @@
                             <div class="col-md-4 col-12">
                                 <label class="form-label">{{ 'company.password' | translate }}<sup
                                         style="color: #f00; font-size: 12px;">*</sup></label>
-                                <input type="password" class="form-control" formControlName="password"
-                                    placeholder="Enter password">
+                                <div class="input-group">
+                                    <input [type]="!showCurrent ? 'text' : 'password'" class="form-control"
+                                        formControlName="password" placeholder="Enter password">
+                                    <span class="input-group-text" role="button" (click)="showCurrent = !showCurrent">
+                                        <i class="fa" [ngClass]="showCurrent ? 'fa-eye' : 'fa-eye-slash'"></i>
+                                    </span>
+                                </div>
                                 <div *ngIf="form.get('password')?.touched && form.get('password')?.invalid"
                                     class="text-danger">
                                     Password is required

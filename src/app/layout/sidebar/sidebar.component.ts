@@ -13,6 +13,7 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { Store } from '@ngrx/store';
 import { selectAuthUser } from '../../state/auth/auth.selectors';
 import { take } from 'rxjs/operators';
+import { AuthService } from '../../core/auth/auth.service';
 
 interface MenuItem {
   roleDisplayName?: string;
@@ -38,6 +39,7 @@ export class SidebarComponent implements OnInit {
     private router: Router,
     private confirm: ConfirmDialogService,
     private toast: ToastService,
+    private authService: AuthService,
     private translate: TranslateService,
     private tokenService: TokenService,
     private sanitizer: DomSanitizer,
@@ -133,12 +135,7 @@ export class SidebarComponent implements OnInit {
 
 
   logout() {
-    this.confirm.confirm(this.translate.instant('sidebar.confirmLogout') || 'Do you really want to logout?').subscribe(result => {
-      if (result) {
-        sessionStorage.clear();
-        this.toast.success(this.translate.instant('sidebar.logoutSuccess') || Constants.LOGOUT_SUCCESS);
-        this.router.navigate(['/login']);
-      }
-    });
+
+    this.authService.logout();
   }
 }

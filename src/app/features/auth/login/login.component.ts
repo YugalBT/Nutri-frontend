@@ -40,19 +40,13 @@ export class LoginComponent implements OnInit {
 
   }
   ngOnInit() {
-  this.route.paramMap.subscribe(params => {
-    this.companyCode = params.get('companyCode') || '';
-    if (this.companyCode) {
-      this.loadHomePageContent();
-    }
-  });
-}
-
-
-
-
-
-
+    this.route.paramMap.subscribe(params => {
+      this.companyCode = params.get('companyCode') || '';
+      if (this.companyCode) {
+        this.loadHomePageContent();
+      }
+    });
+  }
 
 
   onSubmit() {
@@ -69,8 +63,6 @@ export class LoginComponent implements OnInit {
   }
 
 
-
-
   showPassword: boolean = false;
   togglePassword() {
     this.showPassword = !this.showPassword;
@@ -82,7 +74,7 @@ export class LoginComponent implements OnInit {
         if (res?.isSuccess && res.data) {
           this.logoUrl = res.data.logo;
           this.primaryColor = res.data.primaryColor || '#1d7e8b';
-          localStorage.setItem('companyInfo', JSON.stringify(res.data));
+          sessionStorage.setItem('companyInfo', JSON.stringify(res.data));
         } else {
           this.toast.error(res?.message);
         }
