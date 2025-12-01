@@ -7,6 +7,11 @@ import { CompanyService } from '../../../core/services/company/company.service';
 import { ToastService } from '../../../shared/services/toast.service';
 import { ApiResponse } from '../../../core/models/api-response';
 import { Output, EventEmitter } from '@angular/core';
+import { RoleService } from '../../../core/services/role.service';
+import { RoleItem } from '../../../core/models/add-edit-role';
+import { TranslateService } from '../../../i18n/translate.service';
+import { AddEditRoleService } from '../../../core/services/role/add-edit-role.service';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 
 declare var bootstrap: any;
@@ -23,15 +28,21 @@ export class CompanyAddEditComponent implements OnInit {
   form!: FormGroup;
   isEdit = false;
   showCurrent = false;
+  roleList: any[] = [];
   constructor(
     private fb: FormBuilder,
     private companyService: CompanyService,
+    private spinner: NgxSpinnerService,
+    private translate: TranslateService,
+    private roleService: AddEditRoleService,
     private toast: ToastService
   ) { }
 
   // constructor(private fb: FormBuilder) {}
 
   ngOnInit() {
+
+
     this.form = this.fb.group({
       // Company details
       tenantId: [''],
@@ -52,8 +63,8 @@ export class CompanyAddEditComponent implements OnInit {
       logo: ['', Validators.required],
       // primaryColor: ['#1d7e8b', Validators.required],
       // secondaryColor: [''],
-      companyName: ['', [Validators.required,Validators.minLength(3),Validators.maxLength(50), Validators.pattern(/^[\p{L} .'-]+$/u),
-]],
+      companyName: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(50), Validators.pattern(/^[\p{L} .'-]+$/u),
+      ]],
       // Primary user details
       userFirstName: ['', [Validators.required, Validators.pattern(/^[A-Za-z]+$/)]],
       userMiddleName: ['', [Validators.pattern(/^[A-Za-z]+$/)]],
@@ -72,19 +83,43 @@ export class CompanyAddEditComponent implements OnInit {
       zipCode: ['', [Validators.required, Validators.pattern(/^[0-9]{5,6}$/)]],
 
       // Account
-      password: ['', [Validators.required, Validators.minLength(8),Validators.pattern(/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*#?&]{8,}$/)]],
+      password: ['', [Validators.required, Validators.minLength(8), Validators.pattern(/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*#?&]{8,}$/)]],
 
       // legacy fields
       name: [''],
       description: [''],
+      roleId: ['', Validators.required],
       isActive: [true]
     });
-  }
+    this.loadRoles();
 
+  }
+  loadRoles() {
+    this.spinner.show();
+    const payload = {
+      pageNo: 1,
+      recordPerPage: 1000,
+      status: 2,
+      isShow: true
+    };
+
+    const sub = this.roleService.getRoles(payload).subscribe({
+      next: (res) => {
+        const data = (res as any)?.data || (res as any)?.items || res || [];
+        this.roleList = Array.isArray(data) ? data as RoleItem[] : [];
+        this.spinner.hide();
+      },
+      error: (err) => {
+        this.spinner.hide();
+        this.toast.error(this.translate.instant('common.error') || 'Error loading roles');
+      }
+    });
+  }
   openModal(edit = false, data?: any) {
     this.isEdit = edit;
     if (edit && data) {
       this.form.patchValue({ ...data, logo: data.logo || '' });
+      this.form.get('password')?.clearValidators();
       // this.form.patchValue(data);
     } else {
       this.form.reset({ isActive: true });

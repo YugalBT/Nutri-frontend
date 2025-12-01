@@ -251,6 +251,17 @@
                             </div>
 
                             <div class="col-md-4 col-12">
+                                <label class="form-label">{{ 'company.userRole' | translate }}<sup style="color: #f00; font-size: 12px;">*</sup></label>
+                                <select class="form-select" formControlName="roleId">
+                                    <option value="">{{ 'common.selectRole' | translate }}</option>
+                                    <option *ngFor="let role of roleList" [value]="role.roleId">{{ role.nameEn }}( {{role.nameIt}})</option>
+                                </select>
+                                <div *ngIf="form.get('roleId')?.touched && form.get('roleId')?.invalid" class="text-danger">
+                                User Role is required
+                                </div>
+                            </div>
+
+                            <div class="col-md-4 col-12">
                                 <label class="form-label">{{ 'company.password' | translate }}<sup style="color: #f00; font-size: 12px;">*</sup></label>
                                 <input type="password" class="form-control" formControlName="password" placeholder="Enter password">
                                 <div *ngIf="form.get('password')?.touched && form.get('password')?.invalid" class="text-danger">
