@@ -37,10 +37,10 @@
       </select>
     </div>
 
-    <div class="col-md-2 col-sm-6 " *ngIf="isSuperAdmin">
+    <div class="col-md-2 col-sm-6 " *ngIf="isSuperAdmin && ShowCheckBox">
       <label class="form-label">{{ 'role.roleIsShow' | translate }}</label>
       <label class="switch">
-        <input type="checkbox" [checked]="isShow" (change)="isShow.emit($any($event.target).checked)">
+        <input type="checkbox" [checked]="!isShow" (change)="isShow.emit($any($event.target).checked)">
         <span class="slider"></span>
       </label>
 

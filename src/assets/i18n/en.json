@@ -123,7 +123,7 @@
   "role": {
     "roleIsDefault" : "Default",
     "roleIsEditable" : "Editable",
-    "roleIsShow" : "Show",
+    "roleIsShow" : "Master Roles",
     "searchFilters" : "Search Filters",
     "searchPlaceholder": "Search by role name",
     "Heading": "Role Management",

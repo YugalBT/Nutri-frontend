@@ -20,6 +20,8 @@ export class GlobalSearchComponent implements OnInit, OnDestroy {
   @Input() placeholder = 'Enter keyword';
   @Input() showStatus = false;
   @Input() debounceTime = 300;
+  @Input() ShowCheckBox = false;
+
 
   @Output() search = new EventEmitter<string>();
   @Output() statusChange = new EventEmitter<number | null>();
