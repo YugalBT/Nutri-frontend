@@ -70,8 +70,13 @@
                         <div class="col-md-4">
                             <label class="form-label">{{ 'users.password' | translate }} <sup
                                     style="color: #f00; font-size: 12px;">*</sup></label>
-                            <input type="password" formControlName="password" class="form-control"
+                                     <div class="input-group">
+                            <input [type]="showCurrent ? 'text' : 'password'"  formControlName="password" class="form-control"
                                 placeholder="{{ 'users.passwordPlaceholder' | translate }}">
+                                <span class="input-group-text" role="button" (click)="showCurrent = !showCurrent">
+        <i class="fa" [ngClass]="showCurrent ? 'fa-eye' : 'fa-eye-slash'"></i>
+      </span>
+                        </div>
                         </div>
                     </div>
                 </form>

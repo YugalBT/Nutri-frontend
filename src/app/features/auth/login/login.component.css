@@ -5,3 +5,30 @@ button.btn.blue-btn:disabled {
   opacity: 0.7;                         /* optional: show it’s disabled */
   cursor: not-allowed;                  /* show it’s disabled */
 }
+
+/* Position and style the password visibility toggle inside the input wrapper */
+.password_svg { position: relative; }
+.input-with-toggle { position: relative; }
+.input-with-toggle .form-control-custom { padding-right: 56px; }
+.input-with-toggle .password-toggle {
+  position: absolute;
+  top: 50%;
+  right: 12px;
+  transform: translateY(-50%);
+  border: none;
+  background: transparent;
+  width: 36px;
+  height: 36px;
+  padding: 6px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: #7E7E7E;
+  border-radius: 6px;
+}
+.password-toggle:focus { outline: 2px solid rgba(0,0,0,0.08); outline-offset: 2px; }
+.password-toggle svg { display: block; width: 18px; height: 18px; }
+.password-toggle:hover { color: #333; background: rgba(0,0,0,0.02); }
+.dark-mode .password-toggle { color: rgba(230,238,246,0.8); }
+.dark-mode .password-toggle:hover { color: var(--text-color); background: rgba(255,255,255,0.02); }

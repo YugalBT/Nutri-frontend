@@ -18,16 +18,16 @@ declare var bootstrap: any;
   styleUrls: ['./company-add-edit.component.css']
 })
 export class CompanyAddEditComponent implements OnInit {
-@ViewChild('companyModal') companyModal!: ElementRef;
+  @ViewChild('companyModal') companyModal!: ElementRef;
   private modalInstance: any;
   form!: FormGroup;
   isEdit = false;
-
+  showCurrent = false;
   constructor(
-  private fb: FormBuilder,
-  private companyService: CompanyService,
-   private toast: ToastService
-) {}
+    private fb: FormBuilder,
+    private companyService: CompanyService,
+    private toast: ToastService
+  ) { }
 
   // constructor(private fb: FormBuilder) {}
 
@@ -35,20 +35,20 @@ export class CompanyAddEditComponent implements OnInit {
     this.form = this.fb.group({
       // Company details
       tenantId: [''],
-      firstName: ['',Validators.required],
+      firstName: ['', Validators.required],
       middleName: [''],
       lastName: ['', Validators.required],
       code: ['', [Validators.required, Validators.minLength(3)]],
-     // suffix: ['', Validators.required],
+      // suffix: ['', Validators.required],
       url: ['', Validators.required],
-    //  url: ['', [Validators.required, Validators.pattern(/^(https?:\/\/)?([\w.-]+)+[\w-]+(\/[\w-]*)*\/?$/)]],
+      //  url: ['', [Validators.required, Validators.pattern(/^(https?:\/\/)?([\w.-]+)+[\w-]+(\/[\w-]*)*\/?$/)]],
       email: ['', [Validators.required, Validators.email]],
       phoneNumber: ['', [
-    Validators.required,
-    Validators.minLength(10),
-    Validators.maxLength(10),
-    Validators.pattern(/^[0-9]+$/)
-  ]],
+        Validators.required,
+        Validators.minLength(10),
+        Validators.maxLength(10),
+        Validators.pattern(/^[0-9]+$/)
+      ]],
       logo: ['', Validators.required],
       // primaryColor: ['#1d7e8b', Validators.required],
       // secondaryColor: [''],
@@ -58,12 +58,12 @@ export class CompanyAddEditComponent implements OnInit {
       userMiddleName: [''],
       userLastName: ['', Validators.required],
       userEmail: ['', [Validators.required, Validators.email]],
-      userPhoneNumber: ['',  [
-    Validators.required,
-    Validators.minLength(10),
-    Validators.maxLength(10),
-    Validators.pattern(/^[0-9]+$/)
-  ]],
+      userPhoneNumber: ['', [
+        Validators.required,
+        Validators.minLength(10),
+        Validators.maxLength(10),
+        Validators.pattern(/^[0-9]+$/)
+      ]],
       // Address
       streetAddress: ['', Validators.required],
       city: ['', Validators.required],
@@ -105,114 +105,114 @@ export class CompanyAddEditComponent implements OnInit {
     }
   }
 
-onLogoChange(event: Event) {
-  const input = event.target as HTMLInputElement;
+  onLogoChange(event: Event) {
+    const input = event.target as HTMLInputElement;
 
-  if (input.files && input.files.length > 0) {
-    const file = input.files[0];
-    const reader = new FileReader();
+    if (input.files && input.files.length > 0) {
+      const file = input.files[0];
+      const reader = new FileReader();
 
-    reader.onload = () => {
-      this.form.patchValue({ logo: reader.result as string });
-    };
+      reader.onload = () => {
+        this.form.patchValue({ logo: reader.result as string });
+      };
 
-    reader.readAsDataURL(file);
-  }
-}
-
-
- saveCompany() {
-  if (this.form.invalid) {
-    this.form.markAllAsTouched();
-    return;
+      reader.readAsDataURL(file);
+    }
   }
 
-  const payload = this.form.value as Company;
 
-  if (this.isEdit) {
+  saveCompany() {
+    if (this.form.invalid) {
+      this.form.markAllAsTouched();
+      return;
+    }
 
-    this.companyService.updateCompany(payload).subscribe({
+    const payload = this.form.value as Company;
+
+    if (this.isEdit) {
+
+      this.companyService.updateCompany(payload).subscribe({
+        next: (res: ApiResponse<any>) => {
+          if (res?.isSuccess) {
+            this.toast.success(res.message || "Company updated successfully!");
+            this.companyService.notifyCompaniesChanged();
+            this.closeModal();
+
+          } else {
+            this.toast.error(res.message || "Update failed");
+          }
+        },
+        error: (err: any) => {
+          if (err.error?.errors) {
+            Object.values(err.error.errors).forEach((msgList: any) => {
+              msgList.forEach((msg: string) => this.toast.error(msg));
+            });
+          } else {
+            this.toast.error("Something went wrong");
+          }
+        }
+      });
+
+    } else {
+      this.companyService.createCompany(payload).subscribe({
+        next: (res) => {
+
+          if (res?.isSuccess) {
+            this.toast.success(res.message || "Company created successfully!");
+            this.companyService.notifyCompaniesChanged();
+            this.closeModal();
+          } else {
+            this.toast.error(res.message || "Failed to create company");
+          }
+        },
+
+        error: (err) => {
+          console.error("Create Error:", err);
+
+          // Backend validation errors (.NET model state)
+          if (err.error?.errors) {
+            Object.values(err.error.errors).forEach((messages: any) => {
+              messages.forEach((msg: string) => this.toast.error(msg));
+            });
+          }
+          else {
+            // Generic fallback
+            this.toast.error("Something went wrong. Please try again.");
+          }
+        }
+      });
+    }
+  }
+
+  deleteCompany(id: string) {
+    this.companyService.deleteCompany(id).subscribe({
       next: (res: ApiResponse<any>) => {
-        if (res?.isSuccess) {
-          this.toast.success(res.message || "Company updated successfully!");
-          this.companyService.notifyCompaniesChanged();
-          this.closeModal();
-           
+        if (res.isSuccess) {
+          this.toast.success(res.message || "Company deleted successfully!");
         } else {
-          this.toast.error(res.message || "Update failed");
+          this.toast.error(res.message || "Delete failed");
         }
       },
-      error: (err: any) => {
-        if (err.error?.errors) {
-          Object.values(err.error.errors).forEach((msgList: any) => {
-            msgList.forEach((msg: string) => this.toast.error(msg));
-          });
-        } else {
-          this.toast.error("Something went wrong");
-        }
+      error: () => {
+        this.toast.error("Something went wrong");
       }
     });
+  }
 
-  } else {
-  this.companyService.createCompany(payload).subscribe({
-    next: (res) => {
-
-      if (res?.isSuccess) {
-        this.toast.success(res.message || "Company created successfully!");
-        this.companyService.notifyCompaniesChanged();
-        this.closeModal();
-      } else {
-        this.toast.error(res.message || "Failed to create company");
+  activeInactiveCompany(id: string) {
+    this.companyService.ativeInactiveCompanyStatus(id, !this.form.value.isActive).subscribe({
+      next: (res: ApiResponse<any>) => {
+        if (res.isSuccess) {
+          this.toast.success(res.message || "Company Inactivated successfully!");
+        } else {
+          this.toast.error(res.message || "Inactivation failed");
+        }
+      },
+      error: () => {
+        this.toast.error("Something went wrong");
       }
-    },
-
-    error: (err) => {
-      console.error("Create Error:", err);
-
-      // Backend validation errors (.NET model state)
-      if (err.error?.errors) {
-        Object.values(err.error.errors).forEach((messages: any) => {
-          messages.forEach((msg: string) => this.toast.error(msg));
-        });
-      } 
-      else {
-        // Generic fallback
-        this.toast.error("Something went wrong. Please try again.");
-      }
-    }
-  });
-}
+    });
+  }
 }
 
-deleteCompany(id: string) {
-  this.companyService.deleteCompany(id).subscribe({
-    next: (res: ApiResponse<any>) => {
-      if (res.isSuccess) {
-        this.toast.success(res.message || "Company deleted successfully!");
-      } else {
-        this.toast.error(res.message || "Delete failed");
-      }
-    },
-    error: () => {
-      this.toast.error("Something went wrong");
-    }
-  });
-}
-
-activeInactiveCompany(id: string) {
-  this.companyService.ativeInactiveCompanyStatus(id, !this.form.value.isActive).subscribe({
-    next: (res: ApiResponse<any>) => {
-      if (res.isSuccess) {
-        this.toast.success(res.message || "Company Inactivated successfully!");
-      } else {
-        this.toast.error(res.message || "Inactivation failed");
-      }
-    },
-    error: () => {
-      this.toast.error("Something went wrong");
-    }
-  });
-}
-}
-  
 

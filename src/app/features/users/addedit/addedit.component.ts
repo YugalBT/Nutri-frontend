@@ -23,6 +23,7 @@ export class AddeditComponent implements OnInit, OnDestroy {
   private modalInstance: any;
   form!: FormGroup;
   isEdit = false;
+  showCurrent = false;
   roles: RoleList[] = [];
   rolesLoading = false;
   rolesError: string | null = null;
