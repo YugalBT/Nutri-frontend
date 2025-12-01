@@ -20,7 +20,7 @@ export const routes: Routes = [
 
   // Authenticated Area
   {
-    path: 'dashboard',
+    path: '',
     loadComponent: () =>
       import('./layout/layout.component')
         .then(m => m.LayoutComponent),
