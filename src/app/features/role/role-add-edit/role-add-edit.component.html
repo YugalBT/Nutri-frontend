@@ -14,10 +14,45 @@
                     <div class="container-fluid">
                         <div class="row g-3">
 
-                            <div class="col-md-12 col-12">
+                            <div class="col-md-4 col-12">
                                 <label class="form-label">{{ 'role.roleName' | translate }}</label>
                                 <input type="text" class="form-control mb-3" formControlName="roleName"
                                     placeholder="Enter role name">
+
+
+                            </div>
+
+                            <div class="col-md-2 col-12" *ngIf="isSuperAdmin">
+                                <label class="form-label">{{ 'role.roleIsDefault' | translate }}</label>
+                                <div>
+                                    <label class="switch">
+                                        <input type="checkbox" [checked]="this.form.get('isDefault')?.value">
+                                        <span class="slider"></span>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="col-md-2 col-12" *ngIf="isSuperAdmin">
+                                <label class="form-label">{{ 'role.roleIsEditable' | translate }}</label>
+                                <div>
+                                    <label class="switch">
+                                        <input type="checkbox" [checked]="this.form.get('isEditable')?.value">
+                                        <span class="slider"></span>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="col-md-2 col-12" *ngIf="isSuperAdmin">
+                                <label class="form-label">{{ 'role.roleIsShow' | translate }}</label>
+                                <div>
+                                    <label class="switch">
+                                        <input type="checkbox" [checked]="this.form.get('isShow')?.value">
+                                        <span class="slider"></span>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="col-md-12 col-12">
                                 <!-- Table Header -->
                                 <div class="pm-row pm-header">
                                     <div class="pm-module">Module</div>

@@ -24,12 +24,17 @@ export class GlobalSearchComponent implements OnInit, OnDestroy {
   @Output() search = new EventEmitter<string>();
   @Output() statusChange = new EventEmitter<number | null>();
   @Output() clear = new EventEmitter<void>();
+  @Output() isShow = new EventEmitter<boolean>();
+
 
   searchControl = new FormControl('');
   statusControl = new FormControl<string | null>('');
+  isShowControl = new FormControl(false);
+  isSuperAdmin = false;
   private subs: Subscription[] = [];
 
   ngOnInit(): void {
+    sessionStorage.getItem('isSuperAdmin') === 'true' ? this.isSuperAdmin = true : this.isSuperAdmin = false;
     this.subs.push(
       this.searchControl.valueChanges
         .pipe(debounceTime(this.debounceTime), distinctUntilChanged())

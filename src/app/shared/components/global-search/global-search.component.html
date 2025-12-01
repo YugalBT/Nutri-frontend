@@ -18,12 +18,8 @@
 
         <i class="bi bi-search search-icon-modern"></i>
 
-        <input id="global-search-input"
-          type="text"
-          class="search-input-modern"
-          [placeholder]="placeholder"
-          [formControl]="searchControl"
-          [attr.aria-label]="placeholder" />
+        <input id="global-search-input" type="text" class="search-input-modern" [placeholder]="placeholder"
+          [formControl]="searchControl" [attr.aria-label]="placeholder" />
 
         <button class="clear-btn-modern" *ngIf="searchControl.value" (click)="doClear()">
           <i class="bi bi-x-lg"></i>
@@ -39,6 +35,15 @@
         <option value="1">{{ 'common.active' | translate }}</option>
         <option value="0">{{ 'common.inactive' | translate }}</option>
       </select>
+    </div>
+
+    <div class="col-md-2 col-sm-6 " *ngIf="isSuperAdmin">
+      <label class="form-label">{{ 'role.roleIsShow' | translate }}</label>
+      <label class="switch">
+        <input type="checkbox" [checked]="isShow" (change)="isShow.emit($any($event.target).checked)">
+        <span class="slider"></span>
+      </label>
+
     </div>
 
   </div>

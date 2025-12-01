@@ -121,6 +121,9 @@
     }
   },
   "role": {
+    "roleIsDefault" : "Default",
+    "roleIsEditable" : "Editable",
+    "roleIsShow" : "Show",
     "searchFilters" : "Search Filters",
     "searchPlaceholder": "Search by role name",
     "Heading": "Role Management",

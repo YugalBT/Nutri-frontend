@@ -26,16 +26,16 @@ export class HeaderComponent {
 
   constructor(private store: Store, private translate: TranslateService) {
     this.user$ = this.store.select(selectAuthUser);
-    // initialize language from localStorage (if previously selected)
-    const saved = localStorage.getItem('lang');
+    // initialize language from sessionStorage (if previously selected)
+    const saved = sessionStorage.getItem('lang');
     if (saved) {
       this.currentLang = saved;
       this.translate.use(this.currentLang).subscribe();
     } else {
       this.translate.use(this.currentLang).subscribe();
     }
-    // initialize theme from localStorage
-    const theme = localStorage.getItem('theme');
+    // initialize theme from sessionStorage
+    const theme = sessionStorage.getItem('theme');
     this.darkMode = theme === 'dark';
     this.applyTheme();
   }
@@ -54,13 +54,13 @@ export class HeaderComponent {
   changeLanguage(lang: string) {
     if (!lang) return;
     this.currentLang = lang;
-    localStorage.setItem('lang', lang);
+    sessionStorage.setItem('lang', lang);
     this.translate.use(lang).subscribe();
   }
 
   toggleDarkMode() {
     this.darkMode = !this.darkMode;
-    localStorage.setItem('theme', this.darkMode ? 'dark' : 'light');
+    sessionStorage.setItem('theme', this.darkMode ? 'dark' : 'light');
     this.applyTheme();
   }
 

@@ -1,10 +1,10 @@
 export enum Constants {
 
-  localStorageToken = 'ACCESS_TOKEN',
-  localStorageExpireIN = 'EXPIRES_IN',
-  localStorageUserPermission = 'USER_PERMISSION',
-  localStorageUserName = 'userName',
-  localStorageWelcomeName = 'welcomeName',
+  sessionStorageToken = 'ACCESS_TOKEN',
+  sessionStorageExpireIN = 'EXPIRES_IN',
+  sessionStorageUserPermission = 'USER_PERMISSION',
+  sessionStorageUserName = 'userName',
+  sessionStorageWelcomeName = 'welcomeName',
 
   ModuleNameUsers = 'Users',
   ModuleNameRoles = 'Roles',
@@ -15,6 +15,8 @@ export enum Constants {
   USERNAME = 'username',
   USERDATA = 'userdata',
   AUTHTOKEN = 'authToken',
+  IsSuperAdmin = 'isSuperAdmin',
+
 
 
 

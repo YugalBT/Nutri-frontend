@@ -92,39 +92,7 @@
 }
 
 /* SWITCH */
-.switch {
-  position: relative;
-  width: 42px;
-  height: 22px;
-  display: inline-block;
-}
-.switch input {
-  display: none;
-}
-.slider {
-  position: absolute;
-  inset: 0;
-  background: #d1d5db;
-  border-radius: 22px;
-  transition: .3s;
-}
-.slider:before {
-  content: "";
-  width: 18px;
-  height: 18px;
-  border-radius: 50%;
-  background: #fff;
-  position: absolute;
-  left: 2px;
-  top: 2px;
-  transition: .3s;
-}
-input:checked + .slider {
-  background: #3b82f6;
-}
-input:checked + .slider:before {
-  transform: translateX(20px);
-}
+
 
 /* ACTION BUTTON */
 .action-btn {

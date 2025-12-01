@@ -72,7 +72,7 @@ export class SidebarComponent implements OnInit {
         return;
       }
 
-      // Fallback to localStorage-stored user data
+      // Fallback to sessionStorage-stored user data
       const data = this.tokenService.getUserData();
       if (data) {
         try {
@@ -135,7 +135,7 @@ export class SidebarComponent implements OnInit {
   logout() {
     this.confirm.confirm(this.translate.instant('sidebar.confirmLogout') || 'Do you really want to logout?').subscribe(result => {
       if (result) {
-        localStorage.clear();
+        sessionStorage.clear();
         this.toast.success(this.translate.instant('sidebar.logoutSuccess') || Constants.LOGOUT_SUCCESS);
         this.router.navigate(['/login']);
       }

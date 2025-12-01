@@ -117,6 +117,9 @@
     }
   },
   "role": {
+    "roleIsDefault" : "Predefinito",
+    "roleIsEditable" : "Modificabile",
+    "roleIsShow" : "Mostra ruolo",
     "searchFilters" : "Filtri di ricerca",
     "searchPlaceholder": "Cerca per nome ruolo",
     "Heading": "Gestione ruoli",

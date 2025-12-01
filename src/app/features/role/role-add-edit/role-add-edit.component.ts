@@ -38,6 +38,7 @@ export class UserRoleAddEditComponent implements OnInit, OnDestroy {
   modules: Module[] = [];
   modulesLoading = false;
   modulesError: string | null = null;
+  isSuperAdmin = false;
   
   // existing permission ids for edit mode
   existingPermissionIds: Set<string> = new Set<string>();
@@ -60,6 +61,8 @@ export class UserRoleAddEditComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    // Check permission to manage roles
+    sessionStorage.getItem('isSuperAdmin') === 'true' ? this.isSuperAdmin = true : this.isSuperAdmin = false;
     const canManageSub = this.store.select(selectCanManageRoles).pipe(take(1)).subscribe((canManage) => {
       if (!canManage) {
         this.toast.error(this.translate.instant('common.noPermission') || 'You do not have permission to manage roles');
