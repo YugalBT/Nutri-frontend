@@ -8,44 +8,53 @@
                         <h2>Welcome!</h2>
                         <form [formGroup]="form" (ngSubmit)="onSubmit()" class="form_sec mt-5">
                             <div class="row">
-                                    <div class="col-lg-12 mb-lg-4 mb-md-4 mb-3"><label for="exampleInputPassword1"
-                                        class="form-label form-label-custom">{{ 'auth.email' | translate }} <sup style="color: #f00; font-size: 12px;">*</sup></label>
+                                <div class="col-lg-12 mb-lg-4 mb-md-4 mb-3"><label for="exampleInputPassword1"
+                                        class="form-label form-label-custom">{{ 'auth.email' | translate }} <sup
+                                            style="color: #f00; font-size: 12px;">*</sup></label>
                                     <input class="form-control form-control-custom" formControlName="username"
-                                        id="exampleInputPassword1" placeholder="{{ 'auth.emailPlaceholder' | translate }}" type="text">
+                                        id="exampleInputPassword1"
+                                        placeholder="{{ 'auth.emailPlaceholder' | translate }}" type="text">
                                     <div class="text-danger mt-1"
                                         *ngIf="form.get('username')?.touched && form.get('username')?.invalid">
-                                        <small *ngIf="form.get('username')?.errors?.['required']">{{ 'auth.usernameRequired' | translate }}</small>
-                                        <small *ngIf="form.get('username')?.errors?.['username']">{{ 'auth.enterValidEmail' | translate }}</small>
+                                        <small *ngIf="form.get('username')?.errors?.['required']">{{
+                                            'auth.usernameRequired' | translate }}</small>
+                                        <small *ngIf="form.get('username')?.errors?.['username']">{{
+                                            'auth.enterValidEmail' | translate }}</small>
                                     </div>
                                 </div>
 
                                 <div class="col-lg-12">
                                     <div class="position-relative password_svg">
-                                        <label for="exampleInputPassword2"
-                                            class="form-label form-label-custom">{{ 'auth.password' | translate }} <sup style="color: #f00; font-size: 12px;">*</sup></label>
-                                       <div class="input-group">
-                                            <input
-                                            [type]="!showPassword ? 'text' : 'password'" 
+                                        <label for="exampleInputPassword2" class="form-label form-label-custom">{{
+                                            'auth.password' | translate }} <sup
+                                                style="color: #f00; font-size: 12px;">*</sup></label>
+                                        <div class="input-group">
+                                            <input [type]="!showPassword ? 'text' : 'password'"
                                                 class="form-control form-control-custom" formControlName="password"
-                                                id="exampleInputPassword2" placeholder="{{ 'auth.passwordPlaceholder' | translate }}" [type]="showPassword ? 'text' : 'password'">
-                                                <!-- Eye open (visible) -->
-                                               <span class="input-group-text" role="button" (click)="showPassword = !showPassword">
-        <i class="fa" [ngClass]="showPassword ? 'fa-eye' : 'fa-eye-slash'"></i>
-      </span>
+                                                id="exampleInputPassword2"
+                                                placeholder="{{ 'auth.passwordPlaceholder' | translate }}"
+                                                [type]="showPassword ? 'text' : 'password'">
+                                            <!-- Eye open (visible) -->
+                                            <span class="input-group-text" role="button"
+                                                (click)="showPassword = !showPassword">
+                                                <i class="fa" [ngClass]="showPassword ? 'fa-eye' : 'fa-eye-slash'"></i>
+                                            </span>
                                         </div>
                                         <div class="text-danger mt-1"
                                             *ngIf="form.get('password')?.touched && form.get('password')?.invalid">
-                                            <small *ngIf="form.get('password')?.errors?.['required']">{{ 'auth.passwordRequired' | translate }}</small>
+                                            <small *ngIf="form.get('password')?.errors?.['required']">{{
+                                                'auth.passwordRequired' | translate }}</small>
                                         </div>
                                     </div>
-                                        <div class="d-flex align-items-center justify-content-end remember_div mt-3"><a
-                                            class="link_forget" routerLink="/forgot-password"
-                                            data-discover="true">{{ 'auth.forgotPassword' | translate }}</a></div>
+                                    <div class="d-flex align-items-center justify-content-end remember_div mt-3"><a
+                                            class="link_forget"  [routerLink]="['/forgot-password', companyCode]" data-discover="true">{{
+                                            'auth.forgotPassword' | translate }}</a></div>
                                 </div>
                                 <div class="col-lg-12 mb-lg-4 mb-md-4 mt-30">
-                                    <button type="submit" class="btn blue-btn w-100 text-uppercase"
-                                        [disabled]="loading$ | async">
-                                        {{ (loading$ | async) ? ('auth.signingIn' | translate) : ('auth.signIn' | translate) }}
+                                    <button type="submit" [style.backgroundColor]="primaryColor"
+                                        class="btn blue-btn w-100 text-uppercase" [disabled]="loading$ | async">
+                                        {{ (loading$ | async) ? ('auth.signingIn' | translate) : ('auth.signIn' |
+                                        translate) }}
                                     </button>
                                 </div>
 
@@ -57,7 +66,7 @@
             </div>
             <div class="col-lg-5 gradient_bg">
                 <div class="inner_content_two"><a class="" href="#" data-discover="true"><img class="img-fluid" alt=""
-                            src="assets/image/logo.png"></a>
+                            [src]="logoUrl || 'assets/image/logo.png'"></a>
                     <div class="login-right-content">
                         <h2 class="login-right-heading">Smarter feed. Healthier herds. <span> Stronger economics.</span>
                         </h2>

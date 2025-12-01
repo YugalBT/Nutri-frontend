@@ -89,33 +89,34 @@ export class ProfileComponent implements OnInit {
   }
 
   onSubmit() {
-    if (this.profileForm.invalid) {
-      this.toast.error('Please correct the errors in the form before submitting.');
-      return;
-    }
-
-    const payload = this.profileForm.getRawValue();
-    delete payload.email;
-
-    this.profileService.updateProfile(payload).subscribe((res) => {
-      if (res.isSuccess) {
-        this.toast.success(res.message);
-      //    const updatedUser: User = {
-      //   ...payload,
-      //   email: this.profileForm.get('email')?.value,
-      // };
-      
-          this.getLatestProfileDetails();
-      } else {
-        this.toast.error(res.message);
-        //this.store.dispatch(AuthActions.updateProfileFailure({ error: res.message }));
-      }
-    });
+  if (this.profileForm.invalid) {
+    this.toast.error('Please correct the errors in the form before submitting.');
+    return;
   }
+
+  const payload = this.profileForm.getRawValue();
+  delete payload.email;
+
+  this.profileService.updateProfile(payload).subscribe({
+    next: (res: any) => {
+      if (res.isSuccess) {
+        this.toast.success(res?.message);
+        this.getLatestProfileDetails();
+      } else {
+        this.toast.error(res?.message);
+      }
+    },
+    error: (err: any) => {
+      const message = err?.error?.message;
+      this.toast.error(message);
+    }
+  });
+}
+
 
  getLatestProfileDetails() {
   this.profileService.profileDetails().pipe(take(1)).subscribe(res => {
-    if (res.isSuccess && res.data) {
+    if (res?.isSuccess && res?.data) {
 
       this.store.select(selectAuthUser).pipe(take(1)).subscribe((currentUser) => {
         if (currentUser) {

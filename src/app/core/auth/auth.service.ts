@@ -13,32 +13,32 @@ import { ApiResponse } from '../models/api-response';
 })
 export class AuthService {
 
-   constructor(
+  constructor(
     private http: HttpService,
     private tokenService: TokenService
-  ) {}
-  
-   login(body: LoginRequest): Observable<ApiResponse<any>> {
-  const payload: LoginRequest = {
-    ...body,
-    companyCode: body.companyCode ?? 'login'
-  };
+  ) { }
 
-  return this.http.post<any>(API_ENDPOINTS.AUTH.LOGIN, payload).pipe(
-    tap(res => {
-      if (res?.isSuccess && res?.data?.token) {
+  login(body: LoginRequest): Observable<ApiResponse<any>> {
+    const payload: LoginRequest = {
+      ...body,
+      companyCode: body.companyCode ?? 'login'
+    };
 
-        this.tokenService.setToken(res.data.token);
-        this.tokenService.setUserData(JSON.stringify(res.data));
-        this.tokenService.setUserName(`${res.data.firstName || ''} ${res.data.lastName || ''}`);
+    return this.http.post<any>(API_ENDPOINTS.AUTH.LOGIN, payload).pipe(
+      tap(res => {
+        if (res?.isSuccess && res?.data?.token) {
 
-      }
-      else {
-        this.logout();
-      }
-    })
-  );
-}
+          this.tokenService.setToken(res.data.token);
+          this.tokenService.setUserData(JSON.stringify(res.data));
+          this.tokenService.setUserName(`${res.data.firstName || ''} ${res.data.lastName || ''}`);
+
+        }
+        else {
+          this.logout();
+        }
+      })
+    );
+  }
 
 
   logout() {
@@ -47,6 +47,13 @@ export class AuthService {
     this.tokenService.removeUserUserName();
 
   }
+
+ getHomePageContent(companyCode: string): Observable<ApiResponse<any>> {
+  return this.http.get<any>(
+    `${API_ENDPOINTS.AUTH.HOMEPAGE_CONTENT}?CompanyCode=${companyCode}`
+  );
+}
+
 
   isLoggedIn(): boolean {
     return this.tokenService.isLoggedIn();

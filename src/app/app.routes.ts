@@ -1,16 +1,18 @@
 import { Routes } from '@angular/router';
 import { authGuard } from './core/auth/auth.guard';
+import { companyGuard } from './core/auth/company.guard';
 
 export const routes: Routes = [
   // Public Routes
   {
-    path: 'login',
+    path: ':companyCode/login',
+    canActivate: [companyGuard],                                                                        
     loadComponent: () =>
-      import('./features/auth/login/login.component')
+      import('./features/auth/login/login.component')                                   
         .then(m => m.LoginComponent),
   },
   {
-    path: 'forgot-password',
+    path: 'forgot-password/:companyCode',
     loadComponent: () =>
       import('./features/auth/forgot-password/forgot-password.component')
         .then(m => m.ForgotPasswordComponent),
@@ -18,7 +20,7 @@ export const routes: Routes = [
 
   // Authenticated Area
   {
-    path: '',
+    path: 'dashboard',
     loadComponent: () =>
       import('./layout/layout.component')
         .then(m => m.LayoutComponent),
@@ -74,10 +76,14 @@ export const routes: Routes = [
     ],
   },
 
-  {
-    path: '**',
+   {
+    path: '404',
     loadComponent: () =>
       import('./shared/not-found/not-found.component')
         .then(m => m.NotFoundComponent),
   },
+  // {
+  //   path: '**',
+  //   redirectTo: '404',
+  // },
 ];

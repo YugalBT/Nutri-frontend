@@ -20,31 +20,31 @@ import { NgxSpinnerModule, NgxSpinnerService } from 'ngx-spinner';
 })
 export class AppComponent implements OnInit {
   title = 'nutri-frontend';
-  
-   constructor(
+
+  constructor(
     private router: Router,
     private store: Store<{ auth: AuthState }>,
     private tokenService: TokenService,
     private spinner: NgxSpinnerService
-  ) {}
-  
-    ngOnInit() {
-      this.spinner.show('primary');
-      const token = this.tokenService.getToken();
-    const user: User | null = JSON.parse(this.tokenService.getUserData() || 'null');
+  ) { }
 
-    if (token && user) {
-      // If token expired, clear and logout
-      if (this.tokenService.isTokenExpired()) {
-        this.tokenService.clearAll();
-        this.store.dispatch(AuthActions.logout());
-      } else {
-        // Restore session silently on app init — do not trigger success toast or navigation
-        this.store.dispatch(AuthActions.loginSuccess({ user, token, silent: true }));
+  ngOnInit() {
+  this.router.events.subscribe(event => {
+    if (event instanceof NavigationEnd) {
+      const url = event.url;
+      if (!url.includes('/login')) { 
+        const token = this.tokenService.getToken();
+        const user: User | null = JSON.parse(this.tokenService.getUserData() || 'null');
+
+        if (token && user && !this.tokenService.isTokenExpired()) {
+          this.store.dispatch(AuthActions.loginSuccess({ user, token, silent: true }));
+        } else {
+          this.tokenService.clearAll();
+          this.store.dispatch(AuthActions.logout());
+        }
       }
-    } else {
-      this.store.dispatch(AuthActions.logout());
     }
-    this.spinner.hide('primary');
-  }
+  });
+}
+
 }

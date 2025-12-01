@@ -8,6 +8,8 @@ export const API_ENDPOINTS = {
     PROFILE_UPDATE: '/Auth/ProfileUpdate',
     PROFILE_DETAILS: '/Auth/ProfileDetails',
     CHANGE_PASSWORD: '/Auth/ResetPassword',
+    HOMEPAGE_CONTENT: '/Auth/HomePageContent',
+
 
 
   },

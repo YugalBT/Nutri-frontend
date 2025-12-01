@@ -21,31 +21,18 @@
                         </svg></span><input class="form-control"
                         placeholder="{{ 'header.searchPlaceholder' | translate }}" type="text">
                 </div> -->
-                <div class="notification-wrapper position-relative">
-                    <div class="header-icon Notification">
-                        <svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path fill-rule="evenodd" clip-rule="evenodd"
-                                d="M11 16.3605C16.1693 16.3605 18.5608 15.6974 18.7917 13.0356C18.7917 10.3757 17.1244 10.5468 17.1244 7.28318C17.1244 4.73396 14.7082 1.8335 11 1.8335C7.29191 1.8335 4.87565 4.73396 4.87565 7.28318C4.87565 10.5468 3.20837 10.3757 3.20837 13.0356C3.44025 15.7074 5.83167 16.3605 11 16.3605Z"
-                                stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
-                            <path d="M13.1898 19.1191C11.9393 20.5076 9.98862 20.5241 8.7262 19.1191" stroke="black"
-                                stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
-                        </svg>
-                    </div>
-                    <div class="notification-number">2</div>
-                </div>
+                
 
-                                <!-- Dark mode toggle -->
-                                <div class="ms-2">
-                                    <button
-                                        class="btn btn-sm theme-toggle"
-                                        (click)="toggleDarkMode()"
-                                        [attr.aria-pressed]="darkMode"
-                                        [attr.aria-label]="darkMode ? 'Switch to light mode' : 'Switch to dark mode'"
-                                        [title]="darkMode ? 'Light mode' : 'Dark mode'">
-                                        <span class="theme-icon" aria-hidden="true">{{ darkMode ? '☀️' : '🌙' }}</span>
-                                        <span class="theme-label ms-2 d-none d-sm-inline">{{ darkMode ? 'Light' : 'Dark' }}</span>
-                                    </button>
-                                </div>
+
+                <!-- Dark mode toggle -->
+                <div class="ms-2">
+                    <button class="btn btn-sm theme-toggle" (click)="toggleDarkMode()" [attr.aria-pressed]="darkMode"
+                        [attr.aria-label]="darkMode ? 'Switch to light mode' : 'Switch to dark mode'"
+                        [title]="darkMode ? 'Light mode' : 'Dark mode'">
+                        <span class="theme-icon" aria-hidden="true">{{ darkMode ? '☀️' : '🌙' }}</span>
+                        <span class="theme-label ms-2 d-none d-sm-inline">{{ darkMode ? 'Light' : 'Dark' }}</span>
+                    </button>
+                </div>
 
                 <!-- Dropdown -->
                 <div class="dropdown profile-dropdown">
@@ -76,15 +63,51 @@
 
                     <ul class="dropdown-menu dropdown-menu-end">
                         <li><a class="dropdown-item" routerLink="/profile">{{ 'header.myProfile' | translate }}</a></li>
-                        <li><a class="dropdown-item" style="cursor: pointer;" (click)="logout()">{{ 'header.logout' | translate }}</a></li>
+                        <li><a class="dropdown-item" style="cursor: pointer;" (click)="logout()">{{ 'header.logout' |
+                                translate }}</a></li>
                     </ul>
                 </div>
-                
+                <!-- 🔔 Notification Icon -->
+                <div class="notification-wrapper position-relative" (click)="toggleNotificationPopup()">
+                    <div class="header-icon Notification">
+                        <svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg"> <path fill-rule="evenodd" clip-rule="evenodd" d="M11 16.3605C16.1693 16.3605 18.5608 15.6974 18.7917 13.0356C18.7917 10.3757 17.1244 10.5468 17.1244 7.28318C17.1244 4.73396 14.7082 1.8335 11 1.8335C7.29191 1.8335 4.87565 4.73396 4.87565 7.28318C4.87565 10.5468 3.20837 10.3757 3.20837 13.0356C3.44025 15.7074 5.83167 16.3605 11 16.3605Z" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path> <path d="M13.1898 19.1191C11.9393 20.5076 9.98862 20.5241 8.7262 19.1191" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path> </svg>
+                    </div>
+                    <div class="notification-number">
+                        {{ notificationsData.length }} <!-- dynamic count -->
+                    </div>
+                </div>
+
+                <!-- 🧾 POPUP -->
+                <div class="notification-overlay" *ngIf="showNotificationPopup" (click)="closePopup()"></div>
+
+                <div class="notification-popup" *ngIf="showNotificationPopup" (click)="$event.stopPropagation()">
+                    <div class="popup-header d-flex justify-content-between">
+                        <h4>Notifications</h4>
+                        <button class="mark-read-btn">Mark All Read</button>
+                    </div>
+
+                    <div class="popup-body">
+                        <ng-container *ngIf="notificationsData.length > 0; else noNotifications">
+                            <div class="notification-item" *ngFor="let item of notificationsData">
+                                <h5>{{ item.title }}</h5>
+                                <p class="description">{{ item.description }}</p>
+                                <p class="date">{{ item.createdDate }}</p>
+                            </div>
+                        </ng-container>
+
+                        <ng-template #noNotifications>
+                            <p class="no-data">No notifications found.</p>
+                        </ng-template>
+                    </div>
+
+                    <div class="popup-footer" (click)="goToAllNotifications()">
+                        See More →
+                    </div>
+                </div>
+
 
             </div>
         </div>
     </div>
 </header>
-<app-confirm-dialog
-  (confirm)="onConfirm($event)"
-></app-confirm-dialog>
+<app-confirm-dialog (confirm)="onConfirm($event)"></app-confirm-dialog>

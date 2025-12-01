@@ -41,7 +41,7 @@ export class AuthEffects {
           const payload: LoginRequest = {
             username,
             password,
-            companyCode: companyCode ?? 'set',
+            companyCode: companyCode ?? 'login',
           };
 
           return this.authService.login(payload).pipe(
@@ -126,7 +126,7 @@ export class AuthEffects {
             this.spinner.show();
             this.tokenService.clearAll();
 
-            return from(this.router.navigate(['/login'])).pipe(
+            return from(this.router.navigate(['/404'])).pipe(
               finalize(() => {
                 this.spinner.hide();
               })
