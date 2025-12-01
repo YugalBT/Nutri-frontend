@@ -1,5 +1,6 @@
 {
   "company": {
+    "userRole": "User Role",
     "searchFilters" : "Search Filters",
     "searchPlaceholder": "Search by company name, code or phone",
     "Heading": "Company Management",
@@ -156,6 +157,8 @@
     "smtpSetup": "SMTP Setup"
   },
   "common": {
+    "selectRole" : "Select Role",
+    "error": "An error occurred. Please try again.",
     "cancel": "Cancel",
     "save": "Save",
     "update": "Update",
