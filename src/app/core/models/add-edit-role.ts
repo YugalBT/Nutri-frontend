@@ -3,6 +3,9 @@ export interface RoleItem {
   nameEn: string;
   nameIt?: string;
   isActive?: boolean;
+  isDefault?: boolean;
+  isShow?: boolean;
+  isEditable?: boolean;
   tenantId?: string;
   rolePermissionId?: string[];
 }
@@ -17,6 +20,9 @@ export interface GetAllRolesResponse {
 export interface CreateUpdateRolePayload {
   nameEn: string;
   nameIt?: string;
+  isDefault?: boolean;
+  isShow?: boolean;
+  isEditable?: boolean;
   rolePermissionId?: string[];
   roleId?: string; // present for update
 }

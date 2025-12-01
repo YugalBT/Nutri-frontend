@@ -1,13 +1,13 @@
 export class StorageHelper {
   static set(key: string, data: any): void {
-    localStorage.setItem(key, JSON.stringify(data));
+    sessionStorage.setItem(key, JSON.stringify(data));
   }
 
   static get(key: string): any {
-    return JSON.parse(localStorage.getItem(key) || 'null');
+    return JSON.parse(sessionStorage.getItem(key) || 'null');
   }
 
   static remove(key: string): void {
-    localStorage.removeItem(key);
+    sessionStorage.removeItem(key);
   }
 }

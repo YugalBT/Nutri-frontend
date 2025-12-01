@@ -22,6 +22,12 @@
                               <div *ngIf="form.get('companyName')?.errors?.['pattern']" class="text-danger">
                                     Company Name can only contain letters, spaces and hyphens.
                                 </div>
+                                <div *ngIf="form.get('companyName')?.errors?.['minlength']" class="text-danger">
+                                    Company Name must be at least 3 characters long.
+                                </div>
+                                <div *ngIf="form.get('companyName')?.errors?.['maxlength']" class="text-danger">
+                                    Company Name cannot exceed 50 characters.
+                                </div>
                             </div>
 
                             <div class="col-md-4 col-12">
@@ -59,7 +65,7 @@
                                 <input type="color" class="form-control form-control-color" formControlName="secondaryColor" title="Choose secondary color">
                             </div> -->
 
-                            <div class="col-md-6 col-12">
+                            <div class="col-md-4 col-12">
                                 <label class="form-label">{{ 'company.logo' | translate }}<sup style="color: #f00; font-size: 12px;">*</sup></label>
                                 <input type="file" class="form-control" (change)="onLogoChange($event)" accept="image/*">
                           
@@ -68,9 +74,9 @@
                               </div>
                             </div>
 
-                            <div class="col-md-6 col-12">
+                            <div class="col-md-4 col-12">
                                 <label class="form-label"></label>
-                                <img *ngIf="this.form.get('logo')?.value" class="form-control" [src]="this.form.get('logo')?.value || '/assets/image/placeholder-image.png'" style="max-height: 80px; max-width: 150px; object-fit: contain;">
+                                <img class="form-control" [src]="this.form.get('logo')?.value || '/assets/image/placeholder-image.png'" style="max-height: 80px; max-width: 150px; object-fit: contain;">
                             </div>
 
                             <div class="col-12 mt-3">

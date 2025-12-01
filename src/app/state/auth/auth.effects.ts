@@ -78,6 +78,8 @@ export class AuthEffects {
             this.tokenService.setToken(token);
             this.tokenService.setUserData(JSON.stringify(user));
             this.tokenService.setUserName(user?.username ?? '');
+            this.tokenService.setIsSuperAdmin(user?.isSuperAdmin ?? false);
+
 
             // Apply dynamic theme colors from user profile
             try {

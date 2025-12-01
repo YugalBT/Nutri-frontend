@@ -5,7 +5,7 @@ import { PaginationPayload } from '../models/base-pagination.model';
 
 export function getDefaultPagination(): PaginationPayload {
   return {
-    // tenantId: auth.getTenantId(),  // from JWT/localStorage
+    // tenantId: auth.getTenantId(),  // from JWT/sessionStorage
     searchValue: '',
     tenantId: '',
     orderStatus: '',

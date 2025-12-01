@@ -38,6 +38,7 @@ export class UserRoleAddEditComponent implements OnInit, OnDestroy {
   modules: Module[] = [];
   modulesLoading = false;
   modulesError: string | null = null;
+  isSuperAdmin = false;
   
   // existing permission ids for edit mode
   existingPermissionIds: Set<string> = new Set<string>();
@@ -60,6 +61,8 @@ export class UserRoleAddEditComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    // Check permission to manage roles
+    sessionStorage.getItem('isSuperAdmin') === 'true' ? this.isSuperAdmin = true : this.isSuperAdmin = false;
     const canManageSub = this.store.select(selectCanManageRoles).pipe(take(1)).subscribe((canManage) => {
       if (!canManage) {
         this.toast.error(this.translate.instant('common.noPermission') || 'You do not have permission to manage roles');
@@ -75,7 +78,11 @@ export class UserRoleAddEditComponent implements OnInit, OnDestroy {
 
   private initForm(): void {
     this.form = this.fb.group({
-      roleName: ['', Validators.required],
+      roleName: ['', [Validators.required, Validators.pattern(/^[A-Za-z ]+$/)]],
+      roleNameIt: ['',[Validators.pattern(/^[A-Za-z ]+$/)]],
+      isDefault: [false],
+      isShow: [false],
+      isEditable: [false],
       description: ['']
     });
   }
@@ -119,7 +126,11 @@ export class UserRoleAddEditComponent implements OnInit, OnDestroy {
     
     if (isEdit && roleData) {
       this.form.patchValue({
-        roleName: roleData.nameEn || roleData.nameIt || '',
+        roleName: roleData.nameEn || '',
+        roleNameIt: roleData.nameIt || '',
+        isDefault : roleData.isDefault || false,
+        isShow : roleData.isShow || false,
+        isEditable : roleData.isEditable || false,
         description: roleData.nameIt || ''
       });
       
@@ -196,67 +207,160 @@ export class UserRoleAddEditComponent implements OnInit, OnDestroy {
     }
     }
 
-  saveRole(): void {
+  // saveRole(): void {
    
-    if (!this.canManageRoles) {
-      this.toast.error(this.translate.instant('common.noPermission') || 'You do not have permission');
-      return;
-    }
+  //   if (!this.canManageRoles) {
+  //     this.toast.error(this.translate.instant('common.noPermission') || 'You do not have permission');
+  //     return;
+  //   }
 
-    if (!this.form.valid) {
-      this.toast.error(this.translate.instant('common.formInvalid') || 'Please fill required fields');
-      return;
-    }
+  //   if (!this.form.valid) {
+  //     this.toast.error(this.translate.instant('common.formInvalid') || 'Please fill required fields');
+  //     return;
+  //   }
 
-    this.isLoading = true;
-    this.spinner.show();
+  //   this.isLoading = true;
+  //   this.spinner.show();
 
 
-    const checkedPermissions = this.getCheckedPermissions();
+  //   const checkedPermissions = this.getCheckedPermissions();
 
-    const payload: CreateUpdateRolePayload = {
-      nameEn: this.form.get('roleName')?.value,
-      nameIt: this.form.get('description')?.value || this.form.get('roleName')?.value,
-      rolePermissionId: checkedPermissions || []
+  //   const payload: CreateUpdateRolePayload = {
+  //     nameEn: this.form.get('roleName')?.value,
+  //     nameIt: this.form.get('description')?.value || this.form.get('roleName')?.value,
+  //     rolePermissionId: checkedPermissions || []
 
-    };
-     console.log('Saving role...',payload);
-    if (this.isEditMode && this.roleId) {
-      payload.roleId = this.roleId;
-    }
+  //   };
+  //    console.log('Saving role...',payload);
+  //   if (this.isEditMode && this.roleId) {
+  //     payload.roleId = this.roleId;
+  //   }
 
-    const apiCall$ = this.isEditMode && this.roleId
-      ? this.roleService.updateRole(payload)
-      : this.roleService.createRole(payload);
+  //   const apiCall$ = this.isEditMode && this.roleId
+  //     ? this.roleService.updateRole(payload)
+  //     : this.roleService.createRole(payload);
 
-    const sub = apiCall$.subscribe({
-      next: (response: any) => {
-        this.isLoading = false;
-        this.spinner.hide();
-        const message = this.isEditMode
-          ? this.translate.instant('role.updated') || 'Role updated successfully'
-          : this.translate.instant('role.created') || 'Role created successfully';
-        this.toast.success(message);
-        this.closeModal();
-        // extract actual role data from response
-        const respData = (response as any)?.data || response;
-        const savedRole: RoleItem = {
-          roleId: respData?.roleId || respData?.roleId || this.roleId || '',
-          nameEn: payload.nameEn,
-          nameIt: payload.nameIt,
-          rolePermissionId: payload.rolePermissionId || []
-        };
-        this.roleSaved.emit({ role: savedRole, isEdit: this.isEditMode });
-      },
-      error: (err) => {
-        this.isLoading = false;
-        this.spinner.hide();
-        const errMsg = err?.error?.message || this.translate.instant('common.error') || 'Error saving role';
-        this.toast.error(errMsg);
-      }
-    });
-    this.subs.push(sub);
+  //   const sub = apiCall$.subscribe({
+  //     next: (response: any) => {
+  //       this.isLoading = false;
+  //       this.spinner.hide();
+  //       const message = this.isEditMode
+  //         ? this.translate.instant('role.updated') || 'Role updated successfully'
+  //         : this.translate.instant('role.created') || 'Role created successfully';
+  //       this.toast.success(message);
+  //       this.closeModal();
+  //       // extract actual role data from response
+  //       const respData = (response as any)?.data || response;
+  //       const savedRole: RoleItem = {
+  //         roleId: respData?.roleId || respData?.roleId || this.roleId || '',
+  //         nameEn: payload.nameEn,
+  //         nameIt: payload.nameIt,
+  //         rolePermissionId: payload.rolePermissionId || []
+  //       };
+  //       this.roleSaved.emit({ role: savedRole, isEdit: this.isEditMode });
+  //     },
+  //     error: (err) => {
+  //       this.isLoading = false;
+  //       this.spinner.hide();
+  //       const errMsg = err?.error?.message || this.translate.instant('common.error') || 'Error saving role';
+  //       this.toast.error(errMsg);
+  //     }
+  //   });
+  //   this.subs.push(sub);
+  // }
+
+  saveRole(): void {
+
+  if (!this.canManageRoles) {
+    this.toast.error(this.translate.instant('common.noPermission') || 'You do not have permission');
+    return;
   }
+
+  if (this.form.invalid) {
+    this.toast.error(this.translate.instant('common.formInvalid') || 'Please fill required fields');
+    return;
+  }
+
+  this.isLoading = true;
+  this.spinner.show();
+
+  const checkedPermissions = this.getCheckedPermissions();
+
+  const payload: CreateUpdateRolePayload = {
+    nameEn: this.form.get('roleName')?.value,
+    nameIt: this.form.get('roleNameIt')?.value,
+    isDefault: this.form.get('isDefault')?.value,
+    isShow: this.form.get('isShow')?.value,
+    isEditable: this.form.get('isEditable')?.value,
+    rolePermissionId: checkedPermissions || []
+  };
+
+  if (this.isEditMode && this.roleId) {
+    payload.roleId = this.roleId;
+  }
+
+  const apiCall$ = this.isEditMode && this.roleId
+    ? this.roleService.updateRole(payload)
+    : this.roleService.createRole(payload);
+
+  const sub = apiCall$.subscribe({
+    next: (response: any) => {
+      this.isLoading = false;
+      this.spinner.hide();
+
+      const resp = response?.data || response;
+    
+      if (response?.isSuccess === false) {
+        const msg =
+          response?.message ||
+          this.translate.instant('common.error') ||
+          'Something went wrong';
+
+        this.toast.error(msg);
+        return;
+      }
+
+      const message = this.isEditMode
+        ? this.translate.instant('role.updated') || 'Role updated successfully'
+        : this.translate.instant('role.created') || 'Role created successfully';
+
+      this.toast.success(message);
+
+      this.closeModal();
+
+  
+      const savedRole: RoleItem = {
+        roleId: resp?.roleId || payload.roleId || '',
+        nameEn: payload.nameEn,
+        rolePermissionId: payload.rolePermissionId || []
+      };
+
+      this.roleSaved.emit({ role: savedRole, isEdit: this.isEditMode });
+    },
+
+    error: (err) => {
+      this.isLoading = false;
+      this.spinner.hide();
+
+      let errMsg: string = this.translate.instant('common.error') || 'Error saving role';
+
+      if (err?.error?.errors) {
+        const allErrors = Object.values(err.error.errors).flat();
+        errMsg = String(allErrors[0]) || errMsg;
+      }
+      else if (err?.error?.message) {
+        errMsg = String(err.error.message);
+      }
+      else if (typeof err?.message === 'string') {
+        errMsg = err.message;
+      }
+
+      this.toast.error(errMsg);
+    }
+  });
+
+  this.subs.push(sub);
+}
 
 
   private getCheckedPermissions(): string[] {

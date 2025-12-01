@@ -34,6 +34,7 @@ export class RoleComponent implements OnInit, OnDestroy ,AfterViewInit{
   totalRecords = 0;
   pageSize = 5;
   pageIndex = 0;
+  isShow = false;
   canManageRoles = false;
   canDeleteRoles = false;
   private subs: Subscription[] = [];
@@ -90,7 +91,8 @@ export class RoleComponent implements OnInit, OnDestroy ,AfterViewInit{
       pageNo: this.pageIndex + 1,
       recordPerPage: this.pageSize,
       status: this.statusFilter ?? 2,
-      searchValue: this.searchValue
+      searchValue: this.searchValue,
+      isShow: this.isShow
     };
 
     const sub = this.roleService.getRoles(payload).subscribe({
@@ -168,6 +170,14 @@ export class RoleComponent implements OnInit, OnDestroy ,AfterViewInit{
     this.loadRoles();
   }
 
+  onIsShowChange(isShow: boolean): void {
+    // Handle the isShow change event here
+    console.log('Is Show changed to:', isShow);
+    this.isShow = isShow;
+    this.loadRoles();
+
+    // You can implement any additional logic needed when isShow changes
+  }
   onStatusChange(status: number | null): void {
     this.statusFilter = status;
     this.pageIndex = 0;
