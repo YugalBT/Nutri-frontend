@@ -1,6 +1,6 @@
 /* login.component.css or global styles.css */
 button.btn.blue-btn:disabled {
-  background-color: #007bff !important; /* keep your blue color */
+  background-color: #2CA28F !important; /* keep your blue color */
   color: #fff !important;               /* keep text white */
   opacity: 0.7;                         /* optional: show it’s disabled */
   cursor: not-allowed;                  /* show it’s disabled */

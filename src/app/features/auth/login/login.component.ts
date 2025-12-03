@@ -94,18 +94,18 @@ export class LoginComponent implements OnInit {
 
 
 
-  applyTheme(data: any) {
-    this.logoUrl = data.logo;
-    document.documentElement.style.setProperty('--primaryColor', data.primaryColor || '#1d7e8b');
-    document.documentElement.style.setProperty('--secondaryColor', data.secondaryColor || '#FFAA00');
+  // applyTheme(data: any) {
+  //   this.logoUrl = data.logo;
+  //   document.documentElement.style.setProperty('--primaryColor', data.primaryColor || '#1d7e8b');
+  //   document.documentElement.style.setProperty('--secondaryColor', data.secondaryColor || '#F4F5F9');
 
 
-    const favicon: any = document.querySelector("link[rel~='icon']") || document.createElement('link');
-    favicon.rel = 'icon';
-    favicon.href = data.logo;
-    document.head.appendChild(favicon);
-    document.title = data.companyName || 'App';
-  }
+  //   const favicon: any = document.querySelector("link[rel~='icon']") || document.createElement('link');
+  //   favicon.rel = 'icon';
+  //   favicon.href = data.logo;
+  //   document.head.appendChild(favicon);
+  //   document.title = data.companyName || 'App';
+  // }
 
 
 }
