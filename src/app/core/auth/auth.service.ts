@@ -69,7 +69,7 @@ export class AuthService {
         sessionStorage.clear();
         this.toast.success(Constants.LOGOUT_SUCCESS);
         const normalizedCompany = companyCode ? companyCode.toString().replace(/^\/+|\/+$/g, '') : '';
-        const target = normalizedCompany ? `/${normalizedCompany}/login` : '/login';
+        const target = normalizedCompany ? `/${normalizedCompany}/login` : '/404';
         this.router.navigateByUrl(target);
       }
     });

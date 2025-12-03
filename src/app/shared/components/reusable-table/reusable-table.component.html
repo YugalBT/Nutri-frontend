@@ -108,7 +108,7 @@
 
   <!-- Pagination -->
   <nav *ngIf="pageable && data && data.length > 0" class="pagination-wrapper mt-3">
-    <ul class="pagination pagination-sm justify-content-end">
+    <ul class="pagination pagination-sm justify-content-end" style="cursor: pointer;">
       <li class="page-item" [class.disabled]="pageIndex <= 0">
         <a class="page-link" (click)="changePage(pageIndex - 1)">Previous</a>
       </li>

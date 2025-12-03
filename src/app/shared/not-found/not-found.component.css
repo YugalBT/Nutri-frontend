@@ -10,7 +10,7 @@
 
 .not-found .content h1 {
   font-size: 150px;
-  color: var(--primaryColor, #007bff);
+  color: var(--primaryColor, #1F7E9F);
   margin: 0;
 }
 
@@ -28,7 +28,7 @@
 }
 
 .not-found .btn {
-  background: var(--primaryColor, #007bff);
+  background: var(--primaryColor, #1F7E9F);
   color: #fff;
   padding: 12px 25px;
   border: none;
@@ -39,5 +39,5 @@
 }
 
 .not-found .btn:hover {
-  background: #0056b3;
+  background: #1F7E9F;
 }
