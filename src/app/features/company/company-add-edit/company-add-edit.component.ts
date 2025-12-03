@@ -141,20 +141,31 @@ export class CompanyAddEditComponent implements OnInit {
     }
   }
 
-  onLogoChange(event: Event) {
-    const input = event.target as HTMLInputElement;
+ @ViewChild('fileInput') fileInput!: ElementRef<HTMLInputElement>;
 
-    if (input.files && input.files.length > 0) {
-      const file = input.files[0];
-      const reader = new FileReader();
+onLogoChange(event: Event) {
+  const input = event.target as HTMLInputElement;
 
-      reader.onload = () => {
-        this.form.patchValue({ logo: reader.result as string });
-      };
+  if (input.files && input.files.length > 0) {
+    const file = input.files[0];
+    const reader = new FileReader();
 
-      reader.readAsDataURL(file);
-    }
+    reader.onload = () => {
+      this.form.patchValue({ logo: reader.result as string });
+    };
+
+    reader.readAsDataURL(file);
   }
+}
+
+removeLogo() {
+  this.form.patchValue({ logo: null });
+
+  if (this.fileInput) {
+    this.fileInput.nativeElement.value = '';
+  }
+}
+
 
 
   saveCompany() {
