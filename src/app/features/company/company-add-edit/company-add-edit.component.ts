@@ -7,7 +7,6 @@ import { CompanyService } from '../../../core/services/company/company.service';
 import { ToastService } from '../../../shared/services/toast.service';
 import { ApiResponse } from '../../../core/models/api-response';
 import { Output, EventEmitter } from '@angular/core';
-import { RoleService } from '../../../core/services/role.service';
 import { RoleItem } from '../../../core/models/add-edit-role';
 import { TranslateService } from '../../../i18n/translate.service';
 import { AddEditRoleService } from '../../../core/services/role/add-edit-role.service';
@@ -88,7 +87,7 @@ export class CompanyAddEditComponent implements OnInit {
       // legacy fields
       name: [''],
       description: [''],
-      roleId: ['', Validators.required],
+      roleId: [''],
       isActive: [true]
     });
     this.loadRoles();

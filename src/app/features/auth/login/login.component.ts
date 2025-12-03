@@ -58,7 +58,13 @@ export class LoginComponent implements OnInit {
 
 
 
-    const { username, password } = this.form.value;
+    let username = (this.form.value.username || '').trim();
+  let password = (this.form.value.password || '').trim();
+
+  this.form.patchValue(
+    { username, password },
+    { emitEvent: false }
+  );
     this.store.dispatch(AuthActions.login({ username, password, companyCode: this.companyCode }));
   }
 

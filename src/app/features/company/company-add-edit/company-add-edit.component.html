@@ -327,10 +327,9 @@
                                     <option *ngFor="let role of roleList" [value]="role.roleId">{{ role.nameEn }}(
                                         {{role.nameIt}})</option>
                                 </select>
-                                <div *ngIf="form.get('roleId')?.touched && form.get('roleId')?.invalid"
-                                    class="text-danger">
-                                    User Role is required
-                                </div>
+                                <!-- <div *ngIf="form.get('roleId')?.touched && form.get('roleId')?.invalid" class="text-danger">
+                                User Role is required
+                                </div> -->
                             </div>
 
                             <div class="col-md-4 col-12">

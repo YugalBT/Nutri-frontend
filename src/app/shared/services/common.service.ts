@@ -18,9 +18,10 @@ export class CommonService {
     return this.http.get<RoleList[]>(API_ENDPOINTS.COMMON_API.GET_ALL_ROLES);
   }
 
-  getModules(): Observable<ApiResponse<GetAllModulesResponse>> {
-    return this.http.get<GetAllModulesResponse>(API_ENDPOINTS.Module.GET_ALL);
+  getModules(masterRoles: boolean): Observable<ApiResponse<GetAllModulesResponse>> {
+    return this.http.get<GetAllModulesResponse>(`${API_ENDPOINTS.Module.GET_ALL}?masterRoles=${masterRoles}`,);
   }
+ 
   
 
 }

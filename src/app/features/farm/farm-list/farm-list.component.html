@@ -3,36 +3,32 @@
   <!-- Page Header -->
   <div class="page-header">
     <div>
-      <h3 class="page-title">{{ 'role.Heading' | translate }}</h3>
-      <p class="page-subtitle">{{ 'role.manageDesc' | translate }}</p>
+      <h3 class="page-title">Farm Management</h3>
     </div>
 
-    <button class="btn blue-btn" (click)="roleAddEdit.openModal(false)">
+    <button class="btn blue-btn " (click)="farmModal.openModal()">
       <i class="bi bi-plus-lg me-2"></i>
-      {{ 'role.addRole' | translate }}
+      Add Farm
     </button>
   </div>
 
-  <!-- Filters Section -->
+  <!-- Search Filters Section -->
   <div class="filters-card">
     <app-global-search
-      [label]="'role.searchFilters' | translate"
-      [placeholder]="'role.searchPlaceholder' | translate"
+      [placeholder]="'Search by farm name , town or country'"
       [showStatus]="true"
       (search)="onSearch($event)"
       (statusChange)="onStatusChange($event)"
-      (isShow)="onIsShowChange($event)"
-      [ShowCheckBox]="true"
       (clear)="clearFilters()">
     </app-global-search>
   </div>
 
-  <!-- Table Section -->
+  <!-- Farms Table -->
   <div class="table-card">
     <app-reusable-table
-[columns]="columns"
+      [columns]="columns"
       [showActions]="true"
-      [data]="roles"
+      [data]="farms"
       [columnFields]="columnFields"
       [pageable]="true"
       [totalRecords]="totalRecords"
@@ -40,15 +36,12 @@
       [pageIndex]="pageIndex"
       (pageChange)="onPageChange($event)"
       (toggleActive)="onToggleActive($event)"
-      (editRow)="roleAddEdit.openModal(true, $event)"
-      (deleteRow)="onDeleteRole($event)">
+      (deleteRow)="onDelete($event)"
+      (editRow)="farmModal.openModal(true, $event)">
     </app-reusable-table>
   </div>
 
   <!-- Add/Edit Modal -->
-  <app-user-role-addedit #roleAddEdit></app-user-role-addedit>
+  <app-farm-add-edit #farmModal></app-farm-add-edit>
 
 </div>
-
-
-

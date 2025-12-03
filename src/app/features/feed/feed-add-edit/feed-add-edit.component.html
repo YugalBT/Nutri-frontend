@@ -1,0 +1,77 @@
+<div #feedModal class="modal fade" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">{{ isEdit ? 'Edit Feed' : 'Add Feed' }}</h5>
+        <button type="button" class="btn-close" (click)="closeModal()"></button>
+      </div>
+
+      <div class="modal-body">
+        <form [formGroup]="form">
+
+          <!-- Feed Name Field -->
+          <div class="row g-3">
+            <div class="col-md-6">
+              <label class="form-label">Feed Name <sup class="text-danger">*</sup></label>
+              <input type="text" formControlName="feedName" class="form-control" placeholder="Enter feed name">
+              <div *ngIf="form.get('feedName')?.touched && form.get('feedName')?.invalid" class="text-danger">
+                <div *ngIf="form.get('feedName')?.errors?.['required']">Feed Name is required.</div>
+              </div>
+            </div>
+
+            <!-- Category Field -->
+            <div class="col-md-6">
+              <label class="form-label">Category <sup class="text-danger">*</sup></label>
+              <input type="text" formControlName="category" class="form-control" placeholder="Enter category">
+              <div *ngIf="form.get('category')?.touched && form.get('category')?.invalid" class="text-danger">
+                <div *ngIf="form.get('category')?.errors?.['required']">Category is required.</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Dry Matter Field -->
+          <div class="row g-3 mt-2">
+            <div class="col-md-6">
+              <label class="form-label">Dry Matter</label>
+              <input type="number" formControlName="dryMatter" class="form-control" placeholder="Enter dry matter value">
+            </div>
+
+            <!-- Protein Field -->
+            <div class="col-md-6">
+              <label class="form-label">Protein</label>
+              <input type="number" formControlName="protein" class="form-control" placeholder="Enter protein value">
+            </div>
+          </div>
+
+          <!-- NDF Field -->
+          <div class="row g-3 mt-2">
+            <div class="col-md-6">
+              <label class="form-label">NDF</label>
+              <input type="number" formControlName="ndf" class="form-control" placeholder="Enter NDF value">
+            </div>
+
+            <!-- Energy Field -->
+            <div class="col-md-6">
+              <label class="form-label">Energy</label>
+              <input type="number" formControlName="energy" class="form-control" placeholder="Enter energy value">
+            </div>
+          </div>
+
+          <!-- Price Per Kg Field -->
+          <div class="row g-3 mt-2">
+            <div class="col-md-6">
+              <label class="form-label">Price Per Kg</label>
+              <input type="number" formControlName="pricePerKg" class="form-control" placeholder="Enter price per kg">
+            </div>
+          </div>
+
+        </form>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn btn-outline-secondary" (click)="closeModal()">Cancel</button>
+        <button class="btn btn-primary" (click)="saveFeed()">{{ isEdit ? 'Update' : 'Save' }}</button>
+      </div>
+    </div>
+  </div>
+</div>

@@ -131,7 +131,6 @@ export class RoleComponent implements OnInit, OnDestroy ,AfterViewInit{
   }
 
   onDeleteRole(row: RoleItem): void {
-    debugger;
     if (!this.canDeleteRoles) {
       this.toast.error(this.translate.instant('common.noPermission') || 'No permission');
       return;
