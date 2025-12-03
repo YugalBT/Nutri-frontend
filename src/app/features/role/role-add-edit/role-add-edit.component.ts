@@ -78,8 +78,8 @@ export class UserRoleAddEditComponent implements OnInit, OnDestroy {
 
   private initForm(): void {
     this.form = this.fb.group({
-      roleName: ['', [Validators.required, Validators.pattern(/^[A-Za-z ]+$/)]],
-      roleNameIt: ['',[Validators.pattern(/^[A-Za-z ]+$/)]],
+      roleName: ['', [Validators.required,    Validators.pattern(/^[\p{L}_ .'-]+$/u)]],
+      roleNameIt: ['',[   Validators.pattern(/^[\p{L}_ .'-]+$/u)]],
       isDefault: [false],
       isShow: [false],
       isEditable: [false],
@@ -129,7 +129,7 @@ export class UserRoleAddEditComponent implements OnInit, OnDestroy {
         roleName: roleData.nameEn || '',
         roleNameIt: roleData.nameIt || '',
         isDefault : roleData.isDefault || false,
-        isShow : roleData.isShow || false,
+        isShow : roleData.isShow || true,
         isEditable : roleData.isEditable || false,
         description: roleData.nameIt || ''
       });
@@ -288,10 +288,10 @@ export class UserRoleAddEditComponent implements OnInit, OnDestroy {
 
   const payload: CreateUpdateRolePayload = {
     nameEn: this.form.get('roleName')?.value,
-    nameIt: this.form.get('roleNameIt')?.value,
-    isDefault: this.form.get('isDefault')?.value,
-    isShow: this.form.get('isShow')?.value,
-    isEditable: this.form.get('isEditable')?.value,
+    nameIt: this.form.get('roleNameIt')?.value || null,
+    isDefault: this.form.get('isDefault')?.value || false,
+    isShow: this.form.get('isShow')?.value || true,
+    isEditable: this.form.get('isEditable')?.value || false,
     rolePermissionId: checkedPermissions || []
   };
 
