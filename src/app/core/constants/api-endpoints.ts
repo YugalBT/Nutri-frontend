@@ -56,10 +56,16 @@ export const API_ENDPOINTS = {
     ACTIVE_INACTIVE: '/Farm/ActiveInActive',
     GET_ALL: '/Farm/GetAll',
   },
+  FEED: {
+    CREATE: '/Feed/Create',
+    UPDATE: '/Feed/Update',
+    DELETE: '/Feed/Delete',
+    ACTIVE_INACTIVE: '/Feed/ActiveInActive',
+    GET_ALL: '/Feed/GetAll',
+  },
 
    COMPANY: {
-
-    UPDATE: 'Common/UpdateSettingById',
-    GET_BY_ID: 'Common/SettingById',
+    UPDATE: '/Common/UpdateSettingById',
+    GET_BY_ID: '/Common/SettingById',
   },
 };

@@ -11,6 +11,7 @@ import { TranslatePipe } from '../../i18n/translate.pipe';
 import { ConfirmDialogComponent } from '../../shared/components/confirm-dialog/confirm-dialog.component';
 import { NotificationService } from '../../core/services/notification/notification.service';
 import { NotificationList } from '../../core/models/notification-list';
+import { AuthService } from '../../core/auth/auth.service';
 
 @Component({
   selector: 'app-header',
@@ -29,6 +30,7 @@ export class HeaderComponent implements OnInit {
 
   constructor(private store: Store,
      private translate: TranslateService,
+      private authService: AuthService,
      private notificationService: NotificationService,
       private router:Router
     ) {
@@ -52,9 +54,7 @@ export class HeaderComponent implements OnInit {
   }
  
   logout() {
-    
-   
-     this.confirmDialog.show('Are you sure you want to logout?');
+     this.authService.logout();
   }
    onConfirm(result: boolean) {
     if (result) {

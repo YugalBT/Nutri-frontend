@@ -1,7 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Archivo:ital,wght@0,100..900;1,100..900&display=swap');
 :root {
-    --primary-color: #16365C;
-    --secondary-color: #00A499;
+    --primary-color: #F4F5F9;
+    --secondary-color: #F4F5F9;
     --white:#fff;
     --font-dark: #000229;
     --font-gray: #555;
@@ -16,6 +16,7 @@
     --border-color: #F2EADE;
     --gradient-bg:linear-gradient(180deg, #C0EEFF 0%, #E2CA8F 100%);
     --gradient-bg-blue:linear-gradient(180deg, #41D7CD 0%, #077972 100%);
+;
     --font-500: 500;
     --font-600: 600;
     --font-700: 700;

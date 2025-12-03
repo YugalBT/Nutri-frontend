@@ -19,7 +19,8 @@ export class CompanysettingService {
     return this.http.post<any>(API_ENDPOINTS.COMPANY.UPDATE, payload);
   }
 
-  companyDetails(): Observable<ApiResponse<any>> {
-    return this.http.post<any>(API_ENDPOINTS.COMPANY.GET_BY_ID, {});
-  }
+ companyDetails(): Observable<ApiResponse<any>> {
+  return this.http.post<any>(API_ENDPOINTS.COMPANY.GET_BY_ID, {});
+}
+
 }

@@ -4,6 +4,8 @@ import { SharedModule } from '../../shared/shared.module';
 import { ToastService } from '../../shared/services/toast.service';
 import { CompanysettingService } from '../../core/services/company-setting/companysetting.service';
 import { take } from 'rxjs';
+import { ApiResponse } from '../../core/models/api-response';
+import { CustomValidators } from '../../core/helpers/validators';
 
 @Component({
   selector: 'app-companysetting',
@@ -25,7 +27,7 @@ export class CompanysettingComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.setupForm();
+   this.setupForm();
 
     this.companyService.companyDetails().pipe(take(1)).subscribe((res: any) => {
       if (res.isSuccess && res.data) {
@@ -40,31 +42,13 @@ export class CompanysettingComponent implements OnInit {
   setupForm() {
     this.companyForm = this.fb.group({
       logo: [null],
-      companyName: ['', Validators.required],
-      primaryColor: ['#000000'],
-      secondaryColor: ['#ffffff'],
-      email: ['', Validators.email],
-      phoneNumber: ['', [Validators.pattern('^[0-9]{10}$')]],
-      streetAddress: ['', [Validators.maxLength(100)]],
-
-      // REQUIRED FIELDS FROM BACKEND
-      city: ['', [
-        Validators.required,
-        Validators.maxLength(50),
-        Validators.minLength(1),
-        Validators.pattern("^[\\p{L} .'-]+$")
-      ]],
-      country: ['', [
-        Validators.required,
-        Validators.maxLength(50),
-        Validators.minLength(1),
-        Validators.pattern("^[\\p{L} .'-]+$")
-      ]],
-      zipCode: ['', [
-        Validators.required,
-        Validators.pattern("^\\d{5,6}$")  // 5 OR 6 digits only
-      ]],
-
+      companyName: ['', [CustomValidators.required(), CustomValidators.maxLength(50)]],
+      email: ['', [CustomValidators.required(), CustomValidators.email()]],
+      phoneNumber: ['', [CustomValidators.required(), CustomValidators.onlyNumbers(), CustomValidators.minLength(10), CustomValidators.maxLength(10)]],
+      streetAddress: ['', [CustomValidators.required(), CustomValidators.maxLength(100)]],
+      city: ['', [CustomValidators.required(), CustomValidators.onlyChars(), CustomValidators.minLength(3), CustomValidators.maxLength(50)]],
+      country: ['', [CustomValidators.required(), CustomValidators.onlyChars(), CustomValidators.minLength(3), CustomValidators.maxLength(50)]],
+      zipCode: ['', [CustomValidators.required(), CustomValidators.onlyNumbers(), CustomValidators.minLength(5), CustomValidators.maxLength(6)]],
       effectiveDate: [null],
       expiryDate: [null]
     });
@@ -95,7 +79,8 @@ export class CompanysettingComponent implements OnInit {
   }
 
   onSubmit() {
-    if (this.companyForm.invalid) {
+     if (this.companyForm.invalid) {
+      this.companyForm.markAllAsTouched();
       this.toast.error("Please fill all required fields correctly");
       return;
     }
@@ -103,12 +88,12 @@ export class CompanysettingComponent implements OnInit {
     const payload = this.companyForm.getRawValue();
 
     this.companyService.updateCompanySetting(payload).subscribe({
-      next: (res: any) => {
-        if (res.isSuccess) this.toast.success("Company Settings Updated");
+      next: (res: ApiResponse<any>) => {
+        if (res.isSuccess) this.toast.success(res?.message);
         else this.toast.error(res.message);
       },
       error: (err: any) => {
-        this.toast.error(err?.error?.message || "Error updating settings");
+        this.toast.error(err?.error?.message);
       }
     });
   }

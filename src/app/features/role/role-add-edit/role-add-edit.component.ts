@@ -99,11 +99,11 @@ export class UserRoleAddEditComponent implements OnInit, OnDestroy {
 
 
 
-  private loadModules(): void {
+  private loadModules(masterRoles: boolean = false): void {
     this.modulesLoading = true;
     this.modulesError = null;
     
-    const sub = this.commonService.getModules().subscribe({
+    const sub = this.commonService.getModules(masterRoles).subscribe({
       next: (response) => {
         const modulesResp = (response as any)?.data as GetAllModulesResponse;
         this.modules = modulesResp?.data || response?.data || (response as any)?.modules || [];
@@ -133,7 +133,7 @@ export class UserRoleAddEditComponent implements OnInit, OnDestroy {
         isEditable : roleData.isEditable || false,
         description: roleData.nameIt || ''
       });
-      
+         this.loadModules(roleData.isShow);
       // If modules are already loaded, populate permissions immediately from roleData
       if (this.modules && this.modules.length > 0) {
         this.populatePermissionsFromRole(roleData);

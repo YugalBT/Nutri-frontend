@@ -1,6 +1,7 @@
 {
   "company": {
-    "searchFilters" : "Filtri di ricerca",
+    "userRole": "Ruolo utente",
+    "searchFilters": "Filtri di ricerca",
     "searchPlaceholder": "Cerca per nome azienda, codice o telefono",
     "Heading": "Gestione aziende",
     "editCompany": "Modifica azienda",
@@ -13,9 +14,12 @@
     "secondaryColor": "Colore secondario",
     "logo": "Logo",
     "primaryUser": "Utente principale",
-    "userFirstName": "Nome",
-    "userMiddleName": "Secondo nome",
-    "userLastName": "Cognome",
+    "firstName": "Nome",
+    "middleName": "Secondo nome",
+    "lastName": "Cognome",
+    "userFirstName": "Nome amministratore",
+    "userMiddleName": "Secondo nome amministratore",
+    "userLastName": "Cognome amministratore",
     "userEmail": "Email utente",
     "userPhone": "Telefono utente",
     "address": "Indirizzo",
@@ -29,12 +33,14 @@
     "password": "Password",
     "cancel": "Annulla",
     "save": "Salva",
-     "manage": "Gestisci azienda",
+    "manage": "Gestisci azienda",
     "addCompany": "Aggiungi azienda",
     "columns": {
       "logo": "Logo",
       "siteColor": "Colore sito",
       "companyName": "Nome azienda",
+      "firstName": "Nome",
+      "lastName": "Cognome",
       "name": "Nome",
       "email": "Email",
       "phone": "Telefono",
@@ -83,11 +89,10 @@
     "confirmLogout": "Vuoi davvero disconnetterti?",
     "logoutSuccess": "Disconnessione avvenuta con successo!"
   },
- 
   "users": {
+    "searchFilters": "Filtri di ricerca",
+    "searchPlaceholder": "Cerca per nome, email o telefono",
     "Heading": "Gestione utenti",
-    "searchPlaceholder" : "Cerca per nome, email o telefono",
-    "searchFilters" : "Filtri di ricerca",
     "manage": "Gestisci utenti",
     "addUser": "Aggiungi utente",
     "editUser": "Modifica utente",
@@ -107,6 +112,8 @@
     "passwordPlaceholder": "Inserisci password",
     "roles": { "admin": "Admin" },
     "columns": {
+      "firstName": "Nome",
+      "lastName": "Cognome",
       "name": "Nome",
       "email": "Email",
       "phone": "Telefono",
@@ -117,10 +124,10 @@
     }
   },
   "role": {
-    "roleIsDefault" : "Predefinito",
-    "roleIsEditable" : "Modificabile",
-    "roleIsShow" : "Mostra ruolo",
-    "searchFilters" : "Filtri di ricerca",
+    "roleIsDefault": "Predefinito",
+    "roleIsEditable": "Modificabile",
+    "roleIsShow": "Ruoli master",
+    "searchFilters": "Filtri di ricerca",
     "searchPlaceholder": "Cerca per nome ruolo",
     "Heading": "Gestione ruoli",
     "role": "Ruolo",
@@ -152,10 +159,13 @@
     "smtpSetup": "Impostazioni SMTP"
   },
   "common": {
+    "selectRole": "Seleziona ruolo",
+    "error": "Si è verificato un errore. Per favore riprova.",
     "cancel": "Annulla",
     "save": "Salva",
     "update": "Aggiorna",
     "add": "Aggiungi",
+    "create": "Crea",
     "edit": "Modifica",
     "delete": "Elimina",
     "yes": "Sì",
@@ -176,6 +186,7 @@
     "active": "Attivo",
     "inactive": "Inattivo",
     "search": "Cerca",
+    "reset": "Reimposta",
     "loading": "Caricamento..."
   }
 }

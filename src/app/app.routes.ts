@@ -6,9 +6,9 @@ export const routes: Routes = [
   // Public Routes
   {
     path: ':companyCode/login',
-    canActivate: [companyGuard],                                                                        
+    canActivate: [companyGuard],
     loadComponent: () =>
-      import('./features/auth/login/login.component')                                   
+      import('./features/auth/login/login.component')
         .then(m => m.LoginComponent),
   },
   {
@@ -20,11 +20,11 @@ export const routes: Routes = [
 
   // Authenticated Area
   {
-    path: 'dashboard',
+    path: '',
     loadComponent: () =>
       import('./layout/layout.component')
         .then(m => m.LayoutComponent),
-    canActivate: [authGuard],  
+    canActivate: [authGuard],
     children: [
       {
         path: 'dashboard',
@@ -45,14 +45,14 @@ export const routes: Routes = [
           import('./features/users/list/list.component')
             .then(m => m.ListComponent),
       },
-     
+
       {
         path: 'roles',
         loadComponent: () =>
           import('./features/role/role-list/role.component')
             .then(m => m.RoleComponent),
       },
-      
+
       {
         path: 'notifications',
         loadComponent: () =>
@@ -83,12 +83,18 @@ export const routes: Routes = [
           import('./features/farm/farm-list/farm-list.component')
             .then(m => m.FarmListComponent),
       },
+      {
+        path: 'feed',
+        loadComponent: () =>
+          import('./features/feed/feed-add-edit/feed-add-edit.component')
+            .then(m => m.FeedAddEditComponent),
+      },
 
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
     ],
   },
 
-   {
+  {
     path: '404',
     loadComponent: () =>
       import('./shared/not-found/not-found.component')

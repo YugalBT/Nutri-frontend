@@ -1,4 +1,4 @@
-export interface FarmList {
+export interface FeedList {
     firstName?: string;
 	lastName?: string;
 	ghlUserId?: string;
@@ -7,7 +7,7 @@ export interface FarmList {
 	phone?: string;
 	roleId?: string;
 	roleName?: string;
-	feedId?: string;
+	farmId?: string;
 	userName?: string;
 	tenantId?: string;
 	isActive?: boolean;
@@ -16,3 +16,4 @@ export interface FarmList {
 	jobTitleName?: string;
 	[key: string]: any;
 }
+

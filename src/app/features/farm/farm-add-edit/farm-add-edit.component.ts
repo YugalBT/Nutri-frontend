@@ -1,65 +1,55 @@
-import { Component, ElementRef, ViewChild } from '@angular/core';
+import { Component, ElementRef, ViewChild, OnDestroy, OnInit, Output, EventEmitter } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Subscription } from 'rxjs';
 import { CommonService } from '../../../shared/services/common.service';
 import { FarmService } from '../../../core/services/farm/farm.service';
 import { ToastService } from '../../../shared/services/toast.service';
-import { Subscription } from 'rxjs';
-import { TranslateService } from '../../../i18n/translate.service';
 import { SharedModule } from '../../../shared/shared.module';
 import { TranslatePipe } from '../../../i18n/translate.pipe';
 
 declare var bootstrap: any;
-
 
 @Component({
   selector: 'app-farm-add-edit',
   standalone: true,
   imports: [SharedModule, TranslatePipe],
   templateUrl: './farm-add-edit.component.html',
-  styleUrl: './farm-add-edit.component.css'
+  styleUrls: ['./farm-add-edit.component.css']
 })
-export class FarmAddEditComponent {
+export class FarmAddEditComponent implements OnInit, OnDestroy {
 
   @ViewChild('farmModal') farmModal!: ElementRef; 
-  private modalInstance: any;
   form!: FormGroup;
+  modalInstance: any;
   isEdit = false;
-  showCurrent = false;
-
-  rolesLoading = false;
-  rolesError: string | null = null;
-  private currentUserId: string | null = null;
-  private subs: Subscription[] = [];
+  currentFarmId: string | null = null;
+  subs: Subscription[] = [];
+  @Output() onFarmSaved = new EventEmitter<void>()
 
   constructor(
     private fb: FormBuilder,
-    private commonService: CommonService,
     private farmService: FarmService,
     private toast: ToastService,
-    private translate: TranslateService
-  ) { }
+    private commonService: CommonService
+  ) {}
 
   ngOnInit() {
+     this.afterSuccess();
     this.initializeForm();
   }
 
-
+  ngOnDestroy() {
+    this.subs.forEach(s => s.unsubscribe());
+  }
 
   private initializeForm() {
     this.form = this.fb.group({
-      name: ['', [Validators.required, Validators.pattern(/^[A-Za-z]+$/)]],
-      middleName: ['', [Validators.pattern(/^[A-Za-z]+$/)]],
-      lastName: ['', [Validators.required, Validators.pattern(/^[A-Za-z]+$/)]],
-      email: ['', [Validators.required, Validators.email]],
-      phone: ['', [Validators.pattern(/^[0-9]+$/), Validators.minLength(10), Validators.maxLength(10),
-      Validators.required]],
-      roleId: [null, Validators.required],
-      password: ['', [Validators.required, Validators.minLength(8), Validators.pattern(/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*#?&]{8,}$/)]],
-      isActive: [true]
+      clientId: [null],
+      farmName: ['', [Validators.required, Validators.pattern(/^[A-Za-z ]+$/)]],
+      town: ['', [Validators.required,Validators.pattern(/^[A-Za-z ]+$/)]],
+      country: ['', [Validators.required, Validators.pattern(/^[A-Za-z ]+$/)]],
     });
   }
-
-
 
   openModal(edit = false, data?: any) {
     this.isEdit = edit;
@@ -67,20 +57,15 @@ export class FarmAddEditComponent {
 
     if (edit && data) {
       this.form.patchValue({
-        name: data.firstName,
-        middleName: data.middleName,
-        lastName: data.lastName,
-        email: data.email,
-        phone: data.phone,
-        roleId: data.roleId,
+        clientId: data.clientId,
+        farmName: data.farmName,
+        town: data.town,
+        country: data.country,
         isActive: data.isActive
       });
-      this.currentUserId = data.userId;
-      this.form.get('password')?.clearValidators();
-      this.form.get('password')?.updateValueAndValidity();
+      this.currentFarmId = data.farmId;
     } else {
-      this.currentUserId = null;
-
+      this.currentFarmId = null;
     }
 
     this.modalInstance = new bootstrap.Modal(this.farmModal.nativeElement);
@@ -88,47 +73,36 @@ export class FarmAddEditComponent {
   }
 
   closeModal() {
-    if (this.modalInstance) {
-      this.modalInstance.hide();
-    }
+    this.modalInstance?.hide();
   }
 
   saveFarm() {
     if (!this.form.valid) {
-      const payload = this.form.getRawValue();
-      delete payload.password;
       this.toast.warning('Please fill all required fields');
       return;
     }
 
-    const v = this.form.value;
-    const payload: any = {
-      firstName: v.name,
-      middleName: v.middleName,
-      lastName: v.lastName,
-      email: v.email,
-      phone: v.phone,
-      roleId: v.roleId,
-      password: v.password
-    };
+    const payload = this.form.value;
 
-    if (this.isEdit && this.currentUserId) {
-      payload.userId = this.currentUserId;
-
+    if (this.isEdit && this.currentFarmId) {
+      payload.farmId = this.currentFarmId;
       const sub = this.farmService.updateFarms(payload).subscribe(res => {
         if (res.isSuccess) {
           this.toast.success(res.message);
+          this.afterSuccess();
+          this.closeModal();
+          this.onFarmSaved.emit();
         } else {
           this.toast.error(res.message);
         }
       });
       this.subs.push(sub);
-
     } else {
       const sub = this.farmService.createFarms(payload).subscribe(res => {
-        if (res?.isSuccess) {
+        if (res.isSuccess) {
           this.toast.success(res.message);
-         
+           this.afterSuccess();
+          this.closeModal();
         } else {
           this.toast.error(res.message);
         }
@@ -137,6 +111,8 @@ export class FarmAddEditComponent {
     }
   }
 
-
-  
+  private afterSuccess() {
+    this.farmService.notifyfarmsChanged();
+    this.closeModal();
+  }
 }

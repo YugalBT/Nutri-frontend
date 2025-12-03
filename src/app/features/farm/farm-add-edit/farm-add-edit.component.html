@@ -1,137 +1,57 @@
-<div #userModal class="modal fade" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-lg modal-dialog-centered">
-        <div class="modal-content">
+<div #farmModal class="modal fade" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content">
 
-            <div class="modal-header">
-                <h5 class="modal-title">{{ isEdit ? ('users.editUser' | translate) : ('users.addUser' | translate) }}
-                </h5>
-                <button type="button" class="btn-close" (click)="closeModal()"></button>
+      <div class="modal-header">
+        <h5 class="modal-title">{{ isEdit ? 'Edit Farm' : 'Add Farm' }}</h5>
+        <button type="button" class="btn-close" (click)="closeModal()"></button>
+      </div>
+
+      <div class="modal-body">
+        <form [formGroup]="form">
+
+          <div class="row g-3">
+            <div class="col-md-6">
+              <label class="form-label">Farm Name <sup class="text-danger">*</sup></label>
+              <input type="text" formControlName="farmName" class="form-control" placeholder="Enter farm name">
+              <div *ngIf="form.get('farmName')?.touched && form.get('farmName')?.invalid" class="text-danger">
+                <div *ngIf="form.get('farmName')?.errors?.['required']">Farm Name is required.</div>
+                <div *ngIf="form.get('farmName')?.errors?.['pattern']">Only alphabets and spaces allowed.</div>
+              </div>
             </div>
 
-            <div class="modal-body">
-                <form [formGroup]="form">
-
-                    <div class="row g-3">
-                        <div class="col-md-4">
-                            <label class="form-label">{{ 'users.firstName' | translate }} <sup
-                                    style="color: #f00; font-size: 12px;">*</sup></label>
-                            <input type="text" formControlName="name" class="form-control"
-                                placeholder="{{ 'users.firstNamePlaceholder' | translate }}">
-                            <div *ngIf="form.get('name')?.touched && form.get('name')?.invalid" class="text-danger">
-                                First Name is required
-                            </div>
-
-                            <div *ngIf="form.get('name')?.errors?.['pattern']" class="text-danger">
-                                First Name can only contain alphabets.
-                            </div>
-
-                        </div>
-
-                        <div class="col-md-4">
-                            <label class="form-label">{{ 'users.middleName' | translate }}</label>
-                            <input type="text" formControlName="middleName" class="form-control"
-                                placeholder="{{ 'users.middleNamePlaceholder' | translate }}">
-                            <div *ngIf="form.get('middleName')?.touched && form.get('middleName')?.invalid"
-                                class="text-danger">
-                                Middle Name can only contain alphabets.
-                            </div>
-                        </div>
-
-                        <div class="col-md-4">
-                            <label class="form-label">{{ 'users.lastName' | translate }} <sup
-                                    style="color: #f00; font-size: 12px;">*</sup></label>
-                            <input type="text" formControlName="lastName" class="form-control"
-                                placeholder="{{ 'users.lastNamePlaceholder' | translate }}">
-                            <div *ngIf="form.get('lastName')?.touched && form.get('lastName')?.invalid"
-                                class="text-danger">
-                                Last Name is required
-                            </div>
-
-                            <div *ngIf="form.get('lastName')?.errors?.['pattern']" class="text-danger">
-                                Last Name can only contain alphabets.
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row g-3 mt-2">
-                        <div class="col-md-4">
-
-                            <label class="form-label">{{ 'users.email' | translate }}
-                                <sup style="color: #f00; font-size: 12px;">*</sup></label>
-                            <input type="email" formControlName="email" class="form-control"
-                                placeholder="{{ 'users.emailPlaceholder' | translate }}">
-                            <div *ngIf="form.get('email')?.touched && form.get('email')?.invalid" class="text-danger">
-                                Email is required
-                            </div>
-                            <div *ngIf="form.get('email')?.errors?.['email']" class="text-danger">
-                                Please enter a valid email address.
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-
-                            <label class="form-label">{{ 'users.phone' | translate }} <sup
-                                    style="color: #f00; font-size: 12px;">*</sup></label>
-                            <input type="email" formControlName="phone" class="form-control"
-                                placeholder="{{ 'users.phonePlaceholder' | translate }}">
-                            <div *ngIf="form.get('phone')?.touched" class="text-danger">
-
-                                <!-- Required -->
-                                <div *ngIf="form.get('phone')?.errors?.['required']">
-                                    Phone Number is required.
-                                </div>
-
-                                <!-- Minimum length -->
-                                <div *ngIf="form.get('phone')?.errors?.['minlength']">
-                                    Phone Number must be at least 10 digits.
-                                </div>
-                                <!-- Maximum length -->
-                                <div *ngIf="form.get('phone')?.errors?.['maxlength']">
-                                    Phone Number must be at most 10 digits.
-                                </div>
-                                <!-- Only numbers allowed -->
-                                <div *ngIf="form.get('phone')?.errors?.['pattern']">
-                                    Phone Number must contain digits only.
-                                </div>
-
-                            </div>
-                        </div>
-
-
-                        <div class="col-md-4">
-                            <label class="form-label">{{ 'users.role' | translate }} <sup
-                                    style="color: #f00; font-size: 12px;">*</sup></label>
-
-                        </div>
-                        <div class="col-md-4">
-                            <label class="form-label">{{ 'users.password' | translate }} <sup
-                                    style="color: #f00; font-size: 12px;">*</sup></label>
-                            <div class="input-group">
-                                <input [type]="showCurrent ? 'text' : 'password'" formControlName="password"
-                                    class="form-control" placeholder="{{ 'users.passwordPlaceholder' | translate }}">
-                                <span class="input-group-text" role="button" (click)="showCurrent = !showCurrent">
-                                    <i class="fa" [ngClass]="showCurrent ? 'fa-eye' : 'fa-eye-slash'"></i>
-                                </span>
-                            </div>
-                            <div *ngIf="form.get('password')?.touched && form.get('password')?.invalid"
-                                class="text-danger">
-                                Password is required
-                            </div>
-                            <div *ngIf="form.get('password')?.errors?.['minlength']" class="text-danger">
-                                Password must be at least 8 characters long.
-                            </div>
-                            <div *ngIf="form.get('password')?.errors?.['pattern']" class="text-danger">
-                                Password must contain at least one letter ,one special character and one number.
-                            </div>
-                        </div>
-                    </div>
-                </form>
+            <div class="col-md-6">
+              <label class="form-label">Town <sup class="text-danger">*</sup></label>
+              <input type="text" formControlName="town" class="form-control" placeholder="Enter town">
+               <div *ngIf="form.get('town')?.touched && form.get('farmName')?.invalid" class="text-danger">
+                <div *ngIf="form.get('town')?.errors?.['required']">Farm Name is required.</div>
+                <div *ngIf="form.get('town')?.errors?.['pattern']">Only alphabets and spaces allowed.</div>
+              </div>
+              <div *ngIf="form.get('town')?.touched && form.get('town')?.invalid" class="text-danger">
+                Town can only contain alphabets and spaces.
+              </div>
+               
             </div>
+          </div>
 
-            <div class="modal-footer">
-                <button class="btn btn-outline-secondary" (click)="closeModal()">{{ 'common.cancel' | translate
-                    }}</button>
-                <button class="btn blue-btn" (click)="saveFarm()">{{ 'common.save' | translate }}</button>
+          <div class="row g-3 mt-2">
+            <div class="col-md-6">
+              <label class="form-label">Country <sup class="text-danger">*</sup></label>
+              <input type="text" formControlName="country" class="form-control" placeholder="Enter country">
+              <div *ngIf="form.get('country')?.touched && form.get('country')?.invalid" class="text-danger">
+                <div *ngIf="form.get('country')?.errors?.['required']">Country is required.</div>
+                <div *ngIf="form.get('country')?.errors?.['pattern']">Only alphabets and spaces allowed.</div>
+              </div>
             </div>
+          </div>
+        </form>
+      </div>
 
-        </div>
+      <div class="modal-footer">
+        <button class="btn btn-outline-secondary" (click)="closeModal()">Cancel</button>
+        <button class="btn btn-primary" (click)="saveFarm()">{{ isEdit ? 'Update' : 'Save' }}</button>
+      </div>
+
     </div>
+  </div>
 </div>

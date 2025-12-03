@@ -58,7 +58,7 @@ export class ListComponent implements OnInit, OnDestroy {
   }
 
   private loadUsers(pageNo: number, recordPerPage: number): void {
-     this.users = [];
+    this.users = [];
     // this.spinner.show();
 
     const payload: any = {
@@ -116,48 +116,48 @@ export class ListComponent implements OnInit, OnDestroy {
   }
 
 
- onToggleActive(event: { row: any; isActive: boolean }): void {
-  event.row.isToggling = true;
+  onToggleActive(event: { row: any; isActive: boolean }): void {
+    event.row.isToggling = true;
 
-  if (!event?.row?.userId) {
-    this.toast.error(this.translate.instant('users.invalidId') ?? "");
-    return;
-  }
-
-  const sub = this.usersService.activeInActive(event.row.userId).subscribe({
-    next: (res) => {
-      if (res.isSuccess) {
-        this.toast.success(res.message);
-
-        const index = this.users.findIndex(u => u.userId === event.row.userId);
-        if (index !== -1) {
-          this.users[index].isActive = !this.users[index].isActive;
-        }
-      } else {
-        this.toast.error(res.message);
-      }
-    },
-    error: (err) => {
-      this.toast.error(err?.error?.message);
-    },
-    complete: () => {
-      event.row.isToggling = false;  
+    if (!event?.row?.userId) {
+      this.toast.error(this.translate.instant('users.invalidId') ?? "");
+      return;
     }
-  });
 
-  this.subs.push(sub);
-}
+    const sub = this.usersService.activeInActive(event.row.userId).subscribe({
+      next: (res) => {
+        if (res.isSuccess) {
+          this.toast.success(res.message);
+
+          const index = this.users.findIndex(u => u.userId === event.row.userId);
+          if (index !== -1) {
+            this.users[index].isActive = !this.users[index].isActive;
+          }
+        } else {
+          this.toast.error(res.message);
+        }
+      },
+      error: (err) => {
+        this.toast.error(err?.error?.message);
+      },
+      complete: () => {
+        event.row.isToggling = false;
+      }
+    });
+
+    this.subs.push(sub);
+  }
 
 
 
   onDelete(row: any): void {
     const id = row?.userId;
     if (!id) {
-      this.toast.error(this.translate.instant('users.invalidId')??"");
+      this.toast.error(this.translate.instant('users.invalidId') ?? "");
       return;
     }
 
-    this.confirm.confirm(this.translate.instant('users.confirmDelete')??"").subscribe((confirmed) => {
+    this.confirm.confirm(this.translate.instant('users.confirmDelete') ?? "").subscribe((confirmed) => {
       if (!confirmed) return;
 
       const sub = this.usersService.deleteUser(id).subscribe({
@@ -176,12 +176,12 @@ export class ListComponent implements OnInit, OnDestroy {
 
   private setColumns(): void {
     this.columns = [
-      this.translate.instant('users.columns.firstName')??"",
-      this.translate.instant('users.columns.lastName')??"",
-      this.translate.instant('users.columns.email')??"",
-      this.translate.instant('users.columns.phone')??"",
-      this.translate.instant('users.columns.role')??"",
-      this.translate.instant('users.columns.status')??""
+      this.translate.instant('users.columns.firstName') ?? "",
+      this.translate.instant('users.columns.lastName') ?? "",
+      this.translate.instant('users.columns.email') ?? "",
+      this.translate.instant('users.columns.phone') ?? "",
+      this.translate.instant('users.columns.role') ?? "",
+      this.translate.instant('users.columns.status') ?? ""
     ];
     this.columnFields = ['firstName', 'lastName', 'email', 'phone', 'roleName', 'isActive'];
   }

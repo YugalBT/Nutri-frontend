@@ -40,19 +40,13 @@ export class LoginComponent implements OnInit {
 
   }
   ngOnInit() {
-  this.route.paramMap.subscribe(params => {
-    this.companyCode = params.get('companyCode') || '';
-    if (this.companyCode) {
-      this.loadHomePageContent();
-    }
-  });
-}
-
-
-
-
-
-
+    this.route.paramMap.subscribe(params => {
+      this.companyCode = params.get('companyCode') || '';
+      if (this.companyCode) {
+        this.loadHomePageContent();
+      }
+    });
+  }
 
 
   onSubmit() {
@@ -64,11 +58,15 @@ export class LoginComponent implements OnInit {
 
 
 
-    const { username, password } = this.form.value;
+    let username = (this.form.value.username || '').trim();
+  let password = (this.form.value.password || '').trim();
+
+  this.form.patchValue(
+    { username, password },
+    { emitEvent: false }
+  );
     this.store.dispatch(AuthActions.login({ username, password, companyCode: this.companyCode }));
   }
-
-
 
 
   showPassword: boolean = false;
@@ -82,7 +80,7 @@ export class LoginComponent implements OnInit {
         if (res?.isSuccess && res.data) {
           this.logoUrl = res.data.logo;
           this.primaryColor = res.data.primaryColor || '#1d7e8b';
-          localStorage.setItem('companyInfo', JSON.stringify(res.data));
+          sessionStorage.setItem('companyInfo', JSON.stringify(res.data));
         } else {
           this.toast.error(res?.message);
         }

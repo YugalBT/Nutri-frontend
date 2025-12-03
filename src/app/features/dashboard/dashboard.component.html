@@ -1,17 +1,14 @@
-
-
-
-
-
-
-
-<div *ngIf="(user$ | async)?.isSuperAdmin === false; else NoSuperAdmin"  class="body-content">
+<div *ngIf="(user$ | async)?.isSuperAdmin === false; else NoSuperAdmin" class="body-content">
     <!-- welcome sec -->
-    
+
 
     <!-- dashboard overview -->
-     
-    <div  class="dashboard-overview-main ">
+    <div class="welcome-dashboard" *ngIf="user$ | async as user; else NA">
+        <h3 class="mb-2"><b>Welcome To {{ user.companyName }} </b></h3>
+        <p class="mb-0">Easily manage milk production, feed planning, livestock health, and daily farm operations.</p>
+    </div>
+    <div class="dashboard-overview-main">
+
         <div class="d-flex align-items-center justify-content-between py-4">
             <div class="body_heading mb-0">
                 <h2 class=" mb-0 ">Dashboard Overview</h2>
@@ -107,7 +104,7 @@
                     </div>
                     <div class="ov-content">
                         <span>Total Animals</span>
-                        <h3>245</h3>
+                        <h3>€245</h3>
                         <p class="mb-0">+12 from last month</p>
                     </div>
                 </div>
@@ -126,7 +123,7 @@
                     </div>
                     <div class="ov-content">
                         <span>Avg Milk / Day</span>
-                        <h3>8,450 L</h3>
+                        <h3>€8,450 L</h3>
                         <p class="mb-0">+1.5 L from last month</p>
                     </div>
                 </div>
@@ -144,7 +141,7 @@
                     </div>
                     <div class="ov-content">
                         <span>Feed Cost / Month</span>
-                        <h3>₹42,000</h3>
+                        <h3>€42,000</h3>
                         <p class="mb-0">-3% from last month</p>
                     </div>
                 </div>
@@ -166,7 +163,7 @@
                     </div>
                     <div class="ov-content">
                         <span>Fertility Rate</span>
-                        <h3>₹1,25,00</h3>
+                        <h3>€1,25,00</h3>
                         <p class="mb-0">+4% from last cycle</p>
                     </div>
                 </div>
@@ -291,11 +288,11 @@
 
 
 <ng-template #NoSuperAdmin>
-  <div class="welcome-dashboard" *ngIf="user$ | async as user; else NA">
-  <h3 class="mb-2"><b>Welcome To {{ user.companyName }} </b></h3>
-  <p class="mb-0">Manage your business operations with ease</p>
-</div>
-</ng-template >
+    <div class="welcome-dashboard" *ngIf="user$ | async as user; else NA">
+        <h3 class="mb-2"><b>Welcome To {{ user.companyName }} </b></h3>
+        <p class="mb-0">Manage your business operations with ease</p>
+    </div>
+</ng-template>
 <ng-template #NA>
-  <h3>NA</h3>
-</ng-template >
+    <h3>NA</h3>
+</ng-template>
