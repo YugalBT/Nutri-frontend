@@ -336,7 +336,7 @@
                                 <label class="form-label">{{ 'company.password' | translate }}<sup
                                         style="color: #f00; font-size: 12px;">*</sup></label>
                                 <div class="input-group">
-                                    <input [type]="!showCurrent ? 'text' : 'password'" class="form-control"
+                                    <input [type]="!showCurrent ? 'password' : 'text'" class="form-control"
                                         formControlName="password" placeholder="Enter password">
                                     <span class="input-group-text" role="button" (click)="showCurrent = !showCurrent">
                                         <i class="fa" [ngClass]="showCurrent ? 'fa-eye' : 'fa-eye-slash'"></i>
