@@ -12,8 +12,23 @@ export class ModuleListService {
 
   constructor(private http: HttpService) {}
 
-    getRoles(): Observable<ApiResponse<ModuleList[]>> {
-      return this.http.get<ModuleList[]>(API_ENDPOINTS.Module.GET_ALL);
-    }
+  getModules(masterRoles: boolean): Observable<ApiResponse<ModuleList[]>> {
+    const url = `${API_ENDPOINTS.Module.GET_ALL}?masterRoles=${masterRoles}`;
+    return this.http.get<ModuleList[]>(url);
+  }
+
+
+  addModule(payload: any): Observable<ApiResponse<any>> {
+    return this.http.post<any>(API_ENDPOINTS.Module.CREATE, payload);
+  }
+
+  deleteModule(moduleId: string): Observable<ApiResponse<any>> {
+    return this.http.post<any>(`${API_ENDPOINTS.Module.DELETE}?ModuleId=${moduleId}`,{});
+  }
+  // update module
+
+    updateModule(payload: any): Observable<ApiResponse<any>> {
+    return this.http.post<any>(API_ENDPOINTS.Module.CREATE, payload);
+  }
   
 }

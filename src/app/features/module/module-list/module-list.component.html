@@ -1,0 +1,58 @@
+<div class="pagecls">
+
+  <!-- Page Header -->
+  <div class="page-header">
+    <div>
+      <h3 class="page-title">Modules</h3>
+      <p class="page-subtitle">Manage your system modules</p>
+    </div>
+
+    <button class="btn add-btn" (click)="openAdd()">
+      <i class="bi bi-plus-lg me-2"></i>
+      Add Module
+    </button>
+  </div>
+
+  <!-- Search -->
+  <div class="filters-card">
+    <app-global-search
+      label="Search Modules"
+      placeholder="Search by name..."
+      (search)="onSearch($event)"
+      (clear)="onSearch('')">
+    </app-global-search>
+  </div>
+
+  <!-- Table -->
+  <div class="table-card">
+
+    <!-- Loading -->
+    <ng-container *ngIf="modulesLoading; else tableSection">
+      <div class="text-center py-4">Loading modules...</div>
+    </ng-container>
+
+    <!-- Main Table -->
+    <ng-template #tableSection>
+      <app-reusable-table
+        *ngIf="modules.length > 0; else noData"
+        [columns]="columns"
+        [columnFields]="columnFields"
+        [showActions]="true"
+        [data]="modules"
+        (deleteRow)="onDeleteModule($event)"
+        (editRow)="openEdit($event)"
+        >
+      </app-reusable-table>
+
+      <!-- No Data -->
+      <ng-template #noData>
+        <div class="text-center py-4 text-muted">No modules found</div>
+      </ng-template>
+    </ng-template>
+
+  </div>
+
+  <!-- Modal -->
+  <app-module-add-edit #moduleAddEdit (saved)="loadModules()"></app-module-add-edit>
+
+</div>

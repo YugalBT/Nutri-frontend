@@ -17,24 +17,39 @@ export class HttpService {
 
   }
 
-  private handleResponse<T>(obs: Observable<T>): Observable<ApiResponse<T>> {
-    return obs.pipe(
-      map((res: any) => ({
-        isSuccess: res?.isSuccess ?? true,
-        message: res?.message ?? 'Success',
-        data: res?.data ?? res ?? null,
-        totalRecords: res?.totalRecords ?? null
-      })),
-      catchError((error) => {
-        console.error('API Error:', error);
-        return of({
-          isSuccess: false,
-          message: error?.message || 'Something went wrong',
-          data: null
-        } as ApiResponse<T>);
-      })
-    );
-  }
+ private handleResponse<T>(obs: Observable<T>): Observable<ApiResponse<T>> {
+  return obs.pipe(
+    map((res: any) => ({
+      isSuccess: res?.isSuccess,
+      message: res?.message,
+      data: res?.data ?? res ?? null,
+      totalRecords: res?.totalRecords ?? null
+    })),
+    catchError((error) => {
+      let msg = 'Something went wrong';
+
+      // If backend sends validation errors
+      if (error?.error?.errors) {
+        // Combine all errors into a single string
+        msg = Object.values(error.error.errors)
+          .flat()
+          .join(', ');
+      } else if (error?.error?.message) {
+        msg = error.error.message;
+      } else if (error?.message) {
+        msg = error.message;
+      }
+
+      return of({
+        isSuccess: false,
+        message: msg,
+        data: null
+      } as ApiResponse<T>);
+    })
+  );
+}
+
+
 
   get<T>(url: string, options: { headers?: HttpHeaders } = {}): Observable<ApiResponse<T>> {
     return this.handleResponse(

@@ -32,13 +32,17 @@ export const API_ENDPOINTS = {
 
   COMMON_API: {
     GET_ALL_ROLES: '/Common/GetAllRoles',
-    GET_ALL_NOTIFICATION: '/Common/GetAllNotification'
+    GET_ALL_NOTIFICATION: '/Common/GetAllNotification',
+    GET_ALL_FARMS: '/Common/GetAllFarm',
+    GET_ALL_FEED: '/Common/GetAllFeed'
 
   },
   
   Module: {
     GET_ALL: '/Module/modules',
-    GET_ALL_ROLES: '/Common/GetAllRoles'
+    GET_ALL_ROLES: '/Common/GetAllRoles',
+    CREATE: '/Module/Add',
+    DELETE: '/Module/Delete',
   },
   
   Tenant: {
@@ -55,6 +59,13 @@ export const API_ENDPOINTS = {
     DELETE: '/Farm/Delete',
     ACTIVE_INACTIVE: '/Farm/ActiveInActive',
     GET_ALL: '/Farm/GetAll',
+  },
+   RATION: {
+    CREATE: '/Ration/Create',
+    UPDATE: '/Ration/Update',
+    DELETE: '/Ration/Delete',
+    ACTIVE_INACTIVE: '/Ration/ActiveInActive',
+    GET_ALL: '/Ration/GetAll',
   },
   FEED: {
     CREATE: '/Feed/Create',

@@ -1,5 +1,6 @@
 export interface ModuleList {
   moduleName?: string
+  moduleId: string
   moduleDisplayName?: string
   permissions?: Permission[]
 }

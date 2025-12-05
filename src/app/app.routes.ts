@@ -86,8 +86,20 @@ export const routes: Routes = [
       {
         path: 'feed',
         loadComponent: () =>
-          import('./features/feed/feed-add-edit/feed-add-edit.component')
-            .then(m => m.FeedAddEditComponent),
+          import('./features/feed/feed-list/feed-list.component')
+            .then(m => m.FeedListComponent),
+      },
+      {
+        path: 'ration',
+        loadComponent: () =>
+          import('./features/ration/ration-list/ration-list.component')
+            .then(m => m.RationListComponent),
+      },
+      {
+        path: 'module',
+        loadComponent: () =>
+          import('./features/module/module-list/module-list.component')
+            .then(m => m.ModuleListComponent),
       },
 
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },

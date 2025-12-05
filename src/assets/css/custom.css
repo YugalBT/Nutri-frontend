@@ -641,3 +641,19 @@ border-radius: 20px;padding: 30px;background-image: url('../image/welcome-img\ 1
   color: #1f2937;
   font-family: Inter, sans-serif;
 }
+
+::ng-deep .mat-paginator {
+  background: white;
+  border-radius: 6px;
+  padding: 6px 12px;
+}
+
+::ng-deep .mat-paginator-range-label {
+  font-size: 13px;
+}
+
+::ng-deep .mat-paginator-navigation-button {
+  border: 1px solid #dee2e6;
+  border-radius: 4px;
+  margin: 0px 4px;
+}

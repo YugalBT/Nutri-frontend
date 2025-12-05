@@ -3,30 +3,26 @@ import { Subscription } from 'rxjs';
 import { FeedService } from '../../../core/services/feed/feed.service';
 import { ToastService } from '../../../shared/services/toast.service';
 import { ConfirmDialogService } from '../../../shared/services/confirm-dialog.service';
-import { FeedList } from '../../../core/models/feed-list';  // Adjust this import based on actual FeedList model
+import { FeedList } from '../../../core/models/feed-list';
 import { TranslateService } from '../../../i18n/translate.service';
-import { TranslatePipe } from '../../../i18n/translate.pipe';
+import { ApiResponse } from '../../../core/models/api-response';
+import { SharedModule } from '../../../shared/shared.module';
 import { ReusableTableComponent } from '../../../shared/components/reusable-table/reusable-table.component';
 import { GlobalSearchComponent } from '../../../shared/components/global-search/global-search.component';
-import { ApiResponse } from '../../../core/models/api-response';
-import { FeedAddEditComponent } from '../feed-add-edit/feed-add-edit.component';
-import { SharedModule } from '../../../shared/shared.module';
-import { FarmAddEditComponent } from "../../farm/farm-add-edit/farm-add-edit.component";
+import { FeedAddEditComponent } from "../feed-add-edit/feed-add-edit.component";
 
 @Component({
   selector: 'app-feed-list',
   standalone: true,
-  imports: [SharedModule, ReusableTableComponent, GlobalSearchComponent, FarmAddEditComponent],
+  imports: [SharedModule, ReusableTableComponent, GlobalSearchComponent, FeedAddEditComponent],
   templateUrl: './feed-list.component.html',
   styleUrls: ['./feed-list.component.css']
 })
 export class FeedListComponent {
 
-  // Table Config
   columns: string[] = [];
   columnFields: string[] = [];
 
-  // Data & Pagination
   feeds: FeedList[] = [];
   totalRecords = 0;
   pageSize = 5;
@@ -34,8 +30,8 @@ export class FeedListComponent {
   searchValue = '';
   filterStatus: number | null = 2;
 
-  private subs: Subscription[] = [];
-  private langSub: Subscription | undefined;
+  subs: Subscription[] = [];
+  langSub!: Subscription;
 
   constructor(
     private translate: TranslateService,
@@ -49,28 +45,30 @@ export class FeedListComponent {
 
   ngOnInit(): void {
     this.loadFeeds(1, this.pageSize);
-    const sub = this.feedService.farmsChanged$.subscribe(() => {
+
+    const sub = this.feedService.feedsChanged$.subscribe(() => {
       this.loadFeeds(this.pageIndex + 1, this.pageSize);
     });
     this.subs.push(sub);
   }
 
   private loadFeeds(pageNo: number, recordPerPage: number): void {
-    const payload: any = {
+    const payload = {
       pageNo,
       recordPerPage,
-      searchValue: this.searchValue || '',
+      searchValue: this.searchValue ?? '',
       status: this.filterStatus
     };
 
-    const sub = this.feedService.getFeedDetails(payload)
-      .subscribe({
-        next: (res :ApiResponse<any>) => {
-          this.feeds = res?.data ?? [];
-          this.totalRecords = res?.totalRecords ?? 0;
-        },
-        error: () => this.feeds = []
-      });
+    const sub = this.feedService.getFeedDetails(payload).subscribe({
+      next: (res: ApiResponse<any>) => {
+        this.feeds = res?.data ?? [];
+        this.totalRecords = res?.totalRecords ?? 0;
+      },
+      error: () => {
+        this.feeds = [];
+      }
+    });
 
     this.subs.push(sub);
   }
@@ -82,9 +80,15 @@ export class FeedListComponent {
   }
 
   onStatusChange(status: number | null): void {
-    this.filterStatus = status === null ? 2 : status;
+    this.filterStatus = status ?? 2;
     this.pageIndex = 0;
-    this.feeds = [];
+    this.loadFeeds(1, this.pageSize);
+  }
+
+  clearFilters(): void {
+    this.searchValue = '';
+    this.filterStatus = 2;
+    this.pageIndex = 0;
     this.loadFeeds(1, this.pageSize);
   }
 
@@ -94,24 +98,17 @@ export class FeedListComponent {
     this.loadFeeds(this.pageIndex + 1, this.pageSize);
   }
 
-  clearFilters(): void {
-    this.searchValue = '';
-    this.filterStatus = 2;
-    this.pageIndex = 0;
-    this.feeds = [];
-    this.loadFeeds(1, this.pageSize);
-  }
-
   onToggleActive(event: { row: any; isActive: boolean }): void {
     event.row.isToggling = true;
 
-    if (!event?.row?.feedId) {
-      this.toast.error(this.translate.instant('feeds.invalidId') ?? "");
+    const id = event?.row?.feedId;
+    if (!id) {
+      this.toast.error("Invalid feed id");
       return;
     }
 
-    const sub = this.feedService.activeInActive(event.row.feedId).subscribe({
-      next: (res :ApiResponse<any>) => {
+    const sub = this.feedService.activeInActive(id).subscribe({
+      next: (res: ApiResponse<any>) => {
         if (res.isSuccess) {
           this.toast.success(res.message);
           event.row.isActive = !event.row.isActive;
@@ -119,7 +116,7 @@ export class FeedListComponent {
           this.toast.error(res.message);
         }
       },
-      error: (err :ApiResponse<any>) => this.toast.error(err?.message),
+      error: () => { },
       complete: () => event.row.isToggling = false
     });
 
@@ -129,38 +126,62 @@ export class FeedListComponent {
   onDelete(row: any): void {
     const id = row?.feedId;
     if (!id) {
-      this.toast.error(this.translate.instant('feeds.invalidId') ?? "");
+      this.toast.error("Invalid feed id");
       return;
     }
 
-    this.confirm.confirm(this.translate.instant('feeds.confirmDelete') ?? "").subscribe((confirmed) => {
-      if (!confirmed) return;
+    this.confirm.confirm("Are you sure you want to delete this feed?")
+      .subscribe((confirmed) => {
+        if (!confirmed) return;
 
-      const sub = this.feedService.deleteFeeds(id).subscribe({
-        next: (res :ApiResponse<any>) => {
-          res.isSuccess ? this.toast.success(res?.message) : this.toast.error(res?.message);
-          this.feedService.notifyfeedsChanged();
-        },
-        error: (err :ApiResponse<any>) => this.toast.error(err?.message)
+        const sub = this.feedService.deleteFeeds(id).subscribe({
+          next: (res: ApiResponse<any>) => {
+            res.isSuccess ? this.toast.success(res.message) : this.toast.error(res.message);
+            this.feedService.notifyfeedsChanged();
+          },
+          error: (err) => this.toast.error(err?.message)
+        });
+
+        this.subs.push(sub);
       });
-
-      this.subs.push(sub);
-    });
   }
 
   private setColumns(): void {
     this.columns = [
-      this.translate.instant('feeds.columns.feedName') ?? "",
-      this.translate.instant('feeds.columns.category') ?? "",
-      this.translate.instant('feeds.columns.pricePerKg') ?? "",
-      this.translate.instant('feeds.columns.status') ?? ""
+      'Feed Name',
+      'Category',
+      'Dry Matter (%)',
+      'Protein (%)',
+      'NDF (%)',
+      'Energy (kcal/kg)',
+      'Price Per Kg (€)',
+      'ADF (%)',
+      'Fat Content (%)',
+      'Calcium (%)',
+      'Phosphorus (%)',
+      'Status'
     ];
-    this.columnFields = ['feedName', 'category', 'pricePerKg', 'isActive'];
+
+
+    this.columnFields = [
+      'feedName',
+      'category',
+      'dryMatter',
+      'protein',
+      'ndf',
+      'energy',
+      'pricePerKg',
+      'adf',
+      'fatContent',
+      'calcium',
+      'phosphorus',
+      'isActive'
+    ];
   }
+
 
   ngOnDestroy(): void {
     this.langSub?.unsubscribe();
-    this.subs.forEach((s) => s.unsubscribe());
+    this.subs.forEach(s => s.unsubscribe());
   }
-
 }

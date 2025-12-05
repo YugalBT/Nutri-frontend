@@ -1,0 +1,45 @@
+<div class="pagecls">
+
+  <!-- Page Header -->
+  <div class="page-header">
+    <div>
+      <h3 class="page-title">Ration Management</h3>
+    </div>
+
+    <button class="btn add-btn" (click)="rationModal.openModal()">
+      <i class="bi bi-plus-lg me-2"></i>
+      Add Ration
+    </button>
+  </div>
+
+  <div class="filters-card">
+    <app-global-search
+      [placeholder]="'Search by ration name or type'"
+      [showStatus]="true"
+      (search)="onSearch($event)"
+      (statusChange)="onStatusChange($event)"
+      (clear)="clearFilters()">
+    </app-global-search>
+  </div>
+
+  <div class="table-card">
+    <app-reusable-table
+      [columns]="columns"
+      [showActions]="true"
+      [data]="ration"
+      [columnFields]="columnFields"
+      [pageable]="true"
+      [totalRecords]="totalRecords"
+      [pageSize]="pageSize"
+      [pageIndex]="pageIndex"
+      (pageChange)="onPageChange($event)"
+      (toggleActive)="onToggleActive($event)"
+      (deleteRow)="onDelete($event)"
+      (editRow)="rationModal.openModal(true, $event)">
+    </app-reusable-table>
+  </div>
+
+  <!-- Add/Edit Modal -->
+<app-ration-add-edit #rationModal></app-ration-add-edit>
+
+</div>

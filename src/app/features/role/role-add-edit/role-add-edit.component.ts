@@ -99,25 +99,39 @@ export class UserRoleAddEditComponent implements OnInit, OnDestroy {
 
 
 
-  private loadModules(masterRoles: boolean = false): void {
-    this.modulesLoading = true;
-    this.modulesError = null;
-    
-    const sub = this.commonService.getModules(masterRoles).subscribe({
-      next: (response) => {
-        const modulesResp = (response as any)?.data as GetAllModulesResponse;
-        this.modules = modulesResp?.data || response?.data || (response as any)?.modules || [];
-        this.modulesLoading = false;
-      },
-      error: (err: any) => {
-        console.error('Error loading modules:', err);
-        this.modulesError = this.translate.instant('common.error') || 'Error loading permissions';
-        this.toast.error(this.modulesError);
-        this.modulesLoading = false;
+private loadModules(masterRoles: boolean = false): void {
+  this.modulesLoading = true;
+  this.modulesError = null;
+
+  const sub = this.commonService.getModules(masterRoles).subscribe({
+    next: (response) => {
+      let data = response?.data;
+
+      // If API returns { data: { data: [...] } }
+      if (data && Array.isArray(data.data)) {
+        this.modules = data.data;
       }
-    });
-    this.subs.push(sub);
-  }
+      // If API returns { data: [...] }
+      else if (Array.isArray(data)) {
+        this.modules = data;
+      }
+      else {
+        this.modules = []; // fallback
+      }
+
+      this.modulesLoading = false;
+    },
+    error: (err) => {
+      console.error('Error loading modules:', err);
+      this.modulesError = 'Error loading permissions';
+      this.toast.error(this.modulesError);
+      this.modulesLoading = false;
+    }
+  });
+
+  this.subs.push(sub);
+}
+
 
  
   openModal(isEdit: boolean, roleData?: RoleItem | undefined): void {
