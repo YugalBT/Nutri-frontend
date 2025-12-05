@@ -82,7 +82,7 @@ export class CompanyAddEditComponent implements OnInit {
       zipCode: ['', [Validators.required, Validators.pattern(/^[0-9]{5,6}$/)]],
 
       // Account
-      password: ['', [Validators.required, Validators.minLength(8), Validators.pattern(/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*#?&]{8,}$/)]],
+      password: ['', [Validators.minLength(8), Validators.pattern(/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*#?&]{8,}$/)]],
 
       // legacy fields
       name: [''],
@@ -114,19 +114,63 @@ export class CompanyAddEditComponent implements OnInit {
       }
     });
   }
-  openModal(edit = false, data?: any) {
-    this.isEdit = edit;
-    if (edit && data) {
-      this.form.patchValue({ ...data, logo: data.logo || '' });
-      this.form.get('password')?.clearValidators();
-      // this.form.patchValue(data);
-    } else {
-      this.form.reset({ isActive: true });
-    }
+  // openModal(edit = false, data?: any) {
+  //   this.isEdit = edit;
+  //   if (edit && data) {
+  //     this.form.patchValue({ ...data, logo: data.logo || '' });
 
-    this.modalInstance = new bootstrap.Modal(this.companyModal.nativeElement);
-    this.modalInstance.show();
+      
+  //   // ❌ Remove validations for EDIT mode
+  //   this.form.get('password')?.clearValidators();
+  //   this.form.get('roleId')?.clearValidators();
+
+  //   this.form.get('password')?.updateValueAndValidity();
+  //   this.form.get('roleId')?.updateValueAndValidity();
+  //  //   this.form.get('password')?.clearValidators();
+  //     // this.form.patchValue(data);
+  //   } else {
+  //     this.form.reset({ isActive: true });
+  //   }
+
+  //   this.modalInstance = new bootstrap.Modal(this.companyModal.nativeElement);
+  //   this.modalInstance.show();
+  // }
+
+  openModal(edit = false, data?: any) {
+  this.isEdit = edit;
+
+  if (edit && data) {
+    // Patch data
+    this.form.patchValue({ ...data, logo: data.logo || '' });
+
+    // ❌ Remove validations for EDIT mode
+    this.form.get('password')?.clearValidators();
+    this.form.get('roleId')?.clearValidators();
+
+    this.form.get('password')?.updateValueAndValidity();
+    this.form.get('roleId')?.updateValueAndValidity();
+  } 
+  else {
+    // Reset form for create mode
+    this.form.reset({ isActive: true });
+
+    // ✅ Add required validators for CREATE mode
+    this.form.get('password')?.setValidators([
+      Validators.required,
+      Validators.minLength(8),
+      Validators.pattern(/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*#?&]{8,}$/)
+    ]);
+
+    this.form.get('roleId')?.setValidators([Validators.required]);
+
+    this.form.get('password')?.updateValueAndValidity();
+    this.form.get('roleId')?.updateValueAndValidity();
   }
+
+  this.modalInstance = new bootstrap.Modal(this.companyModal.nativeElement);
+  this.modalInstance.show();
+}
+
 
   closeModal() {
     if (this.modalInstance) {
@@ -140,20 +184,31 @@ export class CompanyAddEditComponent implements OnInit {
     }
   }
 
-  onLogoChange(event: Event) {
-    const input = event.target as HTMLInputElement;
+ @ViewChild('fileInput') fileInput!: ElementRef<HTMLInputElement>;
 
-    if (input.files && input.files.length > 0) {
-      const file = input.files[0];
-      const reader = new FileReader();
+onLogoChange(event: Event) {
+  const input = event.target as HTMLInputElement;
 
-      reader.onload = () => {
-        this.form.patchValue({ logo: reader.result as string });
-      };
+  if (input.files && input.files.length > 0) {
+    const file = input.files[0];
+    const reader = new FileReader();
 
-      reader.readAsDataURL(file);
-    }
+    reader.onload = () => {
+      this.form.patchValue({ logo: reader.result as string });
+    };
+
+    reader.readAsDataURL(file);
   }
+}
+
+removeLogo() {
+  this.form.patchValue({ logo: null });
+
+  if (this.fileInput) {
+    this.fileInput.nativeElement.value = '';
+  }
+}
+
 
 
   saveCompany() {

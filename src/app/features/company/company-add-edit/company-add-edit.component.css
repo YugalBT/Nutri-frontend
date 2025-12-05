@@ -1,0 +1,33 @@
+.logo-preview-wrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.logo-preview-img {
+  width: 150px;
+  height: 80px;
+  object-fit: contain;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.remove-logo-btn {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: #dc3545;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  padding: 0;
+  transition: 0.2s;
+}
+
+.remove-logo-btn:hover {
+  background: #b32b36;
+}
