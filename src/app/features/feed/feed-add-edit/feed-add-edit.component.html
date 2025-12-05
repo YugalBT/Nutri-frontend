@@ -47,7 +47,7 @@
   <div class="row g-3 mt-2">
     <div class="col-md-4">
       <label class="form-label">Dry Matter (%) <sup class="text-danger">*</sup></label>
-      <input type="number" step="0.01" formControlName="dryMatter" class="form-control" placeholder="Enter Dry Matter %">
+      <input type="number" step="0.01" min="0" formControlName="dryMatter" class="form-control" placeholder="Enter Dry Matter %">
       <div *ngIf="form.get('dryMatter')?.touched && form.get('dryMatter')?.invalid" class="text-danger">
         Dry Matter is required.
       </div>
@@ -55,7 +55,7 @@
 
     <div class="col-md-4">
       <label class="form-label">Protein (%) <sup class="text-danger">*</sup></label>
-      <input type="number" step="0.01" formControlName="protein" class="form-control" placeholder="Enter Protein %">
+      <input type="number" step="0.01" min="0" formControlName="protein" class="form-control" placeholder="Enter Protein %">
       <div *ngIf="form.get('protein')?.touched && form.get('protein')?.invalid" class="text-danger">
         Protein is required.
       </div>
@@ -63,7 +63,7 @@
 
     <div class="col-md-4">
       <label class="form-label">NDF (%) <sup class="text-danger">*</sup></label>
-      <input type="number" step="0.01" formControlName="ndf" class="form-control" placeholder="Enter NDF %">
+      <input type="number" step="0.01" min="0" formControlName="ndf" class="form-control" placeholder="Enter NDF %">
       <div *ngIf="form.get('ndf')?.touched && form.get('ndf')?.invalid" class="text-danger">
         NDF is required.
       </div>
@@ -74,7 +74,7 @@
   <div class="row g-3 mt-2">
     <div class="col-md-4">
       <label class="form-label">Energy (kcal/kg) <sup class="text-danger">*</sup></label>
-      <input type="number" step="0.001" formControlName="energy" class="form-control" placeholder="Enter Energy (kcal/kg)">
+      <input type="number" step="0.001" min="0" formControlName="energy" class="form-control" placeholder="Enter Energy (kcal/kg)">
       <div *ngIf="form.get('energy')?.touched && form.get('energy')?.invalid" class="text-danger">
         Energy is required.
       </div>
@@ -82,7 +82,7 @@
 
     <div class="col-md-4">
       <label class="form-label">Price Per Kg (€) <sup class="text-danger">*</sup></label>
-      <input type="number" step="0.0001" formControlName="pricePerKg" class="form-control" placeholder="Enter Price Per Kg (€)">
+      <input type="number" step="0.0001" min="0" formControlName="pricePerKg" class="form-control" placeholder="Enter Price Per Kg (€)">
       <div *ngIf="form.get('pricePerKg')?.touched && form.get('pricePerKg')?.invalid" class="text-danger">
         Price Per Kg is required.
       </div>
@@ -90,7 +90,7 @@
 
     <div class="col-md-4">
       <label class="form-label">ADF (%) <sup class="text-danger">*</sup></label>
-      <input type="number" step="0.01" formControlName="adf" class="form-control" placeholder="Enter ADF %">
+      <input type="number" step="0.01" min="0" formControlName="adf" class="form-control" placeholder="Enter ADF %">
       <div *ngIf="form.get('adf')?.touched && form.get('adf')?.invalid" class="text-danger">
         ADF is required.
       </div>
@@ -101,7 +101,7 @@
   <div class="row g-3 mt-2">
     <div class="col-md-4">
       <label class="form-label">Fat Content (%) <sup class="text-danger">*</sup></label>
-      <input type="number" step="0.01" formControlName="fatContent" class="form-control" placeholder="Enter Fat Content %">
+      <input type="number" step="0.01" min="0" formControlName="fatContent" class="form-control" placeholder="Enter Fat Content %">
       <div *ngIf="form.get('fatContent')?.touched && form.get('fatContent')?.invalid" class="text-danger">
         Fat Content is required.
       </div>
@@ -109,7 +109,7 @@
 
     <div class="col-md-4">
       <label class="form-label">Calcium (%) <sup class="text-danger">*</sup></label>
-      <input type="number" step="0.001" formControlName="calcium" class="form-control" placeholder="Enter Calcium %">
+      <input type="number" step="0.001" min="0" formControlName="calcium" class="form-control" placeholder="Enter Calcium %">
       <div *ngIf="form.get('calcium')?.touched && form.get('calcium')?.invalid" class="text-danger">
         Calcium is required.
       </div>
@@ -117,7 +117,7 @@
 
     <div class="col-md-4">
       <label class="form-label">Phosphorus (%) <sup class="text-danger">*</sup></label>
-      <input type="number" step="0.001" formControlName="phosphorus" class="form-control" placeholder="Enter Phosphorus %">
+      <input type="number" step="0.001" min="0" formControlName="phosphorus" class="form-control" placeholder="Enter Phosphorus %">
       <div *ngIf="form.get('phosphorus')?.touched && form.get('phosphorus')?.invalid" class="text-danger">
         Phosphorus is required.
       </div>
