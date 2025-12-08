@@ -143,7 +143,7 @@ private loadModules(masterRoles: boolean = false): void {
         roleName: roleData.nameEn || '',
         roleNameIt: roleData.nameIt || '',
         isDefault : roleData.isDefault || false,
-        isShow : roleData.isShow || true,
+        isShow : roleData.isShow,
         isEditable : roleData.isEditable || false,
         description: roleData.nameIt || ''
       });
@@ -304,7 +304,7 @@ private loadModules(masterRoles: boolean = false): void {
     nameEn: this.form.get('roleName')?.value,
     nameIt: this.form.get('roleNameIt')?.value || null,
     isDefault: this.form.get('isDefault')?.value || false,
-    isShow: this.form.get('isShow')?.value || true,
+    isShow: this.form.get('isShow')?.value,
     isEditable: this.form.get('isEditable')?.value || false,
     rolePermissionId: checkedPermissions || []
   };
