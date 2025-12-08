@@ -1,0 +1,70 @@
+<div #dayModal class="modal fade" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title">{{ isEdit ? 'Edit Day' : 'Add Day' }}</h5>
+                <button type="button" class="btn-close" (click)="closeModal()"></button>
+            </div>
+
+            <div class="modal-body">
+                <form [formGroup]="form">
+
+                    <div class="row g-3">
+
+                        <!-- Farm -->
+                        <div class="col-md-4">
+                            <label class="form-label">Farm <sup class="text-danger">*</sup></label>
+                            <select formControlName="farmId" class="form-select" [disabled]="farmsLoading">
+                                <option [ngValue]="null">Select Farm</option>
+                                <option *ngFor="let f of farms" [ngValue]="f.farmId">{{ f.farmName }}</option>
+                            </select>
+
+                            <div class="text-danger" *ngIf="form.get('farmId')?.touched && form.get('farmId')?.invalid">
+                                Farm is required.
+                            </div>
+                        </div>
+
+                        <!-- Date -->
+                        <div class="col-md-4">
+                            <label class="form-label">Date <sup class="text-danger">*</sup></label>
+                            <input type="date" formControlName="date" class="form-control">
+
+                            <div class="text-danger" *ngIf="form.get('date')?.touched && form.get('date')?.invalid">
+                                Date is required.
+                            </div>
+                        </div>
+
+                        <!-- Is Closed -->
+                        <div class="col-md-4">
+                            <label class="form-label d-flex align-items-center gap-1">
+                                Is Closed <sup class="text-danger"></sup>
+                            </label>
+
+                            <label class="switch">
+                                <input type="checkbox" formControlName="isClosed">
+                                <span class="slider"></span>
+                            </label>
+
+                            <!-- <div class="text-danger"
+                                *ngIf="form.get('isClosed')?.touched && form.get('isClosed')?.invalid">
+                                Status is required.
+                            </div> -->
+                        </div>
+
+
+                    </div>
+
+                </form>
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn btn-outline-secondary" (click)="closeModal()">Cancel</button>
+                <button class="btn add-btn" (click)="saveDay()">
+                    {{ isEdit ? 'Update' : 'Save' }}
+                </button>
+            </div>
+
+        </div>
+    </div>
+</div>

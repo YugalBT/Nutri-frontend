@@ -101,6 +101,18 @@ export const routes: Routes = [
           import('./features/module/module-list/module-list.component')
             .then(m => m.ModuleListComponent),
       },
+      {
+        path: 'day',
+        loadComponent: () =>
+          import('./features/day/day-list/day-list.component')
+            .then(m => m.DayListComponent),
+      },
+      {
+        path: 'calvesration',
+        loadComponent: () =>
+          import('./features/calves/calves-list/calves-list.component')
+            .then(m => m.CalvesListComponent),
+      },
 
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
     ],

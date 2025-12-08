@@ -8,6 +8,7 @@ import { API_ENDPOINTS } from '../../core/constants/api-endpoints';
 import { GetAllModulesResponse } from '../../core/models/add-edit-role';
 import { FarmList } from '../../core/models/farm-list';
 import { FeedList } from '../../core/models/feed-list';
+import { DayList } from '../../core/models/day-list';
 
 @Injectable({
   providedIn: 'root'
@@ -30,6 +31,9 @@ export class CommonService {
 
   getFeedList(): Observable<ApiResponse<FeedList>> {
     return this.http.get<FeedList>(API_ENDPOINTS.COMMON_API.GET_ALL_FEED);
+  }
+  getDayList(): Observable<ApiResponse<DayList>> {
+    return this.http.get<DayList>(API_ENDPOINTS.COMMON_API.GET_ALL_Days);
   }
 
 
