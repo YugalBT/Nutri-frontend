@@ -78,8 +78,8 @@ export class UserRoleAddEditComponent implements OnInit, OnDestroy {
 
   private initForm(): void {
     this.form = this.fb.group({
-      roleName: ['', [Validators.required,    Validators.pattern(/^[\p{L}_ .'-]+$/u)]],
-      roleNameIt: ['',[   Validators.pattern(/^[\p{L}_ .'-]+$/u)]],
+      roleName: ['', [Validators.required,Validators.pattern(/^(?=.*\p{L})[\p{L} _.'-]+$/u)]],
+      roleNameIt: ['',[Validators.pattern(/^(?=.*\p{L})[\p{L} _.'-]+$/u)]],
       isDefault: [false],
       isShow: [false],
       isEditable: [false],
