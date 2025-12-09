@@ -1,6 +1,7 @@
 import { Routes } from '@angular/router';
 import { authGuard } from './core/auth/auth.guard';
 import { companyGuard } from './core/auth/company.guard';
+import { permissionGuard } from './core/auth/permission.guard';
 
 export const routes: Routes = [
   // Public Routes
@@ -100,6 +101,25 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./features/module/module-list/module-list.component')
             .then(m => m.ModuleListComponent),
+      },
+      {
+        path: 'reports',
+         canActivate: [permissionGuard],
+        loadComponent: () =>
+          import('./features/reports/reports/reports.component')
+            .then(m => m.ReportsComponent),
+      },
+      {
+        path: 'day',
+        loadComponent: () =>
+          import('./features/day/day-list/day-list.component')
+            .then(m => m.DayListComponent),
+      },
+      {
+        path: 'calvesration',
+        loadComponent: () =>
+          import('./features/calves/calves-list/calves-list.component')
+            .then(m => m.CalvesListComponent),
       },
 
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },

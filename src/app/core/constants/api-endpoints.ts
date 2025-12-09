@@ -34,7 +34,8 @@ export const API_ENDPOINTS = {
     GET_ALL_ROLES: '/Common/GetAllRoles',
     GET_ALL_NOTIFICATION: '/Common/GetAllNotification',
     GET_ALL_FARMS: '/Common/GetAllFarm',
-    GET_ALL_FEED: '/Common/GetAllFeed'
+    GET_ALL_FEED: '/Common/GetAllFeed',
+    GET_ALL_Days: '/Common/GetAllDay'
 
   },
   
@@ -73,6 +74,20 @@ export const API_ENDPOINTS = {
     DELETE: '/Feed/Delete',
     ACTIVE_INACTIVE: '/Feed/ActiveInActive',
     GET_ALL: '/Feed/GetAll',
+  },
+   DAY: {
+    CREATE: '/Day/Create',
+    UPDATE: '/Day/Update',
+    DELETE: '/Day/Delete',
+    ACTIVE_INACTIVE: '/Day/ActiveInActive',
+    GET_ALL: '/Day/GetAll',
+  },
+   CALVES: {
+    CREATE: '/Calves/Create',
+    UPDATE: '/Calves/Update',
+    DELETE: '/Calves/Delete',
+    ACTIVE_INACTIVE: '/Calves/ActiveInActive',
+    GET_ALL: '/Calves/GetAll',
   },
 
    COMPANY: {
