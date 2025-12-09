@@ -31,11 +31,11 @@ export class AddeditComponent implements OnInit, OnDestroy {
   private currentUserId: string | null = null;
 
   constructor(
-    private fb: FormBuilder, 
-    private commonService: CommonService, 
+    private fb: FormBuilder,
+    private commonService: CommonService,
     private usersService: UsersService,
-     private toast: ToastService
-  ) {}
+    private toast: ToastService
+  ) { }
 
   ngOnInit() {
     this.initializeForm();
@@ -53,7 +53,7 @@ export class AddeditComponent implements OnInit, OnDestroy {
       lastName: ['', [Validators.required, Validators.pattern(/^[A-Za-z]+$/)]],
       email: ['', [Validators.required, Validators.email]],
       phone: ['', [Validators.pattern(/^[0-9]+$/), Validators.minLength(10), Validators.maxLength(10),
-        Validators.required]],
+      Validators.required]],
       roleId: [null, Validators.required],
       password: ['', [Validators.required, Validators.minLength(8), Validators.pattern(/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*#?&]{8,}$/)]],
       isActive: [true]
@@ -100,11 +100,11 @@ export class AddeditComponent implements OnInit, OnDestroy {
         isActive: data.isActive
       });
       this.currentUserId = data.userId;
-       this.form.get('password')?.clearValidators();
-    this.form.get('password')?.updateValueAndValidity();
+      this.form.get('password')?.clearValidators();
+      this.form.get('password')?.updateValueAndValidity();
     } else {
       this.currentUserId = null;
-      
+
     }
 
     this.modalInstance = new bootstrap.Modal(this.userModal.nativeElement);
@@ -117,50 +117,50 @@ export class AddeditComponent implements OnInit, OnDestroy {
     }
   }
 
- saveUser() {
-  if (!this.form.valid) {
+  saveUser() {
+    if (!this.form.valid) {
       const payload = this.form.getRawValue();
       delete payload.password;
-    this.toast.warning('Please fill all required fields');
-    return;
+      this.toast.warning('Please fill all required fields');
+      return;
+    }
+
+    const v = this.form.value;
+    const payload: any = {
+      firstName: v.name,
+      middleName: v.middleName,
+      lastName: v.lastName,
+      email: v.email,
+      phone: v.phone,
+      roleId: v.roleId,
+      password: v.password
+    };
+
+    if (this.isEdit && this.currentUserId) {
+      payload.userId = this.currentUserId;
+
+      const sub = this.usersService.updateUser(payload).subscribe(res => {
+        if (res.isSuccess) {
+          this.toast.success(res.message);
+          this.afterSuccess();
+        } else {
+          this.toast.error(res.message);
+        }
+      });
+      this.subs.push(sub);
+
+    } else {
+      const sub = this.usersService.createUser(payload).subscribe(res => {
+        if (res?.isSuccess) {
+          this.toast.success(res.message);
+          this.afterSuccess();
+        } else {
+          this.toast.error(res.message);
+        }
+      });
+      this.subs.push(sub);
+    }
   }
-
-  const v = this.form.value;
-  const payload: any = {
-    firstName: v.name,
-    middleName: v.middleName,
-    lastName: v.lastName,
-    email: v.email,
-    phone: v.phone,
-    roleId: v.roleId,
-    password: v.password
-  };
-
-  if (this.isEdit && this.currentUserId) {
-    payload.userId = this.currentUserId;
-
-    const sub = this.usersService.updateUser(payload).subscribe(res => {
-      if (res.isSuccess) {
-        this.toast.success(res.message);
-        this.afterSuccess();
-      } else {
-        this.toast.error(res.message);
-      }
-    });
-    this.subs.push(sub);
-
-  } else {
-    const sub = this.usersService.createUser(payload).subscribe(res => {
-      if (res?.isSuccess) {
-        this.toast.success(res.message);
-        this.afterSuccess();
-      } else {
-        this.toast.error(res.message || 'Creation failed');
-      }
-    });
-    this.subs.push(sub);
-  }
-}
 
 
   private afterSuccess() {

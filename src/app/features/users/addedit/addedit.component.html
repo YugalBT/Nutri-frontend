@@ -17,25 +17,24 @@
                                     style="color: #f00; font-size: 12px;">*</sup></label>
                             <input type="text" formControlName="name" class="form-control"
                                 placeholder="{{ 'users.firstNamePlaceholder' | translate }}">
-                               <div *ngIf="form.get('name')?.touched && form.get('name')?.invalid"
-                                    class="text-danger">
-                                    First Name is required
-                                </div>
+                            <div *ngIf="form.get('name')?.touched && form.get('name')?.invalid" class="text-danger">
+                                First Name is required
+                            </div>
 
-                                <div *ngIf="form.get('name')?.errors?.['pattern']" class="text-danger">
-                                    First Name can only contain alphabets.
-                                </div>
-                                
+                            <div *ngIf="form.get('name')?.errors?.['pattern']" class="text-danger">
+                                First Name can only contain alphabets.
+                            </div>
+
                         </div>
 
                         <div class="col-md-4">
                             <label class="form-label">{{ 'users.middleName' | translate }}</label>
                             <input type="text" formControlName="middleName" class="form-control"
                                 placeholder="{{ 'users.middleNamePlaceholder' | translate }}">
-                                <div *ngIf="form.get('middleName')?.touched && form.get('middleName')?.invalid"
-                                    class="text-danger">
-                                      Middle Name can only contain alphabets.
-                                </div>
+                            <div *ngIf="form.get('middleName')?.touched && form.get('middleName')?.invalid"
+                                class="text-danger">
+                                Middle Name can only contain alphabets.
+                            </div>
                         </div>
 
                         <div class="col-md-4">
@@ -43,14 +42,14 @@
                                     style="color: #f00; font-size: 12px;">*</sup></label>
                             <input type="text" formControlName="lastName" class="form-control"
                                 placeholder="{{ 'users.lastNamePlaceholder' | translate }}">
-                                <div *ngIf="form.get('lastName')?.touched && form.get('lastName')?.invalid"
-                                    class="text-danger">
-                                    Last Name is required
-                                </div>
+                            <div *ngIf="form.get('lastName')?.touched && form.get('lastName')?.invalid"
+                                class="text-danger">
+                                Last Name is required
+                            </div>
 
-                                <div *ngIf="form.get('lastName')?.errors?.['pattern']" class="text-danger">
-                                    Last Name can only contain alphabets.
-                                </div>
+                            <div *ngIf="form.get('lastName')?.errors?.['pattern']" class="text-danger">
+                                Last Name can only contain alphabets.
+                            </div>
                         </div>
                     </div>
                     <div class="row g-3 mt-2">
@@ -60,13 +59,12 @@
                                 <sup style="color: #f00; font-size: 12px;">*</sup></label>
                             <input type="email" formControlName="email" class="form-control"
                                 placeholder="{{ 'users.emailPlaceholder' | translate }}">
-                            <div *ngIf="form.get('email')?.touched && form.get('email')?.invalid"
-                                    class="text-danger">
-                                    Email is required
-                                </div>
-                                <div *ngIf="form.get('email')?.errors?.['email']" class="text-danger">
-                                    Please enter a valid email address.
-                                </div>
+                            <div *ngIf="form.get('email')?.touched && form.get('email')?.invalid" class="text-danger">
+                                Email is required
+                            </div>
+                            <div *ngIf="form.get('email')?.errors?.['email']" class="text-danger">
+                                Please enter a valid email address.
+                            </div>
                         </div>
                         <div class="col-md-4">
 
@@ -74,27 +72,27 @@
                                     style="color: #f00; font-size: 12px;">*</sup></label>
                             <input type="email" formControlName="phone" class="form-control"
                                 placeholder="{{ 'users.phonePlaceholder' | translate }}">
-                             <div *ngIf="form.get('phone')?.touched" class="text-danger">
+                            <div *ngIf="form.get('phone')?.touched" class="text-danger">
 
-                                        <!-- Required -->
-                                        <div *ngIf="form.get('phone')?.errors?.['required']">
-                                            Phone Number is required.
-                                        </div>
+                                <!-- Required -->
+                                <div *ngIf="form.get('phone')?.errors?.['required']">
+                                    Phone Number is required.
+                                </div>
 
-                                        <!-- Minimum length -->
-                                        <div *ngIf="form.get('phone')?.errors?.['minlength']">
-                                            Phone Number must be at least 10 digits.
-                                        </div>
-                                        <!-- Maximum length -->
-                                        <div *ngIf="form.get('phone')?.errors?.['maxlength']">
-                                            Phone Number must be at most 10 digits.
-                                        </div>
-                                        <!-- Only numbers allowed -->
-                                        <div *ngIf="form.get('phone')?.errors?.['pattern']">
-                                            Phone Number must contain digits only.
-                                        </div>
+                                <!-- Minimum length -->
+                                <div *ngIf="form.get('phone')?.errors?.['minlength']">
+                                    Phone Number must be at least 10 digits.
+                                </div>
+                                <!-- Maximum length -->
+                                <div *ngIf="form.get('phone')?.errors?.['maxlength']">
+                                    Phone Number must be at most 10 digits.
+                                </div>
+                                <!-- Only numbers allowed -->
+                                <div *ngIf="form.get('phone')?.errors?.['pattern']">
+                                    Phone Number must contain digits only.
+                                </div>
 
-                                    </div>
+                            </div>
                         </div>
 
 
@@ -117,25 +115,25 @@
                             </ng-container>
                         </div>
                         <div class="col-md-4">
-                            <label class="form-label">{{ 'users.password' | translate }} <sup
-                                    style="color: #f00; font-size: 12px;">*</sup></label>
-                                     <div class="input-group">
-                            <input [type]="showCurrent ? 'text' : 'password'"  formControlName="password" class="form-control"
-                                placeholder="{{ 'users.passwordPlaceholder' | translate }}">
+                            <label class="form-label">{{ 'users.password' | translate }} </label>
+                            <div class="input-group">
+                                <input [type]="showCurrent ? 'text' : 'password'" autocomplete="off"
+                                    formControlName="password" class="form-control"
+                                    placeholder="{{ 'users.passwordPlaceholder' | translate }}">
                                 <span class="input-group-text" role="button" (click)="showCurrent = !showCurrent">
-        <i class="fa" [ngClass]="showCurrent ? 'fa-eye' : 'fa-eye-slash'"></i>
-      </span>
-                        </div>
-                           <div *ngIf="form.get('password')?.touched && form.get('password')?.invalid"
-                                        class="text-danger">
-                                        Password is required
-                                    </div>
-                                    <div *ngIf="form.get('password')?.errors?.['minlength']" class="text-danger">
-                                        Password must be at least 8 characters long.
-                                    </div>
-                                    <div *ngIf="form.get('password')?.errors?.['pattern']" class="text-danger">
-                                        Password must contain at least one letter ,one special character and one number.
-                                    </div>
+                                    <i class="fa" [ngClass]="showCurrent ? 'fa-eye' : 'fa-eye-slash'"></i>
+                                </span>
+                            </div>
+                            <div *ngIf="form.get('password')?.touched && form.get('password')?.invalid"
+                                class="text-danger">
+                                Password is required
+                            </div>
+                            <div *ngIf="form.get('password')?.errors?.['minlength']" class="text-danger">
+                                Password must be at least 8 characters long.
+                            </div>
+                            <div *ngIf="form.get('password')?.errors?.['pattern']" class="text-danger">
+                                Password must contain at least one letter ,one special character and one number.
+                            </div>
                         </div>
                     </div>
                 </form>
