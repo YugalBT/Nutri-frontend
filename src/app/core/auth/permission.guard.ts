@@ -9,8 +9,8 @@ export const permissionGuard: CanActivateFn = (route, state) => {
   const router = inject(Router);
 
   const requiredPerm = route.data['permission'] as string;
-
   return store.select(selectUserRoles).pipe(
+    
     take(1),
     map(roles => {
       if (roles?.includes(requiredPerm)) {

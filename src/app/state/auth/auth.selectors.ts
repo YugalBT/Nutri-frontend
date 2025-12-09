@@ -20,62 +20,62 @@ export const selectUserPermissions = createSelector(
   (user) => user?.permissions || []
 );
 
-export const selectCanViewUsers = createSelector(
-  selectUserRoles,
-  (roles) => roles.includes('ViewUser')
-);
+// export const selectCanViewUsers = createSelector(
+//   selectUserRoles,
+//   (roles) => roles.includes('ViewUser')
+// );
 
-export const selectCanEditUsers = createSelector(
-  selectUserRoles,
-  (roles) => roles.includes('EditUser')
-);
+// export const selectCanEditUsers = createSelector(
+//   selectUserRoles,
+//   (roles) => roles.includes('EditUser')
+// );
 
-export const selectCanDeleteUsers = createSelector(
-  selectUserRoles,
-  (roles) => roles.includes('DeleteUser')
-);
+// export const selectCanDeleteUsers = createSelector(
+//   selectUserRoles,
+//   (roles) => roles.includes('DeleteUser')
+// );
 
-export const selectCanAddUsers = createSelector(
-  selectUserRoles,
-  (roles) => roles.includes('AddUser')
-);
+// export const selectCanAddUsers = createSelector(
+//   selectUserRoles,
+//   (roles) => roles.includes('AddUser')
+// );
 
-export const selectCanViewRoles = createSelector(
-  selectUserRoles,
-  (roles) => roles.includes('ViewRole')
-);
+// export const selectCanViewRoles = createSelector(
+//   selectUserRoles,
+//   (roles) => roles.includes('ViewRole')
+// );
 
-export const selectCanEditRoles = createSelector(
-  selectUserRoles,
-  (roles) => roles.includes('EditRole')
-);
+// export const selectCanEditRoles = createSelector(
+//   selectUserRoles,
+//   (roles) => roles.includes('EditRole')
+// );
 
-export const selectCanDeleteRoles = createSelector(
-  selectUserRoles,
-  (roles) => roles.includes('DeleteRole')
-);
+// export const selectCanDeleteRoles = createSelector(
+//   selectUserRoles,
+//   (roles) => roles.includes('DeleteRole')
+// );
 
-export const selectCanAddRoles = createSelector(
-  selectUserRoles,
-  (roles) => roles.includes('AddRole')
-);
+// export const selectCanAddRoles = createSelector(
+//   selectUserRoles,
+//   (roles) => roles.includes('AddRole')
+// );
 
-export const selectCanManageRoles = createSelector(
-  selectUserRoles,
-  (roles) => roles.includes('AddRole') || roles.includes('EditRole') || roles.includes('DeleteRole')
-);
+// export const selectCanManageRoles = createSelector(
+//   selectUserRoles,
+//   (roles) => roles.includes('AddRole') || roles.includes('EditRole') || roles.includes('DeleteRole')
+// );
 
-export const selectCanViewCompanies = createSelector(
-  selectUserRoles,
-  (roles) => roles.includes('ViewTenant')
-);
+// export const selectCanViewCompanies = createSelector(
+//   selectUserRoles,
+//   (roles) => roles.includes('ViewTenant')
+// );
 
-export const selectCanEditCompanies = createSelector(
-  selectUserRoles,
-  (roles) => roles.includes('EditTenant')
-);
+// export const selectCanEditCompanies = createSelector(
+//   selectUserRoles,
+//   (roles) => roles.includes('EditTenant')
+// );
 
-export const selectCanAddCompanies = createSelector(
-  selectUserRoles,
-  (roles) => roles.includes('AddTenant')
-);
+// export const selectCanAddCompanies = createSelector(
+//   selectUserRoles,
+//   (roles) => roles.includes('AddTenant')
+// );

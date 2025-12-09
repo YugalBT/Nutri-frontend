@@ -11,7 +11,7 @@ import { RoleItem } from '../../../core/models/add-edit-role';
 import { TranslateService } from '../../../i18n/translate.service';
 import { ToastService } from '../../../shared/services/toast.service';
 import { ConfirmDialogService } from '../../../shared/services/confirm-dialog.service';
-import { selectCanManageRoles, selectCanDeleteRoles } from '../../../state/auth/auth.selectors';
+// import { selectCanManageRoles, selectCanDeleteRoles } from '../../../state/auth/auth.selectors';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { GlobalSearchComponent } from '../../../shared/components/global-search/global-search.component';
 import { ApiResponse } from '../../../core/models/api-response';
@@ -53,16 +53,16 @@ export class RoleComponent implements OnInit, OnDestroy ,AfterViewInit{
   }
 
   ngOnInit(): void {
-    this.store.select(selectCanManageRoles).pipe(take(1)).subscribe((canManage) => {
-      this.canManageRoles = canManage;
-      if (!canManage) {
-        this.toast.error(this.translate.instant('common.noPermission') || 'No permission to manage roles');
-      }
-    });
+    // this.store.select(selectCanManageRoles).pipe(take(1)).subscribe((canManage) => {
+    //   this.canManageRoles = canManage;
+    //   if (!canManage) {
+    //     this.toast.error(this.translate.instant('common.noPermission') || 'No permission to manage roles');
+    //   }
+    // });
 
-    this.store.select(selectCanDeleteRoles).pipe(take(1)).subscribe((canDelete) => {
-      this.canDeleteRoles = canDelete;
-    });
+    // this.store.select(selectCanDeleteRoles).pipe(take(1)).subscribe((canDelete) => {
+    //   this.canDeleteRoles = canDelete;
+    // });
 
     this.loadRoles();
   }
