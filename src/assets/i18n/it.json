@@ -79,7 +79,7 @@
   "sidebar": {
     "dashboard": "Dashboard",
     "workspace": "Workspace",
-    "user": "Utente",
+    "users": "Utente",
     "company": "Azienda",
     "role": "Ruolo",
     "profile": "Profilo",
@@ -87,7 +87,14 @@
     "settings": "Impostazioni",
     "logout": "Disconnetti",
     "confirmLogout": "Vuoi davvero disconnetterti?",
-    "logoutSuccess": "Disconnessione avvenuta con successo!"
+    "logoutSuccess": "Disconnessione avvenuta con successo!",
+    "feed":"Foraggio",
+    "farm":"Azienda Agricola",
+    "ration":"Razione",
+    "calvesRation":"VitelliRazione",
+    "day":"Giorno",
+    "changePassword":"Cambiare la password",
+    "setting":"Collocamento"
   },
   "users": {
     "searchFilters": "Filtri di ricerca",
