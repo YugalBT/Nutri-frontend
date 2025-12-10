@@ -3,7 +3,7 @@
     <div class="modal-content">
 
       <div class="modal-header">
-        <h5 class="modal-title">{{ isEdit ? 'Edit Calves' : 'Add Calves' }}</h5>
+        <h5 class="modal-title">{{ isEdit ? 'Edit Calves Ration' : 'Add Calves Ration' }}</h5>
         <button class="btn-close" (click)="closeModal()"></button>
       </div>
 
@@ -39,7 +39,7 @@
             <!-- Kg/Head -->
             <div class="col-md-4">
               <label class="form-label">Kg Per Head Per Day <sup class="text-danger">*</sup></label>
-              <input type="number"  class="form-control" formControlName="kgPerHeadPerDay" />
+              <input type="number" min="0" class="form-control" formControlName="kgPerHeadPerDay" />
             </div>
 
             <!-- Cost -->
