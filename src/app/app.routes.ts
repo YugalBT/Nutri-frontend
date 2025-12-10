@@ -2,6 +2,7 @@ import { Routes } from '@angular/router';
 import { authGuard } from './core/auth/auth.guard';
 import { companyGuard } from './core/auth/company.guard';
 import { permissionGuard } from './core/auth/permission.guard';
+import { PERMISSIONS } from './core/constants/permissions.constants';
 
 export const routes: Routes = [
   // Public Routes
@@ -35,6 +36,8 @@ export const routes: Routes = [
       },
       {
         path: 'companies',
+        canActivate: [permissionGuard],
+        data: { requiredPermissions: [PERMISSIONS.TenantView, PERMISSIONS.TenantEdit, PERMISSIONS.TenantAdd, PERMISSIONS.TenantDelete] },
         loadComponent: () =>
           import('./features/company/company-list/company-list.component')
             .then(m => m.CompanyListComponent),
@@ -42,6 +45,8 @@ export const routes: Routes = [
 
       {
         path: 'users',
+        canActivate: [permissionGuard],
+        data: { requiredPermissions: [PERMISSIONS.UserView, PERMISSIONS.UserEdit, PERMISSIONS.UserAdd, PERMISSIONS.UserDelete] },
         loadComponent: () =>
           import('./features/users/list/list.component')
             .then(m => m.ListComponent),
@@ -49,6 +54,8 @@ export const routes: Routes = [
 
       {
         path: 'roles',
+        canActivate: [permissionGuard],
+        data: { requiredPermissions: [PERMISSIONS.RoleView, PERMISSIONS.RoleEdit, PERMISSIONS.RoleAdd, PERMISSIONS.RoleDelete] },
         loadComponent: () =>
           import('./features/role/role-list/role.component')
             .then(m => m.RoleComponent),
@@ -56,67 +63,88 @@ export const routes: Routes = [
 
       {
         path: 'notifications',
+        canActivate: [permissionGuard],
+        data: { requiredPermissions: [PERMISSIONS.Notificaton] },
         loadComponent: () =>
           import('./features/notifications/notifications.component')
             .then(m => m.NotificationsComponent),
       },
       {
         path: 'change-password',
+        canActivate: [permissionGuard],
+        data: { requiredPermissions: [PERMISSIONS.ChangePasswordView, PERMISSIONS.ChangePasswordEdit] },
         loadComponent: () =>
           import('./features/auth/change-password/change-password.component')
             .then(m => m.ChangePasswordComponent),
       },
       {
         path: 'profile',
+        canActivate: [permissionGuard],
+        data: { requiredPermissions: [PERMISSIONS.ProfileView, PERMISSIONS.ProfileEdit] },
         loadComponent: () =>
           import('./features/profile/profile.component')
             .then(m => m.ProfileComponent),
       },
       {
         path: 'setting',
+        canActivate: [permissionGuard],
+        data: { requiredPermissions: [PERMISSIONS.SettingView, PERMISSIONS.SettingEdit] },
         loadComponent: () =>
           import('./features/companysetting/companysetting.component')
             .then(m => m.CompanysettingComponent),
       },
       {
         path: 'farm',
+        canActivate: [permissionGuard],
+        data: { requiredPermissions: [PERMISSIONS.FarmView, PERMISSIONS.FarmEdit, PERMISSIONS.FarmAdd, PERMISSIONS.FarmDelete] },
         loadComponent: () =>
           import('./features/farm/farm-list/farm-list.component')
             .then(m => m.FarmListComponent),
       },
       {
         path: 'feed',
+        canActivate: [permissionGuard],
+        data: { requiredPermissions: [PERMISSIONS.FeedView, PERMISSIONS.FeedEdit, PERMISSIONS.FeedAdd, PERMISSIONS.FeedDelete] },
         loadComponent: () =>
           import('./features/feed/feed-list/feed-list.component')
             .then(m => m.FeedListComponent),
       },
       {
         path: 'ration',
+        canActivate: [permissionGuard],
+        data: { requiredPermissions: [PERMISSIONS.RationView, PERMISSIONS.RationEdit, PERMISSIONS.RationAdd, PERMISSIONS.RationDelete] },
         loadComponent: () =>
           import('./features/ration/ration-list/ration-list.component')
             .then(m => m.RationListComponent),
       },
       {
         path: 'module',
+        canActivate: [permissionGuard],
+        data: { requiredPermissions: [PERMISSIONS.ModuleView, PERMISSIONS.ModuleEdit, PERMISSIONS.ModuleAdd, PERMISSIONS.ModuleDelete] },
         loadComponent: () =>
           import('./features/module/module-list/module-list.component')
             .then(m => m.ModuleListComponent),
       },
       {
         path: 'reports',
-         canActivate: [permissionGuard],
+        canActivate: [permissionGuard],
+        data: { requiredPermissions: [PERMISSIONS.ReportsView, PERMISSIONS.ReportsEdit, PERMISSIONS.ReportsAdd, PERMISSIONS.ReportsDelete] },
         loadComponent: () =>
           import('./features/reports/reports/reports.component')
             .then(m => m.ReportsComponent),
       },
       {
         path: 'day',
+        canActivate: [permissionGuard],
+        data: { requiredPermissions: [PERMISSIONS.DayView, PERMISSIONS.DayEdit, PERMISSIONS.DayAdd, PERMISSIONS.DayDelete] },
         loadComponent: () =>
           import('./features/day/day-list/day-list.component')
             .then(m => m.DayListComponent),
       },
       {
         path: 'calvesration',
+        canActivate: [permissionGuard],
+        data: { requiredPermissions: [PERMISSIONS.CalvesRationView, PERMISSIONS.CalvesRationEdit, PERMISSIONS.CalvesRationAdd, PERMISSIONS.CalvesRationDelete] },
         loadComponent: () =>
           import('./features/calves/calves-list/calves-list.component')
             .then(m => m.CalvesListComponent),
