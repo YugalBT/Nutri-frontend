@@ -40,12 +40,12 @@ export class LoginComponent implements OnInit {
 
   }
   ngOnInit() {
-    this.route.paramMap.subscribe(params => {
-      this.companyCode = params.get('companyCode') || '';
-      if (this.companyCode) {
-        this.loadHomePageContent();
-      }
-    });
+    // this.route.paramMap.subscribe(params => {
+    //   this.companyCode = params.get('companyCode') || '';
+    //   // if (this.companyCode) {
+    //   //   this.loadHomePageContent();
+    //   // }
+    // });
   }
 
 
@@ -65,7 +65,7 @@ export class LoginComponent implements OnInit {
     { username, password },
     { emitEvent: false }
   );
-    this.store.dispatch(AuthActions.login({ username, password, companyCode: this.companyCode }));
+    this.store.dispatch(AuthActions.login({ username, password}));
   }
 
 
@@ -74,22 +74,22 @@ export class LoginComponent implements OnInit {
     this.showPassword = !this.showPassword;
   }
 
-  loadHomePageContent() {
-    this.authService.getHomePageContent(this.companyCode).subscribe({
-      next: (res) => {
-        if (res?.isSuccess && res.data) {
-          this.logoUrl = res.data.logo;
-          this.primaryColor = res.data.primaryColor || '#1d7e8b';
-          sessionStorage.setItem('companyInfo', JSON.stringify(res.data));
-        } else {
-          this.toast.error(res?.message);
-        }
-      },
-      error: (err) => {
-        this.toast.error(err?.message);
-      }
-    });
-  }
+  // loadHomePageContent() {
+  //   this.authService.getHomePageContent(this.companyCode).subscribe({
+  //     next: (res) => {
+  //       if (res?.isSuccess && res.data) {
+  //         this.logoUrl = res.data.logo;
+  //         this.primaryColor = res.data.primaryColor || '#1d7e8b';
+  //         sessionStorage.setItem('companyInfo', JSON.stringify(res.data));
+  //       } else {
+  //         this.toast.error(res?.message);
+  //       }
+  //     },
+  //     error: (err) => {
+  //       this.toast.error(err?.message);
+  //     }
+  //   });
+  // }
 
 
 

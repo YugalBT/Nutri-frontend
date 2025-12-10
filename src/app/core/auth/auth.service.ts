@@ -29,8 +29,8 @@ export class AuthService {
 
   login(body: LoginRequest): Observable<ApiResponse<any>> {
     const payload: LoginRequest = {
-      ...body,
-      companyCode: body.companyCode ?? 'login'
+      ...body
+      // companyCode: body.companyCode ?? 'login'
     };
 
     return this.http.post<any>(API_ENDPOINTS.AUTH.LOGIN, payload).pipe(
@@ -68,9 +68,9 @@ export class AuthService {
         }
         sessionStorage.clear();
         this.toast.success(Constants.LOGOUT_SUCCESS);
-        const normalizedCompany = companyCode ? companyCode.toString().replace(/^\/+|\/+$/g, '') : '';
-        const target = normalizedCompany ? `/${normalizedCompany}/login` : '/404';
-        this.router.navigateByUrl(target);
+        //const normalizedCompany = companyCode ? companyCode.toString().replace(/^\/+|\/+$/g, '') : '';
+        // const target = normalizedCompany ? `/${normalizedCompany}/login` : '/404';
+        this.router.navigateByUrl('/login');
       }
     });
   }
@@ -82,11 +82,11 @@ export class AuthService {
 
   // }
 
-  getHomePageContent(companyCode: string): Observable<ApiResponse<any>> {
-    return this.http.get<any>(
-      `${API_ENDPOINTS.AUTH.HOMEPAGE_CONTENT}?CompanyCode=${companyCode}`
-    );
-  }
+  // getHomePageContent(companyCode: string): Observable<ApiResponse<any>> {
+  //   return this.http.get<any>(
+  //     `${API_ENDPOINTS.AUTH.HOMEPAGE_CONTENT}?CompanyCode=${companyCode}`
+  //   );
+  // }
 
 
   isLoggedIn(): boolean {

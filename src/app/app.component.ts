@@ -14,7 +14,7 @@ import { NgxSpinnerModule, NgxSpinnerService } from 'ngx-spinner';
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, CommonModule, LoaderComponent, NgxSpinnerModule],
+  imports: [RouterOutlet, CommonModule, NgxSpinnerModule],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
@@ -29,22 +29,28 @@ export class AppComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-  this.router.events.subscribe(event => {
-    if (event instanceof NavigationEnd) {
-      const url = event.url;
-      if (!url.includes('/login')) { 
-        const token = this.tokenService.getToken();
+    const token = this.tokenService.getToken();
         const user: User | null = JSON.parse(this.tokenService.getUserData() || 'null');
 
         if (token && user && !this.tokenService.isTokenExpired()) {
           this.store.dispatch(AuthActions.loginSuccess({ user, token, silent: true }));
-        } else {
-          this.tokenService.clearAll();
-          this.store.dispatch(AuthActions.logout());
-        }
-      }
-    }
-  });
+        } 
+  // this.router.events.subscribe(event => {
+  //   if (event instanceof NavigationEnd) {
+  //     const url = event.url;
+  //     if (!url.includes('/login')) { 
+  //       const token = this.tokenService.getToken();
+  //       const user: User | null = JSON.parse(this.tokenService.getUserData() || 'null');
+
+  //       if (token && user && !this.tokenService.isTokenExpired()) {
+  //         this.store.dispatch(AuthActions.loginSuccess({ user, token, silent: true }));
+  //       } else {
+  //         this.tokenService.clearAll();
+  //         this.store.dispatch(AuthActions.logout());
+  //       }
+  //     }
+  //   }
+  // });
 }
 
 }

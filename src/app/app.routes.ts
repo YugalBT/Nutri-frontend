@@ -1,20 +1,19 @@
 import { Routes } from '@angular/router';
 import { authGuard } from './core/auth/auth.guard';
-import { companyGuard } from './core/auth/company.guard';
 import { permissionGuard } from './core/auth/permission.guard';
 import { PERMISSIONS } from './core/constants/permissions.constants';
 
 export const routes: Routes = [
   // Public Routes
   {
-    path: ':companyCode/login',
-    canActivate: [companyGuard],
+    path: 'login',
+    // canActivate: [companyGuard],
     loadComponent: () =>
       import('./features/auth/login/login.component')
         .then(m => m.LoginComponent),
   },
   {
-    path: 'forgot-password/:companyCode',
+    path: 'forgot-password',
     loadComponent: () =>
       import('./features/auth/forgot-password/forgot-password.component')
         .then(m => m.ForgotPasswordComponent),
@@ -160,8 +159,8 @@ export const routes: Routes = [
       import('./shared/not-found/not-found.component')
         .then(m => m.NotFoundComponent),
   },
-  // {
-  //   path: '**',
-  //   redirectTo: '404',
-  // },
+  {
+    path: '**',
+    redirectTo: '404',
+  },
 ];

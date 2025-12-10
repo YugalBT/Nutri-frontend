@@ -31,7 +31,7 @@ export class ModuleAddEditComponent implements OnInit, OnDestroy {
     private fb: FormBuilder,
     private toast: ToastService,
     private moduleService: ModuleListService
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.initializeForm();
@@ -55,24 +55,41 @@ export class ModuleAddEditComponent implements OnInit, OnDestroy {
   }
 
   openModal(edit = false, data?: any) {
-    this.isEdit = edit;
+  this.isEdit = edit;
+
+  if (edit && data) {
+    this.currentModuleId = data.moduleId;
+    this.form.patchValue({
+      moduleNameEn: data.moduleName || '',      
+      moduleNameIt: data.moduleNameIt || '',
+      moduleIcon: data.moduleIcon || '',
+      moduleUrl: data.moduleUrl || '',
+      isAdd: data.isAdd,
+      isEdit: data.isEdit,
+      isView: data.isView,
+      isDelete: data.isDelete,
+    });
+  } else {
+    this.currentModuleId = null;
     this.form.reset({
+      moduleNameEn: '',
+      moduleNameIt: '',
+      moduleIcon: '',
+      moduleUrl: '',
       isAdd: true,
       isEdit: true,
       isView: true,
       isDelete: true
     });
+  }
 
-    if (edit && data) {
-      this.form.patchValue(data);
-      this.currentModuleId = data.moduleId;
-    } else {
-      this.currentModuleId = null;
-    }
-
+  setTimeout(() => {
     this.modalInstance = new bootstrap.Modal(this.moduleModal.nativeElement);
     this.modalInstance.show();
-  }
+  });
+}
+
+
 
   closeModal() {
     this.modalInstance?.hide();

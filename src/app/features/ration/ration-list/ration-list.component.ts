@@ -1,4 +1,7 @@
 import { Component } from '@angular/core';
+import { Store } from '@ngrx/store';
+import { selectUserRoles } from '../../../state/auth/auth.selectors';
+import { PERMISSIONS } from '../../../core/constants/permissions.constants';
 import { RationList } from '../../../core/models/ration-list';
 import { Subscription } from 'rxjs';
 import { TranslateService } from '../../../i18n/translate.service';
@@ -32,21 +35,35 @@ export class RationListComponent {
 
   private subs: Subscription[] = [];
   private langSub: Subscription | undefined;
+  // permissions
+  userRoles: string[] = [];
+  canAddRation = false;
 
   constructor(
     private translate: TranslateService,
     private rationService: RationService,
     private toast: ToastService,
     private confirm: ConfirmDialogService
+    ,
+    private store: Store
   ) {
     this.setColumns();
     this.langSub = this.translate.lang$.subscribe(() => this.setColumns());
   }
 
   ngOnInit(): void {
+    this.loadUserPermissions();
     this.loadRation(1, this.pageSize);
     const sub = this.rationService.rationChanged$.subscribe(() => {
       this.loadRation(this.pageIndex + 1, this.pageSize);
+    });
+    this.subs.push(sub);
+  }
+
+  private loadUserPermissions(): void {
+    const sub = this.store.select(selectUserRoles).subscribe(roles => {
+      this.userRoles = roles || [];
+      this.canAddRation = this.userRoles.includes(PERMISSIONS.RationAdd);
     });
     this.subs.push(sub);
   }

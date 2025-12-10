@@ -6,7 +6,7 @@
       <h3 class="page-title">Ration Management</h3>
     </div>
 
-    <button class="btn add-btn" (click)="rationModal.openModal()">
+    <button class="btn add-btn" (click)="rationModal.openModal()" [disabled]="!canAddRation">
       <i class="bi bi-plus-lg me-2"></i>
       Add Ration
     </button>

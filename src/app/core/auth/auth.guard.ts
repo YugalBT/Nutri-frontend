@@ -22,7 +22,7 @@ export const authGuard: CanActivateFn = (route, state) => {
           return true;
         } else {
           store.dispatch(logout());
-          router.navigate(['/404']);
+          router.navigate(['/login']);
           return false;
         }
       }
@@ -30,7 +30,7 @@ export const authGuard: CanActivateFn = (route, state) => {
       if (user) return true;
 
       store.dispatch(logout());
-      router.navigate(['/404']);
+      router.navigate(['/login']);
       return false;
     })
   );

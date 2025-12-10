@@ -101,6 +101,12 @@ export class SidebarComponent implements OnInit {
       }
     });
   }
+  isOpen: any = { dashboard: false };
+
+toggleGroup(key: string) {
+  this.isOpen[key] = !this.isOpen[key];
+}
+
 
   private stripListTags(html: string): string {
     if (!html) return html;

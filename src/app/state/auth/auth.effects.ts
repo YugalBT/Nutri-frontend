@@ -37,18 +37,18 @@ export class AuthEffects {
     this.login$ = createEffect(() =>
       this.actions$.pipe(
         ofType(AuthActions.login),
-        switchMap(({ username, password, companyCode }) => {
+        switchMap(({ username, password}) => {
           const payload: LoginRequest = {
             username,
-            password,
-            companyCode: companyCode ?? 'login',
+            password
+            //companyCode: companyCode ?? 'login',
           };
 
           return this.authService.login(payload).pipe(
             map((res) => {
               if (!res?.isSuccess || !res?.data?.token) {
                 return AuthActions.loginFailure({
-                  error: res?.message || 'Invalid credentials',
+                  error: res?.message,
                 });
               }
 
@@ -60,7 +60,7 @@ export class AuthEffects {
             catchError((error) =>
               of(
                 AuthActions.loginFailure({
-                  error: error?.message || 'Login request failed',
+                  error: error?.message,
                 })
               )
             )
@@ -128,7 +128,7 @@ export class AuthEffects {
             this.spinner.show();
             this.tokenService.clearAll();
 
-            return from(this.router.navigate(['/404'])).pipe(
+            return from(this.router.navigate(['/login'])).pipe(
               finalize(() => {
                 this.spinner.hide();
               })

@@ -37,29 +37,29 @@ export class ForgotPasswordComponent {
       email: ['', [Validators.required, Validators.email]],
     });
 
-    this.route.paramMap.subscribe((params) => {
-      this.companyCode = params.get('companyCode') || '';
-      if (this.companyCode) {
-        this.loadHomePageContent();
-      }else{
-        this.toast.error('Invalid company code.');
-        this.router.navigate(['/404']);}
-    });
+    // this.route.paramMap.subscribe((params) => {
+    //   this.companyCode = params.get('companyCode') || '';
+    //   if (this.companyCode) {
+    //     //this.loadHomePageContent();
+    //   }else{
+    //     this.toast.error('Invalid company code.');
+    //     this.router.navigate(['/404']);}
+    // });
   }
 
-  loadHomePageContent() {
-    this.authService.getHomePageContent(this.companyCode).subscribe({
-      next: (res) => {
-        if (res?.isSuccess && res.data) {
-          this.logoUrl = res.data.logo;
-          this.primaryColor = res.data.primaryColor || '#1d7e8b';
-        }
-      },
-      error: (err) => {
-        this.toast.error(err?.message || 'Unable to load company info.');
-      },
-    });
-  }
+  // loadHomePageContent() {
+  //   this.authService.getHomePageContent(this.companyCode).subscribe({
+  //     next: (res) => {
+  //       if (res?.isSuccess && res.data) {
+  //         this.logoUrl = res.data.logo;
+  //         this.primaryColor = res.data.primaryColor || '#1d7e8b';
+  //       }
+  //     },
+  //     error: (err) => {
+  //       this.toast.error(err?.message || 'Unable to load company info.');
+  //     },
+  //   });
+  // }
 
   onSubmit() {
     if (this.forgotForm.invalid) {
