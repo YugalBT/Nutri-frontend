@@ -15,6 +15,10 @@ import { ConfirmDialogService } from '../../../shared/services/confirm-dialog.se
 import { NgxSpinnerService } from 'ngx-spinner';
 import { GlobalSearchComponent } from '../../../shared/components/global-search/global-search.component';
 import { ApiResponse } from '../../../core/models/api-response';
+import { PERMISSIONS } from '../../../core/constants/permissions.constants';
+import { Constants } from '../../../shared/utils/constants/constants';
+import { CommonService } from '../../../shared/services/common.service';
+
 
 
 @Component({
@@ -35,6 +39,7 @@ export class RoleComponent implements OnInit, OnDestroy ,AfterViewInit{
   pageSize = 5;
   pageIndex = 0;
   isShow = false;
+  
   canManageRoles = false;
   canDeleteRoles = false;
   private subs: Subscription[] = [];
@@ -46,7 +51,8 @@ export class RoleComponent implements OnInit, OnDestroy ,AfterViewInit{
     private toast: ToastService,
     private confirm: ConfirmDialogService,
     private spinner: NgxSpinnerService,
-    private roleService: AddEditRoleService
+    private roleService: AddEditRoleService,
+    private commonService : CommonService
   ) {
     this.setColumns();
     this.langSub = this.translate.lang$.subscribe(() => this.setColumns());
@@ -64,7 +70,9 @@ export class RoleComponent implements OnInit, OnDestroy ,AfterViewInit{
     //   this.canDeleteRoles = canDelete;
     // });
 
+    if(!this.commonService.checkPermission(PERMISSIONS.RoleView)) return;
     this.loadRoles();
+    
   }
 
    ngAfterViewInit(): void {
@@ -85,6 +93,7 @@ export class RoleComponent implements OnInit, OnDestroy ,AfterViewInit{
     this.columnFields = ['nameEn',  'isActive'];
   }
 
+  
   loadRoles(): void {
     this.spinner.show();
     const payload = {
@@ -111,30 +120,23 @@ export class RoleComponent implements OnInit, OnDestroy ,AfterViewInit{
   }
 
   onAddRole(): void {
-    if (!this.canManageRoles) {
-      this.toast.error(this.translate.instant('common.noPermission') || 'No permission');
-      return;
-    }
+    if(!this.commonService.checkPermission(PERMISSIONS.RoleAdd)) return;
+    
     if (this.roleAddEditComp) {
       this.roleAddEditComp.openModal(false);
     }
   }
 
   onEditRole(row: RoleItem): void {
-    if (!this.canManageRoles) {
-      this.toast.error(this.translate.instant('common.noPermission') || 'No permission');
-      return;
-    }
+    if(!this.commonService.checkPermission(PERMISSIONS.RoleEdit)) return;
+
     if (this.roleAddEditComp) {
       this.roleAddEditComp.openModal(true, row);
     }
   }
 
   onDeleteRole(row: RoleItem): void {
-    if (!this.canDeleteRoles) {
-      this.toast.error(this.translate.instant('common.noPermission') || 'No permission');
-      return;
-    }
+    if(!this.commonService.checkPermission(PERMISSIONS.RoleDelete)) return;
 
     this.confirm.confirm(
       this.translate.instant('common.confirmDelete') || `Delete role "${row.nameEn}"?`

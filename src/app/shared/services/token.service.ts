@@ -50,6 +50,9 @@ setIsSuperAdmin(isSuperAdmin: boolean | false) {
     return payload.exp <= now;
   }
 
+
+
+
    getUserData(): string | null {
     return sessionStorage.getItem(Constants.USERDATA);
   }

@@ -9,14 +9,29 @@ import { GetAllModulesResponse } from '../../core/models/add-edit-role';
 import { FarmList } from '../../core/models/farm-list';
 import { FeedList } from '../../core/models/feed-list';
 import { DayList } from '../../core/models/day-list';
+import { StorageHelper } from '../../core/helpers/storage.helper';
+import { ToastService } from './toast.service';
+import { TranslateService } from '../../i18n/translate.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CommonService {
-  constructor(private http: HttpService) { }
+  constructor(private http: HttpService,
+    private toast : ToastService,
+    private translate : TranslateService
+  ) { }
 
-
+  checkPermission(roleName : string){
+      console.log("rolename" , roleName)
+      if(!StorageHelper.CheckRole(roleName)){
+            console.log("role" , "no")
+  
+         this.toast.error(this.translate.instant('common.noPermission') || 'No permission');
+         return false;
+      }
+      return true;
+    }
   getRoles(): Observable<ApiResponse<RoleList[]>> {
     return this.http.get<RoleList[]>(API_ENDPOINTS.COMMON_API.GET_ALL_ROLES);
   }

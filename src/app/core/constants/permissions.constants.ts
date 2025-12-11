@@ -61,6 +61,12 @@ export const PERMISSIONS = {
     TenantAdd: 'TenantAdd',
     TenantDelete: 'TenantDelete',
     
+
+    AnimalTypeView: 'AnimalTypeView',
+    AnimalTypeEdit: 'AnimalTypeEdit',
+    AnimalTypeDelete: 'AnimalTypeDelete',
+    AnimalTypeAdd: 'AnimalTypeAdd',
+    
 } as const;
 
 export type PermissionKey = keyof typeof PERMISSIONS;

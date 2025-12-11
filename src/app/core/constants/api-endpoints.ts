@@ -90,6 +90,13 @@ export const API_ENDPOINTS = {
     GET_ALL: '/Calves/GetAll',
   },
 
+   AnimalType: {
+    CREATE: '/Animal/CreateAnimalType',
+    UPDATE: '/Animal/UpdateAnimalType',
+    DELETE: '/Animal/DeleteAnimalType',
+    ACTIVE_INACTIVE: '/Animal/ActiveInactiveAnimalType',
+    GET_ALL: '/Animal/GetAllAnimalType',
+  },
    COMPANY: {
     UPDATE: '/Common/UpdateSettingById',
     GET_BY_ID: '/Common/SettingById',

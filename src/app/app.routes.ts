@@ -149,6 +149,14 @@ export const routes: Routes = [
             .then(m => m.CalvesListComponent),
       },
 
+       {
+        path: 'animalType',
+        canActivate: [permissionGuard],
+        data: { requiredPermissions: [PERMISSIONS.AnimalTypeAdd, PERMISSIONS.AnimalTypeEdit, PERMISSIONS.AnimalTypeView, PERMISSIONS.AnimalTypeDelete] },
+        loadComponent: () =>
+          import('./features/animalType/animal-type-list/animal-type-list.component')
+            .then(m => m.AnimalTypeListComponent),
+      },
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
     ],
   },

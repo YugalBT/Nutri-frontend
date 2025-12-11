@@ -1,115 +1,3 @@
-// import { Component, OnDestroy } from '@angular/core';
-// import { CompanyAddEditComponent } from '../company-add-edit/company-add-edit.component';
-// import { ReusableTableComponent } from '../../../shared/components/reusable-table/reusable-table.component';
-// import { TranslateService } from '../../../i18n/translate.service';
-// import { TranslatePipe } from '../../../i18n/translate.pipe';
-// import { CompanyService } from '../../../core/services/company/company.service';
-// import { CompanyList } from '../../../core/models/company-list';
-// import { Subscription } from 'rxjs/internal/Subscription';
-
-// @Component({
-//   selector: 'app-company-list',
-//   standalone: true,
-//   imports: [CompanyAddEditComponent,ReusableTableComponent, TranslatePipe],
-//   templateUrl: './company-list.component.html',
-//   styleUrls: ['./company-list.component.css']
-// })
-// export class CompanyListComponent implements OnDestroy {
-//   columns: string[] = [];
-//   companies: CompanyList[] = [];
-//   private langSub: any;
-//   totalRecords = 0;
-//   pageSize = 5;
-//   pageIndex = 0;
-//   searchValue = '';
-//   private searchDebounce: any;
-//   filterStatus: number | null = null;
-//   private subs: Subscription[] = [];
-//   columnFields: string[] = [];
-
-//   constructor(private translate: TranslateService, private companyService: CompanyService) {
-//     this.setColumns();
-//     this.langSub = this.translate.lang$.subscribe(() => this.setColumns());
-//   }
-
-  
-// private setColumns() {
-  
-//   // Table header labels
-//   this.columns = [
-//     this.translate.instant('company.columns.logo') || 'Logo',
-//     this.translate.instant('company.columns.siteColor') || 'Site Color',
-//     this.translate.instant('company.columns.companyName') || 'Company Name',
-//     this.translate.instant('company.columns.firstName') || 'Name',
-//     this.translate.instant('company.columns.email') || 'Email',
-//     this.translate.instant('company.columns.phone') || 'Phone Number',
-//     this.translate.instant('company.columns.code') || 'Code',
-//     this.translate.instant('company.columns.status') || 'Status',
-//     //this.translate.instant('company.columns.actions') || 'Actions'
-//   ];
-
-//   // Table binding fields
-//   this.columnFields = [
-//     'logo',
-//     'primaryColor',
-//     'companyName',
-//     'fullName',
-//     'userEmail',
-//     'userPhoneNumber',
-//     'code',
-//     'isActive',
-//    // 'actions'
-//   ];
-// }
-
- 
-
-// ngOnInit(): void {
-//   this.getAllCompanies();
-// }
-
-
-// getAllCompanies() {
-//   this.companyService.getAllCompanies().subscribe({
-//     next: (res) => {
-//       this.companies = (res.data as CompanyList[]).map(item => ({
-//         ...item,
-//         fullName: `${item.firstName ?? ''} ${item.lastName ?? ''}`.trim()
-//       }));
-//     },
-//     error: (err) => {
-//       console.error('Error fetching companies:', err);
-//     }
-//   });
-// }
-
-
-//   deleteCompany(row: any) {
-//   if (confirm(`Are you sure you want to delete ${row.name}?`)) {
-//     this.companyService.deleteCompany(row.tenantId).subscribe({
-//       next: () => alert('Company deleted successfully'),
-//       error: () => alert('Failed to delete company')
-//     });
-//   }
-// }
-
-// toggleCompanyStatus(event: any) {
-//   const row = event.row;
-//   const newStatus = event.isActive;
-
-//   this.companyService.ativeInactiveCompanyStatus(row.tenantId, newStatus).subscribe({
-//     next: () => {
-//       row.isActive = newStatus;   
-//     },
-//     error: () => alert("Failed to update status")
-//   });
-// }
-
-//  ngOnDestroy(): void {
-//     this.langSub.unsubscribe();
-//   }
-// }
-
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CompanyAddEditComponent } from '../company-add-edit/company-add-edit.component';
 import { ReusableTableComponent } from '../../../shared/components/reusable-table/reusable-table.component';
@@ -123,6 +11,7 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import { ApiResponse } from '../../../core/models/api-response';
 import { GlobalSearchComponent } from '../../../shared/components/global-search/global-search.component';
 import { ToastService } from '../../../shared/services/toast.service';
+import { ConfirmDialogService } from '../../../shared/services/confirm-dialog.service';
 
 @Component({
   selector: 'app-company-list',
@@ -158,7 +47,8 @@ export class CompanyListComponent implements OnInit, OnDestroy {
     private translate: TranslateService,
     private companyService: CompanyService,
     private spinner: NgxSpinnerService,
-    private toast: ToastService
+    private toast: ToastService,
+    private confirm: ConfirmDialogService,
   ) {
     this.setColumns();
     this.langSub = this.translate.lang$.subscribe(() => this.setColumns());
@@ -263,18 +153,38 @@ export class CompanyListComponent implements OnInit, OnDestroy {
     this.loadCompanies(this.pageIndex + 1, this.pageSize);
   }
 
-  deleteCompany(row: any) {
-    if (confirm(`Are you sure you want to delete ${row.companyName}?`)) {
-      this.companyService.deleteCompany(row.tenantId).subscribe({
-        next: () => {
-          this.toast.success('Company deleted successfully');
+deleteCompany(row: any): void {
+  const id = row?.tenantId;
+
+  if (!id) {
+    this.toast.error("Invalid Company ID");
+    return;
+  }
+
+  this.confirm.confirm(`Are you sure you want to delete "${row.companyName}"?`)
+    .subscribe((confirmed) => {
+      if (!confirmed) return;
+
+      const sub = this.companyService.deleteCompany(id).subscribe({
+        next: (res) => {
+          if (res?.isSuccess) {
+            this.toast.success(res.message || "Company deleted successfully");
+          } else {
+            this.toast.error(res.message || "Failed to delete company");
+          }
+
           this.loadCompanies(1, this.pageSize);
         },
-        
-        error: () => this.toast.error('Failed to delete company')
+
+        error: (err) => {
+          this.toast.error(err?.error?.message || "Something went wrong");
+        }
       });
-    }
-  }
+
+      this.subs.push(sub);
+    });
+}
+
 
   toggleCompanyStatus(event: any) {
     const row = event.row;
