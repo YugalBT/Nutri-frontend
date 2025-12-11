@@ -159,6 +159,7 @@ export class FeedListComponent {
       'Fat Content (%)',
       'Calcium (%)',
       'Phosphorus (%)',
+      'Starch (%)',
       'Status'
     ];
 
@@ -175,6 +176,7 @@ export class FeedListComponent {
       'fatContent',
       'calcium',
       'phosphorus',
+      'starch',
       'isActive'
     ];
   }

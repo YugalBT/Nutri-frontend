@@ -123,6 +123,15 @@
       </div>
     </div>
   </div>
+   <div class="row g-3 mt-2">
+    <div class="col-md-4">
+      <label class="form-label">Starch (%) <sup class="text-danger">*</sup></label>
+      <input type="number" step="0.01" min="0" formControlName="starch" class="form-control" placeholder="Enter Starch %">
+      <div *ngIf="form.get('starch')?.touched && form.get('starch')?.invalid" class="text-danger">
+        Starch is required.
+      </div>
+    </div>
+    </div>
 </form>
 
       </div>

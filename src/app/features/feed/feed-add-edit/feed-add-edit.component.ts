@@ -63,7 +63,8 @@ export class FeedAddEditComponent implements OnInit, OnDestroy {
       adf: [null, Validators.required],
       fatContent: [null, Validators.required],
       calcium: [null, Validators.required],
-      phosphorus: [null, Validators.required]
+      phosphorus: [null, Validators.required],
+      starch: [null,Validators.required]
     });
   }
 
@@ -92,6 +93,7 @@ export class FeedAddEditComponent implements OnInit, OnDestroy {
 
     if (edit && data) {
       this.form.patchValue({
+        clientId: data.clientId,
         farmId: data.farmId,
         feedName: data.feedName,
         category: data.category,
@@ -105,7 +107,8 @@ export class FeedAddEditComponent implements OnInit, OnDestroy {
         adf: data.adf,
         fatContent: data.fatContent,
         calcium: data.calcium,
-        phosphorus: data.phosphorus
+        phosphorus: data.phosphorus,
+        starch : data.starch
       });
 
       this.currentFeedId = data.feedId;

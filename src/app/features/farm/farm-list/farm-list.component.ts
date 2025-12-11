@@ -148,11 +148,12 @@ export class FarmListComponent {
   private setColumns(): void {
     this.columns = [
       this.translate.instant('farms.columns.farmName') ?? "",
-      this.translate.instant('farms.columns.town') ?? "",
-      this.translate.instant('farms.columns.country') ?? "",
-      this.translate.instant('farms.columns.status') ?? ""
+      this.translate.instant('farms.columns.milkPrice') ?? "",
+      this.translate.instant('farms.columns.city') ?? "",
+      this.translate.instant('farms.columns.state') ?? "",
+      this.translate.instant('farms.columns.status') ?? "",
     ];
-    this.columnFields = ['farmName', 'town', 'country', 'isActive'];
+    this.columnFields = ['farmName','milkPrice', 'city', 'state', 'isActive'];
   }
 
   ngOnDestroy(): void {

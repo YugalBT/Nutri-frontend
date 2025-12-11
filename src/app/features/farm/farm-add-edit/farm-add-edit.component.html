@@ -11,7 +11,7 @@
         <form [formGroup]="form">
 
           <div class="row g-3">
-            <div class="col-md-6">
+            <div class="col-md-4">
               <label class="form-label">Farm Name <sup class="text-danger">*</sup></label>
               <input type="text" formControlName="farmName" class="form-control" placeholder="Enter farm name">
               <div *ngIf="form.get('farmName')?.touched && form.get('farmName')?.invalid" class="text-danger">
@@ -20,22 +20,68 @@
               </div>
             </div>
 
-            <div class="col-md-6">
+            <!-- <div class="col-md-4">
               <label class="form-label">Town <sup class="text-danger">*</sup></label>
               <input type="text" formControlName="town" class="form-control" placeholder="Enter town">
                <div *ngIf="form.get('town')?.touched && form.get('farmName')?.invalid" class="text-danger">
-                <div *ngIf="form.get('town')?.errors?.['required']">Farm Name is required.</div>
+                <div *ngIf="form.get('town')?.errors?.['required']">Town Name is required.</div>
                 <div *ngIf="form.get('town')?.errors?.['pattern']">Only alphabets and spaces allowed.</div>
               </div>
               <div *ngIf="form.get('town')?.touched && form.get('town')?.invalid" class="text-danger">
                 Town can only contain alphabets and spaces.
               </div>
                
+            </div> -->
+             <div class="col-md-4">
+              <label class="form-label">Milk Price <sup class="text-danger">*</sup></label>
+              <input type="number" formControlName="milkPrice" class="form-control" placeholder="Enter Milk Price">
+              <div *ngIf="form.get('milkPrice')?.touched && form.get('milkPrice')?.invalid" class="text-danger">
+                <div *ngIf="form.get('milkPrice')?.errors?.['required']">Milk Price is required.</div>
+                <div *ngIf="form.get('milkPrice')?.errors?.['pattern']">Only positive number allowed.</div>
+              </div>
+            </div>
+              <div class="col-md-4">
+              <label class="form-label">Street Address <sup class="text-danger">*</sup></label>
+              <input type="text" formControlName="streetAddress" class="form-control" placeholder="Enter Street Address">
+              <div *ngIf="form.get('streetAddress')?.touched && form.get('streetAddress')?.invalid" class="text-danger">
+                <div *ngIf="form.get('streetAddress')?.errors?.['required']">Street Address is required.</div>
+                <!-- <div *ngIf="form.get('streetAddress')?.errors?.['pattern']">Only alphabets and spaces allowed.</div> -->
+              </div>
             </div>
           </div>
 
           <div class="row g-3 mt-2">
-            <div class="col-md-6">
+          
+             <div class="col-md-4">
+              <label class="form-label">City<sup class="text-danger">*</sup></label>
+              <input type="text" formControlName="city" class="form-control" placeholder="Enter city">
+              <div *ngIf="form.get('city')?.touched && form.get('city')?.invalid" class="text-danger">
+                <div *ngIf="form.get('city')?.errors?.['required']">City is required.</div>
+                <div *ngIf="form.get('city')?.errors?.['pattern']">Only alphabets allowed.</div>
+              </div>
+            </div>
+             <div class="col-md-4">
+              <label class="form-label">State<sup class="text-danger">*</sup></label>
+              <input type="text" formControlName="state" class="form-control" placeholder="Enter country">
+              <div *ngIf="form.get('state')?.touched && form.get('state')?.invalid" class="text-danger">
+                <div *ngIf="form.get('state')?.errors?.['required']">State is required.</div>
+                <div *ngIf="form.get('state')?.errors?.['pattern']">Only alphabets allowed.</div>
+              </div>
+            </div>
+              <div class="col-md-4">
+              <label class="form-label">ZipCode<sup class="text-danger">*</sup></label>
+              <input formControlName="zipCode" class="form-control" placeholder="Enter zipCode">
+              
+              <div *ngIf="form.get('zipCode')?.touched && form.get('zipCode')?.invalid" class="text-danger">
+                <div *ngIf="form.get('zipCode')?.errors?.['required']">ZipCode is required.</div>
+                <div *ngIf="form.get('zipCode')?.errors?.['onlyNumbers']">Only numbers allowed.</div>
+                <div *ngIf="form.get('zipCode')?.errors?.['minlength'] || form.get('zipCode')?.errors?.['maxlength']">5-6 digits allowed.</div>
+              </div>
+            </div>
+          </div>
+          <div class="row g-3 mt-2">
+          
+             <div class="col-md-4">
               <label class="form-label">Country <sup class="text-danger">*</sup></label>
               <input type="text" formControlName="country" class="form-control" placeholder="Enter country">
               <div *ngIf="form.get('country')?.touched && form.get('country')?.invalid" class="text-danger">

@@ -6,6 +6,7 @@ import { FarmService } from '../../../core/services/farm/farm.service';
 import { ToastService } from '../../../shared/services/toast.service';
 import { SharedModule } from '../../../shared/shared.module';
 import { TranslatePipe } from '../../../i18n/translate.pipe';
+import { CustomValidators } from '../../../core/helpers/validators';
 
 declare var bootstrap: any;
 
@@ -46,8 +47,14 @@ export class FarmAddEditComponent implements OnInit, OnDestroy {
     this.form = this.fb.group({
       clientId: [null],
       farmName: ['', [Validators.required, Validators.pattern(/^[A-Za-z ]+$/)]],
-      town: ['', [Validators.required,Validators.pattern(/^[A-Za-z ]+$/)]],
+     // town: ['', [Validators.required,Validators.pattern(/^[A-Za-z ]+$/)]],
       country: ['', [Validators.required, Validators.pattern(/^[A-Za-z ]+$/)]],
+      milkPrice : ['',[Validators.required,
+      Validators.pattern(/^[0-9]+(\.[0-9]+)?$/)] ],
+      state :['',[Validators.required,Validators.pattern(/^[A-Za-z]+$/)]],
+      city : ['',[Validators.required,Validators.pattern(/^[A-Za-z]+$/)]],
+      streetAddress:['',Validators.required],
+      zipCode: ['', [CustomValidators.required(), CustomValidators.onlyNumbers(), CustomValidators.minLength(5), CustomValidators.maxLength(6)]],
     });
   }
 
@@ -59,9 +66,14 @@ export class FarmAddEditComponent implements OnInit, OnDestroy {
       this.form.patchValue({
         clientId: data.clientId,
         farmName: data.farmName,
-        town: data.town,
+     //   town: data.town,
         country: data.country,
-        isActive: data.isActive
+        isActive: data.isActive,
+        milkPrice : data.milkPrice,
+        state : data.state,
+        city : data.city,
+        streetAddress:data.streetAddress,
+        zipCode: data.zipCode
       });
       this.currentFarmId = data.farmId;
     } else {
