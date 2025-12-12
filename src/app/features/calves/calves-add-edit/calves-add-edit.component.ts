@@ -8,6 +8,7 @@ import { ApiResponse } from '../../../core/models/api-response';
 import { FeedList } from '../../../core/models/feed-list';
 import { DayList } from '../../../core/models/day-list';
 import { SharedModule } from '../../../shared/shared.module';
+import { PERMISSIONS } from '../../../core/constants/permissions.constants';
 
 declare var bootstrap: any;
 
@@ -40,10 +41,12 @@ export class CalvesAddEditComponent implements OnInit, OnDestroy {
     private fb: FormBuilder,
     private toast: ToastService,
     private commonService: CommonService,
-    private calvesService: CalvesService
+    private calvesService: CalvesService,
   ) {}
 
   ngOnInit() {
+    if(!this.commonService.checkPermission(PERMISSIONS.CalvesRationAdd)|| !this.commonService.checkPermission(PERMISSIONS.CalvesRationEdit))
+      return;
     this.initForm();
     this.loadFeeds();
     this.loadDays();
@@ -131,6 +134,10 @@ export class CalvesAddEditComponent implements OnInit, OnDestroy {
 
   /** SAVE **/
   saveCalves() {
+
+    
+    if(!this.commonService.checkPermission(PERMISSIONS.CalvesRationAdd)|| !this.commonService.checkPermission(PERMISSIONS.CalvesRationEdit))
+      return;
     if (this.form.invalid) {
       this.toast.warning('Please fill all required fields.');
       return;

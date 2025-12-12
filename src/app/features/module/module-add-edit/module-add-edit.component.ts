@@ -1,10 +1,11 @@
 import { Component, ElementRef, ViewChild, OnInit, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
-
 import { ToastService } from '../../../shared/services/toast.service';
 import { ModuleListService } from '../../../core/services/module/module-list.service';
 import { SharedModule } from '../../../shared/shared.module';
+import { CommonService } from '../../../shared/services/common.service';
+import { PERMISSIONS } from '../../../core/constants/permissions.constants';
 
 declare var bootstrap: any;
 
@@ -30,10 +31,15 @@ export class ModuleAddEditComponent implements OnInit, OnDestroy {
   constructor(
     private fb: FormBuilder,
     private toast: ToastService,
-    private moduleService: ModuleListService
+    private moduleService: ModuleListService,
+    private commonService : CommonService
   ) { }
 
   ngOnInit() {
+ 
+  if(!this.commonService.checkPermission(PERMISSIONS.ModuleAdd)
+    || !this.commonService.checkPermission(PERMISSIONS.ModuleEdit))
+      return;
     this.initializeForm();
   }
 
@@ -96,6 +102,9 @@ export class ModuleAddEditComponent implements OnInit, OnDestroy {
   }
 
   saveModule() {
+    if(!this.commonService.checkPermission(PERMISSIONS.ModuleAdd)
+      || !this.commonService.checkPermission(PERMISSIONS.ModuleEdit))
+        return;
     if (!this.form.valid) {
       this.toast.warning('Please fill all required fields');
       return;

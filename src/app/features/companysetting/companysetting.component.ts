@@ -6,6 +6,8 @@ import { CompanysettingService } from '../../core/services/company-setting/compa
 import { take } from 'rxjs';
 import { ApiResponse } from '../../core/models/api-response';
 import { CustomValidators } from '../../core/helpers/validators';
+import { CommonService } from '../../shared/services/common.service';
+import { PERMISSIONS } from '../../core/constants/permissions.constants';
 
 @Component({
   selector: 'app-companysetting',
@@ -23,12 +25,15 @@ export class CompanysettingComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private toast: ToastService,
-    private companyService: CompanysettingService
+    private companyService: CompanysettingService,
+    private commonService : CommonService
   ) { }
 
   ngOnInit(): void {
-   this.setupForm();
 
+  if(!this.commonService.checkPermission(PERMISSIONS.SettingEdit)|| !this.commonService.checkPermission(PERMISSIONS.SettingView))
+      return;
+   this.setupForm();
     this.companyService.companyDetails().pipe(take(1)).subscribe((res: any) => {
       if (res.isSuccess && res.data) {
         this.companyForm.patchValue(res.data);
@@ -79,6 +84,8 @@ export class CompanysettingComponent implements OnInit {
   }
 
   onSubmit() {
+      if(!this.commonService.checkPermission(PERMISSIONS.SettingEdit)|| !this.commonService.checkPermission(PERMISSIONS.SettingView))
+      return;
      if (this.companyForm.invalid) {
       this.companyForm.markAllAsTouched();
       this.toast.error("Please fill all required fields correctly");

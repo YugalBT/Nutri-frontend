@@ -6,6 +6,7 @@ import { ToastService } from '../../../shared/services/toast.service';
 import { CommonService } from '../../../shared/services/common.service';
 import { SharedModule } from '../../../shared/shared.module';
 import { FarmList } from '../../../core/models/farm-list';
+import { PERMISSIONS } from '../../../core/constants/permissions.constants';
 
 
 declare var bootstrap: any;
@@ -40,6 +41,9 @@ export class FeedAddEditComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
+    if(!this.commonService.checkPermission(PERMISSIONS.FeedAdd)
+      || !this.commonService.checkPermission(PERMISSIONS.FeedEdit))
+        return;
     this.initializeForm();
     this.loadFarmList();
   }

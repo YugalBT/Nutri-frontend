@@ -8,6 +8,7 @@ import { SharedModule } from '../../../shared/shared.module';
 import { CustomValidators } from '../../../core/helpers/validators';
 import { ApiResponse } from '../../../core/models/api-response';
 import { FeedList } from '../../../core/models/feed-list';
+import { PERMISSIONS } from '../../../core/constants/permissions.constants';
 
 declare var bootstrap: any;
 
@@ -45,6 +46,10 @@ export class RationAddEditComponent {
   ) {}
 
   ngOnInit() {
+    
+    if(!this.commonService.checkPermission(PERMISSIONS.RationAdd)
+      || !this.commonService.checkPermission(PERMISSIONS.RationEdit))
+        return;
     this.initializeForm();
     this.loadFarmList(true);
     this.loadFeedList(true);
@@ -127,6 +132,9 @@ export class RationAddEditComponent {
   }
 
   saveRation() {
+    if(!this.commonService.checkPermission(PERMISSIONS.RationAdd)
+      || !this.commonService.checkPermission(PERMISSIONS.RationEdit))
+        return;
     if (!this.form.valid) {
       this.toast.warning('Please fill all required fields');
       return;

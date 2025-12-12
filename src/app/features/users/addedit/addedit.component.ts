@@ -8,6 +8,7 @@ import { Subscription } from 'rxjs';
 import { CommonService } from '../../../shared/services/common.service';
 import { ToastService } from '../../../shared/services/toast.service';
 import { UsersService } from '../../../core/services/users/user.service';
+import { PERMISSIONS } from '../../../core/constants/permissions.constants';
 
 declare var bootstrap: any;
 
@@ -34,10 +35,14 @@ export class AddeditComponent implements OnInit, OnDestroy {
     private fb: FormBuilder,
     private commonService: CommonService,
     private usersService: UsersService,
-    private toast: ToastService
+    private toast: ToastService,
   ) { }
 
   ngOnInit() {
+    
+  if(!this.commonService.checkPermission(PERMISSIONS.UserAdd)
+    || !this.commonService.checkPermission(PERMISSIONS.UserEdit))
+      return;
     this.initializeForm();
     this.loadRoles();
   }
@@ -118,6 +123,10 @@ export class AddeditComponent implements OnInit, OnDestroy {
   }
 
   saveUser() {
+    
+    if(!this.commonService.checkPermission(PERMISSIONS.UserAdd)
+      || !this.commonService.checkPermission(PERMISSIONS.UserEdit))
+        return;
     if (!this.form.valid) {
       const payload = this.form.getRawValue();
       delete payload.password;

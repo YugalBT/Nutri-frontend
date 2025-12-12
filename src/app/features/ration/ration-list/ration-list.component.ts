@@ -12,6 +12,7 @@ import { ApiResponse } from '../../../core/models/api-response';
 import { RationAddEditComponent } from "../ration-add-edit/ration-add-edit.component";
 import { GlobalSearchComponent } from '../../../shared/components/global-search/global-search.component';
 import { ReusableTableComponent } from '../../../shared/components/reusable-table/reusable-table.component';
+import { CommonService } from '../../../shared/services/common.service';
 
 @Component({
   selector: 'app-ration-list',
@@ -43,15 +44,19 @@ export class RationListComponent {
     private translate: TranslateService,
     private rationService: RationService,
     private toast: ToastService,
-    private confirm: ConfirmDialogService
-    ,
-    private store: Store
+    private confirm: ConfirmDialogService,
+    private store: Store,
+    private commonService : CommonService
   ) {
     this.setColumns();
     this.langSub = this.translate.lang$.subscribe(() => this.setColumns());
   }
 
   ngOnInit(): void {
+    
+    if(!this.commonService.checkPermission(PERMISSIONS.RationView)
+      || !this.commonService.checkPermission(PERMISSIONS.RationDelete))
+        return;
     this.loadUserPermissions();
     this.loadRation(1, this.pageSize);
     const sub = this.rationService.rationChanged$.subscribe(() => {
@@ -140,6 +145,9 @@ export class RationListComponent {
   }
 
   onDelete(row: any): void {
+    
+    if(!this.commonService.checkPermission(PERMISSIONS.RationDelete))
+        return;
     const id = row?.rationId;
     if (!id) {
       this.toast.error(this.translate.instant('ration.invalidId') ?? "");
@@ -167,10 +175,9 @@ export class RationListComponent {
       'Farm Name',
       'Ration Name',
       'Total Ration Items',
-      'Target Group',
       'Status'
     ];
-    this.columnFields = ['farmName', 'rationName', 'totalItems', 'targetGroup', 'isActive'];
+    this.columnFields = ['farmName', 'rationName', 'totalItems', 'isActive'];
   }
 
   ngOnDestroy(): void {

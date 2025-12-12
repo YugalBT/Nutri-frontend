@@ -10,6 +10,8 @@ import { SharedModule } from '../../../shared/shared.module';
 import { ReusableTableComponent } from '../../../shared/components/reusable-table/reusable-table.component';
 import { GlobalSearchComponent } from '../../../shared/components/global-search/global-search.component';
 import { FeedAddEditComponent } from "../feed-add-edit/feed-add-edit.component";
+import { CommonService } from '../../../shared/services/common.service';
+import { PERMISSIONS } from '../../../core/constants/permissions.constants';
 
 @Component({
   selector: 'app-feed-list',
@@ -37,13 +39,18 @@ export class FeedListComponent {
     private translate: TranslateService,
     private feedService: FeedService,
     private toast: ToastService,
-    private confirm: ConfirmDialogService
+    private confirm: ConfirmDialogService,
+    private commonService : CommonService
   ) {
     this.setColumns();
     this.langSub = this.translate.lang$.subscribe(() => this.setColumns());
   }
 
   ngOnInit(): void {
+    
+    if(!this.commonService.checkPermission(PERMISSIONS.FeedView)
+      || !this.commonService.checkPermission(PERMISSIONS.FeedDelete))
+        return;
     this.loadFeeds(1, this.pageSize);
 
     const sub = this.feedService.feedsChanged$.subscribe(() => {
@@ -124,6 +131,9 @@ export class FeedListComponent {
   }
 
   onDelete(row: any): void {
+    
+    if(!this.commonService.checkPermission(PERMISSIONS.FeedDelete))
+        return;
     const id = row?.feedId;
     if (!id) {
       this.toast.error("Invalid feed id");

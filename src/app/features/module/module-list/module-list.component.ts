@@ -3,17 +3,16 @@ import {
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Subscription } from 'rxjs';
-
 import { ReusableTableComponent } from '../../../shared/components/reusable-table/reusable-table.component';
 import { GlobalSearchComponent } from '../../../shared/components/global-search/global-search.component';
-
 import { ModuleAddEditComponent } from '../module-add-edit/module-add-edit.component';
 import { ToastService } from '../../../shared/services/toast.service';
 import { ConfirmDialogService } from '../../../shared/services/confirm-dialog.service';
-
 import { ModuleList } from '../../../core/models/module-list';
 import { ApiResponse } from '../../../core/models/api-response';
 import { ModuleListService } from '../../../core/services/module/module-list.service';
+import { CommonService } from '../../../shared/services/common.service';
+import { PERMISSIONS } from '../../../core/constants/permissions.constants';
 
 @Component({
   selector: 'app-module-list',
@@ -47,10 +46,14 @@ export class ModuleListComponent implements OnInit, OnDestroy {
   constructor(
     private moduleService: ModuleListService,
     private confirm: ConfirmDialogService,
-    private toast: ToastService
+    private toast: ToastService,
+    private commonService : CommonService
   ) { }
 
   ngOnInit(): void {
+    if(!this.commonService.checkPermission(PERMISSIONS.ModuleView)
+      || !this.commonService.checkPermission(PERMISSIONS.ModuleDelete))
+        return;
     this.loadModules();
   }
 
@@ -107,6 +110,9 @@ export class ModuleListComponent implements OnInit, OnDestroy {
   }
 
   onDeleteModule(row: ModuleList) {
+
+    if(!this.commonService.checkPermission(PERMISSIONS.ModuleDelete))
+        return;
     this.confirm.confirm("Are you sure you want to delete this module?")
       .subscribe((ok) => {
         if (!ok) return;

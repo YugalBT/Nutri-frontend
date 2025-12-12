@@ -9,6 +9,8 @@ import { ConfirmDialogService } from '../../../shared/services/confirm-dialog.se
 import { AnimaltypeService } from '../../../core/services/animaltype/animaltype.service';
 import { ToastService } from '../../../shared/services/toast.service';
 import { NgxSpinnerService } from 'ngx-spinner';
+import { CommonService } from '../../../shared/services/common.service';
+import { PERMISSIONS } from '../../../core/constants/permissions.constants';
 
 @Component({
   selector: 'app-animal-type-list',
@@ -44,9 +46,12 @@ export class AnimalTypeListComponent implements OnInit, OnDestroy {
     private spinner: NgxSpinnerService,
     private toast: ToastService,
     private confirm: ConfirmDialogService,
+    private commonService : CommonService
   ) {}
 
 ngOnInit() {
+  if(!this.commonService.checkPermission(PERMISSIONS.AnimalTypeView))
+    return;
   this.loadAnimalTypes(this.pageIndex + 1, this.pageSize);
 
   this.subs.push(
@@ -119,6 +124,9 @@ ngOnInit() {
 
   
 deleteAnimalType(row: any): void {
+
+  if(!this.commonService.checkPermission(PERMISSIONS.AnimalTypeDelete))
+    return;
   const id = row?.animalTypeId;
 
   if (!id) {

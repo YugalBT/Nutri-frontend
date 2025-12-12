@@ -1,16 +1,15 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Subscription } from 'rxjs';
-
 import { SharedModule } from '../../../shared/shared.module';
 import { ReusableTableComponent } from '../../../shared/components/reusable-table/reusable-table.component';
 import { GlobalSearchComponent } from '../../../shared/components/global-search/global-search.component';
-
 import { CalvesAddEditComponent } from '../calves-add-edit/calves-add-edit.component';
 import { CalvesService } from '../../../core/services/calves/calves.service';
-
 import { ToastService } from '../../../shared/services/toast.service';
 import { ConfirmDialogService } from '../../../shared/services/confirm-dialog.service';
 import { ApiResponse } from '../../../core/models/api-response';
+import { CommonService } from '../../../shared/services/common.service';
+import { PERMISSIONS } from '../../../core/constants/permissions.constants';
 
 @Component({
   selector: 'app-calves-list',
@@ -44,12 +43,17 @@ export class CalvesListComponent implements OnInit, OnDestroy {
   constructor(
     private calvesService: CalvesService,
     private toast: ToastService,
-    private confirm: ConfirmDialogService
+    private confirm: ConfirmDialogService,
+    private commonService : CommonService
   ) {
     this.setColumns();
   }
 
   ngOnInit(): void {
+
+    
+    if(!this.commonService.checkPermission(PERMISSIONS.CalvesRationView))
+      return;
     this.loadCalves(1, this.pageSize);
 
     const sub = this.calvesService.calvesChanged$.subscribe(() => {
@@ -130,6 +134,8 @@ export class CalvesListComponent implements OnInit, OnDestroy {
   }
 
   onDelete(row: any): void {
+    if(!this.commonService.checkPermission(PERMISSIONS.CalvesRationDelete))
+      return;
     const id = row?.calvesId;
     if (!id) {
       this.toast.error("Invalid calves id");

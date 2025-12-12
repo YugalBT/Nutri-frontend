@@ -12,6 +12,8 @@ import { ApiResponse } from '../../../core/models/api-response';
 import { GlobalSearchComponent } from '../../../shared/components/global-search/global-search.component';
 import { ToastService } from '../../../shared/services/toast.service';
 import { ConfirmDialogService } from '../../../shared/services/confirm-dialog.service';
+import { CommonService } from '../../../shared/services/common.service';
+import { PERMISSIONS } from '../../../core/constants/permissions.constants';
 
 @Component({
   selector: 'app-company-list',
@@ -49,12 +51,17 @@ export class CompanyListComponent implements OnInit, OnDestroy {
     private spinner: NgxSpinnerService,
     private toast: ToastService,
     private confirm: ConfirmDialogService,
+    private commonService : CommonService
   ) {
     this.setColumns();
     this.langSub = this.translate.lang$.subscribe(() => this.setColumns());
   }
 
   ngOnInit() {
+
+  
+    if(!this.commonService.checkPermission(PERMISSIONS.TenantView) || !this.commonService.checkPermission(PERMISSIONS.TenantDelete))
+            return;
   this.loadCompanies(this.pageIndex, this.pageSize);
 
   this.companyService.companiesChanged$.subscribe(() => {
@@ -154,8 +161,9 @@ export class CompanyListComponent implements OnInit, OnDestroy {
   }
 
 deleteCompany(row: any): void {
+  if(!this.commonService.checkPermission(PERMISSIONS.TenantDelete))
+    return;
   const id = row?.tenantId;
-
   if (!id) {
     this.toast.error("Invalid Company ID");
     return;

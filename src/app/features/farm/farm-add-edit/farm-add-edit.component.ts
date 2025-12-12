@@ -7,6 +7,7 @@ import { ToastService } from '../../../shared/services/toast.service';
 import { SharedModule } from '../../../shared/shared.module';
 import { TranslatePipe } from '../../../i18n/translate.pipe';
 import { CustomValidators } from '../../../core/helpers/validators';
+import { PERMISSIONS } from '../../../core/constants/permissions.constants';
 
 declare var bootstrap: any;
 
@@ -35,6 +36,10 @@ export class FarmAddEditComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
+
+    if(!this.commonService.checkPermission(PERMISSIONS.FarmAdd)
+      || !this.commonService.checkPermission(PERMISSIONS.FarmEdit))
+        return;
      this.afterSuccess();
     this.initializeForm();
   }
@@ -89,6 +94,9 @@ export class FarmAddEditComponent implements OnInit, OnDestroy {
   }
 
   saveFarm() {
+    if(!this.commonService.checkPermission(PERMISSIONS.FarmAdd)
+      || !this.commonService.checkPermission(PERMISSIONS.FarmEdit))
+        return;
     if (!this.form.valid) {
       this.toast.warning('Please fill all required fields');
       return;

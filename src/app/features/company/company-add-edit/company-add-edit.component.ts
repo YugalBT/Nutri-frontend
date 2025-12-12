@@ -11,7 +11,8 @@ import { RoleItem } from '../../../core/models/add-edit-role';
 import { TranslateService } from '../../../i18n/translate.service';
 import { AddEditRoleService } from '../../../core/services/role/add-edit-role.service';
 import { NgxSpinnerService } from 'ngx-spinner';
-
+import { CommonService } from '../../../shared/services/common.service';
+import { PERMISSIONS } from '../../../core/constants/permissions.constants';
 
 declare var bootstrap: any;
 @Component({
@@ -34,14 +35,17 @@ export class CompanyAddEditComponent implements OnInit {
     private spinner: NgxSpinnerService,
     private translate: TranslateService,
     private roleService: AddEditRoleService,
-    private toast: ToastService
+    private toast: ToastService,
+    private commonService : CommonService
   ) { }
 
   // constructor(private fb: FormBuilder) {}
 
   ngOnInit() {
-
-
+    if(!this.commonService.checkPermission(PERMISSIONS.TenantAdd)|| 
+    !this.commonService.checkPermission(PERMISSIONS.TenantEdit)
+  || !this.commonService.checkPermission(PERMISSIONS.TenantDelete))
+      return;
     this.form = this.fb.group({
       // Company details
       tenantId: [''],
@@ -114,27 +118,6 @@ export class CompanyAddEditComponent implements OnInit {
       }
     });
   }
-  // openModal(edit = false, data?: any) {
-  //   this.isEdit = edit;
-  //   if (edit && data) {
-  //     this.form.patchValue({ ...data, logo: data.logo || '' });
-
-      
-  //   // ❌ Remove validations for EDIT mode
-  //   this.form.get('password')?.clearValidators();
-  //   this.form.get('roleId')?.clearValidators();
-
-  //   this.form.get('password')?.updateValueAndValidity();
-  //   this.form.get('roleId')?.updateValueAndValidity();
-  //  //   this.form.get('password')?.clearValidators();
-  //     // this.form.patchValue(data);
-  //   } else {
-  //     this.form.reset({ isActive: true });
-  //   }
-
-  //   this.modalInstance = new bootstrap.Modal(this.companyModal.nativeElement);
-  //   this.modalInstance.show();
-  // }
 
   openModal(edit = false, data?: any) {
   this.isEdit = edit;
@@ -209,9 +192,11 @@ removeLogo() {
   }
 }
 
-
-
   saveCompany() {
+
+    if(!this.commonService.checkPermission(PERMISSIONS.TenantAdd)|| 
+    !this.commonService.checkPermission(PERMISSIONS.TenantEdit))
+      return;
     if (this.form.invalid) {
       this.form.markAllAsTouched();
       return;
@@ -274,20 +259,22 @@ removeLogo() {
     }
   }
 
-  deleteCompany(id: string) {
-    this.companyService.deleteCompany(id).subscribe({
-      next: (res: ApiResponse<any>) => {
-        if (res.isSuccess) {
-          this.toast.success(res.message || "Company deleted successfully!");
-        } else {
-          this.toast.error(res.message || "Delete failed");
-        }
-      },
-      error: () => {
-        this.toast.error("Something went wrong");
-      }
-    });
-  }
+  // deleteCompany(id: string) {
+  //   if(!this.commonService.checkPermission(PERMISSIONS.TenantDelete))
+  //     return;
+  //   this.companyService.deleteCompany(id).subscribe({
+  //     next: (res: ApiResponse<any>) => {
+  //       if (res.isSuccess) {
+  //         this.toast.success(res.message || "Company deleted successfully!");
+  //       } else {
+  //         this.toast.error(res.message || "Delete failed");
+  //       }
+  //     },
+  //     error: () => {
+  //       this.toast.error("Something went wrong");
+  //     }
+  //   });
+  // }
 
   activeInactiveCompany(id: string) {
     this.companyService.ativeInactiveCompanyStatus(id, !this.form.value.isActive).subscribe({

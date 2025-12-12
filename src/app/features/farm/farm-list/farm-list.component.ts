@@ -9,6 +9,8 @@ import { FarmAddEditComponent } from '../farm-add-edit/farm-add-edit.component';
 import { TranslatePipe } from '../../../i18n/translate.pipe';
 import { ReusableTableComponent } from '../../../shared/components/reusable-table/reusable-table.component';
 import { GlobalSearchComponent } from '../../../shared/components/global-search/global-search.component';
+import { CommonService } from '../../../shared/services/common.service';
+import { PERMISSIONS } from '../../../core/constants/permissions.constants';
 
 @Component({
   selector: 'app-farm-list',
@@ -38,13 +40,18 @@ export class FarmListComponent {
     private translate: TranslateService,
     private farmService: FarmService,
     private toast: ToastService,
-    private confirm: ConfirmDialogService
+    private confirm: ConfirmDialogService,
+    private commonService : CommonService
   ) {
     this.setColumns();
     this.langSub = this.translate.lang$.subscribe(() => this.setColumns());
   }
 
   ngOnInit(): void {
+    
+    if(!this.commonService.checkPermission(PERMISSIONS.FarmView)
+      || !this.commonService.checkPermission(PERMISSIONS.FarmDelete))
+        return;
     this.loadFarms(1, this.pageSize);
     const sub = this.farmService.farmsChanged$.subscribe(() => {
       this.loadFarms(this.pageIndex + 1, this.pageSize);
@@ -124,6 +131,9 @@ export class FarmListComponent {
   }
 
   onDelete(row: any): void {
+    
+    if(!this.commonService.checkPermission(PERMISSIONS.FarmDelete))
+        return;
     const id = row?.farmId;
     if (!id) {
       this.toast.error(this.translate.instant('farms.invalidId') ?? "");

@@ -39,30 +39,13 @@
               </div>
             </div>
 
-          </div>
-
-          <!-- SECOND ROW -->
-          <div class="row g-3 mt-2">
-
-            <!-- Target Group -->
-            <div class="col-md-6">
-              <label class="form-label">Target Group <sup class="text-danger">*</sup></label>
-              <input type="text" formControlName="targetGroup" class="form-control" placeholder="Enter target group">
-
-              <div *ngIf="form.get('targetGroup')?.touched && form.get('targetGroup')?.invalid" class="text-danger">
-                <div *ngIf="form.get('targetGroup')?.errors?.['required']">Target Group is required.</div>
-                <div *ngIf="form.get('targetGroup')?.errors?.['pattern']">Only alphabets & spaces allowed.</div>
-              </div>
-            </div>
-
-            <!-- Vitelli Toggle -->
-            <div class="col-md-6"><br>
+              <!-- <div class="col-md-4"><br>
               <label class="form-label">For Calves</label>
               <label class="switch">
                 <input type="checkbox" formControlName="isForVitelli">
                 <span class="slider"></span>
               </label>
-            </div>
+            </div> -->
           </div>
 
           <!-- RATION ITEMS -->

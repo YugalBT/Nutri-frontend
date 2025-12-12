@@ -5,6 +5,8 @@ import { ReusableTableComponent } from '../../shared/components/reusable-table/r
 import { NotificationService } from '../../core/services/notification/notification.service';
 import { NotificationList } from '../../core/models/notification-list';
 import { GlobalSearchComponent } from '../../shared/components/global-search/global-search.component';
+import { CommonService } from '../../shared/services/common.service';
+import { PERMISSIONS } from '../../core/constants/permissions.constants';
 
 @Component({
   selector: 'app-notifications',
@@ -21,9 +23,12 @@ export class NotificationsComponent implements OnInit {
   filteredData: any[] = [];
   loading = false;
 
-  constructor(private notificationService: NotificationService) { }
+  constructor(private notificationService: NotificationService,private commonService : CommonService) { }
 
   ngOnInit(): void {
+    
+    if(!this.commonService.checkPermission(PERMISSIONS.Notificaton))
+        return;
     this.loadNotifications();
   }
 

@@ -4,6 +4,8 @@ import { ToastService } from '../../../shared/services/toast.service';
 import { AnimaltypeService } from '../../../core/services/animaltype/animaltype.service';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
+import { CommonService } from '../../../shared/services/common.service';
+import { PERMISSIONS } from '../../../core/constants/permissions.constants';
 
 declare var bootstrap: any;
 @Component({
@@ -25,10 +27,14 @@ export class AnimalTypeAddEditComponent implements OnInit{
     constructor(
     private fb: FormBuilder,
     private animalTypeService: AnimaltypeService,
-    private toast: ToastService
+    private toast: ToastService,
+    private commonService : CommonService
   ) {}
   
     ngOnInit(): void {
+
+    if(!this.commonService.checkPermission(PERMISSIONS.AnimalTypeAdd)|| !this.commonService.checkPermission(PERMISSIONS.AnimalTypeEdit))
+      return;
     this.form = this.fb.group({
       typeNameIt: ['', 
         [Validators.required, Validators.minLength(3),Validators.maxLength(50),
@@ -59,6 +65,9 @@ export class AnimalTypeAddEditComponent implements OnInit{
   }
 
    save() {
+    if(!this.commonService.checkPermission(PERMISSIONS.AnimalTypeAdd)|| !this.commonService.checkPermission(PERMISSIONS.AnimalTypeEdit))
+      return;
+    
     if (this.form.invalid) {
       this.form.markAllAsTouched();
       return;

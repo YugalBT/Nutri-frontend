@@ -7,6 +7,7 @@ import { CommonService } from '../../../shared/services/common.service';
 import { DayService } from '../../../core/services/day/day.service';
 import { ApiResponse } from '../../../core/models/api-response';
 import { FarmList } from '../../../core/models/farm-list';
+import { PERMISSIONS } from '../../../core/constants/permissions.constants';
 
 declare var bootstrap: any;
 
@@ -40,6 +41,8 @@ export class DayAddEditComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
+    if(!this.commonService.checkPermission(PERMISSIONS.DayAdd)|| !this.commonService.checkPermission(PERMISSIONS.DayEdit))
+        return;
     this.initializeForm();
     this.loadFarmList();
   }
@@ -100,6 +103,9 @@ export class DayAddEditComponent implements OnInit, OnDestroy {
   }
 
   saveDay() {
+      if(!this.commonService.checkPermission(PERMISSIONS.DayAdd)|| 
+      !this.commonService.checkPermission(PERMISSIONS.DayEdit))
+      return;
     if (!this.form.valid) {
       this.toast.warning('Please fill all required fields');
       return;

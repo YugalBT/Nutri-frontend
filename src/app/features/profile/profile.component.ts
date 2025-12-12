@@ -12,6 +12,8 @@ import { refreshAuthUser } from '../../state/auth/auth.actions';
 import { SharedModule } from '../../shared/shared.module';
 import { CustomValidators } from '../../core/helpers/validators';
 import * as AuthActions from '../../state/auth/auth.actions';  
+import { CommonService } from '../../shared/services/common.service';
+import { PERMISSIONS } from '../../core/constants/permissions.constants';
 
 @Component({
   selector: 'app-profile',
@@ -31,12 +33,17 @@ export class ProfileComponent implements OnInit {
     private store: Store,
     private fb: FormBuilder,
     private profileService: UpdateProfileService,
+    private commonService :CommonService
 
   ) {
     this.user$ = this.store.select(selectAuthUser);
   }
 
   ngOnInit() {
+
+    if(!this.commonService.checkPermission(PERMISSIONS.ProfileEdit)
+      || !this.commonService.checkPermission(PERMISSIONS.ProfileView))
+        return;
     this.profileService.profileDetails().pipe(take(1)).subscribe((res) => {
       if (res.isSuccess && res.data) {
 

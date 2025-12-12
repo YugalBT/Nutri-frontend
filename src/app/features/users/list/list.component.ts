@@ -12,6 +12,8 @@ import { ConfirmDialogService } from '../../../shared/services/confirm-dialog.se
 import { UserList } from '../../../core/models/userlist';
 import { UsersService } from '../../../core/services/users/user.service';
 import { PaginationRequest } from '../../../shared/modal/pagination-request.model';
+import { CommonService } from '../../../shared/services/common.service';
+import { PERMISSIONS } from '../../../core/constants/permissions.constants';
 
 @Component({
   selector: 'app-list',
@@ -42,7 +44,8 @@ export class ListComponent implements OnInit, OnDestroy {
     private usersService: UsersService,
     private toast: ToastService,
     private confirm: ConfirmDialogService,
-    private spinner: NgxSpinnerService
+    private spinner: NgxSpinnerService,
+    private commonService : CommonService
   ) {
     this.setColumns();
     this.langSub = this.translate.lang$.subscribe(() => this.setColumns());
@@ -50,6 +53,10 @@ export class ListComponent implements OnInit, OnDestroy {
 
   // 🔹 Load Users Initially
   ngOnInit(): void {
+
+    if(!this.commonService.checkPermission(PERMISSIONS.UserView)
+      || !this.commonService.checkPermission(PERMISSIONS.UserDelete))
+        return;
     this.loadUsers(1, this.pageSize);
     const sub = this.usersService.usersChanged$.subscribe(() => {
       this.loadUsers(this.pageIndex + 1, this.pageSize);
@@ -151,6 +158,9 @@ export class ListComponent implements OnInit, OnDestroy {
 
 
   onDelete(row: any): void {
+    if(!this.commonService.checkPermission(PERMISSIONS.UserView)
+      || !this.commonService.checkPermission(PERMISSIONS.UserDelete))
+        return;
     const id = row?.userId;
     if (!id) {
       this.toast.error(this.translate.instant('users.invalidId') ?? "");

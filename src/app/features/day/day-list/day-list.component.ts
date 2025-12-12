@@ -1,6 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
-
 import { DayAddEditComponent } from '../day-add-edit/day-add-edit.component';
 import { SharedModule } from '../../../shared/shared.module';
 import { ReusableTableComponent } from '../../../shared/components/reusable-table/reusable-table.component';
@@ -11,6 +10,9 @@ import { DayService } from '../../../core/services/day/day.service';
 import { ToastService } from '../../../shared/services/toast.service';
 import { ConfirmDialogService } from '../../../shared/services/confirm-dialog.service';
 import { ApiResponse } from '../../../core/models/api-response';
+import { CommonService } from '../../../shared/services/common.service';
+import { PERMISSIONS } from '../../../core/constants/permissions.constants';
+
 
 @Component({
   selector: 'app-day-list',
@@ -43,13 +45,18 @@ export class DayListComponent implements OnInit, OnDestroy {
     private translate: TranslateService,
     private dayService: DayService,
     private toast: ToastService,
-    private confirm: ConfirmDialogService
+    private confirm: ConfirmDialogService,
+    private commonService : CommonService
   ) {
     this.setColumns();
     this.langSub = this.translate.lang$.subscribe(() => this.setColumns());
   }
 
   ngOnInit(): void {
+    
+    if(!this.commonService.checkPermission(PERMISSIONS.DayView)
+      || !this.commonService.checkPermission(PERMISSIONS.DayDelete))
+        return;
     this.loadDays(1, this.pageSize);
 
     const sub = this.dayService.daysChanged$.subscribe(() => {
@@ -130,6 +137,9 @@ export class DayListComponent implements OnInit, OnDestroy {
   }
 
   onDelete(row: any): void {
+    
+    if(!this.commonService.checkPermission(PERMISSIONS.DayDelete))
+        return;
     const id = row?.dayId;
     if (!id) {
       this.toast.error("Invalid day id");
