@@ -109,45 +109,31 @@ export class AnimalGroupAddEditComponent implements OnInit, OnDestroy {
     );
   }
 
- private loadLactationList(force = false): Observable<any[]> {
-  if (!force && this.lactations.length > 0) return of(this.lactations);
+  private loadLactationList(force = false): Observable<any[]> {
+    if (!force && this.lactations.length > 0) return of(this.lactations);
 
-  this.lactationsLoading = true;
-  return this.commonService.getAnimalLactationStageList().pipe(
-    tap(raw => console.debug('getAnimalLactationStageList raw:', raw)),
-    map((res: ApiResponse<any>) => {
-      const raw = res?.data ?? [];
-      return Array.isArray(raw) ? raw.map(item => {
-        const id = item.animalLactationId ?? item.lactationId ?? item.id ?? '';
-        const name = item.lactationNameEn ?? item.lactationName ?? item.nameEn ?? item.name ?? '';
-        return {
-          ...item,
-          animalLactationId: id != null ? String(id) : '',
-          lactationNameEn: String(name)
-        };
-      }) : [];
-    }),
-    tap(data => {
-  console.debug('Loaded lactations:', data); 
-  this.lactations = data;
-}),
-    catchError(err => {
-      console.error('loadLactationList error', err);
-      this.toast.error('Failed to load lactations');
-      return of([]);
-    }),
-    finalize(() => this.lactationsLoading = false)
-  );
-}
+    this.lactationsLoading = true;
+    return this.commonService.getAnimalLactationStageList().pipe(
+      map((res: ApiResponse<any>) => res?.data ?? []),
+      tap((data: any[]) => {
+        this.lactations = Array.isArray(data) ? data.map(l => ({ ...l, animalLactationId: l.animalLactationId != null ? String(l.animalLactationId) : '' })) : [];
+        console.log('Loaded lactations', this.lactations);
+      }),
+      catchError(err => {
+        this.toast.error('Failed to load animal types');
+        return of([]);
+      }),
+      finalize(() => this.typesLoading = false)
+    );
+  }
 
 
-  
+
   openModal(edit = false, data?: any): void {
     this.isEdit = edit;
     this.form.reset();
     this.currentAnimalGroupId = data?.animalGroupId ?? null;
 
-    // set permission for this mode
     this.isAddEditPermission = edit
       ? this.commonService.checkPermission(PERMISSIONS.AnimalGroupEdit)
       : this.commonService.checkPermission(PERMISSIONS.AnimalGroupAdd);
@@ -160,7 +146,7 @@ export class AnimalGroupAddEditComponent implements OnInit, OnDestroy {
 
     const s = join$.subscribe({
       next: () => {
-        // patch AFTER dropdowns are loaded
+
         if (edit && data) {
           this.form.patchValue({
             farmId: data.farmId != null ? String(data.farmId) : '',
@@ -169,13 +155,12 @@ export class AnimalGroupAddEditComponent implements OnInit, OnDestroy {
             animalGroupNameEn: data.animalGroupNameEn,
             animalGroupNameIt: data.animalGroupNameIt
           });
+          console.log('Patching form for edit:', this.form.value);
         }
-        // show modal only after patching
         this.modalInstance.show();
       },
       error: () => {
         this.toast.error('Failed to load required data to open modal');
-        // optional: still show modal: this.modalInstance.show();
       }
     });
 
@@ -186,13 +171,11 @@ export class AnimalGroupAddEditComponent implements OnInit, OnDestroy {
     this.modalInstance?.hide();
   }
 
-  // canSave relies on permission (set in openModal) + form validity
   canSave(): boolean {
     return this.isAddEditPermission && this.form.valid;
   }
 
   saveAnimalGroup(): void {
-    // re-check permission depending on mode (safety)
     const hasPermission = this.isEdit
       ? this.commonService.checkPermission(PERMISSIONS.AnimalGroupEdit)
       : this.commonService.checkPermission(PERMISSIONS.AnimalGroupAdd);

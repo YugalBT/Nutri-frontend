@@ -14,8 +14,8 @@
                     <div class="row g-3">
                         <!-- Farm -->
                         <div class="col-md-4">
-                            <label class="form-label">Farm <sup class="text-danger">*</sup></label>
-                            <select class="form-select" formControlName="farmId" [disabled]="farmsLoading">
+                            <label class="form-label" for="farmId">Farm <sup class="text-danger">*</sup></label>
+                            <select class="form-select" id="farmId" formControlName="farmId" [disabled]="farmsLoading">
                                 <option [ngValue]="null">Select Farm</option>
                                 <option *ngFor="let f of farms" [value]="f.farmId">{{ f.farmName }}</option>
                             </select>
@@ -26,8 +26,8 @@
 
                         <!-- Animal Type -->
                         <div class="col-md-4">
-                            <label class="form-label">Animal Type <sup class="text-danger">*</sup></label>
-                            <select class="form-select" formControlName="animalTypeId" [disabled]="typesLoading">
+                            <label class="form-label" for="animalTypeId" >Animal Type <sup class="text-danger">*</sup></label>
+                            <select class="form-select" id="animalTypeId" formControlName="animalTypeId" [disabled]="typesLoading">
                                 <option [ngValue]="null">Select Type</option>
                                 <option *ngFor="let t of animalTypes" [ngValue]="t.animalTypeId">{{ t.typeNameEn }}
                                 </option>
@@ -40,9 +40,9 @@
 
                         <!-- Lactation -->
                         <div class="col-md-4">
-                            <label class="form-label">Lactation Stage <sup class="text-danger">*</sup></label>
-                            <select class="form-select" formControlName="animalLactationId">
-                                <option value="">Select Lactation</option>
+                            <label class="form-label" for="animalLactationId" >Lactation Stage <sup class="text-danger">*</sup></label>
+                            <select class="form-select" id="animalLactationId" formControlName="animalLactationId">
+                                <option [ngValue]="null">Select Lactation</option>
                                 <option *ngFor="let l of lactations" [value]="l.animalLactationId">{{ l.lactationNameEn
                                     }}</option>
                             </select>

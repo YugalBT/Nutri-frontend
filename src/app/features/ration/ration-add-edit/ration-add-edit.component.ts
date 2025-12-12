@@ -70,8 +70,8 @@ export class RationAddEditComponent implements OnInit, OnDestroy {
       feedId: [ item?.feedId != null ? String(item.feedId) : '', Validators.required ],
       perKg: [ item?.perKg ?? '', Validators.required ],
       // read-only display controls
-      dryMatter: [ item?.dryMatter ?? null ],
-      protein: [ item?.protein ?? null ]
+      // dryMatter: [ item?.dryMatter ?? null ],
+      // protein: [ item?.protein ?? null ]
     });
   }
 
