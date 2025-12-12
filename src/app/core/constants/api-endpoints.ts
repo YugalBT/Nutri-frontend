@@ -35,8 +35,10 @@ export const API_ENDPOINTS = {
     GET_ALL_NOTIFICATION: '/Common/GetAllNotification',
     GET_ALL_FARMS: '/Common/GetAllFarm',
     GET_ALL_FEED: '/Common/GetAllFeed',
-    GET_ALL_Days: '/Common/GetAllDay'
-
+    GET_ALL_Days: '/Common/GetAllDay',
+    GET_ALL_ANIMALTYPE: '/Common/GetAllAnimalType',
+    GET_ALL_ANIMAL_LACTATION: '/Common/GetAllAnimalLactation',
+    GET_ALL_ANIMAL_GROUP: '/Common/GetAllAnimalGroup'
   },
   
   Module: {
@@ -96,6 +98,21 @@ export const API_ENDPOINTS = {
     DELETE: '/Animal/DeleteAnimalType',
     ACTIVE_INACTIVE: '/Animal/ActiveInactiveAnimalType',
     GET_ALL: '/Animal/GetAllAnimalType',
+  },
+
+  AnimalLactation: {
+    CREATE: '/Animal/CreateAnimalLactation',
+    UPDATE: '/Animal/UpdateAnimalLactation',
+    DELETE: '/Animal/DeleteAnimalLactation',
+    ACTIVE_INACTIVE: '/Animal/ActiveInactiveLactation',
+    GET_ALL: '/Animal/GetAllLactation',
+  },
+  AnimalGroup: {
+    CREATE: '/Animal/CreateAnimalGroup',
+    UPDATE: '/Animal/UpdateAnimalGroup',
+    DELETE: '/Animal/DeleteAnimalGroup',
+    ACTIVE_INACTIVE: '/Animal/ActiveInactiveAnimalGroup',
+    GET_ALL: '/Animal/GetAllAnimalGroup',
   },
    COMPANY: {
     UPDATE: '/Common/UpdateSettingById',

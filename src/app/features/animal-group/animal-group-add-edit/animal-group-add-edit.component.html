@@ -1,0 +1,94 @@
+<!-- animal-group-add-edit.component.html -->
+<div #animalGroupModal class="modal fade" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title">{{ isEdit ? 'Edit Animal Group' : 'Add Animal Group' }}</h5>
+                <button type="button" class="btn-close" (click)="closeModal()"></button>
+            </div>
+
+            <div class="modal-body">
+                <form [formGroup]="form">
+
+                    <div class="row g-3">
+                        <!-- Farm -->
+                        <div class="col-md-4">
+                            <label class="form-label">Farm <sup class="text-danger">*</sup></label>
+                            <select class="form-select" formControlName="farmId" [disabled]="farmsLoading">
+                                <option [ngValue]="null">Select Farm</option>
+                                <option *ngFor="let f of farms" [value]="f.farmId">{{ f.farmName }}</option>
+                            </select>
+                            <div *ngIf="form.get('farmId')?.touched && form.get('farmId')?.invalid" class="text-danger">
+                                Farm is required.
+                            </div>
+                        </div>
+
+                        <!-- Animal Type -->
+                        <div class="col-md-4">
+                            <label class="form-label">Animal Type <sup class="text-danger">*</sup></label>
+                            <select class="form-select" formControlName="animalTypeId" [disabled]="typesLoading">
+                                <option [ngValue]="null">Select Type</option>
+                                <option *ngFor="let t of animalTypes" [ngValue]="t.animalTypeId">{{ t.typeNameEn }}
+                                </option>
+                            </select>
+                            <div *ngIf="form.get('animalTypeId')?.touched && form.get('animalTypeId')?.invalid"
+                                class="text-danger">
+                                Animal type is required.
+                            </div>
+                        </div>
+
+                        <!-- Lactation -->
+                        <div class="col-md-4">
+                            <label class="form-label">Lactation Stage <sup class="text-danger">*</sup></label>
+                            <select class="form-select" formControlName="animalLactationId">
+                                <option value="">Select Lactation</option>
+                                <option *ngFor="let l of lactations" [value]="l.animalLactationId">{{ l.lactationNameEn
+                                    }}</option>
+                            </select>
+                            <div *ngIf="form.get('animalLactationId')?.touched && form.get('animalLactationId')?.invalid"
+                                class="text-danger">
+                                Lactation stage is required.
+                            </div>
+                        </div>
+
+                        <!-- Group Name EN -->
+                        <div class="col-md-4">
+                            <label class="form-label">Group Name (EN) <sup class="text-danger">*</sup></label>
+                            <input type="text" class="form-control" formControlName="animalGroupNameEn"
+                                placeholder="Enter name in English">
+                            <div *ngIf="form.get('animalGroupNameEn')?.touched && form.get('animalGroupNameEn')?.invalid"
+                                class="text-danger">
+                                <div *ngIf="form.get('animalGroupNameEn')?.errors?.['required']">Name is required.</div>
+                                <div *ngIf="form.get('animalGroupNameEn')?.errors?.['pattern']">Only alphabets & spaces
+                                    allowed.</div>
+                            </div>
+                        </div>
+
+                        <!-- Group Name IT -->
+                        <div class="col-md-4">
+                            <label class="form-label">Group Name (IT) <sup class="text-danger">*</sup></label>
+                            <input type="text" class="form-control" formControlName="animalGroupNameIt"
+                                placeholder="Enter name in Italian">
+                            <div *ngIf="form.get('animalGroupNameIt')?.touched && form.get('animalGroupNameIt')?.invalid"
+                                class="text-danger">
+                                <div *ngIf="form.get('animalGroupNameIt')?.errors?.['required']">Name is required.</div>
+                                <div *ngIf="form.get('animalGroupNameIt')?.errors?.['pattern']">Only alphabets & spaces
+                                    allowed.</div>
+                            </div>
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn btn-outline-secondary" (click)="closeModal()">Cancel</button>
+                <button class="btn add-btn" (click)="saveAnimalGroup()" [disabled]="!canSave()">
+                    {{ isEdit ? 'Update' : 'Save' }}
+                </button>
+            </div>
+
+        </div>
+    </div>
+</div>

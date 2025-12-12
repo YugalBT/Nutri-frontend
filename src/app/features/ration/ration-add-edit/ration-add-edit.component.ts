@@ -1,11 +1,11 @@
-import { Component, ElementRef, EventEmitter, Output, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, FormArray } from '@angular/forms';
-import { Subscription } from 'rxjs';
+import { Component, ElementRef, EventEmitter, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
+import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { forkJoin, Observable, of, Subscription } from 'rxjs';
+import { catchError, finalize, map, tap } from 'rxjs/operators';
+import { SharedModule } from '../../../shared/shared.module';
 import { RationService } from '../../../core/services/ration/ration.service';
 import { ToastService } from '../../../shared/services/toast.service';
 import { CommonService } from '../../../shared/services/common.service';
-import { SharedModule } from '../../../shared/shared.module';
-import { CustomValidators } from '../../../core/helpers/validators';
 import { ApiResponse } from '../../../core/models/api-response';
 import { FeedList } from '../../../core/models/feed-list';
 import { PERMISSIONS } from '../../../core/constants/permissions.constants';
@@ -19,9 +19,8 @@ declare var bootstrap: any;
   templateUrl: './ration-add-edit.component.html',
   styleUrls: ['./ration-add-edit.component.css']
 })
-export class RationAddEditComponent {
-
-  @ViewChild('rationModal') rationModal!: ElementRef;
+export class RationAddEditComponent implements OnInit, OnDestroy {
+  @ViewChild('rationModal', { static: true }) rationModal!: ElementRef;
   @Output() onRationSaved = new EventEmitter<void>();
 
   form!: FormGroup;
@@ -31,9 +30,11 @@ export class RationAddEditComponent {
   currentRationId: string | null = null;
 
   farms: any[] = [];
+  animalGroups: any[] = [];
   feeds: FeedList[] = [];
 
   farmsLoading = false;
+  animalGroupsLoading = false;
   feedsLoading = false;
 
   subs: Subscription[] = [];
@@ -46,13 +47,8 @@ export class RationAddEditComponent {
   ) {}
 
   ngOnInit() {
-    
-    if(!this.commonService.checkPermission(PERMISSIONS.RationAdd)
-      || !this.commonService.checkPermission(PERMISSIONS.RationEdit))
-        return;
     this.initializeForm();
-    this.loadFarmList(true);
-    this.loadFeedList(true);
+    this.modalInstance = new bootstrap.Modal(this.rationModal.nativeElement, { backdrop: 'static' });
   }
 
   ngOnDestroy() {
@@ -61,18 +57,21 @@ export class RationAddEditComponent {
 
   private initializeForm() {
     this.form = this.fb.group({
-      farmId: ['', CustomValidators.required()],
+      farmId: ['', Validators.required],
+      animalGroupId: ['', Validators.required],
       name: ['', [Validators.required, Validators.pattern(/^[A-Za-z ]+$/)]],
-      targetGroup: ['', [Validators.required]],
-      isForVitelli: [false],
-      rationItems: this.fb.array([this.createRationItem()])
+      rationItems: this.fb.array([ this.createRationItem() ])
     });
   }
 
-  createRationItem(): FormGroup {
+  // create ration item includes dryMatter & protein so we can show them in UI
+  createRationItem(item?: any): FormGroup {
     return this.fb.group({
-      feedId: ['', Validators.required],
-      perKg: ['', Validators.required]
+      feedId: [ item?.feedId != null ? String(item.feedId) : '', Validators.required ],
+      perKg: [ item?.perKg ?? '', Validators.required ],
+      // read-only display controls
+      dryMatter: [ item?.dryMatter ?? null ],
+      protein: [ item?.protein ?? null ]
     });
   }
 
@@ -88,55 +87,124 @@ export class RationAddEditComponent {
     this.rationItems.removeAt(i);
   }
 
-  openModal(edit = false, data?: any) {
-  this.isEdit = edit;
-  this.form.reset({ isForVitelli: false });
-  this.rationItems.clear();
-  this.addRationItem();
-
-  if (edit && data) {
-    this.currentRationId = data.rationId;
-
-    // Patch main fields
-    this.form.patchValue({
-      farmId: data.farmId,
-      name: data.rationName,      // notice api field is "rationName"
-      targetGroup: data.targetGroup,
-      isForVitelli: data.isForVitelli ?? false
-    });
-
-    // Patch ration items
-    if (data.items?.length > 0) {
-      this.rationItems.clear();
-      data.items.forEach((item: any) => {
-        this.rationItems.push(this.fb.group({
-          feedId: item.feedId,
-          perKg: item.perKg
-        }));
-      });
-    } else {
-      this.addRationItem();
-    }
-  } else {
-    this.currentRationId = null;
+  // ---------- loaders that RETURN observables (cached when available) ----------
+  private loadFarmList(force = false): Observable<any[]> {
+    if (!force && this.farms.length > 0) return of(this.farms);
+    this.farmsLoading = true;
+    return this.commonService.getFarmsList().pipe(
+      map((res: ApiResponse<any>) => res?.data ?? []),
+      tap(data => this.farms = Array.isArray(data) ? data.map(d => ({ ...d, farmId: d.farmId != null ? String(d.farmId) : '' })) : []),
+      catchError(err => {
+        this.toast.error('Failed to load farms');
+        return of([]);
+      }),
+      finalize(() => this.farmsLoading = false)
+    );
   }
 
-  // Show modal
-  this.modalInstance = new bootstrap.Modal(this.rationModal.nativeElement);
-  this.modalInstance.show();
-}
+  private loadFeedList(force = false): Observable<FeedList[]> {
+    if (!force && this.feeds.length > 0) return of(this.feeds);
+    this.feedsLoading = true;
+    return this.commonService.getFeedList().pipe(
+      map((res: ApiResponse<any>) => Array.isArray(res?.data) ? res.data : []),
+      tap(data => this.feeds = data),
+      catchError(err => {
+        this.toast.error('Failed to load feeds');
+        return of([]);
+      }),
+      finalize(() => this.feedsLoading = false)
+    );
+  }
 
+  private loadAnimalGroupList(force = false): Observable<any[]> {
+    if (!force && this.animalGroups.length > 0) return of(this.animalGroups);
+    this.animalGroupsLoading = true;
+    return this.commonService.getAnimalGroupsList().pipe(
+      map((res: ApiResponse<any>) => res?.data ?? []),
+      tap(data => this.animalGroups = Array.isArray(data) ? data.map(d => ({ ...d, animalGroupId: d.animalGroupId != null ? String(d.animalGroupId) : '' })) : []),
+      catchError(err => {
+        this.toast.error('Failed to load animal groups');
+        return of([]);
+      }),
+      finalize(() => this.animalGroupsLoading = false)
+    );
+  }
+
+  /**
+   * Open modal: load required dropdowns first, then patch values (if edit), then show modal.
+   */
+  openModal(edit = false, data?: any) {
+    this.isEdit = edit;
+    this.form.reset();
+    this.rationItems.clear();
+    this.addRationItem();
+    this.currentRationId = null;
+
+    // ensure permission check happens where you expect — keep existing logic if required
+    // (you can set some permission flag here if used in template)
+
+    const join$ = forkJoin({
+      farms: this.loadFarmList(false),
+      feeds: this.loadFeedList(false),
+      animalGroups: this.loadAnimalGroupList(false)
+    });
+
+    const s = join$.subscribe({
+      next: () => {
+        if (edit && data) {
+          this.currentRationId = data.rationId ?? null;
+
+          this.form.patchValue({
+            farmId: data.farmId != null ? String(data.farmId) : '',
+            animalGroupId: data.animalGroupId != null ? String(data.animalGroupId) : '',
+            name: data.rationName,
+
+          });
+
+
+          this.rationItems.clear();
+          if (data.items && Array.isArray(data.items) && data.items.length > 0) {
+            data.items.forEach((it: any) => {
+
+              const normalized = {
+                feedId: it.feedId != null ? String(it.feedId) : '',
+                perKg: it.perKg,
+                dryMatter: it.dryMatter,
+                protein: it.protein
+              };
+              this.rationItems.push(this.createRationItem(normalized));
+            });
+          } else {
+            this.addRationItem();
+          }
+        }
+
+
+        this.modalInstance.show();
+      },
+      error: () => {
+        this.toast.error('Failed to load data for ration form');
+      }
+    });
+    this.subs.push(s);
+  }
 
   closeModal() {
     this.modalInstance?.hide();
   }
 
   saveRation() {
+
     if(!this.commonService.checkPermission(PERMISSIONS.RationAdd)
-      || !this.commonService.checkPermission(PERMISSIONS.RationEdit))
-        return;
+      || !this.commonService.checkPermission(PERMISSIONS.RationEdit)) {
+      this.toast.error('You do not have permission');
+      return;
+    }
+
     if (!this.form.valid) {
+      debugger;
       this.toast.warning('Please fill all required fields');
+      this.form.markAllAsTouched();
       return;
     }
 
@@ -154,9 +222,8 @@ export class RationAddEditComponent {
         } else {
           this.toast.error(res.message);
         }
-      });
+      }, err => this.toast.error(err?.error?.message));
       this.subs.push(sub);
-
     } else {
       const sub = this.rationService.createration(payload).subscribe(res => {
         if (res.isSuccess) {
@@ -166,43 +233,14 @@ export class RationAddEditComponent {
         } else {
           this.toast.error(res.message);
         }
-      });
+      }, err => this.toast.error(err?.error?.message));
       this.subs.push(sub);
     }
-  }
-
-  private loadFeedList(force = false) {
-    if (!force && this.feeds.length > 0) return;
-    this.feedsLoading = true;
-
-    const sub = this.commonService.getFeedList().subscribe({
-      next: res => {
-        this.feeds = Array.isArray(res?.data) ? res.data : [];
-        this.feedsLoading = false;
-      },
-      error: () => {
-        this.feedsLoading = false;
-        this.toast.error('Failed to load feeds');
-      }
-    });
-
-    this.subs.push(sub);
-  }
-
-  private loadFarmList(force = false) {
-    if (!force && this.farms.length > 0) return;
-
-    const sub = this.commonService.getFarmsList().subscribe({
-      next: (res: ApiResponse<any>) => {
-        this.farms = res.data || [];
-      }
-    });
-
-    this.subs.push(sub);
   }
 
   private afterSuccess() {
     this.rationService.notifyrationChanged();
     this.closeModal();
   }
+  
 }

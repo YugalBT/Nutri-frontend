@@ -1,0 +1,45 @@
+<div #animalLactationModal class="modal fade" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h5 *ngIf="isAddEditPermission" class="modal-title">{{ isEdit ? 'Edit Lactation' : 'Add Lactation' }}</h5>
+        <button type="button" class="btn-close" (click)="closeModal()"></button>
+      </div>
+
+      <div class="modal-body">
+        <form [formGroup]="form"  (ngSubmit)="save()">
+            <div class="container-fluid">
+          <div class="row g-3">
+            <div class="col-md-12">
+              <label class="form-label">Lactation Name En <sup class="text-danger">*</sup></label>
+              <input type="text" formControlName="lactationNameEn" class="form-control" placeholder="Enter lactation name">
+              <div *ngIf="form.get('lactationNameEn')?.touched && form.get('lactationNameEn')?.invalid" class="text-danger">
+                <div *ngIf="form.get('lactationNameEn')?.errors?.['required']">Lactation Name is required.</div>
+                <div *ngIf="form.get('lactationNameEn')?.errors?.['pattern']">Only alphabets and spaces allowed.</div>
+              </div>
+            </div>
+
+            <div class="col-md-12">
+              <label class="form-label">Lactation Name It <sup class="text-danger">*</sup></label>
+              <input type="text" formControlName="lactationNameIt" class="form-control" placeholder="Enter lactation name">
+              <div *ngIf="form.get('lactationNameIt')?.touched && form.get('lactationNameIt')?.invalid" class="text-danger">
+                <div *ngIf="form.get('lactationNameIt')?.errors?.['required']">Lactation Name is required.</div>
+                <div *ngIf="form.get('lactationNameIt')?.errors?.['pattern']">Only alphabets and spaces allowed.</div>
+              </div>
+            </div>
+          </div>
+          </div>
+        </form>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn btn-outline-secondary" (click)="closeModal()">Cancel</button>
+        <button class="btn add-btn" [disabled]="!isAddEditPermission" (click)="save()">
+          {{ isEdit ? 'Update' : 'Save' }}
+        </button>
+      </div>
+
+    </div>
+  </div>
+</div>

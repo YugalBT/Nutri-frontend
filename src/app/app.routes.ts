@@ -157,6 +157,23 @@ export const routes: Routes = [
           import('./features/animalType/animal-type-list/animal-type-list.component')
             .then(m => m.AnimalTypeListComponent),
       },
+       {
+        path: 'animalLactationStage',
+        canActivate: [permissionGuard],
+        data: { requiredPermissions: [PERMISSIONS.AnimalLactationAdd, PERMISSIONS.AnimalLactationEdit, PERMISSIONS.AnimalLactationView, PERMISSIONS.AnimalLactationDelete] },
+        loadComponent: () =>
+          import('./features/animalLactation/animal-lactation-list/animal-lactation-list.component')
+            .then(m => m.AnimalLactationListComponent),
+      },
+
+       {
+        path: 'animalGroup',
+        canActivate: [permissionGuard],
+        data: { requiredPermissions: [PERMISSIONS.AnimalGroupAdd, PERMISSIONS.AnimalGroupEdit, PERMISSIONS.AnimalGroupView, PERMISSIONS.AnimalGroupDelete] },
+        loadComponent: () =>
+          import('./features/animal-group/animal-group-list/animal-group-list.component')
+            .then(m => m.AnimalGroupListComponent),
+      },
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
     ],
   },

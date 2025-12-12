@@ -66,6 +66,16 @@ export const PERMISSIONS = {
     AnimalTypeEdit: 'AnimalTypeEdit',
     AnimalTypeDelete: 'AnimalTypeDelete',
     AnimalTypeAdd: 'AnimalTypeAdd',
+
+    AnimalLactationAdd: 'AnimalLactationAdd',
+    AnimalLactationEdit: 'AnimalLactationEdit',
+    AnimalLactationDelete: 'AnimalLactationDelete',
+    AnimalLactationView: 'AnimalLactationView',
+
+    AnimalGroupAdd: 'AnimalGroupAdd',
+    AnimalGroupEdit: 'AnimalGroupEdit',
+    AnimalGroupDelete: 'AnimalGroupDelete',
+    AnimalGroupView: 'AnimalGroupView',
     
 } as const;
 

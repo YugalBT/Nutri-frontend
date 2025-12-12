@@ -175,9 +175,10 @@ export class RationListComponent {
       'Farm Name',
       'Ration Name',
       'Total Ration Items',
+      'animal GroupName En',
       'Status'
     ];
-    this.columnFields = ['farmName', 'rationName', 'totalItems', 'isActive'];
+    this.columnFields = ['farmName', 'rationName', 'totalItems','animalGroupNameEn', 'isActive'];
   }
 
   ngOnDestroy(): void {
