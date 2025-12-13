@@ -116,8 +116,8 @@ export class AnimalGroupAddEditComponent implements OnInit, OnDestroy {
     return this.commonService.getAnimalLactationStageList().pipe(
       map((res: ApiResponse<any>) => res?.data ?? []),
       tap((data: any[]) => {
-        this.lactations = data
-        // this.lactations = Array.isArray(data) ? data.map(l => ({ ...l, animalLactationId: l.animalLactationId != null ? String(l.animalLactationId) : '' })) : [];
+        //this.lactations = data
+        this.lactations = Array.isArray(data) ? data.map(l => ({ ...l, animalLactationId: l.animalLactationId != null ? String(l.animalLactationId) : '' })) : [];
         console.log('Loaded lactations', this.lactations);
       }),
       catchError(err => {
