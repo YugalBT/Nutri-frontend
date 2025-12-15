@@ -17,6 +17,8 @@
               <div *ngIf="form.get('lactationNameEn')?.touched && form.get('lactationNameEn')?.invalid" class="text-danger">
                 <div *ngIf="form.get('lactationNameEn')?.errors?.['required']">Lactation Name is required.</div>
                 <div *ngIf="form.get('lactationNameEn')?.errors?.['pattern']">Only alphabets and spaces allowed.</div>
+                <div *ngIf="form.get('lactationNameEn')?.errors?.['minlength']">Minimum 3 characters.</div>
+                <div *ngIf="form.get('lactationNameEn')?.errors?.['maxlength']">Maximum 50 characters.</div>
               </div>
             </div>
 
@@ -24,8 +26,9 @@
               <label class="form-label">Lactation Name It <sup class="text-danger">*</sup></label>
               <input type="text" formControlName="lactationNameIt" class="form-control" placeholder="Enter lactation name">
               <div *ngIf="form.get('lactationNameIt')?.touched && form.get('lactationNameIt')?.invalid" class="text-danger">
-                <div *ngIf="form.get('lactationNameIt')?.errors?.['required']">Lactation Name is required.</div>
                 <div *ngIf="form.get('lactationNameIt')?.errors?.['pattern']">Only alphabets and spaces allowed.</div>
+                <div *ngIf="form.get('lactationNameIt')?.errors?.['minlength']">Minimum 3 characters.</div>
+                <div *ngIf="form.get('lactationNameIt')?.errors?.['maxlength']">Maximum 50 characters.</div>
               </div>
             </div>
           </div>

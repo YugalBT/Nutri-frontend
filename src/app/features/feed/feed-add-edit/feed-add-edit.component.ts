@@ -7,6 +7,7 @@ import { CommonService } from '../../../shared/services/common.service';
 import { SharedModule } from '../../../shared/shared.module';
 import { FarmList } from '../../../core/models/farm-list';
 import { PERMISSIONS } from '../../../core/constants/permissions.constants';
+import { CustomValidators } from '../../../core/helpers/validators';
 
 
 declare var bootstrap: any;
@@ -56,19 +57,18 @@ export class FeedAddEditComponent implements OnInit, OnDestroy {
   private initializeForm() {
     this.form = this.fb.group({
       farmId: ['', Validators.required],
-      feedName: ['', Validators.required],
-      category: ['', Validators.required],
-
-      dryMatter: [null,Validators.required],
-      protein: [null,Validators.required],
-      ndf: [null,Validators.required],
-      energy: [null,Validators.required],
-      pricePerKg: [null,Validators.required],
-      adf: [null, Validators.required],
-      fatContent: [null, Validators.required],
-      calcium: [null, Validators.required],
-      phosphorus: [null, Validators.required],
-      starch: [null,Validators.required]
+      feedName: ['', [Validators.required,Validators.min(3),Validators.max(20),Validators.pattern(/^(?=.*\p{L})[\p{L} _.'-]+$/u)]],
+      category: ['', [Validators.required,Validators.min(3),Validators.max(20),Validators.pattern(/^(?=.*\p{L})[\p{L} _.'-]+$/u)]],
+      dryMatter: [null,[Validators.required,CustomValidators.maxDigits(20),Validators.pattern(/^(?:0|[1-9]\d*)(?:\.\d+)?$/)]],
+      protein: [null,[Validators.required,CustomValidators.maxDigits(20),Validators.pattern(/^(?:0|[1-9]\d*)(?:\.\d+)?$/)]],
+      ndf: [null,[Validators.required,CustomValidators.maxDigits(20),Validators.pattern(/^(?:0|[1-9]\d*)(?:\.\d+)?$/)]],
+      energy: [null,[Validators.required,CustomValidators.maxDigits(20),Validators.pattern(/^(?:0|[1-9]\d*)(?:\.\d+)?$/)]],
+      pricePerKg: [null,[Validators.required,CustomValidators.maxDigits(20),Validators.pattern(/^(?:0|[1-9]\d*)(?:\.\d+)?$/)]],
+      adf: [null, [Validators.required,CustomValidators.maxDigits(20),Validators.pattern(/^(?:0|[1-9]\d*)(?:\.\d+)?$/)]],
+      fatContent: [null, [Validators.required,CustomValidators.maxDigits(20),Validators.pattern(/^(?:0|[1-9]\d*)(?:\.\d+)?$/)]],
+      calcium: [null, [Validators.required,CustomValidators.maxDigits(20),Validators.pattern(/^(?:0|[1-9]\d*)(?:\.\d+)?$/)]],
+      phosphorus: [null, [Validators.required,CustomValidators.maxDigits(20),Validators.pattern(/^(?:0|[1-9]\d*)(?:\.\d+)?$/)]],
+      starch: [null,[Validators.required,CustomValidators.maxDigits(20),Validators.pattern(/^(?:0|[1-9]\d*)(?:\.\d+)?$/)]]
     });
   }
 

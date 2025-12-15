@@ -9,6 +9,7 @@ import { CommonService } from '../../../shared/services/common.service';
 import { ApiResponse } from '../../../core/models/api-response';
 import { FeedList } from '../../../core/models/feed-list';
 import { PERMISSIONS } from '../../../core/constants/permissions.constants';
+import { CustomValidators } from '../../../core/helpers/validators';
 
 declare var bootstrap: any;
 
@@ -59,7 +60,7 @@ export class RationAddEditComponent implements OnInit, OnDestroy {
     this.form = this.fb.group({
       farmId: ['', Validators.required],
       animalGroupId: ['', Validators.required],
-      name: ['', [Validators.required, Validators.pattern(/^[A-Za-z ]+$/)]],
+      name: ['', [Validators.required,Validators.min(3),Validators.max(20),Validators.pattern(/^[A-Za-z ]+$/)]],
       rationItems: this.fb.array([ this.createRationItem() ])
     });
   }
@@ -67,8 +68,8 @@ export class RationAddEditComponent implements OnInit, OnDestroy {
 
   createRationItem(item?: any): FormGroup {
   return this.fb.group({
-    feedId: [item?.feedId ?? '', Validators.required],
-    perKg: [item?.perKg ?? '', Validators.required],
+    feedId: [item?.feedId ?? '',Validators.required],
+    perKg: [item?.perKg ?? '',CustomValidators.maxDigits(20),  Validators.required],
 
     dryMatter: [item?.dryMatter ?? null],
     protein: [item?.protein ?? null],

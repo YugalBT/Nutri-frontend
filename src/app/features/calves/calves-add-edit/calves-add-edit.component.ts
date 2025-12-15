@@ -9,6 +9,7 @@ import { FeedList } from '../../../core/models/feed-list';
 import { DayList } from '../../../core/models/day-list';
 import { SharedModule } from '../../../shared/shared.module';
 import { PERMISSIONS } from '../../../core/constants/permissions.constants';
+import { CustomValidators } from '../../../core/helpers/validators';
 
 declare var bootstrap: any;
 
@@ -62,8 +63,8 @@ export class CalvesAddEditComponent implements OnInit, OnDestroy {
       dayId: ['', Validators.required],
       ageClass: ['', Validators.required],
       feedId: ['', Validators.required],
-      kgPerHeadPerDay: ['', Validators.required],
-      costPerHeadPerDay: ['', Validators.required]
+      kgPerHeadPerDay: ['',CustomValidators.maxDigits(20), Validators.required],
+      costPerHeadPerDay: ['',CustomValidators.maxDigits(20), Validators.required]
     });
   }
 

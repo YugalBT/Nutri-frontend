@@ -46,6 +46,20 @@ export const CustomValidators = {
       const valid = regex.test(control.value);
       return valid ? null : { [errorKey]: true };
     };
+  },
+   maxDigits: (max: number): ValidatorFn => {
+    return (control: AbstractControl): ValidationErrors | null => {
+      if (control.value === null || control.value === undefined) return null;
+
+      const digits = control.value
+        .toString()
+        .replace('.', '')
+        .replace(/^0+/, '');
+
+      return digits.length > max
+        ? { maxDigits: true }
+        : null;
+    };
   }
 
 };

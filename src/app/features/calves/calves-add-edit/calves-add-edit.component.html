@@ -40,12 +40,18 @@
             <div class="col-md-4">
               <label class="form-label">Kg Per Head Per Day <sup class="text-danger">*</sup></label>
               <input type="number" min="0" class="form-control" formControlName="kgPerHeadPerDay" />
+              <div *ngIf="form.get('kgPerHeadPerDay')?.errors?.['maxDigits']" class="text-danger">
+              Maximum 20 digits are allowed.
+            </div> 
             </div>
 
             <!-- Cost -->
             <div class="col-md-4">
               <label class="form-label">Cost Per Head Per Day <sup class="text-danger">*</sup></label>
               <input type="number" min="0" class="form-control" formControlName="costPerHeadPerDay" />
+              <div *ngIf="form.get('costPerHeadPerDay')?.errors?.['maxDigits']" class="text-danger">
+              Maximum 20 digits are allowed.
+            </div> 
             </div>
 
           </div>

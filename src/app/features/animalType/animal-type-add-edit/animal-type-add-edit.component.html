@@ -35,9 +35,9 @@
                 />
 
                 <div *ngIf="form.get('typeNameIt')?.touched && form.get('typeNameIt')?.invalid" class="text-danger">
-                  <div *ngIf="form.get('typeNameIt')?.errors?.['required']">Italian name is required.</div>
+                  <!-- <div *ngIf="form.get('typeNameIt')?.errors?.['required']">Italian name is required.</div> -->
                   <div *ngIf="form.get('typeNameIt')?.errors?.['minlength']">Minimum 3 characters.</div>
-                  <div *ngIf="form.get('typeNameIt')?.errors?.['maxlength']">Maximum 50 characters.</div>
+                  <div *ngIf="form.get('typeNameIt')?.errors?.['maxlength']">Maximum 20 characters.</div>
                   <div *ngIf="form.get('typeNameIt')?.errors?.['pattern']">Animal Type Name can only contain alphabets.</div>
                 </div>
               </div>
@@ -59,7 +59,7 @@
                 <div *ngIf="form.get('typeNameEn')?.touched && form.get('typeNameEn')?.invalid" class="text-danger">
                   <div *ngIf="form.get('typeNameEn')?.errors?.['required']">English name is required.</div>
                   <div *ngIf="form.get('typeNameEn')?.errors?.['minlength']">Minimum 2 characters.</div>
-                  <div *ngIf="form.get('typeNameEn')?.errors?.['maxlength']">Maximum 50 characters.</div>
+                  <div *ngIf="form.get('typeNameEn')?.errors?.['maxlength']">Maximum 20 characters.</div>
                   <div *ngIf="form.get('typeNameEn')?.errors?.['pattern']">Animal Type Name can only contain alphabets.</div>
                 </div>
               </div>
