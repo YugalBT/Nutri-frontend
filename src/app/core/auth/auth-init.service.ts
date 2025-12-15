@@ -28,8 +28,6 @@ export class AuthInitService {
       }));
       return;
     }
-
-    // No token/user: ensure logged out
     this.store.dispatch(AuthActions.logout());
   }
 }

@@ -66,7 +66,7 @@
               <!-- FEED DROPDOWN -->
               <div class="col-md-4">
                 <label class="form-label">Select Feed <sup class="text-danger">*</sup></label>
-                <select class="form-select"  formControlName="feedId">
+                <select class="form-select" (change)="onFeedChangeUI(item)"  formControlName="feedId">
                   <option [ngValue]="null">Select Feed</option>
                   <option *ngFor="let feed of feeds" [ngValue]="feed.feedId">
                     {{ feed.feedName }}
@@ -91,22 +91,20 @@
                 <div class="form-control-plaintext">{{ item.get('dryMatter')?.value ?? '-' }}</div>
               </div>
 
-              <!-- CP -->
               <div class="col-md-1">
                 <label class="form-label">CP</label>
                 <div class="form-control-plaintext">{{ item.get('protein')?.value ?? '-' }}</div>
               </div>
 
-              <!-- PRICE (₹/kg) - if you have a price field, replace with actual control -->
               <div class="col-md-1">
-                <label class="form-label">₹/kg</label>
+                <label class="form-label">€/kg</label>
                 <div class="form-control-plaintext">
                   <!-- show perKg as example price placeholder; adjust if you have a price field -->
-                  {{ item.get('perKg')?.value ? ('₹' + (item.get('perKg')?.value | number:'1.0-2')) : '₹0' }}
+                  {{ item.get('perKg')?.value ? ('€' + (item.get('perKg')?.value | number:'1.0-2')) : '₹0' }}
                 </div>
               </div>
 
-              <!-- ADD / REMOVE -->
+
               <div class="col-md-1 d-flex gap-2">
                 <button type="button" class="btn btn-success btn-sm" (click)="addRationItem()"><svg width="16"
                     height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
