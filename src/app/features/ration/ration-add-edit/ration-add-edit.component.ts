@@ -1,5 +1,5 @@
 import { Component, ElementRef, EventEmitter, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
-import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { forkJoin, Observable, of, Subscription } from 'rxjs';
 import { catchError, finalize, map, tap } from 'rxjs/operators';
 import { SharedModule } from '../../../shared/shared.module';
@@ -64,16 +64,18 @@ export class RationAddEditComponent implements OnInit, OnDestroy {
     });
   }
 
-  // create ration item includes dryMatter & protein so we can show them in UI
+
   createRationItem(item?: any): FormGroup {
-    return this.fb.group({
-      feedId: [ item?.feedId != null ? String(item.feedId) : '', Validators.required ],
-      perKg: [ item?.perKg ?? '', Validators.required ],
-      // read-only display controls
-      // dryMatter: [ item?.dryMatter ?? null ],
-      // protein: [ item?.protein ?? null ]
-    });
-  }
+  return this.fb.group({
+    feedId: [item?.feedId ?? '', Validators.required],
+    perKg: [item?.perKg ?? '', Validators.required],
+
+    dryMatter: [item?.dryMatter ?? null],
+    protein: [item?.protein ?? null],
+    pricePerKg: [item?.pricePerKg ?? null]
+  });
+}
+
 
   get rationItems(): FormArray {
     return this.form.get('rationItems') as FormArray;
@@ -86,8 +88,38 @@ export class RationAddEditComponent implements OnInit, OnDestroy {
   removeRationItem(i: number) {
     this.rationItems.removeAt(i);
   }
+onFeedChangeUI(item: AbstractControl) {
+  debugger;
+  const group = item as FormGroup;
 
-  // ---------- loaders that RETURN observables (cached when available) ----------
+  const feedId = group.get('feedId')?.value;
+
+  const selectedFeed = this.feeds.find(
+    f => f.feedId === feedId
+  );
+
+  if (!selectedFeed) {
+    group.patchValue({
+      dryMatter: null,
+      protein: null,
+      pricePerKg: null
+    });
+    return;
+  }
+
+  group.patchValue({
+    dryMatter: selectedFeed.dryMatter,
+    protein: selectedFeed.protein,
+    pricePerKg: selectedFeed.pricePerKg
+  });
+}
+
+
+
+
+
+
+
   private loadFarmList(force = false): Observable<any[]> {
     if (!force && this.farms.length > 0) return of(this.farms);
     this.farmsLoading = true;
@@ -170,7 +202,8 @@ export class RationAddEditComponent implements OnInit, OnDestroy {
                 feedId: it.feedId != null ? String(it.feedId) : '',
                 perKg: it.perKg,
                 dryMatter: it.dryMatter,
-                protein: it.protein
+                protein: it.protein,
+                pricePerKg: it.pricePerKg
               };
               this.rationItems.push(this.createRationItem(normalized));
             });

@@ -10,6 +10,7 @@ import { ConfirmDialogService } from '../../shared/services/confirm-dialog.servi
 import { ToastService } from '../../shared/services/toast.service';
 import { Router } from '@angular/router';
 import { Constants } from '../../shared/utils/constants/constants';
+import { ROUTE_CONST } from '../constants/route.constants';
 
 
 
@@ -70,7 +71,7 @@ export class AuthService {
         this.toast.success(Constants.LOGOUT_SUCCESS);
         //const normalizedCompany = companyCode ? companyCode.toString().replace(/^\/+|\/+$/g, '') : '';
         // const target = normalizedCompany ? `/${normalizedCompany}/login` : '/404';
-        this.router.navigateByUrl('/login');
+        this.router.navigateByUrl(ROUTE_CONST.LOGIN);
       }
     });
   }

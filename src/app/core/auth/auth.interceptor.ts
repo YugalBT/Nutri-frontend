@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { catchError, throwError } from 'rxjs';
 import { TokenService } from '../../shared/services/token.service';
 import { AuthService } from './auth.service';
+import { ROUTE_CONST } from '../constants/route.constants';
 
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const tokenService = inject(TokenService);
@@ -24,7 +25,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
     catchError((error: HttpErrorResponse) => {
       if (error.status === 401) {
         authService.logout();  
-        router.navigate(['/login']);
+        router.navigate([ROUTE_CONST.LOGIN]);
       }
       return throwError(() => error);
     })
