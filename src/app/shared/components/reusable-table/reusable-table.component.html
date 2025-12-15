@@ -64,9 +64,24 @@
             </ng-container>
 
             <!-- TEXT -->
+            <!-- TEXT -->
+            <!-- TEXT -->
             <ng-container *ngIf="cell.type === 'text'">
-              {{ cell.value }}
+
+              <!-- Clickable field -->
+              <a style="color:#2CA28F !important ;" *ngIf="clickableField === (columnFields?.[i] || col.toLowerCase())" href="javascript:void(0)"
+                class=" fw-semibold" (click)="onCellClick(columnFields?.[i] || col.toLowerCase(), row)">
+                {{ cell.value }}
+              </a>
+
+              <!-- Normal text -->
+              <span *ngIf="clickableField !== (columnFields?.[i] || col.toLowerCase())">
+                {{ cell.value }}
+              </span>
+
             </ng-container>
+
+
 
           </ng-container>
         </td>
@@ -124,13 +139,8 @@
       </li>
     </ul>
   </nav> -->
-<mat-paginator
-  *ngIf="pageable && data && data.length > 0"
-  [length]="totalRecords"
-  [pageSize]="pageSize"
-  [pageIndex]="pageIndex"
-  [pageSizeOptions]="[5, 10, 25, 50, 100]"
-  (page)="onPaginate($event)">
-</mat-paginator>
+  <mat-paginator *ngIf="pageable && data && data.length > 0" [length]="totalRecords" [pageSize]="pageSize"
+    [pageIndex]="pageIndex" [pageSizeOptions]="[5, 10, 25, 50, 100]" (page)="onPaginate($event)">
+  </mat-paginator>
 
 </div>

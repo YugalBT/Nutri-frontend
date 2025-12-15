@@ -117,6 +117,18 @@ export const routes: Routes = [
             .then(m => m.RationListComponent),
       },
       {
+        path: 'ration/items',
+        canActivate: [permissionGuard],
+        data: {
+          requiredPermissions: [
+            PERMISSIONS.RationView
+          ]
+        },
+        loadComponent: () =>
+          import('./features/ration/ration-items/ration-items.component')
+            .then(m => m.RationItemsComponent),
+      },
+      {
         path: 'module',
         canActivate: [permissionGuard],
         data: { requiredPermissions: [PERMISSIONS.ModuleView, PERMISSIONS.ModuleEdit, PERMISSIONS.ModuleAdd, PERMISSIONS.ModuleDelete] },
@@ -149,7 +161,7 @@ export const routes: Routes = [
             .then(m => m.CalvesListComponent),
       },
 
-       {
+      {
         path: 'animalType',
         canActivate: [permissionGuard],
         data: { requiredPermissions: [PERMISSIONS.AnimalTypeAdd, PERMISSIONS.AnimalTypeEdit, PERMISSIONS.AnimalTypeView, PERMISSIONS.AnimalTypeDelete] },
@@ -157,7 +169,7 @@ export const routes: Routes = [
           import('./features/animalType/animal-type-list/animal-type-list.component')
             .then(m => m.AnimalTypeListComponent),
       },
-       {
+      {
         path: 'animalLactationStage',
         canActivate: [permissionGuard],
         data: { requiredPermissions: [PERMISSIONS.AnimalLactationAdd, PERMISSIONS.AnimalLactationEdit, PERMISSIONS.AnimalLactationView, PERMISSIONS.AnimalLactationDelete] },
@@ -166,7 +178,7 @@ export const routes: Routes = [
             .then(m => m.AnimalLactationListComponent),
       },
 
-       {
+      {
         path: 'animalGroup',
         canActivate: [permissionGuard],
         data: { requiredPermissions: [PERMISSIONS.AnimalGroupAdd, PERMISSIONS.AnimalGroupEdit, PERMISSIONS.AnimalGroupView, PERMISSIONS.AnimalGroupDelete] },

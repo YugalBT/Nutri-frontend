@@ -42,4 +42,9 @@ export class RationService {
        const url = `${API_ENDPOINTS.RATION.DELETE}?RationId=${rationId}`;
        return this.http.post<any>(url, {});
      }
+
+      getRationItems(rationId: string): Observable<ApiResponse<any>> {
+       const url = `${API_ENDPOINTS.COMMON_API.GET_RATION_ITEMS}?RationId=${rationId}`;
+       return this.http.get<any>(url, {});
+     }
 }

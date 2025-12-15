@@ -13,6 +13,8 @@ import { RationAddEditComponent } from "../ration-add-edit/ration-add-edit.compo
 import { GlobalSearchComponent } from '../../../shared/components/global-search/global-search.component';
 import { ReusableTableComponent } from '../../../shared/components/reusable-table/reusable-table.component';
 import { CommonService } from '../../../shared/services/common.service';
+import { Router } from '@angular/router';
+import { ROUTE_CONST } from '../../../core/constants/route.constants';
 
 @Component({
   selector: 'app-ration-list',
@@ -46,7 +48,8 @@ export class RationListComponent {
     private toast: ToastService,
     private confirm: ConfirmDialogService,
     private store: Store,
-    private commonService : CommonService
+    private commonService : CommonService,
+    private router: Router
   ) {
     this.setColumns();
     this.langSub = this.translate.lang$.subscribe(() => this.setColumns());
@@ -169,16 +172,27 @@ export class RationListComponent {
         this.subs.push(sub);
       });
   }
+  onCellClick(event: { field: string; row: any }): void {
+  if (event.field !== 'rationName') return;
+
+  this.router.navigate([ROUTE_CONST.RATION_ITEMS], {
+    queryParams: {
+      rationId: event.row.rationId
+    }
+  });
+}
+
+
 
   private setColumns(): void {
     this.columns = [
-      'Farm Name',
       'Ration Name',
+      'Farm Name',
       'Total Ration Items',
       'animal GroupName En',
       'Status'
     ];
-    this.columnFields = ['farmName', 'rationName', 'totalItems','animalGroupNameEn', 'isActive'];
+    this.columnFields = ['rationName','farmName',  'totalItems','animalGroupNameEn', 'isActive'];
   }
 
   ngOnDestroy(): void {

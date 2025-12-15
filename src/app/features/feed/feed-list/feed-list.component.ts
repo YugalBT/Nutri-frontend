@@ -161,13 +161,11 @@ export class FeedListComponent {
       'Feed Name',
       'Category',
       'Dry Matter (%)',
-      'Protein (%)',
+      'Crude Protein (%)',
       'NDF (%)',
-      'Energy (kcal/kg)',
+      'Energy (MJ/kg)',
       'Price Per Kg (€)',
-      'ADF (%)',
-      'Fat Content (%)',
-      'Calcium (%)',
+      
       'Phosphorus (%)',
       'Starch (%)',
       'Status'
@@ -182,9 +180,6 @@ export class FeedListComponent {
       'ndf',
       'energy',
       'pricePerKg',
-      'adf',
-      'fatContent',
-      'calcium',
       'phosphorus',
       'starch',
       'isActive'

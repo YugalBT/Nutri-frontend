@@ -29,7 +29,9 @@
       [data]="ration"
       [columnFields]="columnFields"
       [pageable]="true"
-      [totalRecords]="totalRecords"
+      [totalRecords]="totalRecords",
+      [clickableField]="'rationName'"
+      (cellClick)="onCellClick($event)"
       [pageSize]="pageSize"
       [pageIndex]="pageIndex"
       (pageChange)="onPageChange($event)"

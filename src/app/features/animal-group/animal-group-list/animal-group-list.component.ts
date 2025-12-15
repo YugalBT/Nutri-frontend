@@ -63,8 +63,8 @@ export class AnimalGroupListComponent implements OnInit, OnDestroy {
   }
 
   private setColumns(): void {
-    this.columns = ['Farm Name', 'Group Name (EN)', 'Group Name (IT)', 'Animal Type', 'Lactation', 'Status'];
-    this.columnFields = ['farmName', 'animalGroupNameEn', 'animalGroupNameIt', 'typeNameEn', 'lactationNameEn', 'isActive'];
+    this.columns = ['Farm Name', 'Group Name', 'Animal Type', 'Lactation Stage', 'Status'];
+    this.columnFields = ['farmName', 'animalGroupNameEn',  'typeNameEn', 'lactationNameEn', 'isActive'];
   }
 
   private loadUserPermissions(): void {

@@ -34,7 +34,7 @@ export class ModuleListComponent implements OnInit, OnDestroy {
   modulesLoading = false;
 
   columns: string[] = ['Module Name', 'Display Name', 'Permissions'];
-  columnFields: string[] = ['moduleName', 'moduleDisplayName','permissionsText'];
+  columnFields: string[] = ['moduleNameEn', 'moduleDisplayName','permissionsText'];
 
   totalRecords = 0;
   pageSize = 10;

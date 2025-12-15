@@ -38,7 +38,8 @@ export const API_ENDPOINTS = {
     GET_ALL_Days: '/Common/GetAllDay',
     GET_ALL_ANIMALTYPE: '/Common/GetAllAnimalType',
     GET_ALL_ANIMAL_LACTATION: '/Common/GetAllAnimalLactation',
-    GET_ALL_ANIMAL_GROUP: '/Common/GetAllAnimalGroup'
+    GET_ALL_ANIMAL_GROUP: '/Common/GetAllAnimalGroup',
+    GET_RATION_ITEMS: '/Common/GetRationByRationd',
   },
   
   Module: {

@@ -30,6 +30,9 @@ export class ReusableTableComponent implements OnChanges {
   @Output() deleteRow = new EventEmitter<any>();
   @Output() toggleActive = new EventEmitter<{ row: any; isActive: boolean }>();
 
+  @Input() clickableField?: string;
+@Output() cellClick = new EventEmitter<{ field: string; row: any }>();
+
   ngOnChanges(changes: SimpleChanges) {
     if (changes['pageIndex'] && !changes['pageIndex'].isFirstChange()) {
       const incoming = changes['pageIndex'].currentValue as number;
@@ -88,6 +91,11 @@ export class ReusableTableComponent implements OnChanges {
       isActive: event.target.checked
     });
   }
+
+  
+onCellClick(field: string, row: any): void {
+  this.cellClick.emit({ field, row });
+}
 
   // FIXED: Correct paginator event
   onPaginate(event: PageEvent) {
