@@ -32,6 +32,12 @@
               <div *ngIf="form.get('feedName')?.touched && form.get('feedName')?.invalid" class="text-danger">
                 Feed Name is required.
               </div>
+               <div *ngIf="form.get('feedName')?.errors?.['pattern']" class="text-danger">
+                FeedName can only contain alphabets ,hyphen and spaces.
+               </div>
+                <div *ngIf="form.get('feedName')?.errors?.['minlength']">Minimum 3 characters.</div>
+                          <div *ngIf="form.get('feedName')?.errors?.['maxlength']">Maximum 20 characters.</div>
+              
             </div>
 
             <div class="col-md-4">
@@ -40,6 +46,11 @@
               <div *ngIf="form.get('category')?.touched && form.get('category')?.invalid" class="text-danger">
                 Category is required.
               </div>
+                <div *ngIf="form.get('category')?.errors?.['pattern']" class="text-danger">
+                Category can only contain alphabets ,hyphen and spaces.
+               </div>
+                 <div *ngIf="form.get('category')?.errors?.['minlength']">Minimum 3 characters.</div>
+                          <div *ngIf="form.get('category')?.errors?.['maxlength']">Maximum 20 characters.</div>
             </div>
           </div>
 
@@ -52,7 +63,13 @@
               <div *ngIf="form.get('dryMatter')?.touched && form.get('dryMatter')?.invalid" class="text-danger">
                 Dry Matter is required.
               </div>
-            </div>
+                <div *ngIf="form.get('dryMatter')?.errors?.['pattern']" class="text-danger">
+                  DryMatter only accepts positive value.
+                  </div>
+            <div *ngIf="form.get('dryMatter')?.errors?.['maxDigits']" class="text-danger">
+              Maximum 20 digits are allowed.
+            </div>      
+           </div>
 
             <div class="col-md-4">
               <label class="form-label">Crude Protein (%) <sup class="text-danger">*</sup></label>
@@ -61,6 +78,12 @@
               <div *ngIf="form.get('protein')?.touched && form.get('protein')?.invalid" class="text-danger">
                 Protein is required.
               </div>
+                <div *ngIf="form.get('protein')?.errors?.['pattern']" class="text-danger">
+                  Protein only accepts positive value.
+                  </div>
+                  <div *ngIf="form.get('protein')?.errors?.['maxDigits']" class="text-danger">
+              Maximum 20 digits are allowed.
+            </div> 
             </div>
 
             <div class="col-md-4">
@@ -70,6 +93,12 @@
               <div *ngIf="form.get('ndf')?.touched && form.get('ndf')?.invalid" class="text-danger">
                 NDF is required.
               </div>
+                <div *ngIf="form.get('ndf')?.errors?.['pattern']" class="text-danger">
+                  NDF only accepts positive value.
+                  </div>
+                  <div *ngIf="form.get('ndf')?.errors?.['maxDigits']" class="text-danger">
+              Maximum 20 digits are allowed.
+            </div> 
             </div>
           </div>
 
@@ -82,6 +111,12 @@
               <div *ngIf="form.get('energy')?.touched && form.get('energy')?.invalid" class="text-danger">
                 Energy is required.
               </div>
+                <div *ngIf="form.get('energy')?.errors?.['pattern']" class="text-danger">
+                  Energy only accepts positive value.
+                  </div>
+                  <div *ngIf="form.get('energy')?.errors?.['maxDigits']" class="text-danger">
+              Maximum 20 digits are allowed.
+            </div> 
             </div>
 
             <div class="col-md-4">
@@ -91,6 +126,12 @@
               <div *ngIf="form.get('pricePerKg')?.touched && form.get('pricePerKg')?.invalid" class="text-danger">
                 Price Per Kg is required.
               </div>
+                <div *ngIf="form.get('pricePerKg')?.errors?.['pattern']" class="text-danger">
+                  Price Per Kg only accepts positive value.
+                  </div>
+                  <div *ngIf="form.get('pricePerKg')?.errors?.['maxDigits']" class="text-danger">
+              Maximum 20 digits are allowed.
+            </div> 
             </div>
 
             <div class="col-md-4">
@@ -100,6 +141,12 @@
               <div *ngIf="form.get('adf')?.touched && form.get('adf')?.invalid" class="text-danger">
                 ADF is required.
               </div>
+                <div *ngIf="form.get('adf')?.errors?.['pattern']" class="text-danger">
+                  ADF only accepts positive value.
+                  </div>
+                  <div *ngIf="form.get('adf')?.errors?.['maxDigits']" class="text-danger">
+              Maximum 20 digits are allowed.
+            </div> 
             </div>
           </div>
 
@@ -112,6 +159,12 @@
               <div *ngIf="form.get('fatContent')?.touched && form.get('fatContent')?.invalid" class="text-danger">
                 Fat Content is required.
               </div>
+                <div *ngIf="form.get('fatContent')?.errors?.['pattern']" class="text-danger">
+                  Fat Content only accepts positive value.
+                  </div>
+                  <div *ngIf="form.get('fatContent')?.errors?.['maxDigits']" class="text-danger">
+              Maximum 20 digits are allowed.
+            </div> 
             </div>
 
             <div class="col-md-4">
@@ -121,6 +174,12 @@
               <div *ngIf="form.get('calcium')?.touched && form.get('calcium')?.invalid" class="text-danger">
                 Calcium is required.
               </div>
+                <div *ngIf="form.get('calcium')?.errors?.['pattern']" class="text-danger">
+                  Calcium only accepts positive value.
+                  </div>
+                  <div *ngIf="form.get('dryMatter')?.errors?.['maxDigits']" class="text-danger">
+              Maximum 20 digits are allowed.
+            </div> 
             </div>
 
             <div class="col-md-4">
@@ -130,6 +189,12 @@
               <div *ngIf="form.get('phosphorus')?.touched && form.get('phosphorus')?.invalid" class="text-danger">
                 Phosphorus is required.
               </div>
+                <div *ngIf="form.get('phosphorus')?.errors?.['pattern']" class="text-danger">
+                  Phosphorus only accepts positive value.
+                  </div>
+                  <div *ngIf="form.get('phosphorus')?.errors?.['maxDigits']" class="text-danger">
+              Maximum 20 digits are allowed.
+            </div> 
             </div>
           </div>
           <div class="row g-3 mt-2">
@@ -140,6 +205,12 @@
               <div *ngIf="form.get('starch')?.touched && form.get('starch')?.invalid" class="text-danger">
                 Starch is required.
               </div>
+                <div *ngIf="form.get('starch')?.errors?.['pattern']" class="text-danger">
+                  Starch only accepts positive value.
+                  </div>
+                  <div *ngIf="form.get('starch')?.errors?.['maxDigits']" class="text-danger">
+              Maximum 20 digits are allowed.
+            </div> 
             </div>
           </div>
         </form>

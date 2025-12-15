@@ -53,7 +53,7 @@ export class FarmAddEditComponent implements OnInit, OnDestroy {
       clientId: [null],
       farmName: ['', [Validators.required, Validators.pattern(/^[A-Za-z ]+$/)]],
      // town: ['', [Validators.required,Validators.pattern(/^[A-Za-z ]+$/)]],
-      country: ['', [Validators.required, Validators.pattern(/^[A-Za-z ]+$/)]],
+      country: ['', [Validators.required,CustomValidators.maxDigits(20),Validators.pattern(/^[A-Za-z ]+$/)]],
       milkPrice : ['',[Validators.required,
       Validators.pattern(/^[0-9]+(\.[0-9]+)?$/)] ],
       state :['',[Validators.required,Validators.pattern(/^[A-Za-z]+$/)]],

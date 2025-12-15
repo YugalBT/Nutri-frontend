@@ -37,10 +37,10 @@ export class AnimalTypeAddEditComponent implements OnInit{
       return;
     this.form = this.fb.group({
       typeNameIt: ['', 
-        [Validators.required, Validators.minLength(3),Validators.maxLength(50),
+        [Validators.minLength(3),Validators.maxLength(20),
         Validators.pattern(/^[A-Za-z]+$/)]],
       typeNameEn: ['', 
-        [Validators.required, Validators.minLength(3),Validators.maxLength(50),
+        [Validators.required, Validators.minLength(3),Validators.maxLength(20),
            Validators.pattern(/^[A-Za-z]+$/)]],
       animalTypeId: [''] 
     });

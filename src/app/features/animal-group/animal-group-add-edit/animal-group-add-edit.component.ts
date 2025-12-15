@@ -66,8 +66,8 @@ export class AnimalGroupAddEditComponent implements OnInit, OnDestroy {
       farmId: ['', Validators.required],
       animalTypeId: ['', Validators.required],
       animalLactationId: ['', Validators.required],
-      animalGroupNameEn: ['', [Validators.required, Validators.pattern(/^[A-Za-z\s]+$/)]],
-      animalGroupNameIt: ['', [Validators.required, Validators.pattern(/^[A-Za-z\s]+$/)]]
+      animalGroupNameEn: ['', [Validators.required,Validators.min(3),Validators.max(20),Validators.pattern(/^[A-Za-z\s]+$/)]],
+      animalGroupNameIt: ['', [Validators.min(3),Validators.max(20), Validators.pattern(/^[A-Za-z\s]+$/)]]
     });
   }
 

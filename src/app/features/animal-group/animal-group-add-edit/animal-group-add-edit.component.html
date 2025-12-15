@@ -62,6 +62,8 @@
                                 <div *ngIf="form.get('animalGroupNameEn')?.errors?.['required']">Name is required.</div>
                                 <div *ngIf="form.get('animalGroupNameEn')?.errors?.['pattern']">Only alphabets & spaces
                                     allowed.</div>
+                          <div *ngIf="form.get('animalGroupNameEn')?.errors?.['minlength']">Minimum 3 characters.</div>
+                          <div *ngIf="form.get('animalGroupNameEn')?.errors?.['maxlength']">Maximum 50 characters.</div>
                             </div>
                         </div>
 
@@ -72,9 +74,11 @@
                                 placeholder="Enter name in Italian">
                             <div *ngIf="form.get('animalGroupNameIt')?.touched && form.get('animalGroupNameIt')?.invalid"
                                 class="text-danger">
-                                <div *ngIf="form.get('animalGroupNameIt')?.errors?.['required']">Name is required.</div>
+                                <!-- <div *ngIf="form.get('animalGroupNameIt')?.errors?.['required']">Name is required.</div> -->
                                 <div *ngIf="form.get('animalGroupNameIt')?.errors?.['pattern']">Only alphabets & spaces
                                     allowed.</div>
+                              <div *ngIf="form.get('animalGroupNameIt')?.errors?.['minlength']">Minimum 3 characters.</div>
+                          <div *ngIf="form.get('animalGroupNameIt')?.errors?.['maxlength']">Maximum 50 characters.</div>
                             </div>
                         </div>
                     </div>
