@@ -66,7 +66,7 @@ export class ModuleAddEditComponent implements OnInit, OnDestroy {
   if (edit && data) {
     this.currentModuleId = data.moduleId;
     this.form.patchValue({
-      moduleNameEn: data.moduleName || '',      
+      moduleNameEn: data.moduleNameEn || '',      
       moduleNameIt: data.moduleNameIt || '',
       moduleIcon: data.moduleIcon || '',
       moduleUrl: data.moduleUrl || '',

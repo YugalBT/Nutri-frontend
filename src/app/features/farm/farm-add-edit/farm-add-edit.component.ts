@@ -58,7 +58,7 @@ export class FarmAddEditComponent implements OnInit, OnDestroy {
       Validators.pattern(/^[0-9]+(\.[0-9]+)?$/)] ],
       state :['',[Validators.required,Validators.pattern(/^[A-Za-z ]+$/)]],
       city : ['',[Validators.required,Validators.pattern(/^[A-Za-z]+$/)]],
-      streetAddress:['',Validators.required],
+      streetAddress:['',Validators.required,Validators.maxLength(20)],
       zipCode: ['', [CustomValidators.required(), CustomValidators.onlyNumbers(), CustomValidators.minLength(5), CustomValidators.maxLength(6)]],
     });
   }
