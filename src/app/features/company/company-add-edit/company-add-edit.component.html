@@ -78,18 +78,39 @@
                                     <sup style="color: #f00; font-size: 12px;">*</sup>
                                 </label>
 
-                                <input
+                                 <input
                                     #fileInput
                                     type="file"
                                     class="form-control"
-                                    (change)="onLogoChange($event)"
-                                    accept="image/*"
+                                    accept="image/png,image/jpeg"
+                                    appImageValidator
+                                    controlName="logo"
+                                    [width]="300"
+                                    [height]="300"
+                                    [maxSizeMB]="2"
                                 />
 
-                                <div *ngIf="form.get('logo')?.touched && form.get('logo')?.invalid" class="text-danger">
+                                 <div
+                                    class="text-danger mt-1"
+                                    *ngIf="form.get('logo')?.touched && form.get('logo')?.errors"
+                                >
+                                    <small *ngIf="form.get('logo')?.errors?.['required']">
                                     Logo is required
+                                    </small>
+
+                                    <small *ngIf="form.get('logo')?.errors?.['invalidType']">
+                                    Only PNG or JPG images are allowed
+                                    </small>
+
+                                    <small *ngIf="form.get('logo')?.errors?.['maxSizeExceeded']">
+                                    Image size must be less than 2 MB
+                                    </small>
+
+                                    <small *ngIf="form.get('logo')?.errors?.['invalidDimension']">
+                                    Image must be exactly 300 × 300 pixels
+                                    </small>
                                 </div>
-                                </div>
+                                                                </div>
 
                                 <div class="col-md-4 col-12" *ngIf="form.get('logo')?.value">
                                 <div class="logo-preview-wrapper">

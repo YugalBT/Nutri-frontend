@@ -14,11 +14,12 @@ import { CustomValidators } from '../../core/helpers/validators';
 import * as AuthActions from '../../state/auth/auth.actions';  
 import { CommonService } from '../../shared/services/common.service';
 import { PERMISSIONS } from '../../core/constants/permissions.constants';
+import { ImageValidatorDirective } from '../../image-validator.directive'; 
 
 @Component({
   selector: 'app-profile',
   standalone: true,
-  imports: [ReactiveFormsModule, SharedModule],
+  imports: [ReactiveFormsModule, SharedModule,ImageValidatorDirective ],
   templateUrl: './profile.component.html',
   styleUrls: ['./profile.component.css']
 })

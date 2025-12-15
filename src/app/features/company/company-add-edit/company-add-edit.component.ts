@@ -13,12 +13,14 @@ import { AddEditRoleService } from '../../../core/services/role/add-edit-role.se
 import { NgxSpinnerService } from 'ngx-spinner';
 import { CommonService } from '../../../shared/services/common.service';
 import { PERMISSIONS } from '../../../core/constants/permissions.constants';
+import { ImageValidatorDirective } from '../../../image-validator.directive';
+
 
 declare var bootstrap: any;
 @Component({
   selector: 'app-company-add-edit',
   standalone: true,
-  imports: [SharedModule, TranslatePipe],
+  imports: [SharedModule, TranslatePipe, ImageValidatorDirective],
   templateUrl: './company-add-edit.component.html',
   styleUrls: ['./company-add-edit.component.css']
 })
