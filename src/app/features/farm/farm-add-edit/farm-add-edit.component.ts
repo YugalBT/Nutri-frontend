@@ -49,19 +49,58 @@ export class FarmAddEditComponent implements OnInit, OnDestroy {
   }
 
   private initializeForm() {
-    this.form = this.fb.group({
-      clientId: [null],
-      farmName: ['', [Validators.required, Validators.pattern(/^[A-Za-z ]+$/)]],
-     // town: ['', [Validators.required,Validators.pattern(/^[A-Za-z ]+$/)]],
-      country: ['', [Validators.required,CustomValidators.maxDigits(20),Validators.pattern(/^[A-Za-z ]+$/)]],
-      milkPrice : ['',[Validators.required,
-      Validators.pattern(/^[0-9]+(\.[0-9]+)?$/)] ],
-      state :['',[Validators.required,Validators.pattern(/^[A-Za-z ]+$/)]],
-      city : ['',[Validators.required,Validators.pattern(/^[A-Za-z]+$/)]],
-      streetAddress:['',Validators.required,Validators.maxLength(20)],
-      zipCode: ['', [CustomValidators.required(), CustomValidators.onlyNumbers(), CustomValidators.minLength(5), CustomValidators.maxLength(6)]],
-    });
-  }
+  this.form = this.fb.group({
+    clientId: [null],
+
+    farmName: [
+      '',
+      [Validators.required, Validators.pattern(/^[A-Za-z ]+$/)]
+    ],
+
+    country: [
+      '',
+      [
+        Validators.required,
+        CustomValidators.maxDigits(20),
+        Validators.pattern(/^[A-Za-z ]+$/)
+      ]
+    ],
+
+    milkPrice: [
+      '',
+      [
+        Validators.required,
+        Validators.pattern(/^[0-9]+(\.[0-9]+)?$/)
+      ]
+    ],
+
+    state: [
+      '',
+      [Validators.required, Validators.pattern(/^[A-Za-z ]+$/)]
+    ],
+
+    city: [
+      '',
+      [Validators.required, Validators.pattern(/^[A-Za-z]+$/)]
+    ],
+
+    streetAddress: [
+      '',
+      [Validators.required, Validators.maxLength(20)] 
+    ],
+
+    zipCode: [
+      '',
+      [
+        CustomValidators.required(),
+        CustomValidators.onlyNumbers(),
+        CustomValidators.minLength(5),
+        CustomValidators.maxLength(6)
+      ]
+    ]
+  });
+}
+
 
   openModal(edit = false, data?: any) {
     this.isEdit = edit;
@@ -98,6 +137,7 @@ export class FarmAddEditComponent implements OnInit, OnDestroy {
       || !this.commonService.checkPermission(PERMISSIONS.FarmEdit))
         return;
     if (!this.form.valid) {
+      
       this.toast.warning('Please fill all required fields');
       return;
     }

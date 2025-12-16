@@ -16,7 +16,8 @@ export class ReusableTableComponent implements OnChanges {
 
   @Input() columns: string[] = [];
   @Input() columnFields?: string[];
-  @Input() data: any[] = [];
+  @Input() data: Record<string, any>[] = [];
+
   @Input() showActions: boolean = false;
 
   @Input() pageable: boolean = false;
@@ -94,8 +95,10 @@ export class ReusableTableComponent implements OnChanges {
 
   
 onCellClick(field: string, row: any): void {
+  if (this.clickableField && field !== this.clickableField) return;
   this.cellClick.emit({ field, row });
 }
+
 
   // FIXED: Correct paginator event
   onPaginate(event: PageEvent) {
