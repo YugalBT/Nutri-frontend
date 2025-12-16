@@ -115,7 +115,9 @@
                             </ng-container>
                         </div>
                         <div class="col-md-4">
-                            <label class="form-label">{{ 'users.password' | translate }} </label>
+                            <label class="form-label">{{ 'users.password' | translate }} 
+                                <sup style="color: #f00; font-size: 12px;" *ngIf="!isEdit">*</sup>
+                            </label>
                             <div class="input-group">
                                 <input [type]="showCurrent ? 'text' : 'password'" autocomplete="off"
                                     formControlName="password" class="form-control"
