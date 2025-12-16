@@ -47,8 +47,8 @@ export class AnimalLactationAddEditComponent {
 
   private initializeForm() {
     this.form = this.fb.group({
-      lactationNameEn: ['', [Validators.required,Validators.min(3),Validators.max(20), Validators.pattern(/^[A-Za-z\s]+$/)]],
-      lactationNameIt: ['', [Validators.min(3),Validators.max(20), Validators.pattern(/^[A-Za-z\s]+$/)]],
+      lactationNameEn: ['', [Validators.required,Validators.minLength(3),Validators.maxLength(20), Validators.pattern(/^[A-Za-z\s]+$/)]],
+      lactationNameIt: ['', [Validators.minLength(3),Validators.maxLength(20), Validators.pattern(/^[A-Za-z\s]+$/)]],
     });
   }
 
