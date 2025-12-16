@@ -26,8 +26,8 @@ import { PERMISSIONS } from '../../../core/constants/permissions.constants';
 })
 export class AnimalTypeListComponent implements OnInit, OnDestroy {
 
-  columns: string[] = ['Italian Name', 'English Name', 'Status'];
-  columnFields: string[] = ['typeNameIt', 'typeNameEn', 'isActive'];
+  columns: string[] = ['Animal Type(English)','Animal Type(Italian)', 'English Name', 'Status'];
+  columnFields: string[] = ['typeNameEn', 'typeNameIt', 'isActive'];
 
   animalTypes: any[] = [];
   
