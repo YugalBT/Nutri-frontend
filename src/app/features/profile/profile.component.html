@@ -13,19 +13,27 @@
 
 
           <div class="img-container">
-            <img *ngIf="imagePreview" [src]="imagePreview" class="profile-img" />
-            <span *ngIf="!imagePreview"><svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="116" height="120"
-                viewBox="0 0 512 512">
-                <path fill="#32BEA6"
-                  d="M7.9,256C7.9,119,119,7.9,256,7.9C393,7.9,504.1,119,504.1,256c0,137-111.1,248.1-248.1,248.1C119,504.1,7.9,393,7.9,256z">
-                </path>
-                <path fill="#FFF"
-                  d="M391.5,214.5H297v-93.9c0-4-3.2-7.2-7.2-7.2h-68.1c-4,0-7.2,3.2-7.2,7.2v93.9h-93.9c-4,0-7.2,3.2-7.2,7.2v69.2c0,4,3.2,7.2,7.2,7.2h93.9v93.4c0,4,3.2,7.2,7.2,7.2h68.1c4,0,7.2-3.2,7.2-7.2v-93.4h94.5c4,0,7.2-3.2,7.2-7.2v-69.2C398.7,217.7,395.4,214.5,391.5,214.5z">
-                </path>
-              </svg></span>
 
-            <label class="upload-btn">
-              <svg width="16" height="16" (click)="removeImage()" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            <!-- Image preview -->
+            <img *ngIf="profileForm.get('logo')?.value" [src]="profileForm.get('logo')?.value" class="profile-img" />
+
+            <!-- Placeholder -->
+            <span *ngIf="!profileForm.get('logo')?.value">
+              <svg xmlns="http://www.w3.org/2000/svg" width="116" height="120" viewBox="0 0 512 512">
+                <path fill="#32BEA6"
+                  d="M7.9,256C7.9,119,119,7.9,256,7.9C393,7.9,504.1,119,504.1,256c0,137-111.1,248.1-248.1,248.1C119,504.1,7.9,393,7.9,256z" />
+                <path fill="#FFF"
+                  d="M391.5,214.5H297v-93.9c0-4-3.2-7.2-7.2-7.2h-68.1c-4,0-7.2,3.2-7.2,7.2v93.9h-93.9c-4,0-7.2,3.2-7.2,7.2v69.2c0,4,3.2,7.2,7.2,7.2h93.9v93.4c0,4,3.2,7.2,7.2,7.2h68.1c4,0,7.2-3.2,7.2-7.2v-93.4h94.5c4,0,7.2-3.2,7.2-7.2v-69.2C398.7,217.7,395.4,214.5,391.5,214.5z" />
+              </svg>
+            </span>
+
+            <!-- SINGLE hidden file input -->
+            <input type="file" id="profileUpload" hidden accept="image/png,image/jpeg" appImageValidator
+              controlName="logo" [width]="300" [height]="300" [maxSizeMB]="2" />
+
+            <!-- DELETE (TRASH) — ACTUALLY DELETES -->
+            <button *ngIf="profileForm.get('logo')?.value" type="button" class="upload-btn" (click)="removeImage()">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                 stroke-linecap="round" stroke-linejoin="round">
                 <polyline points="3 6 5 6 21 6"></polyline>
                 <path d="M19 6l-1 14H6L5 6"></path>
@@ -33,22 +41,45 @@
                 <path d="M14 11v6"></path>
                 <path d="M9 6V4h6v2"></path>
               </svg>
+            </button>
 
-             
+            <!-- PLUS — UPLOAD / REPLACE -->
+            <label for="profileUpload" class="plus-btn">
+              +
             </label>
 
-           <!-- Upload / Plus button (only when no image) -->
-<label *ngIf="!imagePreview" class="plus-btn">
-  +
-  <input
-    type="file"
-    hidden
-    (change)="onProfileImageChange($event)" />
-</label>
-
           </div>
+
           <p class="form-label fw-bold mb-2">Profile Photo</p>
-          <small class="text-secondary">Allowed: PNG, JPG, JPEG</small>
+          <!-- Validation / Helper text -->
+          <ng-container *ngIf="profileForm.get('logo') as logoCtrl">
+
+            <!-- ERROR messages -->
+            <div class="text-danger mt-1" *ngIf="logoCtrl.touched && logoCtrl.errors">
+              <small *ngIf="logoCtrl.errors['required']">
+                Profile image is required
+              </small>
+
+              <small *ngIf="logoCtrl.errors['invalidType']">
+                Only PNG or JPG images are allowed
+              </small>
+
+              <small *ngIf="logoCtrl.errors['maxSizeExceeded']">
+                Image size must be less than 2 MB
+              </small>
+
+              <small *ngIf="logoCtrl.errors['invalidDimension']">
+                Image Dimensions must be exactly 300 × 300 pixels
+              </small>
+            </div>
+
+            <!-- DEFAULT helper text -->
+            <small class="text-secondary" *ngIf="!logoCtrl.touched || !logoCtrl.errors">
+              Allowed: PNG, JPG, JPEG
+            </small>
+
+          </ng-container>
+
         </div>
 
 
