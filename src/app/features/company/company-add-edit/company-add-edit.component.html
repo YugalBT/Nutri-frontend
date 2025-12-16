@@ -348,7 +348,9 @@
                             </div>
 
                             <div class="col-md-4 col-12">
-                                <label class="form-label">{{ 'company.password' | translate }}</label>
+                                <label class="form-label">{{ 'company.password' | translate }}
+                                    <sup style="color: #f00; font-size: 12px;" *ngIf="!isEdit">*</sup>
+                                </label>
                                 <div class="input-group">
                                     <input [type]="!showCurrent ? 'password' : 'text'" autocomplete="off"
                                         class="form-control" formControlName="password" placeholder="Enter password">
