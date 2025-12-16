@@ -9,6 +9,7 @@ import { ToastService } from '../../../shared/services/toast.service';
 import { CommonService } from '../../../shared/services/common.service';
 import { ApiResponse } from '../../../core/models/api-response';
 import { PERMISSIONS } from '../../../core/constants/permissions.constants';
+import { CustomValidators } from '../../../core/helpers/validators';
 
 declare var bootstrap: any;
 
@@ -66,8 +67,11 @@ export class AnimalGroupAddEditComponent implements OnInit, OnDestroy {
       farmId: ['', Validators.required],
       animalTypeId: ['', Validators.required],
       animalLactationId: ['', Validators.required],
-      animalGroupNameEn: ['', [Validators.required,Validators.min(3),Validators.max(20),Validators.pattern(/^[A-Za-z\s]+$/)]],
-      animalGroupNameIt: ['', [Validators.min(3),Validators.max(20), Validators.pattern(/^[A-Za-z\s]+$/)]]
+      animalGroupNameEn: ['', [Validators.required, Validators.min(3), Validators.max(20), Validators.pattern(/^[A-Za-z\s]+$/)]],
+      animalGroupNameIt: ['', [Validators.min(3), Validators.max(20), Validators.pattern(/^[A-Za-z\s]+$/)]],
+      numberOfAnimal: ['', [Validators.required, CustomValidators.maxDigits(20)]],
+      avgMilkPerDay: ['', [Validators.required, CustomValidators.maxDigits(20)]],
+
     });
   }
 
@@ -154,9 +158,10 @@ export class AnimalGroupAddEditComponent implements OnInit, OnDestroy {
             animalTypeId: data.animalTypeId != null ? String(data.animalTypeId) : '',
             animalLactationId: data.animalLactationId != null ? String(data.animalLactationId) : '',
             animalGroupNameEn: data.animalGroupNameEn,
-            animalGroupNameIt: data.animalGroupNameIt
+            animalGroupNameIt: data.animalGroupNameIt,
+            numberOfAnimal: data.numberOfAnimal,
+            avgMilkPerDay: data.avgMilkPerDay,
           });
-          console.log('Patching form for edit:', this.form.value);
         }
         this.modalInstance.show();
       },
@@ -187,7 +192,7 @@ export class AnimalGroupAddEditComponent implements OnInit, OnDestroy {
     }
 
     if (!this.form.valid) {
-      this.toast.warning('Please fill all required fields');
+      this.toast.warning('Please fill all required fields.');
       this.form.markAllAsTouched();
       return;
     }

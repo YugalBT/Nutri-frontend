@@ -4,8 +4,8 @@
 
     <!-- dashboard overview -->
     <div class="welcome-dashboard" *ngIf="user$ | async as user; else NA">
-        <h3 class="mb-2"><b>Welcome To {{ user.companyName }} </b></h3>
-        <p class="mb-0">Easily manage milk production, feed planning, livestock health, and daily farm operations.</p>
+        <h3 class="mb-2"><b>Welcome To <span class="link-text"> {{ user.companyName }} </span></b></h3>
+       
     </div>
     <div class="dashboard-overview-main">
 

@@ -22,7 +22,7 @@ export class ReusableTableComponent implements OnChanges {
   @Input() pageable: boolean = false;
   @Input() totalRecords: number = 0;
 
-  @Input() pageSize = 5;
+  @Input() pageSize = 10;
   @Input() pageIndex = 0;
 
   @Output() pageChange = new EventEmitter<{ pageIndex: number; pageSize: number }>();

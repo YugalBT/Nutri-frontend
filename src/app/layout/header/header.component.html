@@ -1,7 +1,9 @@
 <header class="sticky-top">
     <div class="container-fluid">
-        <div class="header-inner justify-content-end">
-
+        <div class="header-inner justify-content-end align-items-center">
+            <!-- <div class="header-left">
+                <button><img src="image/three-dot" alt=""></button>
+            </div> -->
             <div class="header-right d-flex align-items-center gap-2">
                 <div class="language-selector">
                     <select #langSelect class="form-control form-select" (change)="changeLanguage(langSelect.value)"
@@ -21,7 +23,7 @@
                         </svg></span><input class="form-control"
                         placeholder="{{ 'header.searchPlaceholder' | translate }}" type="text">
                 </div> -->
-                
+
 
 
                 <!-- Dark mode toggle -->
@@ -34,11 +36,17 @@
                     </button>
                 </div> -->
 
-              
+
                 <!-- 🔔 Notification Icon -->
                 <div class="notification-wrapper position-relative" (click)="toggleNotificationPopup()">
                     <div class="header-icon Notification">
-                        <svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg"> <path fill-rule="evenodd" clip-rule="evenodd" d="M11 16.3605C16.1693 16.3605 18.5608 15.6974 18.7917 13.0356C18.7917 10.3757 17.1244 10.5468 17.1244 7.28318C17.1244 4.73396 14.7082 1.8335 11 1.8335C7.29191 1.8335 4.87565 4.73396 4.87565 7.28318C4.87565 10.5468 3.20837 10.3757 3.20837 13.0356C3.44025 15.7074 5.83167 16.3605 11 16.3605Z" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path> <path d="M13.1898 19.1191C11.9393 20.5076 9.98862 20.5241 8.7262 19.1191" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path> </svg>
+                        <svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path fill-rule="evenodd" clip-rule="evenodd"
+                                d="M11 16.3605C16.1693 16.3605 18.5608 15.6974 18.7917 13.0356C18.7917 10.3757 17.1244 10.5468 17.1244 7.28318C17.1244 4.73396 14.7082 1.8335 11 1.8335C7.29191 1.8335 4.87565 4.73396 4.87565 7.28318C4.87565 10.5468 3.20837 10.3757 3.20837 13.0356C3.44025 15.7074 5.83167 16.3605 11 16.3605Z"
+                                stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                            <path d="M13.1898 19.1191C11.9393 20.5076 9.98862 20.5241 8.7262 19.1191" stroke="black"
+                                stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                        </svg>
                     </div>
                     <div class="notification-number">
                         {{ notificationsData.length }} <!-- dynamic count -->
@@ -72,13 +80,13 @@
                         See More →
                     </div>
                 </div>
-  <!-- Dropdown -->
+                <!-- Dropdown -->
                 <div class="dropdown profile-dropdown">
                     <div class="d-flex dropdown-toggle align-items-center gap-3" data-bs-toggle="dropdown"
                         aria-expanded="false" style="cursor:pointer;">
                         <div class="d-flex align-items-center gap-2" *ngIf="user$ | async as user; else guest">
                             <img [src]="user?.logo || '/assets/image/profile-image.png'" alt="" width="40" height="40"
-                                class="rounded-sm">
+                                class="rounded-sm profile-image">
                             <div class="profile-right-content">
                                 <h3 class="mb-0">{{ user?.firstName }} {{ user?.lastName }}</h3>
                                 <!-- <p class="mb-0">{{ user?.roles?.[0] || 'User' }}</p> -->
@@ -104,7 +112,7 @@
                         <li><a class="dropdown-item" style="cursor: pointer;" (click)="logout()">{{ 'header.logout' |
                                 translate }}</a></li>
                     </ul>
-                </div> 
+                </div>
 
             </div>
         </div>

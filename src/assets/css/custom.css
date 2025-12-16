@@ -489,14 +489,11 @@ padding-left: 40px;min-width: 300px;}
 .profile-right-content h3{font-size: var(--font-14);font-weight: var(--font-500);color: #000000;}
 .profile-right-content p{font-size: var(--font-13);}
 .profile-dropdown .dropdown-toggle::after {
-  /* Replace image caret with a font glyph so it inherits color and scales */
-  content: "\25BE"; /* ▼ small down-pointing triangle */
-  display: inline-block;
-  margin-left: 6px;
-  font-size: 12px;
-  line-height: 1;
-  vertical-align: middle;
-  color: currentColor;
+    background-image: url("../image/down.svg");
+    background-repeat: no-repeat;
+    border: none;
+    width: 16px;
+    height: 16px;
 }
 .profile img{width: 100%;height: 100%;object-fit: cover;object-position: center;}
 .body_heading{position: relative;padding-left: 12px;}
@@ -657,3 +654,9 @@ border-radius: 20px;padding: 30px;background-image: url('../image/welcome-img\ 1
   border-radius: 4px;
   margin: 0px 4px;
 }
+.profile-image{    border-radius: 7px;object-fit: cover;
+}
+.btn:hover{background-color: var(--primary-color);}
+.search-wrapper-modern{max-width: 300px !important;border-radius: 8px !important;}
+.form-check-input{border: 1px solid var(--primary-color);} 
+.link-text{color: var(--primary-color) !important;}

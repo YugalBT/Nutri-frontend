@@ -63,8 +63,8 @@ export class AnimalGroupListComponent implements OnInit, OnDestroy {
   }
 
   private setColumns(): void {
-    this.columns = ['Farm Name', 'Group Name', 'Animal Type', 'Lactation Stage', 'Status'];
-    this.columnFields = ['farmName', 'animalGroupNameEn',  'typeNameEn', 'lactationNameEn', 'isActive'];
+    this.columns = ['Farm Name', 'Group Name', 'Animal Type', 'Lactation Stage','Number Of Animal','Avg Milk PerDay', 'Status'];
+    this.columnFields = ['farmName', 'animalGroupNameEn',  'typeNameEn', 'lactationNameEn','numberOfAnimal','avgMilkPerDay', 'isActive'];
   }
 
   private loadUserPermissions(): void {
@@ -151,11 +151,11 @@ export class AnimalGroupListComponent implements OnInit, OnDestroy {
 
       const s = this.animalGroupService.deleteAnimalGroup(id).subscribe({
         next: (res: ApiResponse<any>) => {
-          if (res.isSuccess) {
-            this.toast.success(res.message);
+          if (res?.isSuccess) {
+            this.toast.success(res?.message);
             this.animalGroupService.notifyanimalGroupsChanged();
           } else {
-            this.toast.error(res.message);
+            this.toast.error(res?.message);
           }
         },
         error: (err) => this.toast.error(err?.error?.message)

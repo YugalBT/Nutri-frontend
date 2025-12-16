@@ -66,7 +66,7 @@
               <!-- FEED DROPDOWN -->
               <div class="col-md-4">
                 <label class="form-label">Select Feed <sup class="text-danger">*</sup></label>
-                <select class="form-select" (change)="onFeedChangeUI(item)"  formControlName="feedId">
+                <select class="form-select" (change)="onFeedChangeUI(item)" formControlName="feedId">
                   <option [ngValue]="null">Select Feed</option>
                   <option *ngFor="let feed of feeds" [ngValue]="feed.feedId">
                     {{ feed.feedName }}
@@ -81,9 +81,9 @@
               <div class="col-md-3">
                 <label class="form-label">Per Kg (kg/day per cow) <sup class="text-danger">*</sup></label>
                 <input type="number" min="0" class="form-control" formControlName="perKg" placeholder="Per Kg">
-              <div *ngIf="item.get('perKg')?.errors?.['maxDigits']" class="text-danger">
-              Maximum 20 digits are allowed.
-            </div> 
+                <div *ngIf="item.get('perKg')?.errors?.['maxDigits']" class="text-danger">
+                  Maximum 20 digits are allowed.
+                </div>
               </div>
               <!-- DM -->
               <div class="col-md-1">

@@ -1,11 +1,15 @@
 .img-container {
   position: relative;
-  display: inline-block;
+    width: 120px;
+  height: 120px;
+  margin: auto;
+      margin-bottom: 10px;
+
 }
 
 .profile-img {
-  width: 120px;
-  height: 120px;
+width: 100%;
+height: 100%;
   object-fit: cover;
   border-radius: 50%;
   border: 2px solid #ddd;
@@ -22,12 +26,20 @@
 }
 
 .upload-btn {
-  background: #007bff;
-  color: white;
+    background:#b02a37 ;
+    color: white;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    position: absolute;top: 5px;right: 3px;
 }
-
+.upload-btn svg{margin: 0 !important  ;}
 .upload-btn:hover {
-  background: #0056b3;
+  background: #b30c00;
 }
 
 .delete-btn {
@@ -38,3 +50,4 @@
 .delete-btn:hover {
   background: #b02a37;
 }
+.link-text{color: #b02a37;}
