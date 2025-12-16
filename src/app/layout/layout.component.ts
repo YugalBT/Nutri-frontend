@@ -14,5 +14,9 @@ import { LoaderComponent } from '../shared/components/loader/loader.component';
   styleUrls: ['./layout.component.css']
 })
 export class LayoutComponent {
+ isSidebarCollapsed = false;
 
+  toggleSidebar() {
+    this.isSidebarCollapsed = !this.isSidebarCollapsed;
+  }
 }

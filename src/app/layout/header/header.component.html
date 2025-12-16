@@ -1,9 +1,10 @@
 <header class="sticky-top">
     <div class="container-fluid">
-        <div class="header-inner justify-content-end align-items-center">
-            <!-- <div class="header-left">
-                <button><img src="image/three-dot" alt=""></button>
-            </div> -->
+        <div class="header-inner justify-content-between align-items-center">
+            <button class="btn sidebar-toggle-btn" (click)="toggleSidebar.emit()" aria-label="Toggle sidebar">
+                ☰
+            </button>
+
             <div class="header-right d-flex align-items-center gap-2">
                 <div class="language-selector">
                     <select #langSelect class="form-control form-select" (change)="changeLanguage(langSelect.value)"

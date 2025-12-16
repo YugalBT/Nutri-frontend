@@ -19,7 +19,7 @@ import { ImageValidatorDirective } from '../../image-validator.directive';
 @Component({
   selector: 'app-profile',
   standalone: true,
-  imports: [ReactiveFormsModule, SharedModule,ImageValidatorDirective ],
+  imports: [ReactiveFormsModule, SharedModule,ImageValidatorDirective],
   templateUrl: './profile.component.html',
   styleUrls: ['./profile.component.css']
 })
