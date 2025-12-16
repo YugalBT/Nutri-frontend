@@ -3,7 +3,8 @@
         <div class="sidebar" style="flex-shrink: 0;">
             <div class="sidebar-inner">
                 <div class="menu-top">
-                    <div class="side-logo d-flex align-items-center gap-2 mb-30"><img alt=""src="assets/image/small-logo.png">
+                    <div class="side-logo d-flex align-items-center gap-2 mb-30"><img alt=""
+                            src="assets/image/small-logo.png">
 
                     </div>
                     <div class="side-menus">
@@ -19,40 +20,84 @@
                                     </svg>
 
                                 </span>{{ 'sidebar.dashboard' | translate }}</a>
-                        </div> 
+                        </div>
                     </div>
                 </div>
                 <div class="menu-scrollable">
-                    <div class="side-menus mt-30">
-                        <div class="side-menu-heading mb-3">
-                            <p class="mb-0">{{ 'sidebar.workspace' | translate }}</p>
-                        </div>
-                        <div class="side-menu-ul">
-                            <ng-container *ngIf="menuItems.length">
-                                <li class="side-menu-item" *ngFor="let item of menuItems">
-                                    <a [routerLink]="item.url || '/'" data-discover="true" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" >
-                                        <span class="side-item-icon" [innerHTML]="item.safeIcon"> </span>
-                                        {{ (('sidebar.' + (( item.roleDisplayName) | lowercase)) | translate)
-                                        || (('menu.' + ((item.roleDisplayName) | lowercase)) | translate)
-                                        || item.roleDisplayName || item.roleName }}
-                                    </a>
-                                </li>
-                            </ng-container>
-                            <li class="side-menu-item" style="cursor: pointer;">
-                                <a (click)="logout()" data-discover="true"><span class="side-item-icon">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22"
-                                            viewBox="0 0 24 24" fill="none" stroke="#D2D2D2" stroke-width="1.8"
-                                            stroke-linecap="round" stroke-linejoin="round">
-                                            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
-                                            <polyline points="16 17 21 12 16 7" />
-                                            <line x1="21" y1="12" x2="9" y2="12" />
-                                        </svg>
 
-                                    </span>Logout</a>
-                            </li>
+                    <ng-container *ngFor="let group of groupedMenus; let i = index">
+
+                        <div class="side-menus">
+                            <div class="side-menu-item">
+                                <a role="button" data-bs-toggle="collapse" [attr.data-bs-target]="'#group-' + i"
+                                    aria-expanded="false" class="d-flex justify-content-between align-items-center">
+
+                                    <span class="d-flex align-items-center gap-2">
+                                        <span class="side-item-icon" [innerHTML]="group.icon"></span>
+                                        <span>{{ group.title }}</span>
+                                    </span>
+
+                                    <span class="ms-auto accordion-arrow">
+  <svg width="22" height="22" viewBox="0 0 22 22" fill="none"
+       xmlns="http://www.w3.org/2000/svg">
+    <path
+      d="M15.5833 8.40584C15.4116 8.23511 15.1792 8.13928 14.9371 8.13928C14.6949 8.13928 14.4626 8.23511 14.2908 8.40584L11 11.6508L7.75499 8.40584C7.58325 8.23511 7.35091 8.13928 7.10874 8.13928C6.86657 8.13928 6.63424 8.23511 6.46249 8.40584C6.37658 8.49106 6.30838 8.59244 6.26184 8.70415C6.21531 8.81585 6.19135 8.93566 6.19135 9.05668C6.19135 9.17769 6.21531 9.2975 6.26184 9.4092C6.30838 9.52091 6.37658 9.62229 6.46249 9.70751L10.3492 13.5942C10.4344 13.6801 10.5358 13.7483 10.6475 13.7948C10.7592 13.8414 10.879 13.8653 11 13.8653C11.121 13.8653 11.2408 13.8414 11.3525 13.7948C11.4642 13.7483 11.5656 13.6801 11.6508 13.5942L15.5833 9.70751C15.6692 9.62229 15.7374 9.52091 15.784 9.4092C15.8305 9.2975 15.8545 9.17769 15.8545 9.05668C15.8545 8.93566 15.8305 8.81585 15.784 8.70415C15.7374 8.59244 15.6692 8.49106 15.5833 8.40584Z"
+      fill="white"/>
+  </svg>
+</span>
+
+                                </a>
+
+                            </div>
+                        </div>
+
+                        <div class="collapse" [id]="'group-' + i">
+                            <div class="side-menus ms-3">
+                                <div class="side-menu-item" *ngFor="let item of group.items">
+                                    <a [routerLink]="item.url" routerLinkActive="active"
+                                        [routerLinkActiveOptions]="{ exact: true }">
+                                        <span class="side-item-icon" [innerHTML]="item.safeIcon"></span>
+
+                                        {{ item.roleDisplayName }}
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
+
+                    </ng-container>
+
+                    <div class="side-menus mt-3" *ngFor="let item of standaloneMenus">
+                        <div class="side-menu-item">
+                            <a [routerLink]="item.url" routerLinkActive="active"
+                                [routerLinkActiveOptions]="{ exact: true }">
+                                <span class="side-item-icon" [innerHTML]="item.safeIcon"></span>
+
+                                {{ item.roleDisplayName }}
+                            </a>
                         </div>
                     </div>
+                    <div class="side-menus">
+                        <div class="side-menu-item">
+                            <a (click)="logout()" style="cursor: pointer;" routerLinkActive="active"
+                                data-discover="true"><span class="side-item-icon">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24"
+                                        fill="none" stroke="#D2D2D2" stroke-width="1.8" stroke-linecap="round"
+                                        stroke-linejoin="round">
+                                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                                        <polyline points="16 17 21 12 16 7" />
+                                        <line x1="21" y1="12" x2="9" y2="12" />
+                                    </svg>
+
+
+                                </span>Logout</a>
+                        </div>
+                    </div>
+
                 </div>
+
+
+
             </div>
             <!-- <div class="sidebar-footer">
                 <div class="sidebar-footer-inner">

@@ -1,19 +1,16 @@
 import { Component, OnInit } from '@angular/core';
-import { DashboardComponent } from '../../features/dashboard/dashboard.component';
-import { HeaderComponent } from "../header/header.component";
-import { Router, RouterLink, RouterModule } from "@angular/router";
+import { Router, RouterLink, RouterModule } from '@angular/router';
 import { NgFor, NgIf, LowerCasePipe } from '@angular/common';
-import { ConfirmDialogService } from '../../shared/services/confirm-dialog.service';
-import { ToastService } from '../../shared/services/toast.service';
-import { TranslateService } from '../../i18n/translate.service';
-import { TranslatePipe } from '../../i18n/translate.pipe';
-import { Constants } from '../../shared/utils/constants/constants';
-import { TokenService } from '../../shared/services/token.service';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { Store } from '@ngrx/store';
-import { selectAuthUser } from '../../state/auth/auth.selectors';
 import { take } from 'rxjs/operators';
+
+import { TranslatePipe } from '../../i18n/translate.pipe';
+import { TokenService } from '../../shared/services/token.service';
 import { AuthService } from '../../core/auth/auth.service';
+import { selectAuthUser } from '../../state/auth/auth.selectors';
+import { SIDEBAR_GROUPS } from '../../core/constants/sidebar-groups';
+
 
 interface MenuItem {
   roleDisplayName?: string;
@@ -23,125 +20,91 @@ interface MenuItem {
   safeIcon?: SafeHtml;
 }
 
+interface SidebarGroup {
+  key: string;
+  title: string;
+   icon?: SafeHtml;
+  items: MenuItem[];
+}
+
 @Component({
   selector: 'app-sidebar',
   standalone: true,
-  imports: [RouterLink, TranslatePipe, NgFor, NgIf, LowerCasePipe,RouterModule],
+  imports: [RouterLink, RouterModule, TranslatePipe, NgFor, NgIf, LowerCasePipe],
   templateUrl: './sidebar.component.html',
   styleUrls: ['./sidebar.component.css']
 })
 export class SidebarComponent implements OnInit {
 
-  menuItems: MenuItem[] = [];
+  groupedMenus: SidebarGroup[] = [];
+  standaloneMenus: MenuItem[] = [];
   user: any = null;
 
   constructor(
-    private router: Router,
-    private confirm: ConfirmDialogService,
-    private toast: ToastService,
-    private authService: AuthService,
-    private translate: TranslateService,
-    private tokenService: TokenService,
     private sanitizer: DomSanitizer,
+    private authService: AuthService,
     private store: Store
   ) {}
 
-  openProfile(event: Event) {
-    event.stopPropagation();
-    this.router.navigate(['/profile']);
-  }
-
   ngOnInit(): void {
-    // Prefer NgRx auth user if available
     this.store.select(selectAuthUser).pipe(take(1)).subscribe((authUser: any) => {
-      if (authUser) {
-        // populate menu
-        if (authUser.menu && Array.isArray(authUser.menu)) {
-          this.menuItems = authUser.menu.map((m: any) => ({
-            ...m,
-            url: m.url || m.link || m.path || m.route,
-            safeIcon: m?.icon ? this.sanitizeIcon(m.icon) : ''
-          }));
-        }
-        // populate user info
-        this.user = {
-          logo: authUser.logo || authUser.data?.logo || authUser?.user?.logo,
-          firstName: authUser.firstName || authUser.data?.firstName || authUser?.user?.firstName,
-          lastName: authUser.lastName || authUser.data?.lastName || authUser?.user?.lastName,
-          roles: authUser.roles || authUser.data?.roles || authUser?.user?.roles,
-          email: authUser.email || authUser.data?.email || authUser?.user?.email
-        };
-        return;
+
+      const menuSource = authUser?.menu || authUser?.data?.menu;
+
+      if (Array.isArray(menuSource)) {
+        const flatMenu = menuSource.map((m: any) => ({
+          ...m,
+          url: m.url || m.link || m.path || m.route,
+          safeIcon: m.icon ? this.sanitizeIcon(m.icon) : ''
+        }));
+
+        this.buildAccordionMenu(flatMenu);
       }
 
-      // Fallback to sessionStorage-stored user data
-      const data = this.tokenService.getUserData();
-      if (data) {
-        try {
-          const parsed = JSON.parse(data);
-          const menu = parsed?.data?.menu || parsed?.menu || [];
-          if (Array.isArray(menu)) {
-            this.menuItems = menu.map((m: any) => ({
-              ...m,
-              url: m.url || m.link || m.path || m.route,
-              safeIcon: m?.icon ? this.sanitizeIcon(m.icon) : ''
-            }));
-          }
-          // try to populate user from parsed data
-          const u = parsed?.data || parsed;
-          this.user = {
-            logo: u?.logo,
-            firstName: u?.firstName,
-            lastName: u?.lastName,
-            roles: u?.roles
-          };
-        } catch (e) {
-          // ignore parse errors
-        }
-      }
+      this.user = authUser?.user || authUser;
     });
   }
-  isOpen: any = { dashboard: false };
 
-toggleGroup(key: string) {
-  this.isOpen[key] = !this.isOpen[key];
+private buildAccordionMenu(flatMenu: MenuItem[]) {
+
+  const groupedItemNames = SIDEBAR_GROUPS.flatMap(group => group.items);
+
+  // GROUPED MENUS WITH ICON
+  this.groupedMenus = SIDEBAR_GROUPS
+    .map(group => ({
+      key: group.key,
+      title: group.title,
+      icon: group.icon
+        ? this.sanitizer.bypassSecurityTrustHtml(group.icon)
+        : undefined,
+      items: flatMenu.filter(m =>
+        group.items.includes(m.roleDisplayName || '')
+      )
+    }))
+    .filter(group => group.items.length > 0);
+
+  // STANDALONE MENUS (neeche)
+  this.standaloneMenus = flatMenu.filter(m =>
+    !groupedItemNames.includes(m.roleDisplayName || '') &&
+    m.roleDisplayName !== 'Dashboard'
+  );
 }
 
 
-  private stripListTags(html: string): string {
-    if (!html) return html;
-    // remove any stray <li> or </li> tags that may be present inside icon HTML
-    return html.replace(/<\/?li[^>]*>/gi, '');
+
+  logout() {
+    this.authService.logout();
   }
 
   private sanitizeIcon(icon: string): SafeHtml {
-    if (!icon) return '';
-
-    // decode any HTML entities (e.g. &lt;svg&gt;) by parsing as HTML
-    let decoded = icon;
-    try {
-      const parser = new DOMParser();
-      const doc = parser.parseFromString(icon, 'text/html');
-      const txt = doc.documentElement.textContent;
-      if (txt && txt.trim().length) decoded = txt;
-    } catch (e) {
-      // ignore if DOMParser not available or parsing fails
-    }
-
-    const cleaned = decoded
-      .replace(/<\/?li[^>]*>/gi, '')  // remove <li> or </li>
-      .replace(/\\n/g, '')           // remove \n
-      .replace(/\\t/g, '')           // remove \t
-      .replace(/\\"/g, '"')        // unescape quotes
-      .replace(/\s{2,}/g, ' ')       // collapse big spaces
+    const cleaned = icon
+      .replace(/<\/?li[^>]*>/gi, '')
+      .replace(/\\n/g, '')
+      .replace(/\\t/g, '')
+      .replace(/\\"/g, '"')
       .trim();
 
     return this.sanitizer.bypassSecurityTrustHtml(cleaned);
   }
-
-
-  logout() {
-
-    this.authService.logout();
-  }
 }
+

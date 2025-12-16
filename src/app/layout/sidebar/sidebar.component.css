@@ -1,55 +1,10 @@
-/* Sidebar footer compact styling */
-.sidebar-footer {
-	    position: absolute;
-    left: -4px;
-    right: 16px;
-    bottom: -5px;
-	cursor: pointer;
+.accordion-arrow {
+  display: inline-flex;
+  align-items: center;
+  transition: transform 0.25s ease;
 }
 
-.sidebar-footer-inner {
-	background: rgba(250, 249, 249, 0.03);
-	border-radius: 10px;
-	padding: 0;
-	display: flex;
-	align-items: center;
+/* jab accordion open ho */
+a[aria-expanded="true"] .accordion-arrow {
+  transform: rotate(180deg);
 }
-
-.sidebar-footer .btn-transparent {
-	background: transparent;
-	border: 0;
-	width: 100%;
-	text-align: left;
-}
-
-.sidebar-footer img.rounded-sm {
-	border-radius: 8px;
-	object-fit: cover;
-}
-
-.profile-right-content .small-name {
-	font-size: 13px;
-	font-weight: 600;
-	margin: 0;
-}
-
-.profile-right-content .small-role {
-	font-size: 11px;
-	color: #f1f1f1;
-	margin: 0;
-}
-
-.sidebar-footer .dropdown-menu {
-	min-width: 150px;
-	border-radius: 8px;
-	box-shadow: 0 10px 30px rgba(250, 250, 250, 0.12);
-	padding:  0;
-}
-
-.sidebar-footer .dropdown-item {
-	padding: 8px 14px;
-	font-size: 14px;
-}
-
-.sidebar-footer .drop-caret { opacity: 0.9 }
-

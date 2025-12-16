@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output, ViewChild } from '@angular/core';
 import { Route, Router, RouterLink } from "@angular/router";
 import { CommonModule } from '@angular/common';
 import { Store } from '@ngrx/store';
@@ -16,7 +16,7 @@ import { AuthService } from '../../core/auth/auth.service';
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [RouterLink, CommonModule, TranslatePipe,ConfirmDialogComponent],
+  imports: [RouterLink, CommonModule, TranslatePipe, ConfirmDialogComponent],
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.css']
 })
@@ -25,15 +25,17 @@ export class HeaderComponent implements OnInit {
   user$: Observable<User | null>;
   currentLang = 'en';
   darkMode = false;
-    @ViewChild(ConfirmDialogComponent) confirmDialog!: ConfirmDialogComponent;
-    notificationsData: any[] = [];
+  @ViewChild(ConfirmDialogComponent) confirmDialog!: ConfirmDialogComponent;
+  notificationsData: any[] = [];
+  @Output() toggleSidebar = new EventEmitter<void>();
+
 
   constructor(private store: Store,
-     private translate: TranslateService,
-      private authService: AuthService,
-     private notificationService: NotificationService,
-      private router:Router
-    ) {
+    private translate: TranslateService,
+    private authService: AuthService,
+    private notificationService: NotificationService,
+    private router: Router
+  ) {
     this.user$ = this.store.select(selectAuthUser);
     // initialize language from sessionStorage (if previously selected)
     const saved = sessionStorage.getItem('lang');
@@ -52,30 +54,30 @@ export class HeaderComponent implements OnInit {
   ngOnInit(): void {
     this.loadNotifications();
   }
- 
+
   logout() {
-     this.authService.logout();
+    this.authService.logout();
   }
-   onConfirm(result: boolean) {
+  onConfirm(result: boolean) {
     if (result) {
-      this.store.dispatch(AuthActions.logout()); 
+      this.store.dispatch(AuthActions.logout());
     }
   }
 
   showNotificationPopup = false;
 
-toggleNotificationPopup() {
-  this.showNotificationPopup = !this.showNotificationPopup;
-}
+  toggleNotificationPopup() {
+    this.showNotificationPopup = !this.showNotificationPopup;
+  }
 
-closePopup() {
-  this.showNotificationPopup = false;
-}
+  closePopup() {
+    this.showNotificationPopup = false;
+  }
 
-goToAllNotifications() {
-  this.closePopup();
-  this.router.navigate(['/notifications']);
-}
+  goToAllNotifications() {
+    this.closePopup();
+    this.router.navigate(['/notifications']);
+  }
 
   changeLanguage(lang: string) {
     if (!lang) return;
@@ -103,25 +105,25 @@ goToAllNotifications() {
     }
   }
 
-  
-  
-    loadNotifications(): void {
-      this.notificationService.getNotificationList().subscribe({
-        next: (res) => {
-          if (res.isSuccess && Array.isArray(res.data)) {
-            this.notificationsData = res.data.map((n: NotificationList) => ({
-              title: n.subject,
-              description: n.body,
-              createdDate: n.createdDate ? new Date(n.createdDate).toLocaleDateString() : '',
-              type: n.type
-            }));
-          } else {
-            this.notificationsData = [];
-          }
-        },
-        error: (err) => {
-          console.error('Error fetching notifications:', err);
+
+
+  loadNotifications(): void {
+    this.notificationService.getNotificationList().subscribe({
+      next: (res) => {
+        if (res.isSuccess && Array.isArray(res.data)) {
+          this.notificationsData = res.data.map((n: NotificationList) => ({
+            title: n.subject,
+            description: n.body,
+            createdDate: n.createdDate ? new Date(n.createdDate).toLocaleDateString() : '',
+            type: n.type
+          }));
+        } else {
+          this.notificationsData = [];
         }
-      });
-    }
+      },
+      error: (err) => {
+        console.error('Error fetching notifications:', err);
+      }
+    });
+  }
 }
