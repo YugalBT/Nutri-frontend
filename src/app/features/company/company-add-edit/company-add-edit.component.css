@@ -31,3 +31,9 @@
 .remove-logo-btn:hover {
   background: #b32b36;
 }
+
+.large-checkbox {
+  transform: scale(1.3);
+  margin-right: 6px;
+  cursor: pointer;
+}
