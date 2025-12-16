@@ -37,7 +37,7 @@ export class ChangePasswordComponent {
           [
             Validators.required,
             Validators.minLength(6),
-            Validators.pattern(/^(?=.*[A-Z])(?=.*[0-9]).+$/) // 1 uppercase & 1 number
+            Validators.pattern(/^(?=.*[A-Z])(?=.*[0-9]).+$/) 
           ]
         ],
         confirmPassword: ['', Validators.required]
