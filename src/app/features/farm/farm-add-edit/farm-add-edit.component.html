@@ -49,6 +49,8 @@
               <div *ngIf="form.get('streetAddress')?.touched && form.get('streetAddress')?.invalid" class="text-danger">
                 <div *ngIf="form.get('streetAddress')?.errors?.['required']">Street Address is required.</div>
                 <!-- <div *ngIf="form.get('streetAddress')?.errors?.['pattern']">Only alphabets and spaces allowed.</div> -->
+                  <div *ngIf="form.get('streetAddress')?.errors?.['maxlength']">Maximum 20 characters.</div>
+
               </div>
             </div>
           </div>

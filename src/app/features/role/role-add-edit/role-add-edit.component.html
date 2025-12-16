@@ -25,6 +25,9 @@
                                 <div *ngIf="form.get('roleName')?.errors?.['pattern']" class="text-danger">
                                     Role Name can only contain alphabets ,hyphen and spaces.
                                 </div>
+                               <div *ngIf="form.get('roleName')?.errors?.['minlength']">Minimum 3 characters.</div>
+                                <div *ngIf="form.get('roleName')?.errors?.['maxlength']">Maximum 20 characters.</div>
+
 
                             </div>
                             <div class="col-md-4 col-12">
@@ -38,6 +41,9 @@
                                 <div *ngIf="form.get('roleNameIt')?.errors?.['pattern']" class="text-danger">
                                     Role Name can only contain alphabets ,huphen and spaces.
                                 </div>
+                             <div *ngIf="form.get('roleNameIt')?.errors?.['minlength']">Minimum 3 characters.</div>
+                            <div *ngIf="form.get('roleNameIt')?.errors?.['maxlength']">Maximum 20 characters.</div>
+
 
                             </div>
                             
