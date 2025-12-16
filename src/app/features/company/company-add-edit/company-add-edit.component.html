@@ -56,6 +56,9 @@
                                 <div *ngIf="form.get('url')?.touched && form.get('url')?.invalid" class="text-danger">
                                     Website URL is required
                                 </div>
+                                <div *ngIf="form.get('url')?.errors?.['pattern']" class="text-danger">
+                                    Please enter a valid URL (e.g., https://example.com).
+                                    </div>
                             </div>
 
                             <!-- <div class="col-md-4 col-12">
@@ -242,6 +245,15 @@
                             <div class="col-12 mt-3">
                                 <h5 class="mb-3">{{ 'company.account' | translate }}</h5>
                             </div>
+                            <div class="col-12 mt-2">
+                                <div class="form-check">
+                                    <input class="form-check-input large-checkbox" type="checkbox"
+                                        id="sameAsPrimaryUser" formControlName="sameAsPrimaryUser" />
+                                    <label class="form-check-label" for="sameAsPrimaryUser">
+                                        Same as primary user
+                                    </label>
+                                </div>
+                            </div>
 
                             <div class="col-md-4 col-12">
                                 <label class="form-label">{{ 'company.userFirstName' | translate }}<sup
@@ -352,7 +364,15 @@
                                     Password must be at least 8 characters long.
                                 </div>
                             </div>
-
+                            <div class="col-md-6 col-12 d-flex align-items-end" *ngIf="!isEdit">
+                                <div class="form-check">
+                                    <input class="form-check-input large-checkbox" type="checkbox" id="isFirstLogin"
+                                        formControlName="isFirstLogin" />
+                                    <label class="form-check-label" for="isFirstLogin">
+                                        Password reset needed
+                                    </label>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </form>

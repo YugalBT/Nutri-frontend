@@ -6,7 +6,6 @@ import { Company } from '../../../core/models/company-add-edit';
 import { CompanyService } from '../../../core/services/company/company.service';
 import { ToastService } from '../../../shared/services/toast.service';
 import { ApiResponse } from '../../../core/models/api-response';
-import { Output, EventEmitter } from '@angular/core';
 import { RoleItem } from '../../../core/models/add-edit-role';
 import { TranslateService } from '../../../i18n/translate.service';
 import { AddEditRoleService } from '../../../core/services/role/add-edit-role.service';
@@ -15,8 +14,8 @@ import { CommonService } from '../../../shared/services/common.service';
 import { PERMISSIONS } from '../../../core/constants/permissions.constants';
 import { ImageValidatorDirective } from '../../../image-validator.directive';
 
-
 declare var bootstrap: any;
+
 @Component({
   selector: 'app-company-add-edit',
   standalone: true,
@@ -25,12 +24,16 @@ declare var bootstrap: any;
   styleUrls: ['./company-add-edit.component.css']
 })
 export class CompanyAddEditComponent implements OnInit {
+
   @ViewChild('companyModal') companyModal!: ElementRef;
+  @ViewChild('fileInput') fileInput!: ElementRef<HTMLInputElement>;
+
   private modalInstance: any;
   form!: FormGroup;
   isEdit = false;
   showCurrent = false;
-  roleList: any[] = [];
+  roleList: RoleItem[] = [];
+
   constructor(
     private fb: FormBuilder,
     private companyService: CompanyService,
@@ -38,26 +41,23 @@ export class CompanyAddEditComponent implements OnInit {
     private translate: TranslateService,
     private roleService: AddEditRoleService,
     private toast: ToastService,
-    private commonService : CommonService
-  ) { }
+    private commonService: CommonService
+  ) {}
 
-  // constructor(private fb: FormBuilder) {}
+  ngOnInit(): void {
+    if (
+      !this.commonService.checkPermission(PERMISSIONS.TenantAdd) ||
+      !this.commonService.checkPermission(PERMISSIONS.TenantEdit) ||
+      !this.commonService.checkPermission(PERMISSIONS.TenantDelete)
+    ) return;
 
-  ngOnInit() {
-    if(!this.commonService.checkPermission(PERMISSIONS.TenantAdd)|| 
-    !this.commonService.checkPermission(PERMISSIONS.TenantEdit)
-  || !this.commonService.checkPermission(PERMISSIONS.TenantDelete))
-      return;
     this.form = this.fb.group({
-      // Company details
       tenantId: [''],
+
+      // Primary (Company Owner)
       firstName: ['', [Validators.required, Validators.pattern(/^[A-Za-z]+$/)]],
       middleName: ['', [Validators.pattern(/^[A-Za-z]+$/)]],
       lastName: ['', [Validators.required, Validators.pattern(/^[A-Za-z]+$/)]],
-      code: ['', [Validators.required, Validators.minLength(3)]],
-      // suffix: ['', Validators.required],
-      url: ['', Validators.required],
-      //  url: ['', [Validators.required, Validators.pattern(/^(https?:\/\/)?([\w.-]+)+[\w-]+(\/[\w-]*)*\/?$/)]],
       email: ['', [Validators.required, Validators.email]],
       phoneNumber: ['', [
         Validators.required,
@@ -65,12 +65,23 @@ export class CompanyAddEditComponent implements OnInit {
         Validators.maxLength(10),
         Validators.pattern(/^[0-9]+$/)
       ]],
+
+      companyName: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(50)]],
+      code: ['', [Validators.required, Validators.minLength(3)]],
+      url: ['',  [
+    Validators.required,
+    Validators.pattern(
+      /^(https?:\/\/)(www\.)?[a-zA-Z0-9-]+\.[a-zA-Z]{2,}([\/\w .-]*)*\/?$/
+    )
+  ]],
       logo: ['', Validators.required],
-      // primaryColor: ['#1d7e8b', Validators.required],
-      // secondaryColor: [''],
-      companyName: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(50), Validators.pattern(/^[\p{L} .'-]+$/u),
-      ]],
-      // Primary user details
+
+      streetAddress: ['', Validators.required],
+      city: ['', Validators.required],
+      country: ['', Validators.required],
+      zipCode: ['', [Validators.required, Validators.pattern(/^[0-9]{5,6}$/)]],
+
+      // Admin
       userFirstName: ['', [Validators.required, Validators.pattern(/^[A-Za-z]+$/)]],
       userMiddleName: ['', [Validators.pattern(/^[A-Za-z]+$/)]],
       userLastName: ['', [Validators.required, Validators.pattern(/^[A-Za-z]+$/)]],
@@ -81,124 +92,126 @@ export class CompanyAddEditComponent implements OnInit {
         Validators.maxLength(10),
         Validators.pattern(/^[0-9]+$/)
       ]],
-      // Address
-      streetAddress: ['', Validators.required],
-      city: ['', Validators.required],
-      country: ['', Validators.required],
-      zipCode: ['', [Validators.required, Validators.pattern(/^[0-9]{5,6}$/)]],
 
-      // Account
-      password: ['', [Validators.minLength(8), Validators.pattern(/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*#?&]{8,}$/)]],
+      sameAsPrimaryUser: [false],
 
-      // legacy fields
-      name: [''],
-      description: [''],
+      password: ['', [
+        Validators.minLength(8),
+        Validators.pattern(/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*#?&]{8,}$/)
+      ]],
+
       roleId: [''],
-      isActive: [true]
+      isActive: [true],
+      isFirstLogin: [false]
     });
+
     this.loadRoles();
 
-  }
-  loadRoles() {
-    this.spinner.show();
-    const payload = {
-      pageNo: 1,
-      recordPerPage: 1000,
-      status: 2,
-      isShow: true
-    };
-
-    const sub = this.roleService.getRoles(payload).subscribe({
-      next: (res) => {
-        const data = (res as any)?.data || (res as any)?.items || res || [];
-        this.roleList = Array.isArray(data) ? data as RoleItem[] : [];
-        this.spinner.hide();
-      },
-      error: (err) => {
-        this.spinner.hide();
-        this.toast.error(this.translate.instant('common.error') || 'Error loading roles');
+    // ✅ COPY ONLY WHEN CHECKBOX IS CLICKED
+    this.form.get('sameAsPrimaryUser')?.valueChanges.subscribe((checked: boolean) => {
+      if (checked) {
+        this.copyPrimaryToAdmin();
       }
     });
   }
 
-  openModal(edit = false, data?: any) {
-  this.isEdit = edit;
+  // -------------------------
+  // COPY LOGIC
+  // -------------------------
+  copyPrimaryToAdmin(): void {
+    this.form.patchValue({
+      userFirstName: this.form.get('firstName')?.value,
+      userMiddleName: this.form.get('middleName')?.value,
+      userLastName: this.form.get('lastName')?.value,
+      userEmail: this.form.get('email')?.value,
+      userPhoneNumber: this.form.get('phoneNumber')?.value
+    });
+  }
 
-  if (edit && data) {
-    // Patch data
-    this.form.patchValue({ ...data, logo: data.logo || '' });
+  // -------------------------
+  // ROLES
+  // -------------------------
+  loadRoles(): void {
+    this.spinner.show();
+    this.roleService.getRoles({
+      pageNo: 1,
+      recordPerPage: 1000,
+      status: 2,
+      isShow: true
+    }).subscribe({
+      next: (res: any) => {
+        this.roleList = res?.data || res?.items || [];
+        this.spinner.hide();
+      },
+      error: () => {
+        this.spinner.hide();
+        this.toast.error('Error loading roles');
+      }
+    });
+  }
 
-    // ❌ Remove validations for EDIT mode
-    this.form.get('password')?.clearValidators();
-    this.form.get('roleId')?.clearValidators();
+  // -------------------------
+  // MODAL
+  // -------------------------
+  openModal(edit = false, data?: any): void {
+    this.isEdit = edit;
+
+    if (edit && data) {
+      this.form.patchValue({ ...data, logo: data.logo || '' });
+
+      // ❌ DO NOT AUTO COPY
+      this.form.patchValue({ sameAsPrimaryUser: false });
+
+      this.form.get('password')?.clearValidators();
+      this.form.get('roleId')?.clearValidators();
+    } else {
+      this.form.reset({
+        isActive: true,
+        isFirstLogin: false,
+        sameAsPrimaryUser: false
+      });
+
+      this.form.get('password')?.setValidators([
+        Validators.required,
+        Validators.minLength(8),
+        Validators.pattern(/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*#?&]{8,}$/)
+      ]);
+
+      this.form.get('roleId')?.setValidators([Validators.required]);
+    }
 
     this.form.get('password')?.updateValueAndValidity();
     this.form.get('roleId')?.updateValueAndValidity();
-  } 
-  else {
-    // Reset form for create mode
-    this.form.reset({ isActive: true });
 
-    // ✅ Add required validators for CREATE mode
-    this.form.get('password')?.setValidators([
-      Validators.required,
-      Validators.minLength(8),
-      Validators.pattern(/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*#?&]{8,}$/)
-    ]);
-
-    this.form.get('roleId')?.setValidators([Validators.required]);
-
-    this.form.get('password')?.updateValueAndValidity();
-    this.form.get('roleId')?.updateValueAndValidity();
+    this.modalInstance = new bootstrap.Modal(this.companyModal.nativeElement);
+    this.modalInstance.show();
   }
 
-  this.modalInstance = new bootstrap.Modal(this.companyModal.nativeElement);
-  this.modalInstance.show();
-}
-
-
-  closeModal() {
-    if (this.modalInstance) {
-      this.modalInstance.hide();
-    }
+  closeModal(): void {
+    this.modalInstance?.hide();
   }
 
-  saveUser() {
-    if (this.form.valid) {
-      this.closeModal();
-    }
-  }
+  // -------------------------
+  // LOGO
+  // -------------------------
+  onLogoChange(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    if (!input.files?.length) return;
 
- @ViewChild('fileInput') fileInput!: ElementRef<HTMLInputElement>;
-
-onLogoChange(event: Event) {
-  const input = event.target as HTMLInputElement;
-
-  if (input.files && input.files.length > 0) {
-    const file = input.files[0];
     const reader = new FileReader();
-
-    reader.onload = () => {
-      this.form.patchValue({ logo: reader.result as string });
-    };
-
-    reader.readAsDataURL(file);
+    reader.onload = () => this.form.patchValue({ logo: reader.result });
+    reader.readAsDataURL(input.files[0]);
   }
-}
 
-removeLogo() {
-  this.form.patchValue({ logo: null });
-
-  if (this.fileInput) {
+  removeLogo(): void {
+    this.form.patchValue({ logo: null });
     this.fileInput.nativeElement.value = '';
   }
-}
 
-  saveCompany() {
-
-    if(!this.commonService.checkPermission(PERMISSIONS.TenantAdd)|| 
-    !this.commonService.checkPermission(PERMISSIONS.TenantEdit))
-      return;
+  // -------------------------
+  // SAVE
+  // -------------------------
+  saveCompany(): void {
     if (this.form.invalid) {
       this.form.markAllAsTouched();
       return;
@@ -206,92 +219,21 @@ removeLogo() {
 
     const payload = this.form.value as Company;
 
-    if (this.isEdit) {
+    const request$ = this.isEdit
+      ? this.companyService.updateCompany(payload)
+      : this.companyService.createCompany(payload);
 
-      this.companyService.updateCompany(payload).subscribe({
-        next: (res: ApiResponse<any>) => {
-          if (res?.isSuccess) {
-            this.toast.success(res.message || "Company updated successfully!");
-            this.companyService.notifyCompaniesChanged();
-            this.closeModal();
-
-          } else {
-            this.toast.error(res.message || "Update failed");
-          }
-        },
-        error: (err: any) => {
-          if (err.error?.errors) {
-            Object.values(err.error.errors).forEach((msgList: any) => {
-              msgList.forEach((msg: string) => this.toast.error(msg));
-            });
-          } else {
-            this.toast.error("Something went wrong");
-          }
-        }
-      });
-
-    } else {
-      this.companyService.createCompany(payload).subscribe({
-        next: (res) => {
-
-          if (res?.isSuccess) {
-            this.toast.success(res.message || "Company created successfully!");
-            this.companyService.notifyCompaniesChanged();
-            this.closeModal();
-          } else {
-            this.toast.error(res.message || "Failed to create company");
-          }
-        },
-
-        error: (err) => {
-          console.error("Create Error:", err);
-
-          // Backend validation errors (.NET model state)
-          if (err.error?.errors) {
-            Object.values(err.error.errors).forEach((messages: any) => {
-              messages.forEach((msg: string) => this.toast.error(msg));
-            });
-          }
-          else {
-            // Generic fallback
-            this.toast.error("Something went wrong. Please try again.");
-          }
-        }
-      });
-    }
-  }
-
-  // deleteCompany(id: string) {
-  //   if(!this.commonService.checkPermission(PERMISSIONS.TenantDelete))
-  //     return;
-  //   this.companyService.deleteCompany(id).subscribe({
-  //     next: (res: ApiResponse<any>) => {
-  //       if (res.isSuccess) {
-  //         this.toast.success(res.message || "Company deleted successfully!");
-  //       } else {
-  //         this.toast.error(res.message || "Delete failed");
-  //       }
-  //     },
-  //     error: () => {
-  //       this.toast.error("Something went wrong");
-  //     }
-  //   });
-  // }
-
-  activeInactiveCompany(id: string) {
-    this.companyService.ativeInactiveCompanyStatus(id, !this.form.value.isActive).subscribe({
+    request$.subscribe({
       next: (res: ApiResponse<any>) => {
-        if (res.isSuccess) {
-          this.toast.success(res.message || "Company Inactivated successfully!");
+        if (res?.isSuccess) {
+          this.toast.success(res.message || 'Success');
+          this.companyService.notifyCompaniesChanged();
+          this.closeModal();
         } else {
-          this.toast.error(res.message || "Inactivation failed");
+          this.toast.error(res.message || 'Operation failed');
         }
       },
-      error: () => {
-        this.toast.error("Something went wrong");
-      }
+      error: () => this.toast.error('Something went wrong')
     });
   }
 }
-
-
