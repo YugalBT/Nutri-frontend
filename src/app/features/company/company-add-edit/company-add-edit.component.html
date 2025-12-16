@@ -53,9 +53,9 @@
                                         style="color: #f00; font-size: 12px;">*</sup></label>
                                 <input type="url" class="form-control" formControlName="url"
                                     placeholder="https://example.com">
-                                <div *ngIf="form.get('url')?.touched && form.get('url')?.invalid" class="text-danger">
+                                <!-- <div *ngIf="form.get('url')?.touched && form.get('url')?.invalid" class="text-danger">
                                     Website URL is required
-                                </div>
+                                </div> -->
                                 <div *ngIf="form.get('url')?.errors?.['pattern']" class="text-danger">
                                     Please enter a valid URL (e.g., https://example.com).
                                     </div>

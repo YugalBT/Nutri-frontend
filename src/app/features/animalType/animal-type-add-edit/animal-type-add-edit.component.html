@@ -20,27 +20,7 @@
                 <h5 class="mb-3">Animal Type Details</h5>
               </div> -->
 
-              <!-- Italian Name -->
-              <div class="col-12">
-                <label class="form-label">
-                  Animal Type Name (Italian)
-                  <sup style="color: red; font-size: 12px;">*</sup>
-                </label>
-
-                <input
-                  type="text"
-                  class="form-control"
-                  formControlName="typeNameIt"
-                  placeholder="Enter Italian name"
-                />
-
-                <div *ngIf="form.get('typeNameIt')?.touched && form.get('typeNameIt')?.invalid" class="text-danger">
-                  <!-- <div *ngIf="form.get('typeNameIt')?.errors?.['required']">Italian name is required.</div> -->
-                  <div *ngIf="form.get('typeNameIt')?.errors?.['minlength']">Minimum 3 characters.</div>
-                  <div *ngIf="form.get('typeNameIt')?.errors?.['maxlength']">Maximum 20 characters.</div>
-                  <div *ngIf="form.get('typeNameIt')?.errors?.['pattern']">Animal Type Name can only contain alphabets.</div>
-                </div>
-              </div>
+             
 
               <!-- English Name -->
               <div class="col-12">
@@ -64,6 +44,27 @@
                 </div>
               </div>
 
+                <!-- Italian Name -->
+              <div class="col-12">
+                <label class="form-label">
+                  Animal Type Name (Italian)
+                  <!-- <sup style="color: red; font-size: 12px;">*</sup> -->
+                </label>
+
+                <input
+                  type="text"
+                  class="form-control"
+                  formControlName="typeNameIt"
+                  placeholder="Enter Italian name"
+                />
+
+                <div *ngIf="form.get('typeNameIt')?.touched && form.get('typeNameIt')?.invalid" class="text-danger">
+                  <!-- <div *ngIf="form.get('typeNameIt')?.errors?.['required']">Italian name is required.</div> -->
+                  <div *ngIf="form.get('typeNameIt')?.errors?.['minlength']">Minimum 3 characters.</div>
+                  <div *ngIf="form.get('typeNameIt')?.errors?.['maxlength']">Maximum 20 characters.</div>
+                  <div *ngIf="form.get('typeNameIt')?.errors?.['pattern']">Animal Type Name can only contain alphabets.</div>
+                </div>
+              </div>
             </div>
           </div>
         </form>
