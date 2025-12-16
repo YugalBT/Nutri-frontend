@@ -67,35 +67,37 @@ export class ProfileComponent implements OnInit {
   }
   imagePreview: string | null =  null;
 
-  onProfileImageChange(event: any) {
-    const file = event.target.files[0];
-    if (!file) return;
+  // onProfileImageChange(event: any) {
+  //   const file = event.target.files[0];
+  //   if (!file) return;
 
-    const allowedTypes = ['image/png', 'image/jpeg', 'image/jpg'];
-    if (!allowedTypes.includes(file.type)) {
-      this.toast.error("Only PNG/JPEG files allowed");
-      this.fileInput.nativeElement.value = '';
-      return;
-    }
+  //   const allowedTypes = ['image/png', 'image/jpeg', 'image/jpg'];
+  //   if (!allowedTypes.includes(file.type)) {
+  //     this.toast.error("Only PNG/JPEG files allowed");
+  //     this.fileInput.nativeElement.value = '';
+  //     return;
+  //   }
 
-    const reader = new FileReader();
-    reader.onload = () => {
-      this.imagePreview = reader.result as string;
-      this.profileForm.patchValue({ logo: reader.result });
-    };
-    reader.readAsDataURL(file);
-  }
+  //   const reader = new FileReader();
+  //   reader.onload = () => {
+  //     this.imagePreview = reader.result as string;
+  //     this.profileForm.patchValue({ logo: reader.result });
+  //   };
+  //   reader.readAsDataURL(file);
+  // }
 
+removeImage() {
+  this.profileForm.get('logo')?.reset();
+}
 
+  // removeImage() {
+  //   this.imagePreview = null;
+  //   this.profileForm.patchValue({ logo: null });
 
-  removeImage() {
-    this.imagePreview = null;
-    this.profileForm.patchValue({ logo: null });
-
-    if (this.fileInput) {
-      this.fileInput.nativeElement.value = '';
-    }
-  }
+  //   if (this.fileInput) {
+  //     this.fileInput.nativeElement.value = '';
+  //   }
+  // }
 
   onSubmit() {
   if (this.profileForm.invalid) {

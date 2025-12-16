@@ -72,68 +72,50 @@
                                 <input type="color" class="form-control form-control-color" formControlName="secondaryColor" title="Choose secondary color">
                             </div> -->
 
-                           <div class="col-md-4 col-12">
+                            <div class="col-md-4 col-12">
                                 <label class="form-label">
                                     {{ 'company.logo' | translate }}
                                     <sup style="color: #f00; font-size: 12px;">*</sup>
                                 </label>
 
-                                 <input
-                                    #fileInput
-                                    type="file"
-                                    class="form-control"
-                                    accept="image/png,image/jpeg"
-                                    appImageValidator
-                                    controlName="logo"
-                                    [width]="300"
-                                    [height]="300"
-                                    [maxSizeMB]="2"
-                                />
+                                <input #fileInput type="file" class="form-control" accept="image/png,image/jpeg"
+                                    appImageValidator controlName="logo" [width]="300" [height]="300" [maxSizeMB]="2" />
 
-                                 <div
-                                    class="text-danger mt-1"
-                                    *ngIf="form.get('logo')?.touched && form.get('logo')?.errors"
-                                >
+                                <div class="text-danger mt-1"
+                                    *ngIf="form.get('logo')?.touched && form.get('logo')?.errors">
                                     <small *ngIf="form.get('logo')?.errors?.['required']">
-                                    Logo is required
+                                        Logo is required
                                     </small>
 
                                     <small *ngIf="form.get('logo')?.errors?.['invalidType']">
-                                    Only PNG or JPG images are allowed
+                                        Only PNG or JPG images are allowed
                                     </small>
 
                                     <small *ngIf="form.get('logo')?.errors?.['maxSizeExceeded']">
-                                    Image size must be less than 2 MB
+                                        Image size must be less than 2 MB
                                     </small>
 
                                     <small *ngIf="form.get('logo')?.errors?.['invalidDimension']">
-                                    Image must be exactly 300 × 300 pixels
+                                        Image Dimensions must be exactly 300 × 300 pixels
                                     </small>
                                 </div>
-                                                                </div>
+                            </div>
 
-                                <div class="col-md-4 col-12" *ngIf="form.get('logo')?.value">
+                            <div class="col-md-4 col-12" *ngIf="form.get('logo')?.value">
                                 <div class="logo-preview-wrapper">
 
-                                    <img
-                                    class="logo-preview-img"
-                                    [src]="form.get('logo')?.value"
-                                    alt="Logo Preview"
-                                    />
+                                    <img class="logo-preview-img" [src]="form.get('logo')?.value" alt="Logo Preview" />
 
-                                    <button
-                                    type="button"
-                                    class="remove-logo-btn"
-                                    (click)="removeLogo()"
-                                    title="Remove Logo"
-                                    >
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="white" viewBox="0 0 16 16">
-                                        <path d="M2.5 2.5l11 11m0-11l-11 11" stroke="white" stroke-width="2" />
-                                    </svg>
+                                    <button type="button" class="remove-logo-btn" (click)="removeLogo()"
+                                        title="Remove Logo">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="white"
+                                            viewBox="0 0 16 16">
+                                            <path d="M2.5 2.5l11 11m0-11l-11 11" stroke="white" stroke-width="2" />
+                                        </svg>
                                     </button>
 
                                 </div>
-                                </div>
+                            </div>
 
 
 
@@ -356,8 +338,8 @@
                             <div class="col-md-4 col-12">
                                 <label class="form-label">{{ 'company.password' | translate }}</label>
                                 <div class="input-group">
-                                    <input [type]="!showCurrent ? 'password' : 'text'" autocomplete="off" class="form-control"
-                                        formControlName="password" placeholder="Enter password">
+                                    <input [type]="!showCurrent ? 'password' : 'text'" autocomplete="off"
+                                        class="form-control" formControlName="password" placeholder="Enter password">
                                     <span class="input-group-text" role="button" (click)="showCurrent = !showCurrent">
                                         <i class="fa" [ngClass]="showCurrent ? 'fa-eye' : 'fa-eye-slash'"></i>
                                     </span>
