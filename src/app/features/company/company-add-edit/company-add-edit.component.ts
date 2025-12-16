@@ -69,7 +69,6 @@ export class CompanyAddEditComponent implements OnInit {
       companyName: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(50)]],
       code: ['', [Validators.required, Validators.minLength(3)]],
       url: ['',  [
-    Validators.required,
     Validators.pattern(
       /^(https?:\/\/)(www\.)?[a-zA-Z0-9-]+\.[a-zA-Z]{2,}([\/\w .-]*)*\/?$/
     )

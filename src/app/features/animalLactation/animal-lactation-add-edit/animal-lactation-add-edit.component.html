@@ -23,7 +23,9 @@
             </div>
 
             <div class="col-md-12">
-              <label class="form-label">Lactation Name It <sup class="text-danger">*</sup></label>
+              <label class="form-label">Lactation Name It 
+                <!-- <sup class="text-danger">*</sup> -->
+              </label>
               <input type="text" formControlName="lactationNameIt" class="form-control" placeholder="Enter lactation name">
               <div *ngIf="form.get('lactationNameIt')?.touched && form.get('lactationNameIt')?.invalid" class="text-danger">
                 <div *ngIf="form.get('lactationNameIt')?.errors?.['pattern']">Only alphabets and spaces allowed.</div>
