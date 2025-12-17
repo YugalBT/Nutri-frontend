@@ -144,8 +144,8 @@ export const routes: Routes = [
       },
       {
         path: 'reports',
-        canActivate: [permissionGuard],
-        data: { requiredPermissions: [PERMISSIONS.ReportsView, PERMISSIONS.ReportsEdit, PERMISSIONS.ReportsAdd, PERMISSIONS.ReportsDelete] },
+        //canActivate: [permissionGuard],
+       // data: { requiredPermissions: [PERMISSIONS.ReportsView, PERMISSIONS.ReportsEdit, PERMISSIONS.ReportsAdd, PERMISSIONS.ReportsDelete] },
         loadComponent: () =>
           import('./features/reports/reports/reports.component')
             .then(m => m.ReportsComponent),

@@ -105,8 +105,8 @@ export class AnimalGroupAddEditComponent implements OnInit, OnDestroy {
       tap((data: any[]) => {
         this.animalTypes = Array.isArray(data) ? data.map(t => ({ ...t, animalTypeId: t.animalTypeId != null ? String(t.animalTypeId) : '' })) : [];
       }),
-      catchError(err => {
-        this.toast.error('Failed to load animal types');
+      catchError((err :ApiResponse<any>) => {
+        this.toast.error(err.message);
         return of([]);
       }),
       finalize(() => this.typesLoading = false)
@@ -122,7 +122,6 @@ export class AnimalGroupAddEditComponent implements OnInit, OnDestroy {
       tap((data: any[]) => {
         //this.lactations = data
         this.lactations = Array.isArray(data) ? data.map(l => ({ ...l, animalLactationId: l.animalLactationId != null ? String(l.animalLactationId) : '' })) : [];
-        console.log('Loaded lactations', this.lactations);
       }),
       catchError(err => {
         this.toast.error('Failed to load animal types');
@@ -154,13 +153,13 @@ export class AnimalGroupAddEditComponent implements OnInit, OnDestroy {
 
         if (edit && data) {
           this.form.patchValue({
-            farmId: data.farmId != null ? String(data.farmId) : '',
-            animalTypeId: data.animalTypeId != null ? String(data.animalTypeId) : '',
-            animalLactationId: data.animalLactationId != null ? String(data.animalLactationId) : '',
-            animalGroupNameEn: data.animalGroupNameEn,
-            animalGroupNameIt: data.animalGroupNameIt,
-            numberOfAnimal: data.numberOfAnimal,
-            avgMilkPerDay: data.avgMilkPerDay,
+            farmId: data?.farmId != null ? String(data?.farmId) : '',
+            animalTypeId: data?.animalTypeId != null ? String(data?.animalTypeId) : '',
+            animalLactationId: data?.animalLactationId != null ? String(data?.animalLactationId) : '',
+            animalGroupNameEn: data?.animalGroupNameEn,
+            animalGroupNameIt: data?.animalGroupNameIt,
+            numberOfAnimal: data?.numberOfAnimal,
+            avgMilkPerDay: data?.avgMilkPerDay,
           });
         }
         this.modalInstance.show();
@@ -234,7 +233,6 @@ export class AnimalGroupAddEditComponent implements OnInit, OnDestroy {
     try {
       this.animalGroupService.notifyanimalGroupsChanged();
     } catch (e) {
-      console.warn('notifyanimalGroupsChanged missing', e);
     }
     this.closeModal();
   }

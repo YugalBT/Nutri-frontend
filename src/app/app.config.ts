@@ -13,6 +13,8 @@ import { AuthEffects } from './state/auth/auth.effects';
 import { SpinnerModule } from './shared/spinner.module';
 import { spinnerInterceptor } from './core/interceptors/spinner.interceptor';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
+import { NgxEchartsModule } from 'ngx-echarts';
+
 
 
 export const appConfig: ApplicationConfig = {
@@ -36,6 +38,11 @@ export const appConfig: ApplicationConfig = {
     provideStore({ auth: authReducer }),    // REGISTER STATE
     provideEffects([AuthEffects]),          // REGISTER EFFECTS
     provideStoreDevtools(), provideAnimationsAsync(),
+     importProvidersFrom(
+      NgxEchartsModule.forRoot({
+        echarts: () => import('echarts')
+      })
+    )
 
   ]
 

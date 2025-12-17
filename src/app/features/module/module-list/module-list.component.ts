@@ -1,6 +1,4 @@
-import {
-  Component, OnInit, OnDestroy, ViewChild
-} from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Subscription } from 'rxjs';
 import { ReusableTableComponent } from '../../../shared/components/reusable-table/reusable-table.component';

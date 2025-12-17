@@ -6,7 +6,7 @@ export const SIDEBAR_GROUPS = [
     key: 'access',
     title: 'User & Access',
     icon: SIDEBAR_ICONS.ACCESS,
-    items: ['Users', 'Roles','Companies','Module']
+    items: ['Users', 'Roles','Companies']
   },
   {
     key: 'farm',
@@ -20,10 +20,23 @@ export const SIDEBAR_GROUPS = [
     icon: SIDEBAR_ICONS.NUTRITION,
     items: ['Feed', 'Ration','Animal Type','Animal Lactation Stage']
   },
+   {
+    key: 'reports',
+    title: 'Reports & Analytics',
+    icon: SIDEBAR_ICONS.REPORTS,
+    items: [
+      'Reports',
+      // 'Monthly Report',
+      // 'Cost vs Income',
+      // 'Margin Analysis',
+      // 'Production Trends'
+    ]
+  },
   {
     key: 'settings',
     title: 'Settings',
     icon: SIDEBAR_ICONS.SETTINGS,
-    items: ['Profile', 'Change Password','Setting']
-  }
+    items: ['Profile', 'Change Password','Setting','Module']
+  },
+ 
 ];

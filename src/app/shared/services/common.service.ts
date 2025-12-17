@@ -25,10 +25,7 @@ export class CommonService {
   ) { }
 
   checkPermission(roleName : string){
-      console.log("rolename" , roleName)
       if(!StorageHelper.CheckRole(roleName)){
-            console.log("role" , "no")
-  
          this.toast.error(this.translate.instant('common.noPermission') || 'No permission');
          return false;
       }

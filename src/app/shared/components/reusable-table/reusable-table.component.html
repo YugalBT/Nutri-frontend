@@ -1,17 +1,11 @@
 <div class="table-wrapper ">
 
   <!-- No Data Found Message -->
-  <div *ngIf="!data || data.length === 0" class="no-data-container">
-    <div class="no-data-content">
-      <img src="assets/image/no-data.png" alt="No Data" class="no-data-icon" />
-      <h3 class="no-data-title">No Data Found</h3>
-      <p class="no-data-message">No records match your search criteria</p>
-    </div>
-  </div>
+  
 
   <!-- Table -->
    <div class="table-responsive custom-table-responsive">
-  <table *ngIf="data && data.length > 0" class="table modern-table align-middle table-responsive">
+  <table  class="table modern-table align-middle table-responsive">
 
     <!-- Table Header -->
     <thead>
@@ -22,7 +16,7 @@
     </thead>
 
     <!-- Table Body -->
-    <tbody>
+    <tbody *ngIf="data && data.length > 0">
       <tr *ngFor="let row of data">
 
         <!-- CELL LOOP -->
@@ -43,12 +37,11 @@
             <ng-container *ngIf="cell.type === 'images'">
               <div class="image-grid">
                 <div class="image-cell" *ngFor="let img of cell.value">
-                  <img [src]="img" (error)="onImgError($event)" />
+                  <img [src]="img" loading="lazy" (error)="onImgError($event)" />
                 </div>
               </div>
             </ng-container>
 
-            <!-- TOGGLE SWITCH (isActive) -->
             <ng-container *ngIf="cell.type === 'switch'">
               <label class="switch">
                 <input type="checkbox" [checked]="cell.value" [checked]="cell.value"
@@ -56,40 +49,28 @@
                 <span class="slider"></span>
               </label>
             </ng-container>
-
-            <!-- BOOLEAN BADGE -->
             <ng-container *ngIf="cell.type === 'boolean'">
               <span class="badge" [class.active]="cell.value" [class.inactive]="!cell.value">
                 {{ cell.value ? 'Active' : 'Inactive' }}
               </span>
             </ng-container>
 
-            <!-- TEXT -->
-            <!-- TEXT -->
-            <!-- TEXT -->
             <ng-container *ngIf="cell.type === 'text'">
 
-              <!-- Clickable field -->
               <a style="color:#2CA28F !important ;" *ngIf="clickableField === (columnFields?.[i] || col.toLowerCase())" href="javascript:void(0)"
                 class=" fw-semibold" (click)="onCellClick(columnFields?.[i] || col.toLowerCase(), row)">
                 {{ cell.value }}
               </a>
 
-              <!-- Normal text -->
               <span *ngIf="clickableField !== (columnFields?.[i] || col.toLowerCase())">
                 {{ cell.value }}
               </span>
 
             </ng-container>
-
-
-
           </ng-container>
         </td>
 
-        <!-- ACTION BUTTONS -->
         <td *ngIf="showActions" class="text-center actions-col">
-
           <div class="dropdown">
             <button class="btn action-btn" data-bs-toggle="dropdown">
               <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="#555" viewBox="0 0 20 20">
@@ -119,9 +100,17 @@
 
       </tr>
     </tbody>
+    
 
   </table>
 </div>
+<div *ngIf="!data || data.length === 0" class="no-data-container">
+    <div class="no-data-content">
+      <img loading="lazy" src="assets/image/no-data.png" alt="No Data" class="no-data-icon" />
+      <h3 class="no-data-title">No Data Found</h3>
+      <p class="no-data-message">No records match your search criteria</p>
+    </div>
+  </div>
   <!-- Pagination -->
   <!-- <nav *ngIf="pageable && data && data.length > 0" class="pagination-wrapper mt-3">
     <ul class="pagination pagination-sm justify-content-end" style="cursor: pointer;">

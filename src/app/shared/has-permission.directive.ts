@@ -20,7 +20,6 @@ export class HasPermissionDirective implements OnDestroy {
   ) {}
 
   ngOnChanges?(): void {
-    // handled in setter below via subscription
   }
 
   @Input()

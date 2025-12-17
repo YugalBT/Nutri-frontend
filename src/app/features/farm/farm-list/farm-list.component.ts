@@ -41,17 +41,17 @@ export class FarmListComponent {
     private farmService: FarmService,
     private toast: ToastService,
     private confirm: ConfirmDialogService,
-    private commonService : CommonService
+    private commonService: CommonService
   ) {
     this.setColumns();
     this.langSub = this.translate.lang$.subscribe(() => this.setColumns());
   }
 
   ngOnInit(): void {
-    
-    if(!this.commonService.checkPermission(PERMISSIONS.FarmView)
+
+    if (!this.commonService.checkPermission(PERMISSIONS.FarmView)
       || !this.commonService.checkPermission(PERMISSIONS.FarmDelete))
-        return;
+      return;
     this.loadFarms(1, this.pageSize);
     const sub = this.farmService.farmsChanged$.subscribe(() => {
       this.loadFarms(this.pageIndex + 1, this.pageSize);
@@ -131,9 +131,9 @@ export class FarmListComponent {
   }
 
   onDelete(row: any): void {
-    
-    if(!this.commonService.checkPermission(PERMISSIONS.FarmDelete))
-        return;
+
+    if (!this.commonService.checkPermission(PERMISSIONS.FarmDelete))
+      return;
     const id = row?.farmId;
     if (!id) {
       this.toast.error(this.translate.instant('farms.invalidId') ?? "");
@@ -163,13 +163,13 @@ export class FarmListComponent {
       this.translate.instant('farms.columns.state') ?? "",
       this.translate.instant('farms.columns.status') ?? "",
     ];
-    this.columnFields = ['farmName','milkPrice', 'city', 'state', 'isActive'];
+    this.columnFields = ['farmName', 'milkPrice', 'city', 'state', 'isActive'];
   }
 
   ngOnDestroy(): void {
     this.langSub?.unsubscribe();
     this.subs.forEach((s) => s.unsubscribe());
   }
-  
+
 
 }

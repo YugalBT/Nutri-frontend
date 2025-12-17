@@ -28,9 +28,7 @@ export class HttpService {
     catchError((error) => {
       let msg = 'Something went wrong';
 
-      // If backend sends validation errors
       if (error?.error?.errors) {
-        // Combine all errors into a single string
         msg = Object.values(error.error.errors)
           .flat()
           .join(', ');
