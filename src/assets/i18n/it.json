@@ -155,6 +155,7 @@
     "perm_edit_users": "Modifica utenti",
     "perm_delete_users": "Elimina utenti",
     "perm_manage_roles": "Gestisci ruoli",
+    
     "table": {
       "modules": "Moduli / Pagine",
       "add": "Aggiungi",

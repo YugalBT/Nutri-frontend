@@ -12,7 +12,7 @@
             <div class="container-fluid">
           <div class="row g-3">
             <div class="col-md-12">
-              <label class="form-label">Lactation Name En <sup class="text-danger">*</sup></label>
+              <label class="form-label">Lactation Name<sup class="text-danger">*</sup></label>
               <input type="text" formControlName="lactationNameEn" class="form-control" placeholder="Enter lactation name">
               <div *ngIf="form.get('lactationNameEn')?.touched && form.get('lactationNameEn')?.invalid" class="text-danger">
                 <div *ngIf="form.get('lactationNameEn')?.errors?.['required']">Lactation Name is required.</div>

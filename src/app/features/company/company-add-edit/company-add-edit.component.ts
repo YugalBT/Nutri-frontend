@@ -99,7 +99,7 @@ export class CompanyAddEditComponent implements OnInit {
         Validators.pattern(/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*#?&]{8,}$/)
       ]],
 
-      roleId: [''],
+      roleId: ['', [Validators.required]],
       isActive: [true],
       isFirstLogin: [false]
     });

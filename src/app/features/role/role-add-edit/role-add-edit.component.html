@@ -17,7 +17,7 @@
                             <div class="col-md-4 col-12">
                                 <label class="form-label">{{ 'role.roleName' | translate }}</label>
                                 <input type="text" class="form-control mb-3" formControlName="roleName"
-                                    placeholder="Enter role name">
+                            [placeholder]="'role.roleNamePlaceholder' | translate">
                                 <div *ngIf="form.get('roleName')?.touched && form.get('roleName')?.invalid"
                                     class="text-danger">
                                     Role Name is required.
@@ -30,7 +30,7 @@
 
 
                             </div>
-                            <div class="col-md-4 col-12">
+                            <!-- <div class="col-md-4 col-12">
                                 <label class="form-label">{{ 'role.roleName' | translate }}(Italian)</label>
                                 <input type="text" class="form-control mb-3" formControlName="roleNameIt"
                                     placeholder="Enter role name">
@@ -46,7 +46,7 @@
 
 
                             </div>
-                            
+                             -->
 
                             <div class="col-md-2 col-12" *ngIf="isSuperAdmin">
                                 <label class="form-label">{{ 'role.roleIsDefault' | translate }}</label>
@@ -81,11 +81,11 @@
                             <div class="col-md-12 col-12">
                                 <!-- Table Header -->
                                 <div class="pm-row pm-header">
-                                    <div class="pm-module">Module</div>
-                                    <div class="pm-action">View</div>
-                                    <div class="pm-action">Add</div>
-                                    <div class="pm-action">Edit</div>
-                                    <div class="pm-action">Delete</div>
+                                    <div class="pm-module">{{ 'role.table.modules' | translate }}</div>
+                                    <div class="pm-action">{{ 'role.table.view' | translate }}</div>
+                                    <div class="pm-action">{{ 'role.table.add' | translate }}</div>
+                                    <div class="pm-action">{{ 'role.table.edit' | translate }}</div>
+                                    <div class="pm-action">{{ 'role.table.delete' | translate }}</div>
                                 </div>
 
                                 <!-- Module Rows -->

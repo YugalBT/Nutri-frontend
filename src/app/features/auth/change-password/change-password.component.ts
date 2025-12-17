@@ -4,6 +4,8 @@ import { CommonModule } from '@angular/common';
 import { ToastrService } from 'ngx-toastr';
 import { ApiResponse } from '../../../core/models/api-response';
 import { ChangePasswordService } from '../../../core/services/change-password/change-password.service';
+import { CommonService } from '../../../shared/services/common.service';
+import { PERMISSIONS } from '../../../core/constants/permissions.constants';
 
 @Component({
   selector: 'app-change-password',
@@ -24,7 +26,11 @@ export class ChangePasswordComponent {
   showConfirm = false;
   passwordStrength = '';
 
-  constructor(private fb: FormBuilder, private toastr: ToastrService, private passwordService: ChangePasswordService) {
+  constructor(private fb: FormBuilder, 
+    private toastr: ToastrService, 
+    private passwordService: ChangePasswordService,
+    private commonService : CommonService
+  ) {
     this.createForm();
   }
 
@@ -37,7 +43,7 @@ export class ChangePasswordComponent {
           [
             Validators.required,
             Validators.minLength(6),
-            Validators.pattern(/^(?=.*[A-Z])(?=.*[0-9]).+$/) 
+            Validators.pattern(/^(?=.*[A-Z])(?=.*[0-9]).+$/) // 1 uppercase & 1 number
           ]
         ],
         confirmPassword: ['', Validators.required]
@@ -70,6 +76,8 @@ export class ChangePasswordComponent {
   get f() { return this.changePasswordForm.controls; }
 
   onSubmit() {
+    if(!this.commonService.checkPermission(PERMISSIONS.ChangePasswordEdit)|| !this.commonService.checkPermission(PERMISSIONS.ChangePasswordView))
+      return;
     this.isSubmitted.set(true);
     if (this.changePasswordForm.invalid) {
       this.toastr.error('Please fix validation errors.');

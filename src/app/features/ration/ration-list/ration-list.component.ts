@@ -185,12 +185,12 @@ export class RationListComponent {
 
 
   private setColumns(): void {
-    this.columns = [
-      'Ration Name',
-      'Farm Name',
-      'Total Ration Items',
-      'animal GroupName En',
-      'Status'
+      this.columns = [
+    this.translate.instant('ration.columns.rationName') ?? '',
+    this.translate.instant('ration.columns.farmName') ?? '',
+    this.translate.instant('ration.columns.totalRationItems') ?? '',
+    this.translate.instant('ration.columns.animalGroup') ?? '',
+    this.translate.instant('common.status') ?? ''
     ];
     this.columnFields = ['rationName','farmName',  'totalItems','animalGroupNameEn', 'isActive'];
   }

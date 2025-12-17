@@ -161,7 +161,7 @@ export class FarmListComponent {
       this.translate.instant('farms.columns.milkPrice') ?? "",
       this.translate.instant('farms.columns.city') ?? "",
       this.translate.instant('farms.columns.state') ?? "",
-      this.translate.instant('farms.columns.status') ?? "",
+      this.translate.instant('common.status') ?? "",
     ];
     this.columnFields = ['farmName','milkPrice', 'city', 'state', 'isActive'];
   }

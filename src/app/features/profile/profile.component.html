@@ -3,7 +3,7 @@
 
     <div class="d-flex align-items-center mb-4">
       <i class="bi bi-person-circle fs-2 me-3"></i>
-      <h4 class="mb-0 fw-bold">Update Profile</h4>
+      <h4 class="mb-0 fw-bold">{{'profile.updateProfile' | translate}}</h4>
     </div>
 
     <form [formGroup]="profileForm" (ngSubmit)="onSubmit()">
@@ -15,7 +15,8 @@
           <div class="img-container">
 
             <!-- Image preview -->
-            <img *ngIf="profileForm.get('logo')?.value" [src]="profileForm.get('logo')?.value" class="profile-img" />
+            <img *ngIf="profileForm.get('logo')?.value" [src]="profileForm.get('logo')?.value" 
+            class="profile-img" />
 
             <!-- Placeholder -->
             <span *ngIf="!profileForm.get('logo')?.value">
@@ -28,10 +29,11 @@
             </span>
 
             <!-- SINGLE hidden file input -->
-            <input type="file" id="profileUpload" hidden accept="image/png,image/jpeg" appImageValidator
-              controlName="logo" [width]="300" [height]="300" [maxSizeMB]="2" />
+            <input type="file" id="profileUpload" hidden accept="image/png,image/jpeg" 
+            appImageValidator
+            controlName="logo" [width]="300" [height]="300" [maxSizeMB]="2" />
 
-            <!-- DELETE (TRASH) — ACTUALLY DELETES -->
+            <!--- DELETE --->
             <button *ngIf="profileForm.get('logo')?.value" type="button" class="upload-btn" (click)="removeImage()">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                 stroke-linecap="round" stroke-linejoin="round">
@@ -50,32 +52,32 @@
 
           </div>
 
-          <p class="form-label fw-bold mb-2">Profile Photo</p>
+          <p class="form-label fw-bold mb-2">{{'profile.profilePhoto' | translate}}</p>
           <!-- Validation / Helper text -->
           <ng-container *ngIf="profileForm.get('logo') as logoCtrl">
 
             <!-- ERROR messages -->
             <div class="text-danger mt-1" *ngIf="logoCtrl.touched && logoCtrl.errors">
               <small *ngIf="logoCtrl.errors['required']">
-                Profile image is required
+                {{'imageValidator.required' | translate}}
               </small>
 
               <small *ngIf="logoCtrl.errors['invalidType']">
-                Only PNG or JPG images are allowed
+                {{'imageValidator.invalidType' | translate}}
               </small>
 
               <small *ngIf="logoCtrl.errors['maxSizeExceeded']">
-                Image size must be less than 2 MB
+                {{'imageValidator.maxSizeExceeded' | translate}}
               </small>
 
               <small *ngIf="logoCtrl.errors['invalidDimension']">
-                Image Dimensions must be exactly 300 × 300 pixels
+                {{'imageValidator.invalidDimension' | translate}}
               </small>
             </div>
 
             <!-- DEFAULT helper text -->
             <small class="text-secondary" *ngIf="!logoCtrl.touched || !logoCtrl.errors">
-              Allowed: PNG, JPG, JPEG
+              {{'imageValidator.allowedImages' | translate}}
             </small>
 
           </ng-container>
@@ -87,40 +89,41 @@
       <div class="row mt-3">
 
         <div class="col-md-4">
-          <label class="form-label">First Name <sup style="color: #f00; font-size: 12px;">*</sup></label>
+          <label class="form-label">{{'profile.firstName' | translate}}
+            <sup style="color: #f00; font-size: 12px;">*</sup></label>
           <input type="text" class="form-control" formControlName="firstName">
 
           <div class="text-danger mt-1"
             *ngIf="profileForm.get('firstName')?.touched && profileForm.get('firstName')?.invalid">
-            <small *ngIf="profileForm.get('firstName')?.errors?.['required']">First name is required.</small>
-            <small *ngIf="profileForm.get('firstName')?.errors?.['minlength']">Minimum 3 characters required.</small>
-            <small *ngIf="profileForm.get('firstName')?.errors?.['maxlength']">Maximum length is 50 characters.</small>
-            <small *ngIf="profileForm.get('firstName')?.errors?.['pattern']">Only alphabets are allowed.</small>
+            <small *ngIf="profileForm.get('firstName')?.errors?.['required']">{{'validation.firstNameRequired' | translate}}</small>
+            <small *ngIf="profileForm.get('firstName')?.errors?.['minlength']">{{'validation.minLength' | translate}}</small>
+            <small *ngIf="profileForm.get('firstName')?.errors?.['maxlength']">{{'validation.maxLength' | translate}}</small>
+            <small *ngIf="profileForm.get('firstName')?.errors?.['pattern']">{{'validation.patternMismatch' | translate}}</small>
           </div>
         </div>
 
 
         <div class="col-md-4">
-          <label class="form-label">Middle Name</label>
+          <label class="form-label">{{'profile.middleName' | translate}}</label>
           <input type="text" class="form-control" formControlName="middleName">
           <div class="text-danger mt-1"
             *ngIf="profileForm.get('middleName')?.touched && profileForm.get('middleName')?.invalid">
-            <small *ngIf="profileForm.get('middleName')?.errors?.['minlength']">Minimum 3 characters required.</small>
-            <small *ngIf="profileForm.get('middleName')?.errors?.['maxlength']">Maximum length is 50 characters.</small>
-            <small *ngIf="profileForm.get('middleName')?.errors?.['pattern']">Only alphabets are allowed.</small>
+            <small *ngIf="profileForm.get('middleName')?.errors?.['minlength']">{{'validation.minLength' | translate}}</small>
+            <small *ngIf="profileForm.get('middleName')?.errors?.['maxlength']">{{'validation.maxLength' | translate}}</small>
+            <small *ngIf="profileForm.get('middleName')?.errors?.['pattern']">{{'validation.patternMismatch' | translate}}</small>
           </div>
         </div>
 
         <div class="col-md-4">
-          <label class="form-label">Last Name <sup style="color: #f00; font-size: 12px;">*</sup></label>
+          <label class="form-label">{{'profile.lastName' | translate}} <sup style="color: #f00; font-size: 12px;">*</sup></label>
           <input type="text" class="form-control" formControlName="lastName">
 
           <div class="text-danger mt-1"
             *ngIf="profileForm.get('lastName')?.touched && profileForm.get('lastName')?.invalid">
-            <small *ngIf="profileForm.get('lastName')?.errors?.['required']">Last name is required.</small>
-            <small *ngIf="profileForm.get('lastName')?.errors?.['minlength']">Minimum 3 characters required.</small>
-            <small *ngIf="profileForm.get('lastName')?.errors?.['maxlength']">Maximum length is 50 characters.</small>
-            <small *ngIf="profileForm.get('lastName')?.errors?.['pattern']">Only alphabets are allowed.</small>
+            <small *ngIf="profileForm.get('lastName')?.errors?.['required']">{{'validation.lastNameRequired' | translate}}</small>
+            <small *ngIf="profileForm.get('lastName')?.errors?.['minlength']">{{'validation.minLength' | translate}}</small>
+            <small *ngIf="profileForm.get('lastName')?.errors?.['maxlength']">{{'validation.maxLength' | translate}}</small>
+            <small *ngIf="profileForm.get('lastName')?.errors?.['pattern']">{{'validation.patternMismatch' | translate}}</small>
           </div>
         </div>
 
@@ -128,18 +131,17 @@
 
       <div class="row mt-3">
         <div class="col-md-4">
-          <label class="form-label">Email (Not Editable) </label>
+          <label class="form-label">{{'profile.nonEditableEmail' | translate}}</label>
           <input type="email" class="form-control" formControlName="email" readonly>
         </div>
 
         <div class="col-md-4">
-          <label class="form-label">Phone Number <sup style="color: #f00; font-size: 12px;">*</sup></label>
+          <label class="form-label">{{'profile.phone' | translate}} <sup style="color: #f00; font-size: 12px;">*</sup></label>
           <input type="text" class="form-control" formControlName="phone">
 
           <div class="text-danger mt-1" *ngIf="profileForm.get('phone')?.touched && profileForm.get('phone')?.invalid">
-            <small *ngIf="profileForm.get('phone')?.errors?.['required']">Phone number is required.</small>
-            <small *ngIf="profileForm.get('phone')?.errors?.['pattern']">Phone number must be numeric and exactly 10
-              digits.</small>
+            <small *ngIf="profileForm.get('phone')?.errors?.['required']">{{'validation.phoneRequired' | translate}}</small>
+            <small *ngIf="profileForm.get('phone')?.errors?.['pattern']">{{'validation.phonePattern' | translate}}</small>
           </div>
         </div>
 
@@ -147,7 +149,7 @@
 
       <div class="d-flex justify-content-end mt-4">
         <button class="btn add-btn px-4" type="submit">
-          <i class="bi bi-save2 me-2"></i> Update Profile
+          <i class="bi bi-save2 me-2"></i> {{'profile.updateProfile' | translate}}  
         </button>
 
       </div>

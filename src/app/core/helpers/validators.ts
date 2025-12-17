@@ -47,6 +47,7 @@ export const CustomValidators = {
       return valid ? null : { [errorKey]: true };
     };
   },
+  
    maxDigits: (max: number): ValidatorFn => {
     return (control: AbstractControl): ValidationErrors | null => {
       if (control.value === null || control.value === undefined) return null;

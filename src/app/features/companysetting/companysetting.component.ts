@@ -9,11 +9,12 @@ import { CustomValidators } from '../../core/helpers/validators';
 import { CommonService } from '../../shared/services/common.service';
 import { PERMISSIONS } from '../../core/constants/permissions.constants';
 import { ImageValidatorDirective } from '../../image-validator.directive';
+import { TranslatePipe } from '../../i18n/translate.pipe';
 
 @Component({
   selector: 'app-companysetting',
   standalone: true,
-  imports: [ReactiveFormsModule, SharedModule, ImageValidatorDirective],
+  imports: [ReactiveFormsModule, SharedModule, TranslatePipe, ImageValidatorDirective],
   templateUrl: './companysetting.component.html',
   styleUrl: './companysetting.component.css'
 })

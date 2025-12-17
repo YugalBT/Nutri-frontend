@@ -1,7 +1,7 @@
 <div class="container mt-4 mb-4" *ngIf="companyForm">
   <div class="card shadow-sm border-0 rounded-4 p-4">
 
-    <h4 class="fw-bold mb-3">Company Settings</h4>
+    <h4 class="fw-bold mb-3">{{'companysetting.companysettings' | translate}}</h4>
 
     <form [formGroup]="companyForm" (ngSubmit)="onSubmit()">
 
@@ -45,32 +45,32 @@
           </label>
 
         </div>
-        <p class="form-label fw-bold mb-2">Company Logo</p>
+        <p class="form-label fw-bold mb-2">{{'companysetting.companylogo' | translate}}</p>
         <!-- Validation / Helper text -->
         <ng-container *ngIf="companyForm.get('logo') as logoCtrl">
 
           <!-- ERROR messages -->
           <div class="text-danger mt-1" *ngIf="logoCtrl.touched && logoCtrl.errors">
             <small *ngIf="logoCtrl.errors['required']">
-              Profile image is required
+              {{'imageValidator.required' | translate}}
             </small>
 
             <small *ngIf="logoCtrl.errors['invalidType']">
-              Only PNG or JPG images are allowed
+              {{'imageValidator.invalidType' | translate}}
             </small>
 
             <small *ngIf="logoCtrl.errors['maxSizeExceeded']">
-              Image size must be less than 2 MB
+              {{'imageValidator.maxSizeExceeded' | translate}}
             </small>
 
             <small *ngIf="logoCtrl.errors['invalidDimension']">
-              Image Dimensions must be exactly 300 × 300 pixels
+              {{'imageValidator.invalidDimension' | translate}}
             </small>
           </div>
 
           <!-- DEFAULT helper text -->
           <small class="text-secondary" *ngIf="!logoCtrl.touched || !logoCtrl.errors">
-            Allowed: PNG, JPG, JPEG
+            {{'imageValidator.allowedImages' | translate}}
           </small>
 
         </ng-container>
@@ -80,23 +80,23 @@
       <!-- Company Info -->
       <div class="row">
         <div class="col-md-6">
-          <label>Company Name <sup class="text-danger">*</sup></label>
+          <label>{{'companysetting.companyName' | translate}}<sup class="text-danger">*</sup></label>
           <input formControlName="companyName" class="form-control">
           <div
             *ngIf="companyForm.get('companyName')?.invalid && (companyForm.get('companyName')?.touched || companyForm.get('companyName')?.dirty)"
             class="text-danger">
-            <small *ngIf="companyForm.get('companyName')?.errors?.['required']">Company name is required.</small>
-            <small *ngIf="companyForm.get('companyName')?.errors?.['maxlength']">Maximum 50 characters allowed.</small>
+            <small *ngIf="companyForm.get('companyName')?.errors?.['required']">{{'company.companyNameRequired' | translate}}</small>
+            <small *ngIf="companyForm.get('companyName')?.errors?.['maxlength']">{{'validation.maxLength' | translate}}</small>
           </div>
         </div>
         <div class="col-md-6">
-          <label>Email <sup class="text-danger">*</sup></label>
+          <label>{{'companysetting.email' | translate}} <sup class="text-danger">*</sup></label>
           <input formControlName="email" class="form-control">
           <div
             *ngIf="companyForm.get('email')?.invalid && (companyForm.get('email')?.touched || companyForm.get('email')?.dirty)"
             class="text-danger">
-            <small *ngIf="companyForm.get('email')?.errors?.['required']">Email is required.</small>
-            <small *ngIf="companyForm.get('email')?.errors?.['email']">Invalid email format.</small>
+            <small *ngIf="companyForm.get('email')?.errors?.['required']">{{'validation.emailRequired' | translate}}</small>
+            <small *ngIf="companyForm.get('email')?.errors?.['email']">{{'validation.invalidEmail' | translate}}</small>
           </div>
         </div>
       </div>
@@ -104,27 +104,27 @@
       <!-- Phone & Address -->
       <div class="row mt-3">
         <div class="col-md-6">
-          <label>Phone <sup class="text-danger">*</sup></label>
+          <label>{{'companysetting.phoneNumber' | translate}} <sup class="text-danger">*</sup></label>
           <input formControlName="phoneNumber" class="form-control">
           <div
             *ngIf="companyForm.get('phoneNumber')?.invalid && (companyForm.get('phoneNumber')?.touched || companyForm.get('phoneNumber')?.dirty)"
             class="text-danger">
-            <small *ngIf="companyForm.get('phoneNumber')?.errors?.['required']">Phone is required.</small>
-            <small *ngIf="companyForm.get('phoneNumber')?.errors?.['onlyNumbers']">Only numbers allowed.</small>
+            <small *ngIf="companyForm.get('phoneNumber')?.errors?.['required']">{{'validation.phoneNumberRequired' | translate}}</small>
+            <small *ngIf="companyForm.get('phoneNumber')?.errors?.['onlyNumbers']">{{'validation.onlyNumbers' | translate}}</small>
             <small
-              *ngIf="companyForm.get('phoneNumber')?.errors?.['minlength'] || companyForm.get('phoneNumber')?.errors?.['maxlength']">Phone
-              must be 10 digits.</small>
+              *ngIf="companyForm.get('phoneNumber')?.errors?.['minlength'] ||
+               companyForm.get('phoneNumber')?.errors?.['maxlength']">{{'validation.phoneNumberLength' | translate}}</small>
           </div>
         </div>
         <div class="col-md-6">
-          <label>Street Address <sup class="text-danger">*</sup></label>
+          <label>{{'companysetting.address' | translate}} <sup class="text-danger">*</sup></label>
           <input formControlName="streetAddress" class="form-control">
           <div
             *ngIf="companyForm.get('streetAddress')?.invalid && (companyForm.get('streetAddress')?.touched || companyForm.get('streetAddress')?.dirty)"
             class="text-danger">
-            <small *ngIf="companyForm.get('streetAddress')?.errors?.['required']">Street Address is required.</small>
-            <small *ngIf="companyForm.get('streetAddress')?.errors?.['maxlength']">Maximum 100 characters
-              allowed.</small>
+            <small *ngIf="companyForm.get('streetAddress')?.errors?.['required']">
+              {{'validation.streetAddressRequired' | translate}}</small>
+            <small *ngIf="companyForm.get('streetAddress')?.errors?.['maxlength']">{{'validation.streetAddressMaxLength' | translate}}</small>
           </div>
         </div>
       </div>
@@ -132,29 +132,29 @@
       <!-- City, Country, Zip -->
       <div class="row mt-3">
         <div class="col-md-4">
-          <label>City <sup class="text-danger">*</sup></label>
+          <label>{{'companysetting.city' | translate}} <sup class="text-danger">*</sup></label>
           <input formControlName="city" class="form-control">
           <div
             *ngIf="companyForm.get('city')?.invalid && (companyForm.get('city')?.touched || companyForm.get('city')?.dirty)"
             class="text-danger">
-            <small *ngIf="companyForm.get('city')?.errors?.['required']">City is required.</small>
-            <small *ngIf="companyForm.get('city')?.errors?.['onlyChars']">Only letters allowed.</small>
+            <small *ngIf="companyForm.get('city')?.errors?.['required']">{{'validation.cityRequired' | translate}}</small>
+            <small *ngIf="companyForm.get('city')?.errors?.['onlyChars']">{{'validation.onlyChars' | translate}}</small>
             <small
-              *ngIf="companyForm.get('city')?.errors?.['minlength'] || companyForm.get('city')?.errors?.['maxlength']">3-50
-              characters required.</small>
+              *ngIf="companyForm.get('city')?.errors?.['minlength'] || 
+              companyForm.get('city')?.errors?.['maxlength']">{{'validation.minmax' | translate}}</small>
           </div>
         </div>
         <div class="col-md-4">
-          <label>Country <sup class="text-danger">*</sup></label>
+          <label>{{'companysetting.country' | translate}} <sup class="text-danger">*</sup></label>
           <input formControlName="country" class="form-control">
           <div
             *ngIf="companyForm.get('country')?.invalid && (companyForm.get('country')?.touched || companyForm.get('country')?.dirty)"
             class="text-danger">
-            <small *ngIf="companyForm.get('country')?.errors?.['required']">Country is required.</small>
-            <small *ngIf="companyForm.get('country')?.errors?.['onlyChars']">Only letters allowed.</small>
+            <small *ngIf="companyForm.get('country')?.errors?.['required']">{{'validation.countryRequired' | translate}}</small>
+            <small *ngIf="companyForm.get('country')?.errors?.['onlyChars']">{{'validation.onlyChars' | translate}}</small>
             <small
-              *ngIf="companyForm.get('country')?.errors?.['minlength'] || companyForm.get('country')?.errors?.['maxlength']">3-50
-              characters required.</small>
+              *ngIf="companyForm.get('country')?.errors?.['minlength'] || 
+              companyForm.get('country')?.errors?.['maxlength']">{{'validation.minmax' | translate}}</small>
           </div>
         </div>
         <div class="col-md-4">
@@ -163,11 +163,11 @@
           <div
             *ngIf="companyForm.get('zipCode')?.invalid && (companyForm.get('zipCode')?.touched || companyForm.get('zipCode')?.dirty)"
             class="text-danger">
-            <small *ngIf="companyForm.get('zipCode')?.errors?.['required']">Zip Code is required.</small>
-            <small *ngIf="companyForm.get('zipCode')?.errors?.['onlyNumbers']">Only numbers allowed.</small>
+            <small *ngIf="companyForm.get('zipCode')?.errors?.['required']">
+              {{'addressValidation.zipCodeRequired' | translate}}</small>
+            <small *ngIf="companyForm.get('zipCode')?.errors?.['onlyNumbers']">{{'addressValidation.invalidZipCode' | translate}}</small>
             <small
-              *ngIf="companyForm.get('zipCode')?.errors?.['minlength'] || companyForm.get('zipCode')?.errors?.['maxlength']">5-6
-              digits required.</small>
+              *ngIf="companyForm.get('zipCode')?.errors?.['minlength'] || companyForm.get('zipCode')?.errors?.['maxlength']">{{'addressValidation.zipCodeLength' | translate}}</small>
           </div>
         </div>
       </div>
@@ -185,7 +185,7 @@
       </div> -->
 
       <div class="text-end mt-4">
-        <button class="btn add-btn px-4" type="submit" [disabled]="companyForm.invalid">Save Settings</button>
+        <button class="btn add-btn px-4" type="submit" [disabled]="companyForm.invalid">{{'companysettings.saveSettings' | translate}}</button>
       </div>
 
     </form>

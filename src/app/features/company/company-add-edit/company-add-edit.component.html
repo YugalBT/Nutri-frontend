@@ -17,19 +17,19 @@
                                 <label class="form-label">{{ 'company.companyName' | translate }}<sup
                                         style="color: #f00; font-size: 12px;">*</sup></label>
                                 <input type="text" class="form-control" formControlName="companyName"
-                                    placeholder="Enter company name">
+                                    [placeholder]="'company.companyNamePlaceholder' | translate">
                                 <div *ngIf="form.get('companyName')?.touched && form.get('companyName')?.invalid"
                                     class="text-danger">
-                                    Company Name is required
+                                    {{'validation.companyNameRequired' | translate}}
                                 </div>
                                 <div *ngIf="form.get('companyName')?.errors?.['pattern']" class="text-danger">
-                                    Company Name can only contain letters, spaces and hyphens.
+                                    {{'validation.companyNameInvalid' | translate}}
                                 </div>
                                 <div *ngIf="form.get('companyName')?.errors?.['minlength']" class="text-danger">
-                                    Company Name must be at least 3 characters long.
+                                    {{'validation.minlength' | translate}}
                                 </div>
                                 <div *ngIf="form.get('companyName')?.errors?.['maxlength']" class="text-danger">
-                                    Company Name cannot exceed 50 characters.
+                                    {{'validation.maxlength' | translate}}
                                 </div>
                             </div>
 
@@ -37,9 +37,9 @@
                                 <label class="form-label">{{ 'company.code' | translate }}<sup
                                         style="color: #f00; font-size: 12px;">*</sup></label>
                                 <input type="text" class="form-control" formControlName="code"
-                                    placeholder="Company code">
+                                    [placeholder]="'company.companyCode' | translate">
                                 <div *ngIf="form.get('code')?.touched && form.get('code')?.invalid" class="text-danger">
-                                    Code is required
+                                    {{'validation.companyCodeRequired' | translate}}
                                 </div>
                             </div>
 
@@ -52,13 +52,13 @@
                                 <label class="form-label">{{ 'company.website' | translate }}<sup
                                         style="color: #f00; font-size: 12px;">*</sup></label>
                                 <input type="url" class="form-control" formControlName="url"
-                                    placeholder="https://example.com">
+                                    [placeholder]="'company.urlplaceholder' | translate">
                                 <!-- <div *ngIf="form.get('url')?.touched && form.get('url')?.invalid" class="text-danger">
                                     Website URL is required
                                 </div> -->
                                 <div *ngIf="form.get('url')?.errors?.['pattern']" class="text-danger">
-                                    Please enter a valid URL (e.g., https://example.com).
-                                    </div>
+                                    {{'validation.websiteInvalid' | translate}}
+                                </div>
                             </div>
 
                             <!-- <div class="col-md-4 col-12">
@@ -87,19 +87,19 @@
                                 <div class="text-danger mt-1"
                                     *ngIf="form.get('logo')?.touched && form.get('logo')?.errors">
                                     <small *ngIf="form.get('logo')?.errors?.['required']">
-                                        Logo is required
+                                        {{'imageValidator.imageRequired' | translate }}
                                     </small>
 
                                     <small *ngIf="form.get('logo')?.errors?.['invalidType']">
-                                        Only PNG or JPG images are allowed
+                                        {{'imageValidator.invalidType' | translate }}
                                     </small>
 
                                     <small *ngIf="form.get('logo')?.errors?.['maxSizeExceeded']">
-                                        Image size must be less than 2 MB
+                                        {{'imageValidator.maxSizeExceeded' | translate }}
                                     </small>
 
                                     <small *ngIf="form.get('logo')?.errors?.['invalidDimension']">
-                                        Image Dimensions must be exactly 300 × 300 pixels
+                                        {{'imageValidator.invalidDimensions' | translate }}
                                     </small>
                                 </div>
                             </div>
@@ -130,14 +130,14 @@
                                 <label class="form-label">{{ 'company.firstName' | translate }}<sup
                                         style="color: #f00; font-size: 12px;">*</sup></label>
                                 <input type="text" class="form-control" formControlName="firstName"
-                                    placeholder="First name">
+                                    [placeholder]="'company.firstNamePlaceholder' | translate">
 
                                 <div *ngIf="form.get('firstName')?.touched && form.get('firstName')?.invalid"
                                     class="text-danger">
-                                    First Name is required
+                                    {{'companyValidation.firstNameRequired' | translate}}
                                 </div>
                                 <div *ngIf="form.get('firstName')?.errors?.['pattern']" class="text-danger">
-                                    First Name can only contain alphabets.
+                                    {{'companyValidation.firstNameInvalid' | translate}}
                                 </div>
 
                             </div>
@@ -145,13 +145,13 @@
                                 <label class="form-label">{{ 'company.lastName' | translate }}<sup
                                         style="color: #f00; font-size: 12px;">*</sup></label>
                                 <input type="text" class="form-control" formControlName="lastName"
-                                    placeholder="Last name">
+                                    [placeholder]="'company.lastNamePlaceholder' | translate">
                                 <div *ngIf="form.get('lastName')?.touched && form.get('lastName')?.invalid"
                                     class="text-danger">
-                                    Last Name is required
+                                    {{'companyValidation.lastNameRequired' | translate}}
                                 </div>
                                 <div *ngIf="form.get('lastName')?.errors?.['pattern']" class="text-danger">
-                                    Last Name can only contain alphabets.
+                                    {{'companyValidation.lastNameInvalid' | translate}}
                                 </div>
                             </div>
 
@@ -159,38 +159,38 @@
                                 <label class="form-label">{{ 'company.userEmail' | translate }}<sup
                                         style="color: #f00; font-size: 12px;">*</sup></label>
                                 <input type="email" class="form-control" formControlName="email"
-                                    placeholder="user@example.com">
+                                    [placeholder]="'company.userEmailPlaceholder' | translate">
                                 <div *ngIf="form.get('email')?.touched && form.get('email')?.invalid"
                                     class="text-danger">
-                                    User Email is required
+                                   {{'companyValidation.emailRequired' | translate}}
                                 </div>
                                 <div *ngIf="form.get('email')?.errors?.['email']" class="text-danger">
-                                    Please enter a valid email address.
+                                    {{'companyValidation.emailInvalid' | translate}}
                                 </div>
                             </div>
                             <div class="col-md-4 col-12">
                                 <label class="form-label">{{ 'company.phoneNumber' | translate }}<sup
                                         style="color: #f00; font-size: 12px;">*</sup></label>
                                 <input type="tel" class="form-control" formControlName="phoneNumber"
-                                    placeholder="555 555 5555">
+                                    [placeholder]="'company.userPhonePlaceholder' | translate">
                                 <div *ngIf="form.get('phoneNumber')?.touched" class="text-danger">
 
                                     <!-- Required -->
                                     <div *ngIf="form.get('phoneNumber')?.errors?.['required']">
-                                        Phone Number is required.
+                                        {{'phoneValidation.phoneNumberRequired' | translate}}
                                     </div>
 
                                     <!-- Minimum length -->
                                     <div *ngIf="form.get('phoneNumber')?.errors?.['minlength']">
-                                        Phone Number must be at least 10 digits.
+                                        {{'phoneValidation.minLength' | translate}}
                                     </div>
                                     <!-- Maximum length -->
                                     <div *ngIf="form.get('phoneNumber')?.errors?.['maxlength']">
-                                        Phone Number must be at most 10 digits.
+                                        {{'phoneValidation.maxLength' | translate}}
                                     </div>
                                     <!-- Only numbers allowed -->
                                     <div *ngIf="form.get('phoneNumber')?.errors?.['pattern']">
-                                        Phone Number must contain digits only.
+                                        {{'phoneValidation.invalidPhone' | translate}}
                                     </div>
 
                                 </div>
@@ -204,41 +204,43 @@
                                 <label class="form-label">{{ 'company.streetAddress' | translate }}<sup
                                         style="color: #f00; font-size: 12px;">*</sup></label>
                                 <input type="text" class="form-control" formControlName="streetAddress"
-                                    placeholder="Street address">
+                                    [placeholder]="'company.streetAddressPlaceholder' | translate">
                                 <div *ngIf="form.get('streetAddress')?.touched && form.get('streetAddress')?.invalid"
                                     class="text-danger">
-                                    Street Address is required
+                                  {{'addressValidation.streetAddressRequired' | translate}}
                                 </div>
                             </div>
                             <div class="col-md-4 col-12">
                                 <label class="form-label">{{ 'company.city' | translate }}<sup
                                         style="color: #f00; font-size: 12px;">*</sup></label>
-                                <input type="text" class="form-control" formControlName="city" placeholder="City">
+                                <input type="text" class="form-control" formControlName="city"
+                                    [placeholder]="'company.cityPlaceholder' | translate">
                                 <div *ngIf="form.get('city')?.touched && form.get('city')?.invalid" class="text-danger">
-                                    City is required
+                                   {{'addressValidation.cityRequired' | translate}}
                                 </div>
                             </div>
                             <div class="col-md-4 col-12">
                                 <label class="form-label">{{ 'company.zipCode' | translate }}<sup
                                         style="color: #f00; font-size: 12px;">*</sup></label>
                                 <input type="text" class="form-control" formControlName="zipCode"
-                                    placeholder="Zip / Postal code">
+                                    [placeholder]="'company.zipCodePlaceholder' | translate">
                                 <div *ngIf="form.get('zipCode')?.touched && form.get('zipCode')?.invalid"
                                     class="text-danger">
-                                    Zip Code is required
+                                   {{'addressValidation.zipCodeRequired' | translate}}
                                 </div>
                                 <div *ngIf="form.get('zipCode')?.errors?.['pattern']" class="text-danger">
-                                    Zip Code can only contain numbers.
+                                    {{'addressValidation.invalidZipCode' | translate}}
                                 </div>
                             </div>
 
                             <div class="col-md-4 col-12">
                                 <label class="form-label">{{ 'company.country' | translate }}<sup
                                         style="color: #f00; font-size: 12px;">*</sup></label>
-                                <input type="text" class="form-control" formControlName="country" placeholder="Country">
+                                <input type="text" class="form-control" formControlName="country"
+                                    [placeholder]="'company.countryPlaceholder' | translate">
                                 <div *ngIf="form.get('country')?.touched && form.get('country')?.invalid"
                                     class="text-danger">
-                                    Country is required
+                                    {{'addressValidation.countryRequired' | translate}}
                                 </div>
                             </div>
 
@@ -250,7 +252,7 @@
                                     <input class="form-check-input large-checkbox" type="checkbox"
                                         id="sameAsPrimaryUser" formControlName="sameAsPrimaryUser" />
                                     <label class="form-check-label" for="sameAsPrimaryUser">
-                                        Same as primary user
+                                        {{ 'company.sameAsPrimaryUser' | translate }}
                                     </label>
                                 </div>
                             </div>
@@ -259,35 +261,35 @@
                                 <label class="form-label">{{ 'company.userFirstName' | translate }}<sup
                                         style="color: #f00; font-size: 12px;">*</sup></label>
                                 <input type="text" class="form-control" formControlName="userFirstName"
-                                    placeholder="First name">
+                                    [placeholder]="'company.firstNamePlaceholder' | translate">
                                 <div *ngIf="form.get('userFirstName')?.touched && form.get('userFirstName')?.invalid"
                                     class="text-danger">
-                                    User First Name is required
+                                    {{'addressValidation.userFirstNameRequired' | translate}}
                                 </div>
                                 <div *ngIf="form.get('userFirstName')?.errors?.['pattern']" class="text-danger">
-                                    User First Name can only contain alphabets.
+                                    {{'addressValidation.userFirstNamePattern' | translate}}
                                 </div>
                             </div>
                             <div class="col-md-4 col-12">
                                 <label class="form-label">{{ 'company.userMiddleName' | translate }}</label>
                                 <input type="text" class="form-control" formControlName="userMiddleName"
-                                    placeholder="Middle name">
+                                    [placeholder]="'company.middleNamePlaceholder' | translate">
                                 <!-- Middle Name is optional, so no required validation message -->
                                 <div *ngIf="form.get('userMiddleName')?.errors?.['pattern']" class="text-danger">
-                                    User Middle Name can only contain alphabets.
+                                   {{'addressValidation.userMiddleNamePattern' | translate}}
                                 </div>
                             </div>
                             <div class="col-md-4 col-12">
                                 <label class="form-label">{{ 'company.userLastName' | translate }}<sup
                                         style="color: #f00; font-size: 12px;">*</sup></label>
                                 <input type="text" class="form-control" formControlName="userLastName"
-                                    placeholder="Last name">
+                                    [placeholder]="'company.lastNamePlaceholder' | translate">
                                 <div *ngIf="form.get('userLastName')?.touched && form.get('userLastName')?.invalid"
                                     class="text-danger">
-                                    User Last Name is required
+                                    {{'addressValidation.userLastNameRequired' | translate}}
                                 </div>
                                 <div *ngIf="form.get('userLastName')?.errors?.['pattern']" class="text-danger">
-                                    User Last Name can only contain alphabets.
+                                    {{'addressValidation.userLastNamePattern' | translate}}
                                 </div>
                             </div>
 
@@ -295,13 +297,13 @@
                                 <label class="form-label">{{ 'company.adminEmail' | translate }}<sup
                                         style="color: #f00; font-size: 12px;">*</sup></label>
                                 <input type="email" class="form-control" formControlName="userEmail"
-                                    placeholder="admin@example.com">
+                                    [placeholder]="'company.userEmailPlaceholder' | translate">
                                 <div *ngIf="form.get('userEmail')?.touched && form.get('userEmail')?.invalid"
                                     class="text-danger">
-                                    Admin Email is required
+                                    {{'addressValidation.userEmailRequired' | translate}}
                                 </div>
                                 <div *ngIf="form.get('userEmail')?.errors?.['email']" class="text-danger">
-                                    Please enter a valid email address.
+                                    {{'addressValidation.userEmailInvalid' | translate}}
                                 </div>
 
                             </div>
@@ -309,26 +311,26 @@
                                 <label class="form-label">{{ 'company.phoneNumber' | translate }}<sup
                                         style="color: #f00; font-size: 12px;">*</sup></label>
                                 <input type="tel" class="form-control" formControlName="userPhoneNumber"
-                                    placeholder="555 555 5555">
+                                    [placeholder]="'company.userPhonePlaceholder' | translate">
                                 <div *ngIf="form.get('userPhoneNumber')?.touched" class="text-danger">
 
                                     <!-- Required -->
                                     <div *ngIf="form.get('userPhoneNumber')?.errors?.['required']">
-                                        Phone Number is required.
+                                        {{'phoneValidation.phoneNumberRequired' | translate}}
                                     </div>
 
                                     <!-- Minimum length -->
                                     <div *ngIf="form.get('userPhoneNumber')?.errors?.['minlength']">
-                                        Phone Number must be at least 10 digits.
+                                        {{'phoneValidation.minLength' | translate}}
                                     </div>
 
                                     <!-- Maximum length -->
                                     <div *ngIf="form.get('userPhoneNumber')?.errors?.['maxlength']">
-                                        Phone Number must be at most 10 digits.
+                                        {{'phoneValidation.maxLength' | translate}}
                                     </div>
                                     <!-- Only numbers allowed -->
                                     <div *ngIf="form.get('userPhoneNumber')?.errors?.['pattern']">
-                                        Phone Number must contain digits only.
+                                        {{'phoneValidation.phoneNumberPattern' | translate}}
                                     </div>
 
                                 </div>
@@ -342,9 +344,10 @@
                                     <option *ngFor="let role of roleList" [value]="role.roleId">{{ role.nameEn }}(
                                         {{role.nameIt}})</option>
                                 </select>
-                                <!-- <div *ngIf="form.get('roleId')?.touched && form.get('roleId')?.invalid" class="text-danger">
-                                User Role is required
-                                </div> -->
+                                <div *ngIf="form.get('roleId')?.touched && form.get('roleId')?.invalid"
+                                    class="text-danger">
+                                    {{'companyValidation.roleRequired' | translate}}
+                                </div>
                             </div>
 
                             <div class="col-md-4 col-12">
@@ -353,25 +356,27 @@
                                 </label>
                                 <div class="input-group">
                                     <input [type]="!showCurrent ? 'password' : 'text'" autocomplete="off"
-                                        class="form-control" formControlName="password" placeholder="Enter password">
+                                        class="form-control" formControlName="password"
+                                        [placeholder]="'company.passwordPlaceholder' | translate">
                                     <span class="input-group-text" role="button" (click)="showCurrent = !showCurrent">
                                         <i class="fa" [ngClass]="showCurrent ? 'fa-eye' : 'fa-eye-slash'"></i>
                                     </span>
                                 </div>
                                 <div *ngIf="form.get('password')?.touched && form.get('password')?.invalid"
                                     class="text-danger">
-                                    Password is required
+                                      {{'companyValidation.passwordRequired' | translate}}
                                 </div>
                                 <div *ngIf="form.get('password')?.errors?.['minlength']" class="text-danger">
-                                    Password must be at least 8 characters long.
+                                    {{'companyValidation.passwordMinlength' | translate}}
                                 </div>
                             </div>
                             <div class="col-md-6 col-12 d-flex align-items-end" *ngIf="!isEdit">
                                 <div class="form-check">
-                                    <input class="form-check-input large-checkbox" type="checkbox" id="isFirstLogin"
+                                    <input class="form-check-input large-checkbox" type="checkbox" 
+                                    id="isFirstLogin"
                                         formControlName="isFirstLogin" />
                                     <label class="form-check-label" for="isFirstLogin">
-                                        Password reset needed
+                                        {{ 'company.passwordResetNeeded' | translate }}
                                     </label>
                                 </div>
                             </div>

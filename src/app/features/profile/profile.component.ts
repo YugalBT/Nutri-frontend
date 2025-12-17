@@ -15,11 +15,12 @@ import * as AuthActions from '../../state/auth/auth.actions';
 import { CommonService } from '../../shared/services/common.service';
 import { PERMISSIONS } from '../../core/constants/permissions.constants';
 import { ImageValidatorDirective } from '../../image-validator.directive'; 
+import { TranslatePipe } from '../../i18n/translate.pipe';
 
 @Component({
   selector: 'app-profile',
   standalone: true,
-  imports: [ReactiveFormsModule, SharedModule,ImageValidatorDirective],
+  imports: [ReactiveFormsModule, SharedModule,TranslatePipe,ImageValidatorDirective],
   templateUrl: './profile.component.html',
   styleUrls: ['./profile.component.css']
 })

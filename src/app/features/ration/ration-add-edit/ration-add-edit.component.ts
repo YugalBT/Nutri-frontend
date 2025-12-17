@@ -10,13 +10,14 @@ import { ApiResponse } from '../../../core/models/api-response';
 import { FeedList } from '../../../core/models/feed-list';
 import { PERMISSIONS } from '../../../core/constants/permissions.constants';
 import { CustomValidators } from '../../../core/helpers/validators';
+import { TranslatePipe } from '../../../i18n/translate.pipe';
 
 declare var bootstrap: any;
 
 @Component({
   selector: 'app-ration-add-edit',
   standalone: true,
-  imports: [SharedModule],
+  imports: [SharedModule,TranslatePipe],
   templateUrl: './ration-add-edit.component.html',
   styleUrls: ['./ration-add-edit.component.css']
 })
@@ -114,11 +115,6 @@ onFeedChangeUI(item: AbstractControl) {
     pricePerKg: selectedFeed.pricePerKg
   });
 }
-
-
-
-
-
 
 
   private loadFarmList(force = false): Observable<any[]> {
