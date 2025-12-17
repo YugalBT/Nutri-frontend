@@ -7,48 +7,74 @@
 
       <!-- Logo -->
       <div class="text-center mb-4">
-        <label class="form-label fw-bold">Company Logo</label>
+        <!-- <label class="form-label fw-bold">Company Logo</label> -->
         <div class="img-container">
-          <img *ngIf="imagePreview" [src]="imagePreview" class="profile-img" />
-          <span *ngIf="!imagePreview"><svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="120" height="120"
-              viewBox="0 0 512 512">
+
+          <!-- Image preview -->
+          <img *ngIf="companyForm.get('logo')?.value" [src]="companyForm.get('logo')?.value" class="profile-img" />
+
+          <!-- Placeholder -->
+          <span *ngIf="!companyForm.get('logo')?.value">
+            <svg xmlns="http://www.w3.org/2000/svg" width="116" height="120" viewBox="0 0 512 512">
               <path fill="#32BEA6"
-                d="M7.9,256C7.9,119,119,7.9,256,7.9C393,7.9,504.1,119,504.1,256c0,137-111.1,248.1-248.1,248.1C119,504.1,7.9,393,7.9,256z">
-              </path>
+                d="M7.9,256C7.9,119,119,7.9,256,7.9C393,7.9,504.1,119,504.1,256c0,137-111.1,248.1-248.1,248.1C119,504.1,7.9,393,7.9,256z" />
               <path fill="#FFF"
-                d="M391.5,214.5H297v-93.9c0-4-3.2-7.2-7.2-7.2h-68.1c-4,0-7.2,3.2-7.2,7.2v93.9h-93.9c-4,0-7.2,3.2-7.2,7.2v69.2c0,4,3.2,7.2,7.2,7.2h93.9v93.4c0,4,3.2,7.2,7.2,7.2h68.1c4,0,7.2-3.2,7.2-7.2v-93.4h94.5c4,0,7.2-3.2,7.2-7.2v-69.2C398.7,217.7,395.4,214.5,391.5,214.5z">
-              </path>
-            </svg></span>
-          <div class="action-buttons mt-2">
-            <label class="upload-btn">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                stroke-linecap="round" stroke-linejoin="round" class="me-1">
-                <path d="M14.5 4H9.5L8 6H4v14h16V6h-4l-1.5-2z" />
-                <circle cx="12" cy="13" r="4" />
-              </svg>
+                d="M391.5,214.5H297v-93.9c0-4-3.2-7.2-7.2-7.2h-68.1c-4,0-7.2,3.2-7.2,7.2v93.9h-93.9c-4,0-7.2,3.2-7.2,7.2v69.2c0,4,3.2,7.2,7.2,7.2h93.9v93.4c0,4,3.2,7.2,7.2,7.2h68.1c4,0,7.2-3.2,7.2-7.2v-93.4h94.5c4,0,7.2-3.2,7.2-7.2v-69.2C398.7,217.7,395.4,214.5,391.5,214.5z" />
+            </svg>
+          </span>
 
-              <input type="file" #fileInput (change)="onImageChange($event)" hidden />
-            </label>
-            <!-- <label class="upload-btn">
-              <input type="file" #fileInput (change)="onImageChange($event)" hidden />
-              Upload Logo
-            </label> -->
-            <button *ngIf="imagePreview" class="delete-btn ms-2" type="button" (click)="removeImage()">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                stroke-linecap="round" stroke-linejoin="round">
-                <polyline points="3 6 5 6 21 6"></polyline>
-                <path d="M19 6l-1 14H6L5 6"></path>
-                <path d="M10 11v6"></path>
-                <path d="M14 11v6"></path>
-                <path d="M9 6V4h6v2"></path>
-              </svg>
+          <!-- SINGLE hidden file input -->
+          <input type="file" id="profileUpload" hidden accept="image/png,image/jpeg" appImageValidator
+            controlName="logo" [width]="300" [height]="300" [maxSizeMB]="2" />
 
-            </button>
-            <!-- <button *ngIf="imagePreview" class="btn btn-danger ms-2" type="button"
-              (click)="removeImage()">Remove</button> -->
-          </div>
+          <!-- DELETE (TRASH) — ACTUALLY DELETES -->
+          <button *ngIf="companyForm.get('logo')?.value" type="button" class="upload-btn" (click)="removeImage()">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="3 6 5 6 21 6"></polyline>
+              <path d="M19 6l-1 14H6L5 6"></path>
+              <path d="M10 11v6"></path>
+              <path d="M14 11v6"></path>
+              <path d="M9 6V4h6v2"></path>
+            </svg>
+          </button>
+
+          <!-- PLUS — UPLOAD / REPLACE -->
+          <label for="profileUpload" class="plus-btn">
+            +
+          </label>
+
         </div>
-        <small class="text-muted">Allowed: JPG / PNG</small>
+        <p class="form-label fw-bold mb-2">Company Logo</p>
+        <!-- Validation / Helper text -->
+        <ng-container *ngIf="companyForm.get('logo') as logoCtrl">
+
+          <!-- ERROR messages -->
+          <div class="text-danger mt-1" *ngIf="logoCtrl.touched && logoCtrl.errors">
+            <small *ngIf="logoCtrl.errors['required']">
+              Profile image is required
+            </small>
+
+            <small *ngIf="logoCtrl.errors['invalidType']">
+              Only PNG or JPG images are allowed
+            </small>
+
+            <small *ngIf="logoCtrl.errors['maxSizeExceeded']">
+              Image size must be less than 2 MB
+            </small>
+
+            <small *ngIf="logoCtrl.errors['invalidDimension']">
+              Image Dimensions must be exactly 300 × 300 pixels
+            </small>
+          </div>
+
+          <!-- DEFAULT helper text -->
+          <small class="text-secondary" *ngIf="!logoCtrl.touched || !logoCtrl.errors">
+            Allowed: PNG, JPG, JPEG
+          </small>
+
+        </ng-container>
+
       </div>
 
       <!-- Company Info -->

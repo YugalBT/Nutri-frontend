@@ -8,11 +8,12 @@ import { ApiResponse } from '../../core/models/api-response';
 import { CustomValidators } from '../../core/helpers/validators';
 import { CommonService } from '../../shared/services/common.service';
 import { PERMISSIONS } from '../../core/constants/permissions.constants';
+import { ImageValidatorDirective } from '../../image-validator.directive';
 
 @Component({
   selector: 'app-companysetting',
   standalone: true,
-  imports: [ReactiveFormsModule, SharedModule],
+  imports: [ReactiveFormsModule, SharedModule, ImageValidatorDirective],
   templateUrl: './companysetting.component.html',
   styleUrl: './companysetting.component.css'
 })
@@ -59,23 +60,23 @@ export class CompanysettingComponent implements OnInit {
     });
   }
 
-  onImageChange(event: any) {
-    const file = event.target.files[0];
-    if (!file) return;
+  // onImageChange(event: any) {
+  //   const file = event.target.files[0];
+  //   if (!file) return;
 
-    if (!['image/png', 'image/jpeg'].includes(file.type)) {
-      this.toast.error("Only JPG / PNG allowed");
-      this.fileInput.nativeElement.value = '';
-      return;
-    }
+  //   if (!['image/png', 'image/jpeg'].includes(file.type)) {
+  //     this.toast.error("Only JPG / PNG allowed");
+  //     this.fileInput.nativeElement.value = '';
+  //     return;
+  //   }
 
-    const reader = new FileReader();
-    reader.onload = () => {
-      this.imagePreview = reader.result as string;
-      this.companyForm.patchValue({ logo: reader.result });
-    };
-    reader.readAsDataURL(file);
-  }
+  //   const reader = new FileReader();
+  //   reader.onload = () => {
+  //     this.imagePreview = reader.result as string;
+  //     this.companyForm.patchValue({ logo: reader.result });
+  //   };
+  //   reader.readAsDataURL(file);
+  // }
 
   removeImage() {
     this.imagePreview = null;
