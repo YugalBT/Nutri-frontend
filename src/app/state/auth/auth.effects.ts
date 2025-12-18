@@ -12,6 +12,7 @@ import { LoginRequest } from '../../core/models/login-request';
 import { ToastService } from '../../shared/services/toast.service';
 import { UpdateProfileService } from '../../core/services/profile/update-profile.service';
 import { ROUTE_CONST } from '../../core/constants/route.constants';
+import { use } from 'echarts';
 
 @Injectable()
 
@@ -93,6 +94,10 @@ export class AuthEffects {
 
             if (!silent) {
               this.toast.success('Login successful!');
+              if(!user?.isFirstLogin) {
+                this.router.navigate([ROUTE_CONST.RESET_PASSWORD]);
+                return;
+              }
               this.router.navigate([ROUTE_CONST.DASHBOARD]);
             }
           })

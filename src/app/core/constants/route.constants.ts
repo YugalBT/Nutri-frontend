@@ -3,4 +3,5 @@ export const ROUTE_CONST = {
     RATION_LIST: '/ration',
     RATION_ITEMS: '/ration/items',
     DASHBOARD: '/dashboard',
+    RESET_PASSWORD : '/reset-password',
 };
