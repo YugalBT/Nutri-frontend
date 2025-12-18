@@ -20,9 +20,6 @@ export  class StorageHelper {
   
     const userData = JSON.parse(userDataString);
     const roles: string[] = userData?.roles || [];
-    console.log("roles" , roles)
-
-  
     return roles.includes(roleName);
   }
 }

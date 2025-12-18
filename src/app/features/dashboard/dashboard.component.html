@@ -171,31 +171,60 @@
         </div>
     </div>
     <!-- graph section -->
-    <div class="graph-section py-5">
-        <div class="row g-4">
-            <div class="col-lg-6">
-                <div class="graph-left">
-                    <div class="body_heading mb-4">
-                        <h2 class=" mb-0 ">Feed Cost BreakDown</h2>
-                        <p class="mb-0">Understand which feeds contribute most to your total cost.</p>
-                    </div>
-                    <div class="graph-image">
-                        <img src="assets/image/piechart.png" alt="" class="img-fluid w-100">
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-6">
-                <div class="graph-left">
-                    <div class="body_heading mb-4">
-                        <h2 class=" mb-0 ">Recent Events (Farm Version)</h2>
-                        <p class="mb-0">A real-time feed of the latest farm activities and alerts.</p>
-                    </div>
-                    <div class="graph-image">
-                        <img src="assets/image/line-chart.png" alt="" class="img-fluid w-100">
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-6">
+
+<div class="graph-section py-5">
+  <div class="row g-4">
+
+    <!-- Feed Cost Breakdown -->
+    <div class="col-lg-6">
+      <div class="graph-left">
+        <div class="body_heading mb-4">
+          <h2 class="mb-0">Feed Cost BreakDown</h2>
+          <p class="mb-0">
+            Understand which feeds contribute most to your total cost.
+          </p>
+        </div>
+
+        <div class="graph-image position-relative">
+          <div
+            echarts
+            [options]="feedCostChart"
+             [autoResize]="true"
+            style="height:320px;">
+          </div>
+
+          <!-- Center Text -->
+          <div class="donut-center">
+            <h4 class="mb-0">€ 42,000</h4>
+            <small>Total Feed Cost</small>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Recent Events -->
+    <div class="col-lg-6">
+      <div class="graph-left">
+        <div class="body_heading mb-4">
+          <h2 class="mb-0">Recent Events (Farm Version)</h2>
+          <p class="mb-0">
+            A real-time feed of the latest farm activities and alerts.
+          </p>
+        </div>
+
+        <div class="graph-image">
+          <div
+            echarts
+            [options]="recentEventsChart"
+            style="height:320px;">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Milk Production Trends (UNCHANGED – activity list stays same) -->
+    
+                   <div class="col-lg-6">
                 <div class="graph-left mt-2">
                     <div class="body_heading mb-4">
                         <h2 class=" mb-0 ">Milk Production Trends </h2>
@@ -277,14 +306,16 @@
                                 </div>
                             </div>
                             <div class="act-time">5h ago</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-        </div>
+                        </div></div></div>
+        <ng-content></ng-content>
+      </div>
     </div>
+
+  </div>
 </div>
+
+    
+
 
 
 <ng-template #NoSuperAdmin>

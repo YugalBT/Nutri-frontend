@@ -26,6 +26,8 @@
                                 <!-- <option [ngValue]="null">{{'farm.selectFarm' | translate}}</option> -->
                                 <option *ngFor="let f of farms" [value]="f.farmId">{{ f.farmName }}</option>
                             </select>
+                            <span *ngIf="farmsLoading" class="select-spinner spinner-border spinner-border-sm">
+                            </span>
                             <div *ngIf="form.get('farmId')?.touched && form.get('farmId')?.invalid" class="text-danger">
                                 {{'farm.farmNameRequired' | translate}}
                             </div>
@@ -33,12 +35,23 @@
 
                         <!-- Animal Type -->
                         <div class="col-md-4">
-                            <label class="form-label" for="animalTypeId" >{{'animalGroup.animalType' | translate}} <sup class="text-danger">*</sup></label>
-                            <select class="form-select" id="animalTypeId" formControlName="animalTypeId" [disabled]="typesLoading">
+                            <label class="form-label" for="animalTypeId">{{'animalGroup.animalType' | translate}} <sup
+                                    class="text-danger">*</sup></label>
+                            <select class="form-select" id="animalTypeId" formControlName="animalTypeId"
+                                [disabled]="typesLoading">
+                                <option *ngIf="lactationsLoading">
+                                    Loading lactation stages...
+                                </option>
+
+                                <option *ngIf="!lactationsLoading && lactations?.length === 0">
+                                    No lactation stages available
+                                </option>
                                 <option [ngValue]="null">{{ 'animalGroup.selectAnimalType' | translate }}</option>
                                 <option *ngFor="let t of animalTypes" [ngValue]="t.animalTypeId">{{ t.typeNameEn }}
                                 </option>
                             </select>
+                            <span *ngIf="typesLoading" class="select-spinner spinner-border spinner-border-sm">
+                            </span>
                             <div *ngIf="form.get('animalTypeId')?.touched && form.get('animalTypeId')?.invalid"
                                 class="text-danger">
                                 {{'animalGroup.animalTypeRequired' | translate}}
@@ -49,17 +62,25 @@
                         <div class="col-md-4">
                             <label class="form-label" for="animalLactationId" >{{'animalGroup.lactationStage' | translate}} <sup class="text-danger">*</sup></label>
                             <select class="form-select" id="animalLactationId" formControlName="animalLactationId">
+                                <option *ngIf="lactationsLoading">
+                                    Loading lactation stages...
+                                </option>
+
+                                <option *ngIf="!lactationsLoading && lactations?.length === 0">
+                                    No lactation stages available
+                                </option>
                                 <option [ngValue]="null">{{ 'animalGroup.selectLactationStage' | translate }}</option>
                                 <option *ngFor="let l of lactations" [value]="l.animalLactationId">{{ l.lactationNameEn
                                     }}</option>
                             </select>
+                            <span *ngIf="lactationsLoading" class="select-spinner spinner-border spinner-border-sm">
+                            </span>
                             <div *ngIf="form.get('animalLactationId')?.touched && form.get('animalLactationId')?.invalid"
                                 class="text-danger">
                                 {{'animalGroup.lactationStageRequired' | translate}}
                             </div>
                         </div>
 
-                        <!-- Group Name EN -->
                         <div class="col-md-4">
                             <label class="form-label">{{'animalGroup.animalGroupName' | translate}} <sup class="text-danger">*</sup></label>
                             <input type="text" class="form-control" formControlName="animalGroupNameEn"

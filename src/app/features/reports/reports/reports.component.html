@@ -1,1 +1,72 @@
-<p>Reports Works!</p>
+<div class="pagecls">
+
+<div class="report-filters mb-4">
+
+  <div class="btn-group mb-3" role="group">
+    <button class="btn add-btn ">Daily</button>
+    <button class="btn">Monthly</button>
+    <button class="btn">Period</button>
+    <button class="btn">Quarter</button>
+    <button class="btn">Comparison</button>
+  </div>
+
+  <div class="card">
+    <div class="card-body py-2">
+      <div class="row align-items-center g-3">
+
+        <div class="col-auto ">
+          Date:
+        </div>
+
+        <div class="col-md-3 col-sm-6">
+          <input
+            type="date"
+            class="form-control"
+            value="2024-12-10">
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+</div>
+
+  <div class="table-card mb-4">
+    <app-reusable-table
+      [columns]="columns"
+      [columnFields]="columnFields"
+      [data]="reports"
+      [pageable]="false"
+      [showActions]="false">
+    </app-reusable-table>
+  </div>
+
+  <div class="row">
+    <div class="col-md-6 mb-3">
+      <div class="card">
+        <div class="card-header ">Cost vs Income</div>
+        <div class="card-body">
+          <div
+            echarts
+            [options]="costIncomeChart"
+            style="height:300px;">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-6 mb-3">
+      <div class="card">
+        <div class="card-header ">Margin Trend</div>
+        <div class="card-body">
+          <div
+            echarts
+            [options]="marginTrendChart"
+            style="height:300px;">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>

@@ -20,6 +20,8 @@
                   {{ f.farmName }}
                 </option>
               </select>
+              <span *ngIf="farmsLoading" class="select-spinner spinner-border spinner-border-sm">
+              </span>
 
               <div *ngIf="form.get('farmId')?.touched && form.get('farmId')?.invalid" class="text-danger">
                 {{ 'farm.farmNameRequired' | translate }}

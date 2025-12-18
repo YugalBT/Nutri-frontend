@@ -42,11 +42,14 @@ export const API_ENDPOINTS = {
     GET_RATION_ITEMS: '/Common/GetRationByRationd',
   },
   
+  
   Module: {
     GET_ALL: '/Module/modules',
     GET_ALL_ROLES: '/Common/GetAllRoles',
     CREATE: '/Module/Add',
     DELETE: '/Module/Delete',
+    UPDATE: '/Module/Edit',
+
   },
   
   Tenant: {

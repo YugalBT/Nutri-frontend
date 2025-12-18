@@ -27,9 +27,9 @@ export class LoginComponent implements OnInit {
   form: FormGroup;
   icons = ICONS;
   loading$: Observable<boolean>;
-  companyCode: string = '';
-  logoUrl: string = '';
-  primaryColor: string = '#1d7e8b';
+  // companyCode: string = '';
+  // logoUrl: string = '';
+  // primaryColor: string = '#1d7e8b';
   constructor(private fb: FormBuilder, private store: Store, private toast: ToastService, private translate: TranslateService, private authService: AuthService, private router: Router, private route: ActivatedRoute) {
     this.form = this.fb.group({
       username: ['', [CustomValidators.required()]],
@@ -46,6 +46,8 @@ export class LoginComponent implements OnInit {
     //   //   this.loadHomePageContent();
     //   // }
     // });
+
+
   }
 
 
@@ -59,13 +61,13 @@ export class LoginComponent implements OnInit {
 
 
     let username = (this.form.value.username || '').trim();
-  let password = (this.form.value.password || '').trim();
+    let password = (this.form.value.password || '').trim();
 
-  this.form.patchValue(
-    { username, password },
-    { emitEvent: false }
-  );
-    this.store.dispatch(AuthActions.login({ username, password}));
+    this.form.patchValue(
+      { username, password },
+      { emitEvent: false }
+    );
+    this.store.dispatch(AuthActions.login({ username, password }));
   }
 
 

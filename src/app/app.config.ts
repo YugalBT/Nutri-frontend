@@ -13,16 +13,18 @@ import { AuthEffects } from './state/auth/auth.effects';
 import { SpinnerModule } from './shared/spinner.module';
 import { spinnerInterceptor } from './core/interceptors/spinner.interceptor';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
+import { NgxEchartsModule } from 'ngx-echarts';
+
 
 
 export const appConfig: ApplicationConfig = {
   providers: [
-    provideZoneChangeDetection({ eventCoalescing: true }), 
+    provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes),
-    
+
     provideHttpClient(
-  withInterceptors([authInterceptor, spinnerInterceptor])
-),
+      withInterceptors([authInterceptor, spinnerInterceptor])
+    ),
 
     provideAnimations(),
     importProvidersFrom(SpinnerModule),
@@ -33,11 +35,16 @@ export const appConfig: ApplicationConfig = {
       closeButton: true
     }),
 
-    provideStore({ auth: authReducer }),    // REGISTER STATE
-    provideEffects([AuthEffects]),          // REGISTER EFFECTS
+    provideStore({ auth: authReducer }),   
+    provideEffects([AuthEffects]),    
     provideStoreDevtools(), provideAnimationsAsync(),
+    importProvidersFrom(
+      NgxEchartsModule.forRoot({
+        echarts: () => import('echarts')
+      })
+    )
 
   ]
 
-  
+
 };

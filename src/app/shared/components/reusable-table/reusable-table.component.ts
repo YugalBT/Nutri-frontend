@@ -6,7 +6,7 @@ import { MatBadgeModule } from '@angular/material/badge';
 @Component({
   selector: 'app-reusable-table',
   standalone: true,
-  imports: [CommonModule, MatPaginatorModule,MatBadgeModule],
+  imports: [CommonModule, MatPaginatorModule, MatBadgeModule],
   templateUrl: './reusable-table.component.html',
   styleUrls: ['./reusable-table.component.css']
 })
@@ -32,7 +32,7 @@ export class ReusableTableComponent implements OnChanges {
   @Output() toggleActive = new EventEmitter<{ row: any; isActive: boolean }>();
 
   @Input() clickableField?: string;
-@Output() cellClick = new EventEmitter<{ field: string; row: any }>();
+  @Output() cellClick = new EventEmitter<{ field: string; row: any }>();
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes['pageIndex'] && !changes['pageIndex'].isFirstChange()) {
@@ -85,7 +85,6 @@ export class ReusableTableComponent implements OnChanges {
     img.src = this.NoImagePath;
   }
 
-  // FIXED: separate function
   onToggle(row: any, event: any) {
     this.toggleActive.emit({
       row,
@@ -93,14 +92,13 @@ export class ReusableTableComponent implements OnChanges {
     });
   }
 
-  
-onCellClick(field: string, row: any): void {
-  if (this.clickableField && field !== this.clickableField) return;
-  this.cellClick.emit({ field, row });
-}
+
+  onCellClick(field: string, row: any): void {
+    if (this.clickableField && field !== this.clickableField) return;
+    this.cellClick.emit({ field, row });
+  }
 
 
-  // FIXED: Correct paginator event
   onPaginate(event: PageEvent) {
     this.pageIndex = event.pageIndex;
     this.pageSize = event.pageSize;

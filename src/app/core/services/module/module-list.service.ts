@@ -28,7 +28,7 @@ export class ModuleListService {
   // update module
 
     updateModule(payload: any): Observable<ApiResponse<any>> {
-    return this.http.post<any>(API_ENDPOINTS.Module.CREATE, payload);
+    return this.http.post<any>(API_ENDPOINTS.Module.UPDATE, payload);
   }
   
 }
