@@ -7,13 +7,14 @@ import { SharedModule } from '../../../shared/shared.module';
 import { AnimallactationList } from '../../../core/models/animallactation-list';
 import { CommonService } from '../../../shared/services/common.service';
 import { PERMISSIONS } from '../../../core/constants/permissions.constants';
+import { TranslatePipe } from '../../../i18n/translate.pipe';
 
 declare var bootstrap: any;
 
 @Component({
   selector: 'app-animal-lactation-add-edit',
   standalone: true,
-  imports: [SharedModule, ReactiveFormsModule],
+  imports: [SharedModule, ReactiveFormsModule,TranslatePipe],
   templateUrl: './animal-lactation-add-edit.component.html',
   styleUrls: ['./animal-lactation-add-edit.component.css']
 })

@@ -5,7 +5,9 @@
       <!-- HEADER -->
       <div class="modal-header">
         <h5 class="modal-title">
-          {{ isEdit ? 'Edit Animal Type' : 'Add Animal Type' }}
+                {{ (isEdit 
+                    ? 'animalType.editAnimalType' 
+                    : 'animalType.addAnimalType') | translate }}
         </h5>
         <button type="button" class="btn-close" (click)="closeModal()"></button>
       </div>
@@ -25,7 +27,7 @@
               <!-- English Name -->
               <div class="col-12">
                 <label class="form-label">
-                  Animal Type Name (English)
+                 {{ 'animalType.animalTypeName' | translate }}
                   <sup style="color: red; font-size: 12px;">*</sup>
                 </label>
 
@@ -33,38 +35,18 @@
                   type="text"
                   class="form-control"
                   formControlName="typeNameEn"
-                  placeholder="Enter English name"
+                  placeholder="{{ 'animalType.animalTypeNamePlaceholder' | translate }}"
                 />
 
                 <div *ngIf="form.get('typeNameEn')?.touched && form.get('typeNameEn')?.invalid" class="text-danger">
-                  <div *ngIf="form.get('typeNameEn')?.errors?.['required']">English name is required.</div>
-                  <div *ngIf="form.get('typeNameEn')?.errors?.['minlength']">Minimum 3 characters.</div>
-                  <div *ngIf="form.get('typeNameEn')?.errors?.['maxlength']">Maximum 20 characters.</div>
-                  <div *ngIf="form.get('typeNameEn')?.errors?.['pattern']">Animal Type Name can only contain alphabets.</div>
+                  <div *ngIf="form.get('typeNameEn')?.errors?.['required']">{{ 'animalType.animalTypeNameRequired' | translate }}</div>
+                  <div *ngIf="form.get('typeNameEn')?.errors?.['minlength']">{{ 'validation.minLength' | translate }}</div>
+                  <div *ngIf="form.get('typeNameEn')?.errors?.['maxlength']">{{ 'validation.maxLength' | translate }}</div>
+                  <div *ngIf="form.get('typeNameEn')?.errors?.['pattern']">{{ 'validation.onlyAlphabetAndSpaces' | translate }}</div>
                 </div>
               </div>
 
-                <!-- Italian Name -->
-              <div class="col-12">
-                <label class="form-label">
-                  Animal Type Name (Italian)
-                  <!-- <sup style="color: red; font-size: 12px;">*</sup> -->
-                </label>
-
-                <input
-                  type="text"
-                  class="form-control"
-                  formControlName="typeNameIt"
-                  placeholder="Enter Italian name"
-                />
-
-                <div *ngIf="form.get('typeNameIt')?.touched && form.get('typeNameIt')?.invalid" class="text-danger">
-                  <!-- <div *ngIf="form.get('typeNameIt')?.errors?.['required']">Italian name is required.</div> -->
-                  <div *ngIf="form.get('typeNameIt')?.errors?.['minlength']">Minimum 3 characters.</div>
-                  <div *ngIf="form.get('typeNameIt')?.errors?.['maxlength']">Maximum 20 characters.</div>
-                  <div *ngIf="form.get('typeNameIt')?.errors?.['pattern']">Animal Type Name can only contain alphabets.</div>
-                </div>
-              </div>
+            
             </div>
           </div>
         </form>
@@ -72,9 +54,11 @@
 
       <!-- FOOTER -->
       <div class="modal-footer">
-        <button class="btn btn-outline-secondary" (click)="closeModal()">Cancel</button>
+        <button class="btn btn-outline-secondary" (click)="closeModal()">{{ 'common.cancel' | translate }}</button>
         <button class="btn add-btn" (click)="save()">
-          {{ isEdit ? 'Update' : 'Save' }}
+          {{ (isEdit 
+    ? 'common.update' 
+    : 'common.save') | translate }}
         </button>
       </div>
 

@@ -10,13 +10,14 @@ import { CommonService } from '../../../shared/services/common.service';
 import { ApiResponse } from '../../../core/models/api-response';
 import { PERMISSIONS } from '../../../core/constants/permissions.constants';
 import { CustomValidators } from '../../../core/helpers/validators';
+import { TranslatePipe } from '../../../i18n/translate.pipe';
 
 declare var bootstrap: any;
 
 @Component({
   selector: 'app-animal-group-add-edit',
   standalone: true,
-  imports: [SharedModule],
+  imports: [SharedModule,TranslatePipe],
   templateUrl: './animal-group-add-edit.component.html',
   styleUrls: ['./animal-group-add-edit.component.css']
 })

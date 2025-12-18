@@ -41,7 +41,8 @@ export class AnimalLactationListComponent {
     private animallactationService: AnimallactationService,
     private toast: ToastService,
     private confirm: ConfirmDialogService,
-    private commonService : CommonService
+    private commonService : CommonService,
+    private translateService: TranslateService
   ) {
     this.setColumns();
     this.langSub = this.translate.lang$.subscribe(() => this.setColumns());
@@ -156,14 +157,12 @@ export class AnimalLactationListComponent {
 
   private setColumns(): void {
     this.columns = [
-      'Lactation Name En',
-      'Lactation Name It',
-      'Status'
+      this.translateService.instant('animalLactationStage.columns.lactationNameEn') ?? 'Lactation Name',
+      this.translateService.instant('common.status') ?? 'Status'
     ];
 
     this.columnFields = [
       'lactationNameEn',
-      'lactationNameIt',
       'isActive'
     ];
   }

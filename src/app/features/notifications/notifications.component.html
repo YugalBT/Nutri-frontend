@@ -1,9 +1,12 @@
 <div class="container-fluid mt-4">
   <div class="row mb-3">
     <div class="col-8">
-      <h4 class="fw-semibold">Notifications</h4>
+      <h4 class="fw-semibold">
+        {{ 'notifications.notifications' | translate }}
+      </h4>
+
       <app-global-search
-        [placeholder]="'Search notifications...'"
+        [placeholder]="'notifications.searchPlaceholder' | translate"
         [showStatus]="false"
         (search)="onSearch($event)"
         (clear)="clearFilters()">
@@ -27,8 +30,9 @@
           [showActions]="false">
         </app-reusable-table>
 
-        <div *ngIf="!loading && filteredData.length === 0" class="text-center py-3 text-muted">
-          No notifications found.
+        <div *ngIf="!loading && filteredData.length === 0"
+             class="text-center py-3 text-muted">
+          {{ 'notifications.noNotifications' | translate }}
         </div>
       </ng-template>
     </div>

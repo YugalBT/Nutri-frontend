@@ -8,6 +8,7 @@ import { SharedModule } from '../../../shared/shared.module';
 import { FarmList } from '../../../core/models/farm-list';
 import { PERMISSIONS } from '../../../core/constants/permissions.constants';
 import { CustomValidators } from '../../../core/helpers/validators';
+import { TranslatePipe } from '../../../i18n/translate.pipe';
 
 
 declare var bootstrap: any;
@@ -15,7 +16,7 @@ declare var bootstrap: any;
 @Component({
   selector: 'app-feed-add-edit',
   standalone: true,
-  imports: [SharedModule],
+  imports: [SharedModule,TranslatePipe],
   templateUrl: './feed-add-edit.component.html',
   styleUrls: ['./feed-add-edit.component.css']
 })

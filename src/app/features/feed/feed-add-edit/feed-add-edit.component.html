@@ -3,7 +3,7 @@
     <div class="modal-content">
 
       <div class="modal-header">
-        <h5 class="modal-title">{{ isEdit ? 'Edit Feed' : 'Add Feed' }}</h5>
+        <h5 class="modal-title">{{ isEdit ? ('feed.editFeed' | translate) : ('feed.addFeed' | translate) }}</h5>
         <button type="button" class="btn-close" (click)="closeModal()"></button>
       </div>
 
@@ -13,91 +13,91 @@
           <!-- Farm + Feed Name -->
           <div class="row g-3">
             <div class="col-md-4">
-              <label class="form-label">Farm <sup class="text-danger">*</sup></label>
+              <label class="form-label">{{ 'farm.farmName' | translate }} <sup class="text-danger">*</sup></label>
               <select formControlName="farmId" class="form-select" [disabled]="farmsLoading">
-                <option [ngValue]="null">Select Farm</option>
+                <option [ngValue]="null">{{ 'farm.selectFarm' | translate }}</option>
                 <option *ngFor="let f of farms" [value]="f.farmId">
                   {{ f.farmName }}
                 </option>
               </select>
 
               <div *ngIf="form.get('farmId')?.touched && form.get('farmId')?.invalid" class="text-danger">
-                Farm is required.
+                {{ 'farm.farmNameRequired' | translate }}
               </div>
             </div>
 
             <div class="col-md-4">
-              <label class="form-label">Feed Name <sup class="text-danger">*</sup></label>
-              <input type="text" formControlName="feedName" class="form-control" placeholder="Enter Feed Name">
+              <label class="form-label">{{ 'feed.feedName' | translate }} <sup class="text-danger">*</sup></label>
+              <input type="text" formControlName="feedName" class="form-control" placeholder="{{ 'feed.feedNamePlaceholder' | translate }}">
               <div *ngIf="form.get('feedName')?.touched && form.get('feedName')?.invalid" class="text-danger">
-                Feed Name is required.
+                {{ 'feed.feedNameRequired' | translate }}
               </div>
                <div *ngIf="form.get('feedName')?.errors?.['pattern']" class="text-danger">
-                FeedName can only contain alphabets ,hyphen and spaces.
+                {{'validation.onlyAlphabetsHyphenSpaces' | translate}}
                </div>
-                <div *ngIf="form.get('feedName')?.errors?.['minlength']">Minimum 3 characters.</div>
-                          <div *ngIf="form.get('feedName')?.errors?.['maxlength']">Maximum 20 characters.</div>
+                <div *ngIf="form.get('feedName')?.errors?.['minlength']">{{'validation.minLength' | translate}}</div>
+                          <div *ngIf="form.get('feedName')?.errors?.['maxlength']">{{'validation.maxLength' | translate}}</div>
               
             </div>
 
             <div class="col-md-4">
-              <label class="form-label">Category <sup class="text-danger">*</sup></label>
-              <input type="text" formControlName="category" class="form-control" placeholder="Enter Category">
+              <label class="form-label">{{ 'feed.category' | translate }} <sup class="text-danger">*</sup></label>
+              <input type="text" formControlName="category" class="form-control" placeholder="{{ 'feed.selectCategory' | translate }}">
               <div *ngIf="form.get('category')?.touched && form.get('category')?.invalid" class="text-danger">
-                Category is required.
+                {{ 'feed.categoryRequired' | translate }}
               </div>
                 <div *ngIf="form.get('category')?.errors?.['pattern']" class="text-danger">
-                Category can only contain alphabets ,hyphen and spaces.
+                {{'validation.onlyAlphabetsHyphenSpaces' | translate}}
                </div>
-                 <div *ngIf="form.get('category')?.errors?.['minlength']">Minimum 3 characters.</div>
-                          <div *ngIf="form.get('category')?.errors?.['maxlength']">Maximum 20 characters.</div>
+                 <div *ngIf="form.get('category')?.errors?.['minlength']">{{'validation.minLength' | translate}}</div>
+                          <div *ngIf="form.get('category')?.errors?.['maxlength']">{{'validation.maxLength' | translate}}</div>
             </div>
           </div>
 
           <!-- Dry Matter + Protein + NDF -->
           <div class="row g-3 mt-2">
             <div class="col-md-4">
-              <label class="form-label">Dry Matter (%) <sup class="text-danger">*</sup></label>
+              <label class="form-label">{{ 'feed.dm' | translate }} <sup class="text-danger">*</sup></label>
               <input type="number" step="0.01" min="0" formControlName="dryMatter" class="form-control"
-                placeholder="Enter Dry Matter %">
+                placeholder="{{ 'feed.dmPlaceholder' | translate }}">
               <div *ngIf="form.get('dryMatter')?.touched && form.get('dryMatter')?.invalid" class="text-danger">
-                Dry Matter is required.
+                {{ 'feed.dmRequired' | translate }}
               </div>
                 <div *ngIf="form.get('dryMatter')?.errors?.['pattern']" class="text-danger">
-                  DryMatter only accepts positive value.
+                  {{ 'validation.onlyPositiveNumbers' | translate }}
                   </div>
             <div *ngIf="form.get('dryMatter')?.errors?.['maxDigits']" class="text-danger">
-              Maximum 20 digits are allowed.
+              {{'validation.maxDigits' | translate}}
             </div>      
            </div>
 
             <div class="col-md-4">
-              <label class="form-label">Crude Protein (%) <sup class="text-danger">*</sup></label>
+              <label class="form-label">{{ 'feed.cp' | translate }} <sup class="text-danger">*</sup></label>
               <input type="number" step="0.01" min="0" formControlName="protein" class="form-control"
-                placeholder="Enter Crude Protein %">
+                placeholder="{{ 'feed.cpPlaceholder' | translate }}">
               <div *ngIf="form.get('protein')?.touched && form.get('protein')?.invalid" class="text-danger">
-                Protein is required.
+                {{ 'feed.cpRequired' | translate }}
               </div>
                 <div *ngIf="form.get('protein')?.errors?.['pattern']" class="text-danger">
-                  Protein only accepts positive value.
+                  {{ 'validation.onlyPositiveNumbers' | translate }}
                   </div>
                   <div *ngIf="form.get('protein')?.errors?.['maxDigits']" class="text-danger">
-              Maximum 20 digits are allowed.
+                  {{'validation.maxDigits' | translate}}
             </div> 
             </div>
 
             <div class="col-md-4">
-              <label class="form-label">NDF (%) <sup class="text-danger">*</sup></label>
+              <label class="form-label">{{ 'feed.ndf' | translate }} <sup class="text-danger">*</sup></label>
               <input type="number" step="0.01" min="0" formControlName="ndf" class="form-control"
-                placeholder="Enter NDF %">
+                placeholder="{{ 'feed.ndfPlaceholder' | translate }}">
               <div *ngIf="form.get('ndf')?.touched && form.get('ndf')?.invalid" class="text-danger">
-                NDF is required.
+                {{ 'feed.ndfRequired' | translate }}
               </div>
                 <div *ngIf="form.get('ndf')?.errors?.['pattern']" class="text-danger">
-                  NDF only accepts positive value.
+                  {{ 'validation.onlyPositiveNumbers' | translate }}
                   </div>
                   <div *ngIf="form.get('ndf')?.errors?.['maxDigits']" class="text-danger">
-              Maximum 20 digits are allowed.
+                {{'validation.maxDigits' | translate}}
             </div> 
             </div>
           </div>
@@ -105,47 +105,47 @@
           <!-- Energy + Price Per Kg + ADF -->
           <div class="row g-3 mt-2">
             <div class="col-md-4">
-              <label class="form-label">Energy (kcal/kg) <sup class="text-danger">*</sup></label>
+              <label class="form-label">{{ 'feed.energy' | translate }} <sup class="text-danger">*</sup></label>
               <input type="number" step="0.001" min="0" formControlName="energy" class="form-control"
-                placeholder="Enter Energy (kcal/kg)">
+                placeholder="{{ 'feed.energyPlaceholder' | translate }}">
               <div *ngIf="form.get('energy')?.touched && form.get('energy')?.invalid" class="text-danger">
-                Energy is required.
+                {{ 'feed.energyRequired' | translate }}
               </div>
                 <div *ngIf="form.get('energy')?.errors?.['pattern']" class="text-danger">
-                  Energy only accepts positive value.
+                  {{ 'validation.onlyPositiveNumbers' | translate }}
                   </div>
                   <div *ngIf="form.get('energy')?.errors?.['maxDigits']" class="text-danger">
-              Maximum 20 digits are allowed.
+              {{'validation.maxDigits' | translate}}
             </div> 
             </div>
 
             <div class="col-md-4">
-              <label class="form-label">Price Per Kg (€) <sup class="text-danger">*</sup></label>
+              <label class="form-label">{{ 'feed.pricePerKg' | translate }} <sup class="text-danger">*</sup></label>
               <input type="number" step="0.0001" min="0" formControlName="pricePerKg" class="form-control"
-                placeholder="Enter Price Per Kg (€)">
+                placeholder="{{ 'feed.pricePerKgPlaceholder' | translate }}">
               <div *ngIf="form.get('pricePerKg')?.touched && form.get('pricePerKg')?.invalid" class="text-danger">
-                Price Per Kg is required.
+                {{ 'feed.pricePerKgRequired' | translate }}
               </div>
                 <div *ngIf="form.get('pricePerKg')?.errors?.['pattern']" class="text-danger">
-                  Price Per Kg only accepts positive value.
+                  {{ 'validation.onlyPositiveNumbers' | translate }}
                   </div>
                   <div *ngIf="form.get('pricePerKg')?.errors?.['maxDigits']" class="text-danger">
-              Maximum 20 digits are allowed.
+              {{'validation.maxDigits' | translate}}
             </div> 
             </div>
 
             <div class="col-md-4">
-              <label class="form-label">ADF (%) <sup class="text-danger">*</sup></label>
+              <label class="form-label">{{ 'feed.adf' | translate }} <sup class="text-danger">*</sup></label>
               <input type="number" step="0.01" min="0" formControlName="adf" class="form-control"
-                placeholder="Enter ADF %">
+                placeholder="{{ 'feed.adfPlaceholder' | translate }}">
               <div *ngIf="form.get('adf')?.touched && form.get('adf')?.invalid" class="text-danger">
-                ADF is required.
+                {{ 'feed.adfRequired' | translate }}
               </div>
                 <div *ngIf="form.get('adf')?.errors?.['pattern']" class="text-danger">
-                  ADF only accepts positive value.
+                  {{ 'validation.onlyPositiveNumbers' | translate }}
                   </div>
                   <div *ngIf="form.get('adf')?.errors?.['maxDigits']" class="text-danger">
-              Maximum 20 digits are allowed.
+              {{'validation.maxDigits' | translate}}
             </div> 
             </div>
           </div>
@@ -153,63 +153,63 @@
           <!-- Fat Content + Calcium + Phosphorus -->
           <div class="row g-3 mt-2">
             <div class="col-md-4">
-              <label class="form-label">Fat Content (%) <sup class="text-danger">*</sup></label>
+              <label class="form-label">{{ 'feed.fatContent' | translate }} <sup class="text-danger">*</sup></label>
               <input type="number" step="0.01" min="0" formControlName="fatContent" class="form-control"
-                placeholder="Enter Fat Content %">
+                placeholder="{{ 'feed.fatContentPlaceholder' | translate }}">
               <div *ngIf="form.get('fatContent')?.touched && form.get('fatContent')?.invalid" class="text-danger">
-                Fat Content is required.
+                {{ 'feed.fatContentRequired' | translate }}
               </div>
                 <div *ngIf="form.get('fatContent')?.errors?.['pattern']" class="text-danger">
-                  Fat Content only accepts positive value.
+                  {{ 'validation.onlyPositiveNumbers' | translate }}
                   </div>
                   <div *ngIf="form.get('fatContent')?.errors?.['maxDigits']" class="text-danger">
-              Maximum 20 digits are allowed.
+              {{'validation.maxDigits' | translate}}
             </div> 
             </div>
 
             <div class="col-md-4">
-              <label class="form-label">Calcium (%) <sup class="text-danger">*</sup></label>
+              <label class="form-label">{{ 'feed.calcium' | translate }} <sup class="text-danger">*</sup></label>
               <input type="number" step="0.001" min="0" formControlName="calcium" class="form-control"
-                placeholder="Enter Calcium %">
+                placeholder="{{ 'feed.calciumPlaceholder' | translate }}">
               <div *ngIf="form.get('calcium')?.touched && form.get('calcium')?.invalid" class="text-danger">
-                Calcium is required.
+                {{ 'feed.calciumRequired' | translate }}
               </div>
                 <div *ngIf="form.get('calcium')?.errors?.['pattern']" class="text-danger">
-                  Calcium only accepts positive value.
+                  {{ 'validation.onlyPositiveNumbers' | translate }}
                   </div>
                   <div *ngIf="form.get('calcium')?.errors?.['maxDigits']" class="text-danger">
-              Maximum 20 digits are allowed.
+              {{'validation.maxDigits' | translate}}
             </div> 
             </div>
 
             <div class="col-md-4">
-              <label class="form-label">Phosphorus (%) <sup class="text-danger">*</sup></label>
+              <label class="form-label">{{ 'feed.phosphorus' | translate }} <sup class="text-danger">*</sup></label>
               <input type="number" step="0.001" min="0" formControlName="phosphorus" class="form-control"
-                placeholder="Enter Phosphorus %">
+                placeholder="{{ 'feed.phosphorusPlaceholder' | translate }}">
               <div *ngIf="form.get('phosphorus')?.touched && form.get('phosphorus')?.invalid" class="text-danger">
-                Phosphorus is required.
+                {{ 'feed.phosphorusRequired' | translate }}
               </div>
                 <div *ngIf="form.get('phosphorus')?.errors?.['pattern']" class="text-danger">
-                  Phosphorus only accepts positive value.
+                  {{ 'validation.onlyPositiveNumbers' | translate }}
                   </div>
                   <div *ngIf="form.get('phosphorus')?.errors?.['maxDigits']" class="text-danger">
-              Maximum 20 digits are allowed.
+              {{'validation.maxDigits' | translate}}
             </div> 
             </div>
           </div>
           <div class="row g-3 mt-2">
             <div class="col-md-4">
-              <label class="form-label">Starch (%) <sup class="text-danger">*</sup></label>
+              <label class="form-label">{{ 'feed.starch' | translate }}<sup class="text-danger">*</sup></label>
               <input type="number" step="0.01" min="0" formControlName="starch" class="form-control"
-                placeholder="Enter Starch %">
+                placeholder="{{ 'feed.starchPlaceholder' | translate }}">
               <div *ngIf="form.get('starch')?.touched && form.get('starch')?.invalid" class="text-danger">
-                Starch is required.
+                {{ 'feed.starchRequired' | translate }}
               </div>
                 <div *ngIf="form.get('starch')?.errors?.['pattern']" class="text-danger">
-                  Starch only accepts positive value.
+                  {{ 'validation.onlyPositiveNumbers' | translate }}
                   </div>
                   <div *ngIf="form.get('starch')?.errors?.['maxDigits']" class="text-danger">
-              Maximum 20 digits are allowed.
+              {{'validation.maxDigits' | translate}}
             </div> 
             </div>
           </div>
@@ -218,9 +218,9 @@
       </div>
 
       <div class="modal-footer">
-        <button class="btn btn-outline-secondary" (click)="closeModal()">Cancel</button>
+        <button class="btn btn-outline-secondary" (click)="closeModal()">{{ 'common.cancel' | translate }}</button>
         <button class="btn add-btn" (click)="saveFeed()">
-          {{ isEdit ? 'Update' : 'Save' }}
+          {{isEdit ? ('common.update' | translate) : ('common.save' | translate)}}
         </button>
       </div>
 

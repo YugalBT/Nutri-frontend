@@ -6,11 +6,12 @@ import { ApiResponse } from '../../../core/models/api-response';
 import { ChangePasswordService } from '../../../core/services/change-password/change-password.service';
 import { CommonService } from '../../../shared/services/common.service';
 import { PERMISSIONS } from '../../../core/constants/permissions.constants';
+import { TranslatePipe } from '../../../i18n/translate.pipe';
 
 @Component({
   selector: 'app-change-password',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule,TranslatePipe],
   templateUrl: './change-password.component.html',
   styleUrls: ['./change-password.component.css']
 })

@@ -198,7 +198,8 @@
     "inactive": "Inactive",
     "search": "Search",
     "reset": "Reset",
-    "loading": "Loading..."
+    "loading": "Loading...",
+    "updating": "Updating..."
   },
   "imageValidator": {
     "invalidType": "Invalid image type. Allowed types are: jpeg,jpg,png.",
@@ -232,8 +233,11 @@
     "middleNameInvalid": "Middle Name can only contain alphabets.",
     "onlyChars": "Only letters allowed",
     "onlyNumbers": "Only numbers allowed",
+    "onlyPositiveNumbers": "Only positive numbers allowed",
     "minmax": "Value must be between 3 and 50 characters long",
-    "maxDigitsAllowed": "Maximum 20 digits are allowed."
+    "maxDigitsAllowed": "Maximum 20 digits are allowed.",
+    "onlyAlphabetsHyphenSpaces": "Only alphabets, hyphen and spaces allowed",
+    "onlyAlphabetAndSpaces": "Only alphabets & spaces allowed"
    },
    "phoneValidation": {
     "invalidPhone": "Please enter a valid phone number",
@@ -320,12 +324,13 @@
     "actions": "Actions"
 }
 },
-"farm": {
+"farm": {  
   "addFarm": "Add Farm",
   "editFarm": "Edit Farm",
   "farmName": "Farm Name",
   "farmNamePlaceholder": "Enter farm name",
   "farmNameRequired": "Farm Name is required",
+  "selectFarm": "Select Farm",
   "farmNamePattern": "Only alphabets & spaces allowed",
   "milkPrice": "Milk Price (€/litre)",
   "milkPricePlaceholder": "Enter milk price",
@@ -350,5 +355,133 @@
     "country": "Country",
     "zipCode": "Zip Code",
     "state": "State"
+   },
+"feed": {
+    "addFeed": "Add Feed",
+    "editFeed": "Edit Feed",
+    "feedName": "Feed Name",
+    "feedNamePlaceholder": "Enter feed name",
+    "feedNameRequired": "Feed Name is required",
+    "feedNamePattern": "Only alphabets & spaces allowed",
+    "category": "Category",
+    "selectCategory": "Select Category",
+    "categoryRequired": "Category is required",
+    "selectFarm": "Select Farm",
+    "dm": "Dry Matter(%)",
+    "dmPlaceholder": "Enter DM",
+    "dmRequired": "DM is required",
+    "cp":"Crude Protein(%)",
+    "cpPlaceholder": "Enter CP",
+    "cpRequired": "CP is required",
+    "ndf":"NDF(%)",
+    "ndfPlaceholder": "Enter NDF",
+    "ndfRequired": "NDF is required",
+    "energy": "Energy (kcal/kg)",
+    "energyPlaceholder": "Enter Energy (kcal/kg)",
+    "energyRequired": "Energy is required",
+    "pricePerKg": "Price Per Kg (€)",
+    "pricePerKgPlaceholder": "Enter Price Per Kg (€)",
+    "pricePerKgRequired": "Price Per Kg is required",
+    "adf": "ADF (%)",
+    "adfPlaceholder": "Enter ADF",
+    "adfRequired": "ADF is required",
+    "fatContent": "Fat Content (%)",
+    "fatContentPlaceholder": "Enter Fat Content",
+    "fatContentRequired": "Fat Content is required",
+    "calcium": "Calcium (%)",
+    "calciumPlaceholder": "Enter Calcium",
+    "calciumRequired": "Calcium is required",
+    "phosphorus": "Phosphorus (%)", 
+    "phosphorusPlaceholder": "Enter Phosphorus",
+    "phosphorusRequired": "Phosphorus is required",
+    "starch": "Starch (%)",
+    "starchPlaceholder": "Enter Starch",
+    "starchRequired": "Starch is required",
+    "columns": {
+      "feed": "Feed",
+      "category": "Category",
+      "dm": "Dry Matter(%)",
+      "cp": "Crude Protein(%)",
+      "ndf": "NDF(%)",
+      "energy": "Energy (MJ/kg)",
+      "price": "Price Per Kg (€)",
+      "phosphorus": "Phosphorus (%)",
+      "calcium": "Calcium (%)",
+      "starch": "Starch (%)",
+      "status": "Status",
+      "actions": "Actions"
    }
+},
+"animalGroup": {
+    "addAnimalGroup": "Add Animal Group",
+    "editAnimalGroup": "Edit Animal Group",
+    "animalGroupName": "Group Name",
+    "animalGroupNamePlaceholder": "Enter group name",
+    "animalGroupNameRequired": "Group Name is required",
+    "animalGroupNamePattern": "Only alphabets & spaces allowed",
+    "selectFarm": "Select Farm",
+    "animalType": "Animal Type",
+    "selectAnimalType": "Select Animal Type",
+    "animalTypeRequired": "Animal Type is required",
+    "lactationStage": "Lactation Stage",
+    "selectLactationStage": "Select lactation stage",
+    "lactationStageRequired": "Lactation Stage is required",
+    "noOfAnimals": "Number of Animals",
+    "noOfAnimalsPlaceholder": "Enter number of animals",
+    "noOfAnimalsRequired": "Number of Animals is required",
+    "avgMilkPerDay": "Average Milk Yield (L/day)",
+    "avgMilkPerDayPlaceholder": "Enter average milk yield",
+    "avgMilkPerDayRequired": "Average Milk Yield is required",
+    "columns": {
+      "animalGroupName": "Animal Group Name",
+      "description": "Description",
+      "status": "Status",
+      "actions": "Actions",
+      "animalType": "Animal Type",
+      "lactationStage": "Lactation Stage",
+      "noOfAnimals": "No. of Animals",
+      "avgMilkPerDay": "Avg. Milk/Day (L/day)"
+   }
+  },
+  "animalLactationStage": {
+    "editLactationStage": "Edit Lactation",
+    "addLactationStage": "Add Lactation",
+    "LactationStageName": "Lactation Name",
+    "LactationStageNamePlaceholder": "Enter lactation name",  
+    "LactationStageNameRequired": "Lactation Stage Name is required",
+    "columns": {
+      "lactationNameEn": "Lactation Name"
+    }
+  },
+  "animalType": {
+    "addAnimalType": "Add Animal Type",
+    "editAnimalType": "Edit Animal Type",
+    "animalTypeName": "Animal Type Name",
+    "animalTypeNamePlaceholder": "Enter animal type name",
+    "animalTypeNameRequired": "Animal Type Name is required",
+    "columns": {
+      "animalTypeName": "Animal Type Name"
+    }
+  },
+  "changePassword": {
+    "changePassword": "Change Password",
+    "currentPassword": "Current Password",
+    "currentPasswordPlaceholder": "Enter current password",
+    "newPassword": "New Password",
+    "newPasswordPlaceholder": "Enter new password",
+    "confirmNewPassword": "Confirm New Password",
+    "confirmNewPasswordPlaceholder": "Re-enter new password",
+    "updatePassword": "Update Password",
+    "passwordMismatch": "New Password and Confirm New Password do not match"
+  },
+
+  "notifications": {
+    "notifications": "Notifications",
+    "markAllAsRead": "Mark all as read",
+    "noNotifications": "No notifications found",
+    "searchPlaceholder": "Search notifications..."
+  }
+  
 }
+
+

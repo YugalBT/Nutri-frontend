@@ -6,13 +6,14 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 import { CommonService } from '../../../shared/services/common.service';
 import { PERMISSIONS } from '../../../core/constants/permissions.constants';
+import { TranslatePipe } from '../../../i18n/translate.pipe';
 
 declare var bootstrap: any;
 @Component({
   selector: 'app-animal-type-add-edit',
   standalone: true,
   imports: [ CommonModule,
-    ReactiveFormsModule],
+    ReactiveFormsModule,TranslatePipe],
   templateUrl: './animal-type-add-edit.component.html',
   styleUrl: './animal-type-add-edit.component.css'
 })

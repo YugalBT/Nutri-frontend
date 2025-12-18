@@ -7,11 +7,12 @@ import { NotificationList } from '../../core/models/notification-list';
 import { GlobalSearchComponent } from '../../shared/components/global-search/global-search.component';
 import { CommonService } from '../../shared/services/common.service';
 import { PERMISSIONS } from '../../core/constants/permissions.constants';
+import { TranslatePipe } from '../../i18n/translate.pipe';
 
 @Component({
   selector: 'app-notifications',
   standalone: true,
-  imports: [CommonModule, FormsModule, ReusableTableComponent, GlobalSearchComponent],
+  imports: [CommonModule, FormsModule, ReusableTableComponent, GlobalSearchComponent,TranslatePipe],
   templateUrl: './notifications.component.html',
   styleUrls: ['./notifications.component.css']
 })

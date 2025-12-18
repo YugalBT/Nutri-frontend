@@ -11,6 +11,8 @@ import { selectUserRoles } from '../../../state/auth/auth.selectors';
 import { AnimalGroupAddEditComponent } from '../animal-group-add-edit/animal-group-add-edit.component';
 import { GlobalSearchComponent } from '../../../shared/components/global-search/global-search.component';
 import { ReusableTableComponent } from '../../../shared/components/reusable-table/reusable-table.component';
+import { TranslatePipe } from '../../../i18n/translate.pipe';
+import { TranslateService } from '../../../i18n/translate.service';
 
 @Component({
   selector: 'app-animal-group-list',
@@ -38,14 +40,17 @@ export class AnimalGroupListComponent implements OnInit, OnDestroy {
   canAdd = false;
   canEdit = false;
   canDelete = false;
+  langSub: any;
 
   constructor(
     private animalGroupService: AnimalGroupService,
     private toast: ToastService,
     private confirm: ConfirmDialogService,
-    private store: Store
-  ) {
+    private store: Store,
+    private translateService: TranslateService
+  ){
     this.setColumns();
+    this.langSub = this.translateService.lang$.subscribe(() => this.setColumns());
   }
 
   ngOnInit(): void {
@@ -63,7 +68,17 @@ export class AnimalGroupListComponent implements OnInit, OnDestroy {
   }
 
   private setColumns(): void {
-    this.columns = ['Farm Name', 'Group Name', 'Animal Type', 'Lactation Stage','Number Of Animal','Avg Milk PerDay', 'Status'];
+    this.columns = 
+    [
+      this.translateService.instant('farm.columns.farmName') ?? " ",
+      this.translateService.instant('animalGroup.columns.animalGroupName') ?? " ",
+      this.translateService.instant('animalGroup.columns.animalType') ?? " ",
+      this.translateService.instant('animalGroup.columns.lactationStage') ?? " ",
+      this.translateService.instant('animalGroup.columns.noOfAnimals') ?? " ",
+      this.translateService.instant('animalGroup.columns.avgMilkPerDay') ?? " ",
+      this.translateService.instant('common.status') ?? " "
+    ];
+
     this.columnFields = ['farmName', 'animalGroupNameEn',  'typeNameEn', 'lactationNameEn','numberOfAnimal','avgMilkPerDay', 'isActive'];
   }
 

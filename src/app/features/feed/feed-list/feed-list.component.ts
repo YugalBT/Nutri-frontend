@@ -158,17 +158,16 @@ export class FeedListComponent {
 
   private setColumns(): void {
     this.columns = [
-      'Feed Name',
-      'Category',
-      'Dry Matter (%)',
-      'Crude Protein (%)',
-      'NDF (%)',
-      'Energy (MJ/kg)',
-      'Price Per Kg (€)',
-      
-      'Phosphorus (%)',
-      'Starch (%)',
-      'Status'
+      this.translate.instant('feed.columns.feed')?? " ",
+    this.translate.instant('feed.columns.category') ?? " ",
+    this.translate.instant('feed.columns.dm') ?? " ",
+    this.translate.instant('feed.columns.cp') ?? " ",
+    this.translate.instant('feed.columns.ndf') ?? " ",
+    this.translate.instant('feed.columns.energy') ?? " ",
+    this.translate.instant('feed.columns.price') ?? " ",
+    this.translate.instant('feed.columns.phosphorus') ?? " ",
+    this.translate.instant('feed.columns.starch') ?? " ",
+    this.translate.instant('common.status') ?? " "
     ];
 
 
