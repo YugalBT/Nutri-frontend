@@ -261,7 +261,9 @@
     "cityPlaceholder": "Enter city",
     "statePlaceholder": "Enter state",
     "zipCodePlaceholder": "Enter zip code",
-    "countryPlaceholder": "Enter country"
+    "countryPlaceholder": "Enter country",
+    "state": "State",
+    "stateRequired": "State is required"
   },
   "companysetting": {
     "companyName": "Company Name",
@@ -338,6 +340,7 @@
     "farmNamePattern": "Only alphabets & spaces allowed",
     "milkPrice": "Milk Price (€/litre)",
     "milkPricePlaceholder": "Enter milk price",
+    "milkPriceRequired": "Milk Price is required",
     "location": "Location",
     "locationPlaceholder": "Enter location",
     "locationRequired": "Location is required",

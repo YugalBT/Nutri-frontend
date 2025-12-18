@@ -261,7 +261,9 @@
     "cityPlaceholder": "Inserisci città",
     "statePlaceholder": "Inserisci provincia",
     "zipCodePlaceholder": "Inserisci CAP",
-    "countryPlaceholder": "Inserisci paese"
+    "countryPlaceholder": "Inserisci paese",
+    "state": "Stato",
+"stateRequired": "Lo stato è obbligatorio" 
   },
   "companysetting": {
     "companyName": "Nome azienda",
@@ -345,6 +347,7 @@
     "sizePlaceholder": "Inserisci dimensione",
     "sizeRequired": "La dimensione è obbligatoria",
     "sizeMin": "La dimensione deve essere maggiore di 0",
+    "milkPriceRequired": "Il prezzo del latte è obbligatorio",
     "columns": {
       "farmName": "Nome azienda agricola",
       "milkPrice": "Prezzo del latte (€/litro)",
