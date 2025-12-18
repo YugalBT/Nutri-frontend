@@ -18,11 +18,11 @@
                             <input type="text" formControlName="name" class="form-control"
                                 placeholder="{{ 'users.firstNamePlaceholder' | translate }}">
                             <div *ngIf="form.get('name')?.touched && form.get('name')?.invalid" class="text-danger">
-                                First Name is required
+                               {{'validation.required' | translate }}
                             </div>
 
                             <div *ngIf="form.get('name')?.errors?.['pattern']" class="text-danger">
-                                First Name can only contain alphabets.
+                                {{'validation.firstNameInvalid' | translate }}
                             </div>
 
                         </div>
@@ -33,7 +33,7 @@
                                 placeholder="{{ 'users.middleNamePlaceholder' | translate }}">
                             <div *ngIf="form.get('middleName')?.touched && form.get('middleName')?.invalid"
                                 class="text-danger">
-                                Middle Name can only contain alphabets.
+                                {{'validation.middleNameInvalid' | translate }}
                             </div>
                         </div>
 
@@ -44,11 +44,11 @@
                                 placeholder="{{ 'users.lastNamePlaceholder' | translate }}">
                             <div *ngIf="form.get('lastName')?.touched && form.get('lastName')?.invalid"
                                 class="text-danger">
-                                Last Name is required
+                                {{'validation.required' | translate }}
                             </div>
 
                             <div *ngIf="form.get('lastName')?.errors?.['pattern']" class="text-danger">
-                                Last Name can only contain alphabets.
+                                {{'validation.lastNameInvalid' | translate }}
                             </div>
                         </div>
                     </div>
@@ -60,10 +60,10 @@
                             <input type="email" formControlName="email" class="form-control"
                                 placeholder="{{ 'users.emailPlaceholder' | translate }}">
                             <div *ngIf="form.get('email')?.touched && form.get('email')?.invalid" class="text-danger">
-                                Email is required
+                                {{'validation.required' | translate }}
                             </div>
                             <div *ngIf="form.get('email')?.errors?.['email']" class="text-danger">
-                                Please enter a valid email address.
+                                {{'validation.invalidEmail' | translate }}
                             </div>
                         </div>
                         <div class="col-md-4">
@@ -76,20 +76,20 @@
 
                                 <!-- Required -->
                                 <div *ngIf="form.get('phone')?.errors?.['required']">
-                                    Phone Number is required.
+                                    {{'phonevalidation.phoneRequired' | translate }}
                                 </div>
 
                                 <!-- Minimum length -->
                                 <div *ngIf="form.get('phone')?.errors?.['minlength']">
-                                    Phone Number must be at least 10 digits.
+                                   {{'phonevalidation.minLength' | translate }}
                                 </div>
                                 <!-- Maximum length -->
                                 <div *ngIf="form.get('phone')?.errors?.['maxlength']">
-                                    Phone Number must be at most 10 digits.
+                                    {{'phonevalidation.maxLength' | translate }}
                                 </div>
                                 <!-- Only numbers allowed -->
                                 <div *ngIf="form.get('phone')?.errors?.['pattern']">
-                                    Phone Number must contain digits only.
+                                    {{'phonevalidation.invalidPhone' | translate }}
                                 </div>
 
                             </div>
@@ -130,13 +130,13 @@
                             </div>
                             <div *ngIf="form.get('password')?.touched && form.get('password')?.invalid"
                                 class="text-danger">
-                                Password is required
+                                {{'validation.passwordRequired' | translate}}
                             </div>
                             <div *ngIf="form.get('password')?.errors?.['minlength']" class="text-danger">
-                                Password must be at least 8 characters long.
+                                {{'validation.passwordMinLength' | translate}}
                             </div>
                             <div *ngIf="form.get('password')?.errors?.['pattern']" class="text-danger">
-                                Password must contain at least one letter ,one special character and one number.
+                                {{'validation.passwordPattern' | translate}}
                             </div>
                         </div>
                     </div>
