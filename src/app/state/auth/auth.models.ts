@@ -19,6 +19,7 @@ export interface User {
   hashedPassword?: string | null;
   isPasswordHash?: boolean | null;
   isSuperAdmin?: boolean | null;
+  isFirstLogin?: boolean | null;
   roles?: string[];
   menu?: any[];
   permissions: Permission[]

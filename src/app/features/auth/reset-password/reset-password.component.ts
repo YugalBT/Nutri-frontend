@@ -5,6 +5,7 @@ import { ToastrService } from 'ngx-toastr';
 import { ChangePasswordService } from '../../../core/services/change-password/change-password.service';
 import { ApiResponse } from '../../../core/models/api-response';
 import { CommonModule } from '@angular/common';
+import { ROUTE_CONST } from '../../../core/constants/route.constants';
 
 @Component({
   selector: 'app-reset-password',
@@ -17,6 +18,8 @@ export class ResetPasswordComponent implements OnInit {
 
   resetForm!: FormGroup;
   showPassword = false;
+  oldPasswordShow =false;
+  newPasswordShow =false;
   isSubmitted = false;
   isLoading = false;
 
@@ -30,10 +33,13 @@ export class ResetPasswordComponent implements OnInit {
   ngOnInit(): void {
     this.resetForm = this.fb.group(
       {
-        newPassword: this.fb.control('', {
+        passWord: this.fb.control('', {
           validators: [Validators.required, Validators.minLength(8)]
         }),
-        confirmPassword: this.fb.control('', {
+        oldPassWord: this.fb.control('', {
+          validators: [Validators.required, Validators.minLength(8)]
+        }),
+        confirmPassWord: this.fb.control('', {
           validators: [Validators.required]
         })
       },
@@ -41,15 +47,22 @@ export class ResetPasswordComponent implements OnInit {
     );
   }
 
-  // 🔐 Password match validator
+
   passwordMatchValidator(form: FormGroup) {
-    const password = form.get('newPassword')?.value;
-    const confirm = form.get('confirmPassword')?.value;
+    const password = form.get('passWord')?.value;
+    const confirm = form.get('confirmPassWord')?.value;
     return password === confirm ? null : { passwordMismatch: true };
   }
 
   togglePassword() {
     this.showPassword = !this.showPassword;
+  }
+  toggleOldPassword() {
+    this.oldPasswordShow = !this.oldPasswordShow;
+  }
+
+   toggleNewPassword() {
+    this.newPasswordShow = !this.newPasswordShow;
   }
 
   onSubmit() {
@@ -61,7 +74,9 @@ export class ResetPasswordComponent implements OnInit {
     }
 
     const payload = {
-      newPassword: this.resetForm.value.newPassword
+      passWord: this.resetForm.value.passWord,
+      oldPassWord: this.resetForm.value.oldPassWord,
+      confirmPassWord: this.resetForm.value.confirmPassWord
     };
 
     this.isLoading = true;
@@ -70,16 +85,16 @@ export class ResetPasswordComponent implements OnInit {
       next: (res: ApiResponse<any>) => {
         this.isLoading = false;
         if (res.isSuccess) {
-          this.toast.success(res.message || 'Password reset successful');
+          this.toast.success(res?.message);
           this.resetForm.reset();
-          this.router.navigate(['/login']);
+         this.router.navigate([ROUTE_CONST.DASHBOARD]);
         } else {
-          this.toast.error(res.message || 'Something went wrong');
+          this.toast.error(res.message);
         }
       },
       error: (err) => {
         this.isLoading = false;
-        this.toast.error(err?.message || 'Server error');
+        this.toast.error(err?.message);
       }
     });
   }
