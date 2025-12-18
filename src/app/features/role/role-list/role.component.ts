@@ -59,6 +59,7 @@ export class RoleComponent implements OnInit, OnDestroy ,AfterViewInit{
   }
 
   ngOnInit(): void {
+    
     // this.store.select(selectCanManageRoles).pipe(take(1)).subscribe((canManage) => {
     //   this.canManageRoles = canManage;
     //   if (!canManage) {
@@ -147,7 +148,7 @@ export class RoleComponent implements OnInit, OnDestroy ,AfterViewInit{
           next: (res: any) => {
             this.spinner.hide();
             if (res?.isSuccess || res?.isSuccess !== false) {
-              this.toast.success(this.translate.instant(res?.message??"Role deleted successfully") || 'Role deleted successfully');
+              this.toast.success(this.translate.instant(res?.message) || 'Role deleted successfully');
               this.loadRoles();
             } else {
               this.toast.error(res?.message || this.translate.instant('common.error') || 'Delete failed');

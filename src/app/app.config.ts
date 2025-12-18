@@ -19,12 +19,12 @@ import { NgxEchartsModule } from 'ngx-echarts';
 
 export const appConfig: ApplicationConfig = {
   providers: [
-    provideZoneChangeDetection({ eventCoalescing: true }), 
+    provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes),
-    
+
     provideHttpClient(
-  withInterceptors([authInterceptor, spinnerInterceptor])
-),
+      withInterceptors([authInterceptor, spinnerInterceptor])
+    ),
 
     provideAnimations(),
     importProvidersFrom(SpinnerModule),
@@ -35,10 +35,10 @@ export const appConfig: ApplicationConfig = {
       closeButton: true
     }),
 
-    provideStore({ auth: authReducer }),    // REGISTER STATE
-    provideEffects([AuthEffects]),          // REGISTER EFFECTS
+    provideStore({ auth: authReducer }),   
+    provideEffects([AuthEffects]),    
     provideStoreDevtools(), provideAnimationsAsync(),
-     importProvidersFrom(
+    importProvidersFrom(
       NgxEchartsModule.forRoot({
         echarts: () => import('echarts')
       })
@@ -46,5 +46,5 @@ export const appConfig: ApplicationConfig = {
 
   ]
 
-  
+
 };

@@ -45,7 +45,7 @@ export class RationAddEditComponent implements OnInit, OnDestroy {
     private rationService: RationService,
     private toast: ToastService,
     private commonService: CommonService
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.initializeForm();
@@ -60,22 +60,22 @@ export class RationAddEditComponent implements OnInit, OnDestroy {
     this.form = this.fb.group({
       farmId: ['', Validators.required],
       animalGroupId: ['', Validators.required],
-      name: ['', [Validators.required,Validators.min(3),Validators.max(20),Validators.pattern(/^[A-Za-z ]+$/)]],
-      rationItems: this.fb.array([ this.createRationItem() ])
+      name: ['', [Validators.required, Validators.min(3), Validators.max(20), Validators.pattern(/^[A-Za-z ]+$/)]],
+      rationItems: this.fb.array([this.createRationItem()])
     });
   }
 
 
   createRationItem(item?: any): FormGroup {
-  return this.fb.group({
-    feedId: [item?.feedId ?? '',Validators.required],
-    perKg: [item?.perKg ?? '', [Validators.required,CustomValidators.maxDigits(20)]],
+    return this.fb.group({
+      feedId: [item?.feedId ?? '', Validators.required],
+      perKg: [item?.perKg ?? '', [Validators.required, CustomValidators.maxDigits(20)]],
 
-    dryMatter: [item?.dryMatter ?? null],
-    protein: [item?.protein ?? null],
-    pricePerKg: [item?.pricePerKg ?? null]
-  });
-}
+      dryMatter: [item?.dryMatter ?? null],
+      protein: [item?.protein ?? null],
+      pricePerKg: [item?.pricePerKg ?? null]
+    });
+  }
 
 
   get rationItems(): FormArray {
@@ -89,31 +89,28 @@ export class RationAddEditComponent implements OnInit, OnDestroy {
   removeRationItem(i: number) {
     this.rationItems.removeAt(i);
   }
-onFeedChangeUI(item: AbstractControl) {
-  debugger;
-  const group = item as FormGroup;
+  onFeedChangeUI(item: AbstractControl) {
+    const group = item as FormGroup;
+    const feedId = group.get('feedId')?.value;
+    const selectedFeed = this.feeds.find(
+      f => f.feedId === feedId
+    );
 
-  const feedId = group.get('feedId')?.value;
+    if (!selectedFeed) {
+      group.patchValue({
+        dryMatter: null,
+        protein: null,
+        pricePerKg: null
+      });
+      return;
+    }
 
-  const selectedFeed = this.feeds.find(
-    f => f.feedId === feedId
-  );
-
-  if (!selectedFeed) {
     group.patchValue({
-      dryMatter: null,
-      protein: null,
-      pricePerKg: null
+      dryMatter: selectedFeed.dryMatter,
+      protein: selectedFeed.protein,
+      pricePerKg: selectedFeed.pricePerKg
     });
-    return;
   }
-
-  group.patchValue({
-    dryMatter: selectedFeed.dryMatter,
-    protein: selectedFeed.protein,
-    pricePerKg: selectedFeed.pricePerKg
-  });
-}
 
 
 
@@ -139,7 +136,7 @@ onFeedChangeUI(item: AbstractControl) {
     if (!force && this.feeds.length > 0) return of(this.feeds);
     this.feedsLoading = true;
     return this.commonService.getFeedList().pipe(
-      map((res: ApiResponse<any>) => Array.isArray(res?.data) ? res.data : []),
+      map((res: ApiResponse<any>) => Array.isArray(res?.data) ? res?.data : []),
       tap(data => this.feeds = data),
       catchError(err => {
         this.toast.error('Failed to load feeds');
@@ -229,7 +226,7 @@ onFeedChangeUI(item: AbstractControl) {
 
   saveRation() {
 
-    if(!this.commonService.checkPermission(PERMISSIONS.RationAdd)
+    if (!this.commonService.checkPermission(PERMISSIONS.RationAdd)
       || !this.commonService.checkPermission(PERMISSIONS.RationEdit)) {
       this.toast.error('You do not have permission');
       return;
@@ -276,5 +273,5 @@ onFeedChangeUI(item: AbstractControl) {
     this.rationService.notifyrationChanged();
     this.closeModal();
   }
-  
+
 }

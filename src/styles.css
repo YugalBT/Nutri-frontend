@@ -1,7 +1,23 @@
 .toast-top-center {
 	margin-top: 2px;
 }
-.ngx-spinner-overlay { z-index: 99999 !important; }
+.ball-clip-rotate > div {
+  animation-duration: 2.2s !important;
+  animation-timing-function: ease-in-out;
+}
+
+.ngx-spinner-overlay {
+  transition: opacity 0.25s ease-in-out;
+}
+
+.spinner-text {
+  color: #fff;
+  font-size: 14px;
+  margin-top: 12px;
+  opacity: 0.9;
+}
+
+
 
 .switch {
   position: relative;

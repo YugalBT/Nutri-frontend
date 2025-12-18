@@ -127,7 +127,7 @@ export class AnimalGroupAddEditComponent implements OnInit, OnDestroy {
         this.toast.error('Failed to load animal types');
         return of([]);
       }),
-      finalize(() => this.typesLoading = false)
+      finalize(() => this.lactationsLoading = false)
     );
   }
 

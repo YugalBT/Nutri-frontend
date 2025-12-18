@@ -19,6 +19,8 @@
                                 <option [ngValue]="null">Select Farm</option>
                                 <option *ngFor="let f of farms" [value]="f.farmId">{{ f.farmName }}</option>
                             </select>
+                            <span *ngIf="farmsLoading" class="select-spinner spinner-border spinner-border-sm">
+                            </span>
                             <div *ngIf="form.get('farmId')?.touched && form.get('farmId')?.invalid" class="text-danger">
                                 Farm is required.
                             </div>
@@ -26,12 +28,23 @@
 
                         <!-- Animal Type -->
                         <div class="col-md-4">
-                            <label class="form-label" for="animalTypeId" >Animal Type <sup class="text-danger">*</sup></label>
-                            <select class="form-select" id="animalTypeId" formControlName="animalTypeId" [disabled]="typesLoading">
+                            <label class="form-label" for="animalTypeId">Animal Type <sup
+                                    class="text-danger">*</sup></label>
+                            <select class="form-select" id="animalTypeId" formControlName="animalTypeId"
+                                [disabled]="typesLoading">
+                                <option *ngIf="lactationsLoading">
+                                    Loading lactation stages...
+                                </option>
+
+                                <option *ngIf="!lactationsLoading && lactations?.length === 0">
+                                    No lactation stages available
+                                </option>
                                 <option [ngValue]="null">Select Type</option>
                                 <option *ngFor="let t of animalTypes" [ngValue]="t.animalTypeId">{{ t.typeNameEn }}
                                 </option>
                             </select>
+                            <span *ngIf="typesLoading" class="select-spinner spinner-border spinner-border-sm">
+                            </span>
                             <div *ngIf="form.get('animalTypeId')?.touched && form.get('animalTypeId')?.invalid"
                                 class="text-danger">
                                 Animal type is required.
@@ -40,19 +53,28 @@
 
                         <!-- Lactation -->
                         <div class="col-md-4">
-                            <label class="form-label" for="animalLactationId" >Lactation Stage <sup class="text-danger">*</sup></label>
+                            <label class="form-label" for="animalLactationId">Lactation Stage <sup
+                                    class="text-danger">*</sup></label>
                             <select class="form-select" id="animalLactationId" formControlName="animalLactationId">
+                                <option *ngIf="lactationsLoading">
+                                    Loading lactation stages...
+                                </option>
+
+                                <option *ngIf="!lactationsLoading && lactations?.length === 0">
+                                    No lactation stages available
+                                </option>
                                 <option [ngValue]="null">Select Lactation</option>
                                 <option *ngFor="let l of lactations" [value]="l.animalLactationId">{{ l.lactationNameEn
                                     }}</option>
                             </select>
+                            <span *ngIf="lactationsLoading" class="select-spinner spinner-border spinner-border-sm">
+                            </span>
                             <div *ngIf="form.get('animalLactationId')?.touched && form.get('animalLactationId')?.invalid"
                                 class="text-danger">
                                 Lactation stage is required.
                             </div>
                         </div>
 
-                        <!-- Group Name EN -->
                         <div class="col-md-4">
                             <label class="form-label">Group Name (EN) <sup class="text-danger">*</sup></label>
                             <input type="text" class="form-control" formControlName="animalGroupNameEn"
@@ -62,14 +84,16 @@
                                 <div *ngIf="form.get('animalGroupNameEn')?.errors?.['required']">Name is required.</div>
                                 <div *ngIf="form.get('animalGroupNameEn')?.errors?.['pattern']">Only alphabets & spaces
                                     allowed.</div>
-                          <div *ngIf="form.get('animalGroupNameEn')?.errors?.['minlength']">Minimum 3 characters.</div>
-                          <div *ngIf="form.get('animalGroupNameEn')?.errors?.['maxlength']">Maximum 50 characters.</div>
+                                <div *ngIf="form.get('animalGroupNameEn')?.errors?.['minlength']">Minimum 3 characters.
+                                </div>
+                                <div *ngIf="form.get('animalGroupNameEn')?.errors?.['maxlength']">Maximum 50 characters.
+                                </div>
                             </div>
                         </div>
 
                         <!-- Group Name IT -->
                         <div class="col-md-4">
-                            <label class="form-label">Group Name (IT) 
+                            <label class="form-label">Group Name (IT)
                                 <!-- <sup class="text-danger">*</sup> -->
                             </label>
                             <input type="text" class="form-control" formControlName="animalGroupNameIt"
@@ -79,25 +103,31 @@
                                 <!-- <div *ngIf="form.get('animalGroupNameIt')?.errors?.['required']">Name is required.</div> -->
                                 <div *ngIf="form.get('animalGroupNameIt')?.errors?.['pattern']">Only alphabets & spaces
                                     allowed.</div>
-                              <div *ngIf="form.get('animalGroupNameIt')?.errors?.['minlength']">Minimum 3 characters.</div>
-                          <div *ngIf="form.get('animalGroupNameIt')?.errors?.['maxlength']">Maximum 50 characters.</div>
+                                <div *ngIf="form.get('animalGroupNameIt')?.errors?.['minlength']">Minimum 3 characters.
+                                </div>
+                                <div *ngIf="form.get('animalGroupNameIt')?.errors?.['maxlength']">Maximum 50 characters.
+                                </div>
                             </div>
                         </div>
 
-                         <div class="col-md-4">
-                <label for="numberOfAnimal" class="form-label">Number of Animals <sup class="text-danger">*</sup></label>
-                <input type="number" id="numberOfAnimal" min="0" class="form-control" formControlName="numberOfAnimal" placeholder="Per Kg">
-                <div *ngIf="form.get('numberOfAnimal')?.errors?.['numberOfAnimal']" class="text-danger">
-                  Maximum 20 digits are allowed.
-                </div>
-              </div>
-               <div class="col-md-4">
-                <label for="avgMilkPerDay" class="form-label">Average Milk Yield (L/day) <sup class="text-danger">*</sup></label>
-                <input type="number" id="avgMilkPerDay" min="0" class="form-control" formControlName="avgMilkPerDay" placeholder="Per Kg">
-                <div *ngIf="form.get('avgMilkPerDay')?.errors?.['avgMilkPerDay']" class="text-danger">
-                  Maximum 20 digits are allowed.
-                </div>
-              </div>
+                        <div class="col-md-4">
+                            <label for="numberOfAnimal" class="form-label">Number of Animals <sup
+                                    class="text-danger">*</sup></label>
+                            <input type="number" id="numberOfAnimal" min="0" class="form-control"
+                                formControlName="numberOfAnimal" placeholder="Per Kg">
+                            <div *ngIf="form.get('numberOfAnimal')?.errors?.['numberOfAnimal']" class="text-danger">
+                                Maximum 20 digits are allowed.
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="avgMilkPerDay" class="form-label">Average Milk Yield (L/day) <sup
+                                    class="text-danger">*</sup></label>
+                            <input type="number" id="avgMilkPerDay" min="0" class="form-control"
+                                formControlName="avgMilkPerDay" placeholder="Per Kg">
+                            <div *ngIf="form.get('avgMilkPerDay')?.errors?.['avgMilkPerDay']" class="text-danger">
+                                Maximum 20 digits are allowed.
+                            </div>
+                        </div>
                     </div>
 
                 </form>

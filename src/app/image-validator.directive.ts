@@ -25,7 +25,6 @@ export class ImageValidatorDirective {
 
     if (!control) return;
 
-    // 🔄 Reset previous errors
     control.setErrors(null);
 
     // ✅ File type validation

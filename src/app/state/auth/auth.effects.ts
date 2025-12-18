@@ -11,6 +11,7 @@ import { TokenService } from '../../shared/services/token.service';
 import { LoginRequest } from '../../core/models/login-request';
 import { ToastService } from '../../shared/services/toast.service';
 import { UpdateProfileService } from '../../core/services/profile/update-profile.service';
+import { ROUTE_CONST } from '../../core/constants/route.constants';
 
 @Injectable()
 
@@ -33,7 +34,6 @@ export class AuthEffects {
     private spinner: NgxSpinnerService,
     private updateProfileService: UpdateProfileService
   ) {
-    // LOGIN EFFECT
     this.login$ = createEffect(() =>
       this.actions$.pipe(
         ofType(AuthActions.login),
@@ -41,7 +41,6 @@ export class AuthEffects {
           const payload: LoginRequest = {
             username,
             password
-            //companyCode: companyCode ?? 'login',
           };
 
           return this.authService.login(payload).pipe(
@@ -69,7 +68,6 @@ export class AuthEffects {
       )
     );
 
-    // LOGIN SUCCESS → Save token + user → Navigate
     this.loginSuccess$ = createEffect(
       () =>
         this.actions$.pipe(
@@ -80,32 +78,28 @@ export class AuthEffects {
             this.tokenService.setUserName(user?.username ?? '');
             this.tokenService.setIsSuperAdmin(user?.isSuperAdmin ?? false);
 
-
-            // Apply dynamic theme colors from user profile
             try {
               if (typeof document !== 'undefined' && user) {
                 const root = document.documentElement;
-                if (user.primaryColor) {
+                if (user?.primaryColor) {
                   root.style.setProperty('--primary-color', user.primaryColor);
                 }
-                if (user.secondaryColor) {
+                if (user?.secondaryColor) {
                   root.style.setProperty('--secondary-color', user.secondaryColor);
                 }
               }
             } catch (e) {
-              // ignore DOM errors (e.g., SSR)
             }
 
             if (!silent) {
               this.toast.success('Login successful!');
-              this.router.navigate(['/dashboard']);
+              this.router.navigate([ROUTE_CONST.DASHBOARD]);
             }
           })
         ),
       { dispatch: false }
     );
 
-    // LOGIN SUCCESS → Save token + user → Navigate
     this.loginFailure$ = createEffect(
       () =>
         this.actions$.pipe(
@@ -118,17 +112,15 @@ export class AuthEffects {
     );
 
 
-    // LOGOUT EFFECT
     this.logout$ = createEffect(
       () =>
         this.actions$.pipe(
           ofType(AuthActions.logout),
           switchMap(() => {
-            // Show global spinner while logging out
             this.spinner.show();
             this.tokenService.clearAll();
 
-            return from(this.router.navigate(['/login'])).pipe(
+            return from(this.router.navigate([ROUTE_CONST.LOGIN])).pipe(
               finalize(() => {
                 this.spinner.hide();
               })

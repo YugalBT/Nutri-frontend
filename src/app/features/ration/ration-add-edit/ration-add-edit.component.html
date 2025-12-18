@@ -21,7 +21,13 @@
                 <option *ngFor="let f of farms" [ngValue]="f.farmId">
                   {{ f.farmName }}
                 </option>
+
               </select>
+              <span *ngIf="farmsLoading" class="select-spinner spinner-border spinner-border-sm">
+              </span>
+
+
+
 
               <div *ngIf="form.get('farmId')?.touched && form.get('farmId')?.invalid" class="text-danger">
                 Farm is required.
@@ -47,6 +53,8 @@
                   {{ an.animalGroupNameEn }}
                 </option>
               </select>
+              <span *ngIf="animalGroupsLoading" class="select-spinner spinner-border spinner-border-sm">
+              </span>
 
               <div *ngIf="form.get('animalGroupId')?.touched && form.get('animalGroupId')?.invalid" class="text-danger">
                 Animal Group is required.
@@ -72,6 +80,8 @@
                     {{ feed.feedName }}
                   </option>
                 </select>
+                <span *ngIf="feedsLoading" class="select-spinner spinner-border spinner-border-sm">
+              </span>
                 <div *ngIf="item.get('feedId')?.touched && item.get('feedId')?.invalid" class="text-danger">
                   Feed is required.
                 </div>

@@ -25,7 +25,6 @@ export const routes: Routes = [
         .then(m => m.ResetPasswordComponent),
   },
 
-  // Authenticated Area
   {
     path: '',
     loadComponent: () =>
@@ -145,7 +144,7 @@ export const routes: Routes = [
       {
         path: 'reports',
         //canActivate: [permissionGuard],
-       // data: { requiredPermissions: [PERMISSIONS.ReportsView, PERMISSIONS.ReportsEdit, PERMISSIONS.ReportsAdd, PERMISSIONS.ReportsDelete] },
+        // data: { requiredPermissions: [PERMISSIONS.ReportsView, PERMISSIONS.ReportsEdit, PERMISSIONS.ReportsAdd, PERMISSIONS.ReportsDelete] },
         loadComponent: () =>
           import('./features/reports/reports/reports.component')
             .then(m => m.ReportsComponent),
@@ -193,7 +192,7 @@ export const routes: Routes = [
             .then(m => m.AnimalGroupListComponent),
       },
 
-      
+
 
 
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },

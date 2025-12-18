@@ -106,9 +106,11 @@
                                     <option *ngFor="let r of roles" [value]="r.roleId">{{ r.nameEn || r.nameEn }}
                                     </option>
                                 </select>
+                                 <span *ngIf="rolesLoading" class="select-spinner spinner-border spinner-border-sm">
+                            </span>
 
-                                <div *ngIf="rolesLoading" class="form-text text-muted small">{{ 'common.loading' |
-                                    translate }}</div>
+                                <!-- <div *ngIf="rolesLoading" class="form-text text-muted small">{{ 'common.loading' |
+                                    translate }}</div> -->
                                 <div *ngIf="!rolesLoading && roles.length === 0" class="form-text text-danger small">
                                     {{ rolesError ? (rolesError) : ('users.noRolesAvailable' | translate) }}
                                 </div>

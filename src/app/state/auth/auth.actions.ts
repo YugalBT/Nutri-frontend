@@ -1,13 +1,9 @@
 import { createAction, props } from '@ngrx/store';
 import { User } from './auth.models';
 
-
-
-
-
 export const login = createAction(
   '[Auth] Login',
-  props<{ username: string; password: string;}>()
+  props<{ username: string; password: string; }>()
 );
 
 export const loginSuccess = createAction(
@@ -21,8 +17,6 @@ export const loginFailure = createAction(
 );
 
 export const logout = createAction('[Auth] Logout');
-
-
 export const refreshAuthUser = createAction('[Auth] Refresh Auth User');
 export const refreshAuthUserSuccess = createAction(
   '[Auth] Refresh Auth User Success',
@@ -36,12 +30,12 @@ export const refreshAuthUserFailure = createAction(
 
 export const updateProfile = createAction(
   '[Auth] Update Profile',
-  props<{ payload: any }> ()
+  props<{ payload: any }>()
 );
 
 export const updateProfileSuccess = createAction(
   '[Auth] Update Profile Success',
-  props<{ user: User }>() 
+  props<{ user: User }>()
 );
 
 export const updateProfileFailure = createAction(

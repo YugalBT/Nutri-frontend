@@ -16,16 +16,14 @@ export class TokenService {
   setUserName(token: string) {
     sessionStorage.setItem(Constants.USERNAME, token);
   }
-setIsSuperAdmin(isSuperAdmin: boolean | false) {
+  setIsSuperAdmin(isSuperAdmin: boolean | false) {
     sessionStorage.setItem(Constants.IsSuperAdmin, isSuperAdmin.toString());
   }
   getToken(): string | null {
     return sessionStorage.getItem(Constants.AUTHTOKEN);
   }
 
-  /**
-   * Decode JWT payload (no validation) and return parsed object or null
-   */
+ 
   private decodePayload(token: string): any | null {
     try {
       const parts = token.split('.');
@@ -38,9 +36,7 @@ setIsSuperAdmin(isSuperAdmin: boolean | false) {
     }
   }
 
-  /**
-   * Returns true if token is expired (or invalid). Returns false when token is valid.
-   */
+  
   isTokenExpired(): boolean {
     const token = this.getToken();
     if (!token) return true;
@@ -53,7 +49,7 @@ setIsSuperAdmin(isSuperAdmin: boolean | false) {
 
 
 
-   getUserData(): string | null {
+  getUserData(): string | null {
     return sessionStorage.getItem(Constants.USERDATA);
   }
 
