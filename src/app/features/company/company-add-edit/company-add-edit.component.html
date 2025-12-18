@@ -22,14 +22,14 @@
                                     class="text-danger">
                                     {{'validation.companyNameRequired' | translate}}
                                 </div>
-                                <div *ngIf="form.get('companyName')?.errors?.['pattern']" class="text-danger">
+                                <!-- <div *ngIf="form.get('companyName')?.errors?.['pattern']" class="text-danger">
                                     {{'validation.companyNameInvalid' | translate}}
-                                </div>
+                                </div> -->
                                 <div *ngIf="form.get('companyName')?.errors?.['minlength']" class="text-danger">
-                                    {{'validation.minlength' | translate}}
+                                    {{'validation.minLength' | translate}}
                                 </div>
                                 <div *ngIf="form.get('companyName')?.errors?.['maxlength']" class="text-danger">
-                                    {{'validation.maxlength' | translate}}
+                                    {{'validation.maxLength' | translate}}
                                 </div>
                             </div>
 
@@ -40,6 +40,12 @@
                                     [placeholder]="'company.companyCode' | translate">
                                 <div *ngIf="form.get('code')?.touched && form.get('code')?.invalid" class="text-danger">
                                     {{'validation.companyCodeRequired' | translate}}
+                                </div>
+                                  <div *ngIf="form.get('code')?.errors?.['minlength']" class="text-danger">
+                                    {{'validation.minLength' | translate}}
+                                </div>
+                                <div *ngIf="form.get('code')?.errors?.['maxlength']" class="text-danger">
+                                    {{'validation.maxLength' | translate}}
                                 </div>
                             </div>
 
@@ -134,10 +140,16 @@
 
                                 <div *ngIf="form.get('firstName')?.touched && form.get('firstName')?.invalid"
                                     class="text-danger">
-                                    {{'companyValidation.firstNameRequired' | translate}}
+                                    {{'validation.firstNameRequired' | translate}}
                                 </div>
                                 <div *ngIf="form.get('firstName')?.errors?.['pattern']" class="text-danger">
-                                    {{'companyValidation.firstNameInvalid' | translate}}
+                                    {{'validation.onlyChars' | translate}}
+                                </div>
+                                  <div *ngIf="form.get('firstName')?.errors?.['minlength']" class="text-danger">
+                                    {{'validation.minLength' | translate}}
+                                </div>
+                                <div *ngIf="form.get('firstName')?.errors?.['maxlength']" class="text-danger">
+                                    {{'validation.maxLength' | translate}}
                                 </div>
 
                             </div>
@@ -148,10 +160,16 @@
                                     [placeholder]="'company.lastNamePlaceholder' | translate">
                                 <div *ngIf="form.get('lastName')?.touched && form.get('lastName')?.invalid"
                                     class="text-danger">
-                                    {{'companyValidation.lastNameRequired' | translate}}
+                                    {{'validation.lastNameRequired' | translate}}
                                 </div>
                                 <div *ngIf="form.get('lastName')?.errors?.['pattern']" class="text-danger">
-                                    {{'companyValidation.lastNameInvalid' | translate}}
+                                    {{'validation.onlyChars' | translate}}
+                                </div>
+                                  <div *ngIf="form.get('lastName')?.errors?.['minlength']" class="text-danger">
+                                    {{'validation.minLength' | translate}}
+                                </div>
+                                <div *ngIf="form.get('lastName')?.errors?.['maxlength']" class="text-danger">
+                                    {{'validation.maxLength' | translate}}
                                 </div>
                             </div>
 
@@ -162,10 +180,10 @@
                                     [placeholder]="'company.userEmailPlaceholder' | translate">
                                 <div *ngIf="form.get('email')?.touched && form.get('email')?.invalid"
                                     class="text-danger">
-                                   {{'companyValidation.emailRequired' | translate}}
+                                   {{'validation.required' | translate}}
                                 </div>
                                 <div *ngIf="form.get('email')?.errors?.['email']" class="text-danger">
-                                    {{'companyValidation.emailInvalid' | translate}}
+                                    {{'validation.invalidEmail' | translate}}
                                 </div>
                             </div>
                             <div class="col-md-4 col-12">
@@ -218,6 +236,9 @@
                                 <div *ngIf="form.get('city')?.touched && form.get('city')?.invalid" class="text-danger">
                                    {{'addressValidation.cityRequired' | translate}}
                                 </div>
+                                <div *ngIf="form.get('city')?.errors?.['pattern']" class="text-danger">
+                                    {{'addressValidation.cityPattern' | translate}}
+                                    </div>
                             </div>
                             <div class="col-md-4 col-12">
                                 <label class="form-label">{{ 'company.zipCode' | translate }}<sup
@@ -269,6 +290,12 @@
                                 <div *ngIf="form.get('userFirstName')?.errors?.['pattern']" class="text-danger">
                                     {{'addressValidation.userFirstNamePattern' | translate}}
                                 </div>
+                                  <div *ngIf="form.get('userFirstName')?.errors?.['minlength']" class="text-danger">
+                                    {{'validation.minLength' | translate}}
+                                </div>
+                                <div *ngIf="form.get('userFirstName')?.errors?.['maxlength']" class="text-danger">
+                                    {{'validation.maxLength' | translate}}
+                                </div>
                             </div>
                             <div class="col-md-4 col-12">
                                 <label class="form-label">{{ 'company.userMiddleName' | translate }}</label>
@@ -291,6 +318,10 @@
                                 <div *ngIf="form.get('userLastName')?.errors?.['pattern']" class="text-danger">
                                     {{'addressValidation.userLastNamePattern' | translate}}
                                 </div>
+                                    <div *ngIf="form.get('userLastName')?.errors?.['minlength']" class="text-danger">
+                                        {{'validation.minLength' | translate}}</div>
+                                <div *ngIf="form.get('userLastName')?.errors?.['maxlength']" class="text-danger">
+                                    {{'validation.maxLength' | translate}}</div>
                             </div>
 
                             <div class="col-md-4 col-12">
@@ -374,7 +405,7 @@
                                 <div class="form-check">
                                     <input class="form-check-input large-checkbox" type="checkbox" 
                                     id="isFirstLogin"
-                                        formControlName="isFirstLogin" />
+                                        formControlName="isFirstLogin"  (change)="form.patchValue({ isFirstLogin: false })"/>
                                     <label class="form-check-label" for="isFirstLogin">
                                         {{ 'company.passwordResetNeeded' | translate }}
                                     </label>

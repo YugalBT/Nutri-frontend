@@ -55,9 +55,9 @@ export class CompanyAddEditComponent implements OnInit {
       tenantId: [''],
 
       // Primary (Company Owner)
-      firstName: ['', [Validators.required, Validators.pattern(/^[A-Za-z]+$/)]],
-      middleName: ['', [Validators.pattern(/^[A-Za-z]+$/)]],
-      lastName: ['', [Validators.required, Validators.pattern(/^[A-Za-z]+$/)]],
+      firstName: ['', [Validators.required,Validators.minLength(3),Validators.maxLength(50) ,Validators.pattern(/^[A-Za-z]+$/)]],
+      middleName: ['', [Validators.minLength(3),Validators.maxLength(50) ,Validators.pattern(/^[A-Za-z]+$/)]],
+      lastName: ['', [Validators.required,Validators.minLength(3),Validators.maxLength(50) , Validators.pattern(/^[A-Za-z]+$/)]],
       email: ['', [Validators.required, Validators.email]],
       phoneNumber: ['', [
         Validators.required,
@@ -76,14 +76,14 @@ export class CompanyAddEditComponent implements OnInit {
       logo: ['', Validators.required],
 
       streetAddress: ['', Validators.required],
-      city: ['', Validators.required],
-      country: ['', Validators.required],
+      city: ['', Validators.required, Validators.pattern(/^[A-Za-z\s]+$/)],
+      country: ['', Validators.required, Validators.pattern(/^[A-Za-z\s]+$/)],
       zipCode: ['', [Validators.required, Validators.pattern(/^[0-9]{5,6}$/)]],
 
       // Admin
-      userFirstName: ['', [Validators.required, Validators.pattern(/^[A-Za-z]+$/)]],
-      userMiddleName: ['', [Validators.pattern(/^[A-Za-z]+$/)]],
-      userLastName: ['', [Validators.required, Validators.pattern(/^[A-Za-z]+$/)]],
+      userFirstName: ['', [Validators.required,Validators.minLength(3),Validators.maxLength(50) ,Validators.pattern(/^[A-Za-z]+$/)]],
+      userMiddleName: ['', [Validators.minLength(3),Validators.maxLength(50) ,Validators.pattern(/^[A-Za-z]+$/)]],
+      userLastName: ['', [Validators.required,Validators.minLength(3),Validators.maxLength(50) , Validators.pattern(/^[A-Za-z]+$/)]],
       userEmail: ['', [Validators.required, Validators.email]],
       userPhoneNumber: ['', [
         Validators.required,
@@ -201,6 +201,15 @@ export class CompanyAddEditComponent implements OnInit {
     reader.onload = () => this.form.patchValue({ logo: reader.result });
     reader.readAsDataURL(input.files[0]);
   }
+
+  onFirstLoginToggle(event: Event): void {
+  const checked = (event.target as HTMLInputElement).checked;
+
+  // ✅ If checkbox clicked → send false
+  this.form.patchValue({
+    isFirstLogin: checked ? false : true
+  });
+}
 
   removeLogo(): void {
     this.form.patchValue({ logo: null });
