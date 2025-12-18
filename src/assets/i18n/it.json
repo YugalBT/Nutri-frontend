@@ -270,7 +270,8 @@
     "email": "Email",
     "phoneNumber": "Numero di telefono",
     "address": "Indirizzo",
-    "website": "URL del sito web"
+    "website": "URL del sito web",
+    "saveSettings": "Salva impostazioni"
   },
   "profile": {
     "firstName": "Nome",

@@ -50,7 +50,7 @@
           <!-- ERROR messages -->
           <div class="text-danger mt-1" *ngIf="logoCtrl.touched && logoCtrl.errors">
             <small *ngIf="logoCtrl.errors['required']">
-              {{'imageValidator.required' | translate}}
+              {{'imageValidator.imageRequired' | translate}}
             </small>
 
             <small *ngIf="logoCtrl.errors['invalidType']">
@@ -62,7 +62,7 @@
             </small>
 
             <small *ngIf="logoCtrl.errors['invalidDimension']">
-              {{'imageValidator.invalidDimension' | translate}}
+              {{'imageValidator.invalidDimensions' | translate}}
             </small>
           </div>
 
@@ -130,7 +130,7 @@
       <!-- City, Country, Zip -->
       <div class="row mt-3">
         <div class="col-md-4">
-          <label>{{'companysetting.city' | translate}} <sup class="text-danger">*</sup></label>
+          <label>{{'address.city' | translate}} <sup class="text-danger">*</sup></label>
           <input formControlName="city" class="form-control">
           <div
             *ngIf="companyForm.get('city')?.invalid && (companyForm.get('city')?.touched || companyForm.get('city')?.dirty)"
@@ -143,7 +143,7 @@
           </div>
         </div>
         <div class="col-md-4">
-          <label>{{'companysetting.country' | translate}} <sup class="text-danger">*</sup></label>
+          <label>{{'address.country' | translate}} <sup class="text-danger">*</sup></label>
           <input formControlName="country" class="form-control">
           <div
             *ngIf="companyForm.get('country')?.invalid && (companyForm.get('country')?.touched || companyForm.get('country')?.dirty)"
@@ -183,7 +183,7 @@
       </div> -->
 
       <div class="text-end mt-4">
-        <button class="btn add-btn px-4" type="submit" [disabled]="companyForm.invalid">{{'companysettings.saveSettings' | translate}}</button>
+        <button class="btn add-btn px-4" type="submit" [disabled]="companyForm.invalid">{{'companysetting.saveSettings' | translate}}</button>
       </div>
 
     </form>
