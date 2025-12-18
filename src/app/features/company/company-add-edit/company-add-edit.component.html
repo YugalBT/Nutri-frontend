@@ -403,9 +403,13 @@
                             </div>
                             <div class="col-md-6 col-12 d-flex align-items-end" *ngIf="!isEdit">
                                 <div class="form-check">
-                                    <input class="form-check-input large-checkbox" type="checkbox" 
-                                    id="isFirstLogin"
-                                        formControlName="isFirstLogin"  (change)="form.patchValue({ isFirstLogin: false })"/>
+                                  <input
+  class="form-check-input large-checkbox"
+  type="checkbox"
+  id="isFirstLogin"
+  [checked]="!form.get('isFirstLogin')?.value"
+  (change)="onFirstLoginToggle($event)"
+/>
                                     <label class="form-check-label" for="isFirstLogin">
                                         {{ 'company.passwordResetNeeded' | translate }}
                                     </label>

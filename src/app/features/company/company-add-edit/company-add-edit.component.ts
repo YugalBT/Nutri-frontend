@@ -202,14 +202,16 @@ export class CompanyAddEditComponent implements OnInit {
     reader.readAsDataURL(input.files[0]);
   }
 
-  onFirstLoginToggle(event: Event): void {
+onFirstLoginToggle(event: Event): void {
   const checked = (event.target as HTMLInputElement).checked;
 
-  // ✅ If checkbox clicked → send false
+  // checked = password reset needed
+  // so isFirstLogin must be FALSE
   this.form.patchValue({
-    isFirstLogin: checked ? false : true
+    isFirstLogin: !checked
   });
 }
+
 
   removeLogo(): void {
     this.form.patchValue({ logo: null });
