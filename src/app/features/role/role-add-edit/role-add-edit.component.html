@@ -20,13 +20,13 @@
                             [placeholder]="'role.roleNamePlaceholder' | translate">
                                 <div *ngIf="form.get('roleName')?.touched && form.get('roleName')?.invalid"
                                     class="text-danger">
-                                    Role Name is required.
+                                    {{ 'role.roleNameRequired' | translate }}
                                 </div>
                                 <div *ngIf="form.get('roleName')?.errors?.['pattern']" class="text-danger">
-                                    Role Name can only contain alphabets ,hyphen and spaces.
+                                    {{ 'role.roleNameInvalid' | translate }}
                                 </div>
-                               <div *ngIf="form.get('roleName')?.errors?.['minlength']">Minimum 3 characters.</div>
-                                <div *ngIf="form.get('roleName')?.errors?.['maxlength']">Maximum 20 characters.</div>
+                               <div *ngIf="form.get('roleName')?.errors?.['minlength']">{{ 'validation.minLength' | translate }}</div>
+                                <div *ngIf="form.get('roleName')?.errors?.['maxlength']">{{ 'validation.maxLength' | translate }}</div>
 
 
                             </div>

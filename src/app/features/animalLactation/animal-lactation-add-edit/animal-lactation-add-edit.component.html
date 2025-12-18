@@ -20,9 +20,9 @@
               <input type="text" formControlName="lactationNameEn" class="form-control" placeholder="{{ 'animalLactationStage.LactationStageNamePlaceholder' | translate }}">
               <div *ngIf="form.get('lactationNameEn')?.touched && form.get('lactationNameEn')?.invalid" class="text-danger">
                 <div *ngIf="form.get('lactationNameEn')?.errors?.['required']">{{ 'animalLactationStage.LactationStageNameRequired' | translate }}</div>
-                <div *ngIf="form.get('lactationNameEn')?.errors?.['pattern']">{{'validation.onlyAlphabetAndSpaces'}}</div>
-                <div *ngIf="form.get('lactationNameEn')?.errors?.['minlength']">{{'validation.minLength'}}</div>
-                <div *ngIf="form.get('lactationNameEn')?.errors?.['maxlength']">{{'validation.maxLength'}}</div>
+                <div *ngIf="form.get('lactationNameEn')?.errors?.['pattern']">{{'validation.onlyAlphabetAndSpaces'| translate}}</div>
+                <div *ngIf="form.get('lactationNameEn')?.errors?.['minlength']">{{'validation.minLength'| translate}}</div>
+                <div *ngIf="form.get('lactationNameEn')?.errors?.['maxlength']">{{'validation.maxLength'| translate}}</div>
               </div>
             </div>
 

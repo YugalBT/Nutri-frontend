@@ -138,6 +138,8 @@
     }
   },
   "role": {
+    "roleNameInvalid": "Role Name can only contain alphabets, hyphen and spaces.",
+    "roleNameRequired": "Role Name is required",
     "roleIsDefault": "Default",
     "roleIsEditable": "Editable",
     "roleIsShow": "Master Roles",
@@ -207,7 +209,7 @@
     "invalidType": "Invalid image type. Allowed types are: jpeg,jpg,png.",
     "maxSizeExceeded": "Image size exceeds the maximum limit of 2MB.",
     "imageRequired": "Image is required.",
-    "invalidDimensions": "Invalid image dimensions. Required dimensions are {{width}}x{{height}} pixels.",
+    "invalidDimensions": "Invalid image dimensions. Required dimensions are 300x300 pixels.",
     "allowedImages": "Allowed: PNG, JPG, JPEG"
   },
   "validation": {

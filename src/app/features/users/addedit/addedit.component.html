@@ -22,7 +22,7 @@
                             </div>
 
                             <div *ngIf="form.get('name')?.errors?.['pattern']" class="text-danger">
-                                {{'validation.firstNameInvalid' | translate }}
+                                {{'validation.onlyChars' | translate }}
                             </div>
 
                         </div>
@@ -33,7 +33,7 @@
                                 placeholder="{{ 'users.middleNamePlaceholder' | translate }}">
                             <div *ngIf="form.get('middleName')?.touched && form.get('middleName')?.invalid"
                                 class="text-danger">
-                                {{'validation.middleNameInvalid' | translate }}
+                                {{'validation.onlyChars' | translate }}
                             </div>
                         </div>
 
@@ -48,7 +48,7 @@
                             </div>
 
                             <div *ngIf="form.get('lastName')?.errors?.['pattern']" class="text-danger">
-                                {{'validation.lastNameInvalid' | translate }}
+                                {{'validation.onlyChars' | translate }}
                             </div>
                         </div>
                     </div>
@@ -76,20 +76,20 @@
 
                                 <!-- Required -->
                                 <div *ngIf="form.get('phone')?.errors?.['required']">
-                                    {{'phonevalidation.phoneRequired' | translate }}
+                                    {{'phoneValidation.phoneRequired' | translate }}
                                 </div>
 
                                 <!-- Minimum length -->
                                 <div *ngIf="form.get('phone')?.errors?.['minlength']">
-                                   {{'phonevalidation.minLength' | translate }}
+                                   {{'phoneValidation.minLength' | translate }}
                                 </div>
                                 <!-- Maximum length -->
                                 <div *ngIf="form.get('phone')?.errors?.['maxlength']">
-                                    {{'phonevalidation.maxLength' | translate }}
+                                    {{'phoneValidation.maxLength' | translate }}
                                 </div>
                                 <!-- Only numbers allowed -->
                                 <div *ngIf="form.get('phone')?.errors?.['pattern']">
-                                    {{'phonevalidation.invalidPhone' | translate }}
+                                    {{'phoneValidation.invalidPhone' | translate }}
                                 </div>
 
                             </div>

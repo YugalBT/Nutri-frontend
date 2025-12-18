@@ -57,7 +57,7 @@
             <!-- ERROR messages -->
             <div class="text-danger mt-1" *ngIf="logoCtrl.touched && logoCtrl.errors">
               <small *ngIf="logoCtrl.errors['required']">
-                {{'imageValidator.required' | translate}}
+                {{'imageValidator.imageRequired' | translate}}
               </small>
 
               <small *ngIf="logoCtrl.errors['invalidType']">
@@ -69,7 +69,7 @@
               </small>
 
               <small *ngIf="logoCtrl.errors['invalidDimension']">
-                {{'imageValidator.invalidDimension' | translate}}
+                {{'imageValidator.invalidDimensions' | translate}}
               </small>
             </div>
 
@@ -96,7 +96,7 @@
             <small *ngIf="profileForm.get('firstName')?.errors?.['required']">{{'validation.firstNameRequired' | translate}}</small>
             <small *ngIf="profileForm.get('firstName')?.errors?.['minlength']">{{'validation.minLength' | translate}}</small>
             <small *ngIf="profileForm.get('firstName')?.errors?.['maxlength']">{{'validation.maxLength' | translate}}</small>
-            <small *ngIf="profileForm.get('firstName')?.errors?.['pattern']">{{'validation.patternMismatch' | translate}}</small>
+            <small *ngIf="profileForm.get('firstName')?.errors?.['pattern']">{{'validation.onlyChars' | translate}}</small>
           </div>
         </div>
 
@@ -108,7 +108,7 @@
             *ngIf="profileForm.get('middleName')?.touched && profileForm.get('middleName')?.invalid">
             <small *ngIf="profileForm.get('middleName')?.errors?.['minlength']">{{'validation.minLength' | translate}}</small>
             <small *ngIf="profileForm.get('middleName')?.errors?.['maxlength']">{{'validation.maxLength' | translate}}</small>
-            <small *ngIf="profileForm.get('middleName')?.errors?.['pattern']">{{'validation.patternMismatch' | translate}}</small>
+            <small *ngIf="profileForm.get('middleName')?.errors?.['pattern']">{{'validation.onlyChars' | translate}}</small>
           </div>
         </div>
 
@@ -121,7 +121,7 @@
             <small *ngIf="profileForm.get('lastName')?.errors?.['required']">{{'validation.lastNameRequired' | translate}}</small>
             <small *ngIf="profileForm.get('lastName')?.errors?.['minlength']">{{'validation.minLength' | translate}}</small>
             <small *ngIf="profileForm.get('lastName')?.errors?.['maxlength']">{{'validation.maxLength' | translate}}</small>
-            <small *ngIf="profileForm.get('lastName')?.errors?.['pattern']">{{'validation.patternMismatch' | translate}}</small>
+            <small *ngIf="profileForm.get('lastName')?.errors?.['pattern']">{{'validation.onlyChars' | translate}}</small>
           </div>
         </div>
 
@@ -138,8 +138,8 @@
           <input type="text" class="form-control" formControlName="phone">
 
           <div class="text-danger mt-1" *ngIf="profileForm.get('phone')?.touched && profileForm.get('phone')?.invalid">
-            <small *ngIf="profileForm.get('phone')?.errors?.['required']">{{'validation.phoneRequired' | translate}}</small>
-            <small *ngIf="profileForm.get('phone')?.errors?.['pattern']">{{'validation.phonePattern' | translate}}</small>
+            <small *ngIf="profileForm.get('phone')?.errors?.['required']">{{'phoneValidation.phoneRequired' | translate}}</small>
+            <small *ngIf="profileForm.get('phone')?.errors?.['pattern']">{{'phoneValidation.invalidPhone' | translate}}</small>
           </div>
         </div>
 

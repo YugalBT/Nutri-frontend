@@ -138,6 +138,8 @@
     }
   },
   "role": {
+    "roleNameInvalid": "Il nome del ruolo può contenere solo lettere, trattini e spazi.",
+    "roleNameRequired": "Il nome del ruolo è obbligatorio",
     "roleIsDefault": "Predefinito",
     "roleIsEditable": "Modificabile",
     "roleIsShow": "Ruoli principali",
