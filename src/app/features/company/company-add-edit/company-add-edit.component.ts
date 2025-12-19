@@ -33,6 +33,7 @@ export class CompanyAddEditComponent implements OnInit {
   isEdit = false;
   showCurrent = false;
   roleList: RoleItem[] = [];
+  isSubmitted = false;
 
   constructor(
     private fb: FormBuilder,
@@ -42,7 +43,7 @@ export class CompanyAddEditComponent implements OnInit {
     private roleService: AddEditRoleService,
     private toast: ToastService,
     private commonService: CommonService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     if (
@@ -55,9 +56,9 @@ export class CompanyAddEditComponent implements OnInit {
       tenantId: [''],
 
       // Primary (Company Owner)
-      firstName: ['', [Validators.required,Validators.minLength(3),Validators.maxLength(50) ,Validators.pattern(/^[A-Za-z]+$/)]],
-      middleName: ['', [Validators.minLength(3),Validators.maxLength(50) ,Validators.pattern(/^[A-Za-z]+$/)]],
-      lastName: ['', [Validators.required,Validators.minLength(3),Validators.maxLength(50) , Validators.pattern(/^[A-Za-z]+$/)]],
+      firstName: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(50), Validators.pattern(/^[A-Za-z]+$/)]],
+      middleName: ['', [Validators.minLength(3), Validators.maxLength(50), Validators.pattern(/^[A-Za-z]+$/)]],
+      lastName: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(50), Validators.pattern(/^[A-Za-z]+$/)]],
       email: ['', [Validators.required, Validators.email]],
       phoneNumber: ['', [
         Validators.required,
@@ -68,11 +69,11 @@ export class CompanyAddEditComponent implements OnInit {
 
       companyName: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(50)]],
       code: ['', [Validators.required, Validators.minLength(3)]],
-      url: ['',  [
-    Validators.pattern(
-      /^(https?:\/\/)(www\.)?[a-zA-Z0-9-]+\.[a-zA-Z]{2,}([\/\w .-]*)*\/?$/
-    )
-  ]],
+      url: ['', [
+        Validators.pattern(
+          /^(https?:\/\/)(www\.)?[a-zA-Z0-9-]+\.[a-zA-Z]{2,}([\/\w .-]*)*\/?$/
+        )
+      ]],
       logo: ['', Validators.required],
 
       streetAddress: ['', Validators.required],
@@ -81,9 +82,9 @@ export class CompanyAddEditComponent implements OnInit {
       zipCode: ['', [Validators.required, Validators.pattern(/^[0-9]{5,6}$/)]],
 
       // Admin
-      userFirstName: ['', [Validators.required,Validators.minLength(3),Validators.maxLength(50) ,Validators.pattern(/^[A-Za-z]+$/)]],
-      userMiddleName: ['', [Validators.minLength(3),Validators.maxLength(50) ,Validators.pattern(/^[A-Za-z]+$/)]],
-      userLastName: ['', [Validators.required,Validators.minLength(3),Validators.maxLength(50) , Validators.pattern(/^[A-Za-z]+$/)]],
+      userFirstName: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(50), Validators.pattern(/^[A-Za-z]+$/)]],
+      userMiddleName: ['', [Validators.minLength(3), Validators.maxLength(50), Validators.pattern(/^[A-Za-z]+$/)]],
+      userLastName: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(50), Validators.pattern(/^[A-Za-z]+$/)]],
       userEmail: ['', [Validators.required, Validators.email]],
       userPhoneNumber: ['', [
         Validators.required,
@@ -148,21 +149,31 @@ export class CompanyAddEditComponent implements OnInit {
       }
     });
   }
+  isInvalid(controlName: string, error?: string): boolean {
+    const control = this.form?.get(controlName);
+    if (!control) return false;
 
-  // -------------------------
-  // MODAL
-  // -------------------------
+    const showError = control.dirty || this.isSubmitted;
+
+    if (error) {
+      return showError && !!control.errors?.[error];
+    }
+
+    return showError && control.invalid;
+  }
+ 
   openModal(edit = false, data?: any): void {
     this.isEdit = edit;
+    this.isSubmitted = false;
 
     if (edit && data) {
       this.form.patchValue({ ...data, logo: data.logo || '' });
 
-      // ❌ DO NOT AUTO COPY
-      this.form.patchValue({ sameAsPrimaryUser: false });
-
       this.form.get('password')?.clearValidators();
+      this.form.get('password')?.setErrors(null);
+
       this.form.get('roleId')?.clearValidators();
+      this.form.get('roleId')?.setErrors(null);
     } else {
       this.form.reset({
         isActive: true,
@@ -186,7 +197,9 @@ export class CompanyAddEditComponent implements OnInit {
     this.modalInstance.show();
   }
 
+
   closeModal(): void {
+    this.isSubmitted = false;
     this.modalInstance?.hide();
   }
 
@@ -202,15 +215,15 @@ export class CompanyAddEditComponent implements OnInit {
     reader.readAsDataURL(input.files[0]);
   }
 
-onFirstLoginToggle(event: Event): void {
-  const checked = (event.target as HTMLInputElement).checked;
+  onFirstLoginToggle(event: Event): void {
+    const checked = (event.target as HTMLInputElement).checked;
 
-  // checked = password reset needed
-  // so isFirstLogin must be FALSE
-  this.form.patchValue({
-    isFirstLogin: !checked
-  });
-}
+    // checked = password reset needed
+    // so isFirstLogin must be FALSE
+    this.form.patchValue({
+      isFirstLogin: !checked
+    });
+  }
 
 
   removeLogo(): void {
@@ -222,8 +235,13 @@ onFirstLoginToggle(event: Event): void {
   // SAVE
   // -------------------------
   saveCompany(): void {
+    this.isSubmitted = true;
+
+    // 🔥 Force validation recalculation
+    this.form.markAllAsTouched();
+    this.form.updateValueAndValidity();
+
     if (this.form.invalid) {
-      this.form.markAllAsTouched();
       return;
     }
 

@@ -18,19 +18,18 @@
                                         style="color: #f00; font-size: 12px;">*</sup></label>
                                 <input type="text" class="form-control" formControlName="companyName"
                                     [placeholder]="'company.companyNamePlaceholder' | translate">
-                                <div *ngIf="form.get('companyName')?.touched && form.get('companyName')?.invalid"
-                                    class="text-danger">
-                                    {{'validation.companyNameRequired' | translate}}
+                                <div *ngIf="isInvalid('companyName', 'required')" class="text-danger">
+                                    {{ 'validation.companyNameRequired' | translate }}
                                 </div>
-                                <!-- <div *ngIf="form.get('companyName')?.errors?.['pattern']" class="text-danger">
-                                    {{'validation.companyNameInvalid' | translate}}
-                                </div> -->
-                                <div *ngIf="form.get('companyName')?.errors?.['minlength']" class="text-danger">
-                                    {{'validation.minLength' | translate}}
+
+                                <div *ngIf="isInvalid('companyName', 'minlength')" class="text-danger">
+                                    {{ 'validation.minLength' | translate }}
                                 </div>
-                                <div *ngIf="form.get('companyName')?.errors?.['maxlength']" class="text-danger">
-                                    {{'validation.maxLength' | translate}}
+
+                                <div *ngIf="isInvalid('companyName', 'maxlength')" class="text-danger">
+                                    {{ 'validation.maxLength' | translate }}
                                 </div>
+
                             </div>
 
                             <div class="col-md-4 col-12">
@@ -38,15 +37,18 @@
                                         style="color: #f00; font-size: 12px;">*</sup></label>
                                 <input type="text" class="form-control" formControlName="code"
                                     [placeholder]="'company.companyCode' | translate">
-                                <div *ngIf="form.get('code')?.touched && form.get('code')?.invalid" class="text-danger">
-                                    {{'validation.companyCodeRequired' | translate}}
+                                <div *ngIf="isInvalid('code', 'required')" class="text-danger">
+                                    {{ 'validation.companyCodeRequired' | translate }}
                                 </div>
-                                <div *ngIf="form.get('code')?.errors?.['minlength']" class="text-danger">
-                                    {{'validation.minLength' | translate}}
+
+                                <div *ngIf="isInvalid('code', 'minlength')" class="text-danger">
+                                    {{ 'validation.minLength' | translate }}
                                 </div>
-                                <div *ngIf="form.get('code')?.errors?.['maxlength']" class="text-danger">
-                                    {{'validation.maxLength' | translate}}
+
+                                <div *ngIf="isInvalid('code', 'maxlength')" class="text-danger">
+                                    {{ 'validation.maxLength' | translate }}
                                 </div>
+
                             </div>
 
                             <!-- <div class="col-md-4 col-12">
@@ -91,24 +93,21 @@
                                 <input #fileInput type="file" class="form-control" accept="image/png,image/jpeg"
                                     appImageValidator controlName="logo" [width]="300" [height]="300" [maxSizeMB]="2" />
 
-                                <div class="text-danger mt-1"
-                                    *ngIf="form.get('logo')?.touched && form.get('logo')?.errors">
+                                <div class="text-danger mt-1" *ngIf="isInvalid('logo')">
                                     <small *ngIf="form.get('logo')?.errors?.['required']">
-                                        {{'imageValidator.imageRequired' | translate }}
+                                        {{ 'imageValidator.imageRequired' | translate }}
                                     </small>
-
                                     <small *ngIf="form.get('logo')?.errors?.['invalidType']">
-                                        {{'imageValidator.invalidType' | translate }}
+                                        {{ 'imageValidator.invalidType' | translate }}
                                     </small>
-
                                     <small *ngIf="form.get('logo')?.errors?.['maxSizeExceeded']">
-                                        {{'imageValidator.maxSizeExceeded' | translate }}
+                                        {{ 'imageValidator.maxSizeExceeded' | translate }}
                                     </small>
-
                                     <small *ngIf="form.get('logo')?.errors?.['invalidDimension']">
-                                        {{'imageValidator.invalidDimensions' | translate }}
+                                        {{ 'imageValidator.invalidDimensions' | translate }}
                                     </small>
                                 </div>
+
                             </div>
 
                             <div class="col-md-4 col-12" *ngIf="form.get('logo')?.value">
@@ -179,40 +178,36 @@
                                         style="color: #f00; font-size: 12px;">*</sup></label>
                                 <input type="email" class="form-control" formControlName="email"
                                     [placeholder]="'company.userEmailPlaceholder' | translate">
-                                <div *ngIf="form.get('email')?.touched && form.get('email')?.invalid"
-                                    class="text-danger">
-                                    {{'validation.required' | translate}}
+                                <div *ngIf="isInvalid('email', 'required')" class="text-danger">
+                                    {{ 'validation.required' | translate }}
                                 </div>
-                                <div *ngIf="form.get('email')?.errors?.['email']" class="text-danger">
-                                    {{'validation.invalidEmail' | translate}}
+
+                                <div *ngIf="isInvalid('email', 'email')" class="text-danger">
+                                    {{ 'validation.invalidEmail' | translate }}
                                 </div>
+
                             </div>
                             <div class="col-md-4 col-12">
                                 <label class="form-label">{{ 'company.phoneNumber' | translate }}<sup
                                         style="color: #f00; font-size: 12px;">*</sup></label>
                                 <input type="tel" class="form-control" formControlName="phoneNumber"
                                     [placeholder]="'company.userPhonePlaceholder' | translate">
-                                <div *ngIf="form.get('phoneNumber')?.touched" class="text-danger">
-
-                                    <!-- Required -->
-                                    <div *ngIf="form.get('phoneNumber')?.errors?.['required']">
-                                        {{'phoneValidation.phoneNumberRequired' | translate}}
-                                    </div>
-
-                                    <!-- Minimum length -->
-                                    <div *ngIf="form.get('phoneNumber')?.errors?.['minlength']">
-                                        {{'phoneValidation.minLength' | translate}}
-                                    </div>
-                                    <!-- Maximum length -->
-                                    <div *ngIf="form.get('phoneNumber')?.errors?.['maxlength']">
-                                        {{'phoneValidation.maxLength' | translate}}
-                                    </div>
-                                    <!-- Only numbers allowed -->
-                                    <div *ngIf="form.get('phoneNumber')?.errors?.['pattern']">
-                                        {{'phoneValidation.invalidPhone' | translate}}
-                                    </div>
-
+                                <div *ngIf="isInvalid('phoneNumber', 'required')" class="text-danger">
+                                    {{ 'phoneValidation.phoneNumberRequired' | translate }}
                                 </div>
+
+                                <div *ngIf="isInvalid('phoneNumber', 'minlength')" class="text-danger">
+                                    {{ 'phoneValidation.minLength' | translate }}
+                                </div>
+
+                                <div *ngIf="isInvalid('phoneNumber', 'maxlength')" class="text-danger">
+                                    {{ 'phoneValidation.maxLength' | translate }}
+                                </div>
+
+                                <div *ngIf="isInvalid('phoneNumber', 'pattern')" class="text-danger">
+                                    {{ 'phoneValidation.invalidPhone' | translate }}
+                                </div>
+
                             </div>
 
                             <div class="col-12 mt-3">
@@ -234,12 +229,14 @@
                                         style="color: #f00; font-size: 12px;">*</sup></label>
                                 <input type="text" class="form-control" formControlName="city"
                                     [placeholder]="'company.cityPlaceholder' | translate">
-                                <div *ngIf="form.get('city')?.touched && form.get('city')?.invalid" class="text-danger">
-                                    {{'addressValidation.cityRequired' | translate}}
+                                <div *ngIf="isInvalid('city', 'required')" class="text-danger">
+                                    {{ 'addressValidation.cityRequired' | translate }}
                                 </div>
-                                <div *ngIf="form.get('city')?.errors?.['pattern']" class="text-danger">
-                                    {{'addressValidation.cityPattern' | translate}}
+
+                                <div *ngIf="isInvalid('city', 'pattern')" class="text-danger">
+                                    {{ 'addressValidation.cityPattern' | translate }}
                                 </div>
+
                             </div>
                             <div class="col-md-4 col-12">
                                 <label class="form-label">{{ 'company.zipCode' | translate }}<sup
@@ -373,13 +370,13 @@
                                         style="color: #f00; font-size: 12px;">*</sup></label>
                                 <select class="form-select" formControlName="roleId">
                                     <option value="">{{ 'common.selectRole' | translate }}</option>
-                                    <option *ngFor="let role of roleList" [value]="role.roleId">{{ role.nameEn }}(
-                                        {{role.nameIt}})</option>
+                                    <option *ngFor="let role of roleList" [value]="role.roleId">{{ role.nameEn }}
+                                    </option>
                                 </select>
-                                <div *ngIf="form.get('roleId')?.touched && form.get('roleId')?.invalid"
-                                    class="text-danger">
-                                    {{'companyValidation.roleRequired' | translate}}
+                                <div *ngIf="isInvalid('roleId', 'required')" class="text-danger">
+                                    {{ 'companyValidation.roleRequired' | translate }}
                                 </div>
+
                             </div>
 
                             <div class="col-md-4 col-12">
@@ -394,13 +391,14 @@
                                         <i class="fa" [ngClass]="showCurrent ? 'fa-eye' : 'fa-eye-slash'"></i>
                                     </span>
                                 </div>
-                                <div *ngIf="form.get('password')?.touched && form.get('password')?.invalid"
-                                    class="text-danger">
-                                    {{'companyValidation.passwordRequired' | translate}}
+                                <div *ngIf="!isEdit && isInvalid('password', 'required')" class="text-danger">
+                                    {{ 'companyValidation.passwordRequired' | translate }}
                                 </div>
-                                <div *ngIf="form.get('password')?.errors?.['minlength']" class="text-danger">
-                                    {{'companyValidation.passwordMinlength' | translate}}
+
+                                <div *ngIf="!isEdit && isInvalid('password', 'minlength')" class="text-danger">
+                                    {{ 'companyValidation.passwordMinlength' | translate }}
                                 </div>
+
                             </div>
                             <div class="col-md-6 col-12 d-flex align-items-end" *ngIf="!isEdit">
                                 <div class="form-check">

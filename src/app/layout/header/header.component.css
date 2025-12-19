@@ -108,3 +108,12 @@
 .sticky-top{
 	    background: #fff;
 }
+
+.profile-dropdown .dropdown-item svg {
+  flex-shrink: 0;
+}
+
+.profile-dropdown .dropdown-item:hover svg {
+  opacity: 0.85;
+}
+

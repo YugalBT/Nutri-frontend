@@ -50,7 +50,9 @@ export class AuthService {
     );
   }
   logout() {
-    this.confirm.confirm('Do you really want to logout?').subscribe(result => {
+    this.confirm.confirm(
+      'dialog.logoutMessage'
+    ).subscribe(result => {
       if (result) {
         let companyCode = '';
         const rawCompany = sessionStorage.getItem('companyInfo');

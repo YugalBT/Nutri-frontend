@@ -8,16 +8,16 @@
       </svg>
     </div>
 
-    <h4 class="confirm-title">{{ title }}</h4>
-    <p class="confirm-message">{{ message }}</p>
+    <h4 class="confirm-title">{{ title | translate }}</h4>
+    <p class="confirm-message">{{ message | translate }}</p>
 
     <div class="confirm-footer">
-      <button class="btn-cancel" (click)="onNo()">No</button>
+      <button class="btn-cancel" (click)="onNo()">{{ 'dialog.no' | translate }}</button>
       <button class="btn-yes" (click)="onYes()">
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 512 512" fill="white">
           <path d="M192 384h-48v-64h48zm128 0h-48v-32h48zM464 64H48A48 48 0 0 0 0 112v288a48 48 0 0 0 48 48h416a48 48 0 0 0 48-48V112a48 48 0 0 0-48-48z"/>
         </svg>
-        Yes
+        {{ 'dialog.yes' | translate }}
       </button>
     </div>
   </div>
