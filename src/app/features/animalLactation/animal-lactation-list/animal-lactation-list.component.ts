@@ -12,11 +12,12 @@ import { ReusableTableComponent } from '../../../shared/components/reusable-tabl
 import { GlobalSearchComponent } from '../../../shared/components/global-search/global-search.component';
 import { CommonService } from '../../../shared/services/common.service';
 import { PERMISSIONS } from '../../../core/constants/permissions.constants';
+import { TranslatePipe } from '../../../i18n/translate.pipe';
 
 @Component({
   selector: 'app-animal-lactation-list',
   standalone: true,
-  imports: [SharedModule, AnimalLactationAddEditComponent, ReusableTableComponent, GlobalSearchComponent],
+  imports: [SharedModule, AnimalLactationAddEditComponent, ReusableTableComponent, GlobalSearchComponent,TranslatePipe],
   templateUrl: './animal-lactation-list.component.html',
   styleUrls: ['./animal-lactation-list.component.css']
 })

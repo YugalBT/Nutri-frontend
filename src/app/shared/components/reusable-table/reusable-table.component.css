@@ -156,3 +156,24 @@
 
 
 
+.action-icon {
+  display: inline-flex;
+  align-items: center;
+  cursor: pointer;
+
+  /* 👇 smooth animation */
+  transition: transform 0.25s ease-in-out, color 0.25s ease-in-out;
+}
+
+.edit-icon:hover {
+  transform: scale(1.25);
+}
+
+.delete-icon:hover {
+  transform: scale(1.25);
+}
+
+
+
+
+

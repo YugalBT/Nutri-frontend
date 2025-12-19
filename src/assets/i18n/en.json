@@ -89,6 +89,7 @@
     "logout": "Logout"
   },
   "sidebar": {
+    "title": "Sidebar",
     "dashboard": "Dashboard",
     "workspace": "Workspace",
     "user": "User",
@@ -100,6 +101,7 @@
     "logout": "Logout",
     "confirmLogout": "Do you really want to logout?",
     "logoutSuccess": "Logout successful!"
+    
   },
   "users": {
     "searchFilters": "Search Filters",
@@ -325,6 +327,7 @@
     "dm": "DM",
     "cp": "CP",
     "price": "€/kg",
+    "positiveNumber": "Value must be a positive number",
     "columns": {
       "rationName": "Ration Name",
       "farmName": "Farm Name",
@@ -458,6 +461,7 @@
     }
   },
   "animalLactationStage": {
+    "Heading": "Lactation Stage Management",
     "editLactationStage": "Edit Lactation",
     "addLactationStage": "Add Lactation",
     "LactationStageName": "Lactation Name",
@@ -468,6 +472,7 @@
     }
   },
   "animalType": {
+    "Heading": "Animal Type Management",
     "addAnimalType": "Add Animal Type",
     "editAnimalType": "Edit Animal Type",
     "animalTypeName": "Animal Type Name",

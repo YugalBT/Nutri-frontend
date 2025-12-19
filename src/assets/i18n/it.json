@@ -324,6 +324,7 @@
     "dm": "Sostanza secca",
     "cp": "Proteina grezza",
     "price": "€/kg",
+    "positiveNumber": "Il valore deve essere un numero positivo",
     "columns": {
       "rationName": "Nome razione",
       "farmName": "Nome azienda agricola",
@@ -457,6 +458,7 @@
     }
   },
   "animalLactationStage": {
+    "Heading": "Gestione Fasi di Lattazione",
     "editLactationStage": "Modifica lattazione",
     "addLactationStage": "Aggiungi lattazione",
     "LactationStageName": "Nome fase di lattazione",
@@ -467,6 +469,7 @@
     }
   },
   "animalType": {
+    "Heading": "Gestione Tipi di Animali",
     "addAnimalType": "Aggiungi tipo di animale",
     "editAnimalType": "Modifica tipo di animale",
     "animalTypeName": "Nome tipo di animale",

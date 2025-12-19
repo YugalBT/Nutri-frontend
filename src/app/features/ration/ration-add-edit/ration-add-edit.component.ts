@@ -70,7 +70,7 @@ export class RationAddEditComponent implements OnInit, OnDestroy {
   createRationItem(item?: any): FormGroup {
     return this.fb.group({
       feedId: [item?.feedId ?? '', Validators.required],
-      perKg: [item?.perKg ?? '', [Validators.required, CustomValidators.maxDigits(20)]],
+      perKg: [item?.perKg ?? '', [Validators.required, CustomValidators.maxDigits(20),CustomValidators.positiveNumber()]],
 
       dryMatter: [item?.dryMatter ?? null],
       protein: [item?.protein ?? null],
