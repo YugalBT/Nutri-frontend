@@ -33,12 +33,23 @@ export class ResetPasswordComponent implements OnInit {
   ngOnInit(): void {
     this.resetForm = this.fb.group(
       {
-        passWord: this.fb.control('', {
-          validators: [Validators.required, Validators.minLength(8)]
-        }),
-        oldPassWord: this.fb.control('', {
-          validators: [Validators.required, Validators.minLength(8)]
-        }),
+        passWord: [
+          '',
+          [
+            Validators.required,
+            Validators.minLength(6),
+            Validators.pattern(/^(?=.*[A-Z])(?=.*[0-9]).+$/) 
+          ]
+        ],
+        
+        oldPassWord: [
+          '',
+          [
+            Validators.required,
+            Validators.minLength(10),
+
+          ]
+        ],
         confirmPassWord: this.fb.control('', {
           validators: [Validators.required]
         })
@@ -67,7 +78,7 @@ export class ResetPasswordComponent implements OnInit {
 
   onSubmit() {
     this.isSubmitted = true;
-
+    this.resetForm.markAllAsTouched();
     if (this.resetForm.invalid) {
       this.toast.error('Please fix validation errors.');
       return;

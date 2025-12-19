@@ -15,11 +15,12 @@ import { ReusableTableComponent } from '../../../shared/components/reusable-tabl
 import { CommonService } from '../../../shared/services/common.service';
 import { Router } from '@angular/router';
 import { ROUTE_CONST } from '../../../core/constants/route.constants';
+import { TranslatePipe } from '../../../i18n/translate.pipe';
 
 @Component({
   selector: 'app-ration-list',
   standalone: true,
-  imports: [RationAddEditComponent, GlobalSearchComponent, ReusableTableComponent],
+  imports: [RationAddEditComponent, GlobalSearchComponent, ReusableTableComponent, TranslatePipe],
   templateUrl: './ration-list.component.html',
   styleUrls: ['./ration-list.component.css']
 })

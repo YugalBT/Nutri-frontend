@@ -12,11 +12,12 @@ import { GlobalSearchComponent } from '../../../shared/components/global-search/
 import { FeedAddEditComponent } from "../feed-add-edit/feed-add-edit.component";
 import { CommonService } from '../../../shared/services/common.service';
 import { PERMISSIONS } from '../../../core/constants/permissions.constants';
+import { TranslatePipe } from '../../../i18n/translate.pipe';
 
 @Component({
   selector: 'app-feed-list',
   standalone: true,
-  imports: [SharedModule, ReusableTableComponent, GlobalSearchComponent, FeedAddEditComponent],
+  imports: [SharedModule, ReusableTableComponent, GlobalSearchComponent, FeedAddEditComponent,TranslatePipe],
   templateUrl: './feed-list.component.html',
   styleUrls: ['./feed-list.component.css']
 })

@@ -17,7 +17,7 @@ import { TranslateService } from '../../../i18n/translate.service';
 @Component({
   selector: 'app-animal-group-list',
   standalone: true,
-  imports: [AnimalGroupAddEditComponent, GlobalSearchComponent, ReusableTableComponent],
+  imports: [AnimalGroupAddEditComponent, GlobalSearchComponent, ReusableTableComponent, TranslatePipe],
   templateUrl: './animal-group-list.component.html',
   styleUrls: ['./animal-group-list.component.css']
 })

@@ -8,6 +8,8 @@ import { GlobalSearchComponent } from '../../shared/components/global-search/glo
 import { CommonService } from '../../shared/services/common.service';
 import { PERMISSIONS } from '../../core/constants/permissions.constants';
 import { TranslatePipe } from '../../i18n/translate.pipe';
+import { TranslateService } from '../../i18n/translate.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-notifications',
@@ -18,19 +20,45 @@ import { TranslatePipe } from '../../i18n/translate.pipe';
 })
 export class NotificationsComponent implements OnInit {
 
-  columns: string[] = ['Title', 'Description', 'Create Date', 'Type'];
-  columnFields: string[] = ['title', 'description', 'createdDate', 'type']; // for reusable table
+  columns = [
+  'notifications.columns.title',
+  'notifications.columns.description',
+  'notifications.columns.createdDate',
+  'notifications.columns.type'
+];
+  columnFields: string[] = ['title', 'description', 'createdDate', 'type']; 
   notificationsData: any[] = [];
   filteredData: any[] = [];
   loading = false;
+  langSub!: Subscription;
 
-  constructor(private notificationService: NotificationService,private commonService : CommonService) { }
+  constructor(
+    private notificationService: NotificationService,
+    private commonService : CommonService,
+    private translate: TranslateService,
+
+  ) { 
+     this.setColumns();
+    this.langSub = this.translate.lang$.subscribe(() => this.setColumns());
+  }
 
   ngOnInit(): void {
     
     if(!this.commonService.checkPermission(PERMISSIONS.Notificaton))
         return;
     this.loadNotifications();
+  }
+
+   private setColumns(): void {
+    this.columns = [
+    this.translate.instant('notifications.columns.title')?? " ",
+    this.translate.instant('notifications.columns.description') ?? " ",
+    this.translate.instant('notifications.columns.createdDate') ?? " ",
+    this.translate.instant('notifications.columns.type') ?? " ",
+    
+    ];
+
+    this.columnFields = ['title', 'description', 'createdDate', 'type'];
   }
 
   loadNotifications(): void {

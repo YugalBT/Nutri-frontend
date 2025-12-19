@@ -203,7 +203,10 @@
     "search": "Search",
     "reset": "Reset",
     "loading": "Loading...",
-    "updating": "Updating..."
+    "updating": "Updating...",
+    "noData": "No data available",
+    "noRecordsMatch": "No records match your search"
+    
   },
   "imageValidator": {
     "invalidType": "Invalid image type. Allowed types are: jpeg,jpg,png.",
@@ -299,6 +302,7 @@
     "profilePhoto": "Profile Photo"
   },
   "ration": {
+    "Heading": "Ration Management",
     "addRation": "Add Ration",
     "editRation": "Edit Ration",
     "rationName": "Ration Name",
@@ -331,6 +335,7 @@
     }
   },
   "farm": {
+    "Heading": "Farm Management",
     "addFarm": "Add Farm",
     "editFarm": "Edit Farm",
     "farmName": "Farm Name",
@@ -364,6 +369,7 @@
     "state": "State"
   },
   "feed": {
+    "Heading": "Feed Management",
     "addFeed": "Add Feed",
     "editFeed": "Edit Feed",
     "feedName": "Feed Name",
@@ -420,6 +426,7 @@
     }
   },
   "animalGroup": {
+    "Heading": "Animal Group Management",
     "addAnimalGroup": "Add Animal Group",
     "editAnimalGroup": "Edit Animal Group",
     "animalGroupName": "Group Name",
@@ -485,6 +492,12 @@
     "notifications": "Notifications",
     "markAllAsRead": "Mark all as read",
     "noNotifications": "No notifications found",
-    "searchPlaceholder": "Search notifications..."
+    "searchPlaceholder": "Search notifications...",
+     "columns": {
+      "title": "Title",
+      "description": "Description",
+      "createdDate": "Create Date",
+      "type": "Type"
+    }
   }
 }

@@ -11,7 +11,7 @@
     <thead>
       <tr>
         <th *ngFor="let col of columns">{{ col }}</th>
-        <th *ngIf="showActions" class="text-center">Actions</th>
+        <th *ngIf="showActions" class="text-center">{{ 'common.actions' | translate }}</th>
       </tr>
     </thead>
 
@@ -85,12 +85,12 @@
             <ul class="dropdown-menu shadow-sm">
               <li>
                 <a class="dropdown-item" (click)="editRow.emit(row)">
-                  <i class="bi bi-pencil me-2"></i>Edit
+                  <i class="bi bi-pencil me-2"></i>{{ 'common.edit' | translate }}
                 </a>
               </li>
               <li>
                 <a class="dropdown-item text-danger" (click)="deleteRow.emit(row)">
-                  <i class="bi bi-trash me-2"></i>Delete
+                  <i class="bi bi-trash me-2"></i>{{ 'common.delete' | translate }}
                 </a>
               </li>
             </ul>
@@ -107,8 +107,8 @@
 <div *ngIf="!data || data.length === 0" class="no-data-container">
     <div class="no-data-content">
       <img loading="lazy" src="assets/image/no-data.png" alt="No Data" class="no-data-icon" />
-      <h3 class="no-data-title">No Data Found</h3>
-      <p class="no-data-message">No records match your search criteria</p>
+      <h3 class="no-data-title">{{ 'common.noData' | translate }}</h3>
+      <p class="no-data-message">{{ 'common.noRecordsMatch' | translate }}</p>
     </div>
   </div>
   <!-- Pagination -->

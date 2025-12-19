@@ -2,11 +2,12 @@ import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { MatBadgeModule } from '@angular/material/badge';
+import { TranslatePipe } from '../../../i18n/translate.pipe';
 
 @Component({
   selector: 'app-reusable-table',
   standalone: true,
-  imports: [CommonModule, MatPaginatorModule, MatBadgeModule],
+  imports: [CommonModule, MatPaginatorModule, MatBadgeModule,TranslatePipe],
   templateUrl: './reusable-table.component.html',
   styleUrls: ['./reusable-table.component.css']
 })

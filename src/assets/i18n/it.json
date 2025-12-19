@@ -203,7 +203,9 @@
     "search": "Cerca",
     "reset": "Reimposta",
     "loading": "Caricamento...",
-    "updating": "Aggiornamento in corso..."
+    "updating": "Aggiornamento in corso...",
+    "noData": "Nessun dato disponibile",
+    "noRecordsMatch": "Nessun record corrisponde alla tua ricerca"
   },
   "imageValidator": {
     "invalidType": "Tipo di immagine non valido. I tipi consentiti sono: jpeg, jpg, png.",
@@ -299,6 +301,7 @@
     "profilePhoto": "Foto profilo"
   },
   "ration": {
+    "Heading": "Gestione Razioni",
     "addRation": "Aggiungi razione",
     "editRation": "Modifica razione",
     "rationName": "Nome razione",
@@ -331,6 +334,7 @@
     }
   },
   "farm": {
+    "Heading": "Gestione Aziende Agricole",
     "addFarm": "Aggiungi azienda agricola",
     "editFarm": "Modifica azienda agricola",
     "farmName": "Nome azienda agricola",
@@ -364,6 +368,7 @@
     "state": "Provincia"
   },
   "feed": {
+    "Heading": "Gestione Alimenti",
     "addFeed": "Aggiungi alimento",
     "editFeed": "Modifica alimento",
     "feedName": "Nome alimento",
@@ -420,6 +425,7 @@
     }
   },
   "animalGroup": {
+    "Heading": "Gestione Gruppi Animali",
     "addAnimalGroup": "Aggiungi gruppo animale",
     "editAnimalGroup": "Modifica gruppo animale",
     "animalGroupName": "Nome gruppo",
@@ -485,6 +491,12 @@
     "notifications": "Notifiche",
     "markAllAsRead": "Segna tutte come lette",
     "noNotifications": "Nessuna notifica trovata",
-    "searchPlaceholder": "Cerca notifiche..."
+    "searchPlaceholder": "Cerca notifiche...",
+    "columns": {
+      "title": "Titolo",
+      "description": "Descrizione",
+      "createdDate": "Data di creazione",
+      "type": "Tipo"
+    }
   }
 }
