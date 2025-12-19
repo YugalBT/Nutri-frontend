@@ -6,12 +6,13 @@ import { selectAuthUser } from '../../state/auth/auth.selectors';
 import { CommonModule } from '@angular/common';
 import { NgxEchartsModule } from 'ngx-echarts';
 import type { EChartsOption } from 'echarts';
+import { TranslatePipe } from '../../i18n/translate.pipe';
 
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule,NgxEchartsModule],
+  imports: [CommonModule,NgxEchartsModule,TranslatePipe],
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.css']
 })

@@ -4,25 +4,25 @@ import { SIDEBAR_ICONS } from "./svg-icons";
 export const SIDEBAR_GROUPS = [
   {
     key: 'access',
-    title: 'User & Access',
+    title: 'sidebarmenu.access',
     icon: SIDEBAR_ICONS.ACCESS,
     items: ['Users', 'Roles','Companies']
   },
   {
     key: 'farm',
-    title: 'Farm Management',
+    title: 'sidebarmenu.farm',
     icon: SIDEBAR_ICONS.FARM,
     items: ['Farm', 'Animal Group', 'Day']
   },
   {
     key: 'nutrition',
-    title: 'Nutrition Management',
+    title: 'sidebarmenu.nutrition',
     icon: SIDEBAR_ICONS.NUTRITION,
     items: ['Feed', 'Ration','Animal Type','Animal Lactation Stage']
   },
    {
     key: 'reports',
-    title: 'Reports & Analytics',
+    title: 'sidebarmenu.reports',
     icon: SIDEBAR_ICONS.REPORTS,
     items: [
       'Reports',
@@ -34,7 +34,7 @@ export const SIDEBAR_GROUPS = [
   },
   {
     key: 'settings',
-    title: 'Settings',
+    title: 'sidebarmenu.settings',
     icon: SIDEBAR_ICONS.SETTINGS,
     items: ['Profile', 'Change Password','Setting','Module']
   },

@@ -501,5 +501,22 @@
       "createdDate": "Data di creazione",
       "type": "Tipo"
     }
+  },
+  "sidebarmenu": {
+    "access": "Utenti e Accesso",
+    "farm": "Gestione Azienda Agricola",
+    "nutrition": "Gestione Nutrizione",
+    "reports": "Report e Analisi",
+    "settings": "Impostazioni",
+    "dashboard": "Dashboard",
+    "logout": "Esci"
+  },
+  "dashboard": {
+    "welcome": "Benvenuti nel",
+    "overview": "Panoramica del dashboard",
+    "totalUsers": "Totale Utenti",
+    "totalFarms": "Totale Aziende Agricole",
+    "totalFeeds": "Totale Alimenti",
+    "totalRations": "Totale Razioni"
   }
 }

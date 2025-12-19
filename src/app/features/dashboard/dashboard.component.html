@@ -4,14 +4,14 @@
 
     <!-- dashboard overview -->
     <div class="welcome-dashboard" *ngIf="user$ | async as user; else NA">
-        <h3 class="mb-2"><b>Welcome To <span class="link-text"> {{ user.companyName }} </span></b></h3>
+        <h3 class="mb-2"><b>{{ 'dashboard.welcome' | translate }} <span class="link-text"> {{ user.companyName }} </span></b></h3>
        
     </div>
     <div class="dashboard-overview-main">
 
         <div class="d-flex align-items-center justify-content-between py-4">
             <div class="body_heading mb-0">
-                <h2 class=" mb-0 ">Dashboard Overview</h2>
+                <h2 class=" mb-0 ">{{ 'dashboard.overview' | translate }}</h2>
             </div>
             <div class="month-filter-wrapper d-flex gap-2 align-items-center">
                 <!-- Month -->
@@ -320,8 +320,8 @@
 
 <ng-template #NoSuperAdmin>
     <div class="welcome-dashboard" *ngIf="user$ | async as user; else NA">
-        <h3 class="mb-2"><b>Welcome To {{ user.companyName }} </b></h3>
-        <p class="mb-0">Manage your business operations with ease</p>
+        <h3 class="mb-2"><b>{{ 'dashboard.welcome' | translate }} {{ user.companyName }} </b></h3>
+        <!-- <p class="mb-0">Manage your business operations with ease</p> -->
     </div>
 </ng-template>
 <ng-template #NA>
