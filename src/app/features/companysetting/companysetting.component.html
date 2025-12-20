@@ -156,7 +156,7 @@
           </div>
         </div>
         <div class="col-md-4">
-          <label>Zip Code <sup class="text-danger">*</sup></label>
+          <label>{{'address.zipCode' | translate}} <sup class="text-danger">*</sup></label>
           <input formControlName="zipCode" class="form-control">
           <div
             *ngIf="companyForm.get('zipCode')?.invalid && (companyForm.get('zipCode')?.touched || companyForm.get('zipCode')?.dirty)"
