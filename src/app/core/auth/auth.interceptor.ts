@@ -12,11 +12,16 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const router = inject(Router);
 
   const token = tokenService.getToken();
+  const language = sessionStorage.getItem('lang') || 'en';
 
+  const headers: any = {
+    'Accept-Language': language
+  };
   if (token) {
     req = req.clone({
       setHeaders: {
-        Authorization: `Bearer ${token}`
+        Authorization: `Bearer ${token}`,
+        ...headers
       }
     });
   }
