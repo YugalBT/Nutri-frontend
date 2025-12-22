@@ -27,9 +27,9 @@
             </span>
 
             <!-- SINGLE hidden file input -->
-            <input type="file" id="profileUpload" class="form-control form-control-sm mt-2"
-              *ngIf="!profileForm.get('logo')?.value" accept="image/png,image/jpeg" appImageValidator controlName="logo"
-              [width]="300" [height]="300" [maxSizeMB]="2" />
+            <input #fileInput type="file" (change)="onImageChange($event)" class="form-control" accept="image/png,image/jpeg"
+                                    formControlName="logo" appImageValidator [width]="300" [height]="300"
+                                    [maxSizeMB]="2" />
 
             <!--- DELETE --->
             <button *ngIf="profileForm.get('logo')?.value" type="button" class="upload-btn" (click)="removeImage()">
@@ -54,31 +54,31 @@
           <!-- Validation / Helper text -->
           <ng-container *ngIf="profileForm.get('logo') as logoCtrl">
 
-            <!-- ERROR messages -->
-            <div class="text-danger mt-1" *ngIf="logoCtrl.touched && logoCtrl.errors">
-              <small *ngIf="logoCtrl.errors['required']">
-                {{'imageValidator.imageRequired' | translate}}
-              </small>
-
-              <small *ngIf="logoCtrl.errors['invalidType']">
-                {{'imageValidator.invalidType' | translate}}
-              </small>
-
-              <small *ngIf="logoCtrl.errors['maxSizeExceeded']">
-                {{'imageValidator.maxSizeExceeded' | translate}}
-              </small>
-
-              <small *ngIf="logoCtrl.errors['invalidDimension']">
-                {{'imageValidator.invalidDimensions' | translate}}
-              </small>
-            </div>
-
-            <!-- DEFAULT helper text -->
-            <small class="text-secondary" *ngIf="!logoCtrl.touched || !logoCtrl.errors">
-              {{'imageValidator.allowedImages' | translate}}
+          <!-- ERROR messages -->
+          <div class="text-danger mt-1" *ngIf="logoCtrl.touched && logoCtrl.errors">
+            <small *ngIf="logoCtrl.errors['required']">
+              {{'imageValidator.imageRequired' | translate}}
             </small>
 
-          </ng-container>
+            <small *ngIf="logoCtrl.errors['invalidType']">
+              {{'imageValidator.invalidType' | translate}}
+            </small>
+
+            <small *ngIf="logoCtrl.errors['maxSizeExceeded']">
+              {{'imageValidator.maxSizeExceeded' | translate}}
+            </small>
+
+            <small *ngIf="logoCtrl.errors['invalidDimension']">
+              {{'imageValidator.invalidDimensions' | translate}} hh
+            </small>
+          </div>
+
+          <!-- DEFAULT helper text -->
+          <small class="text-secondary" *ngIf="!logoCtrl.touched || !logoCtrl.errors">
+            {{'imageValidator.allowedImages' | translate}}
+          </small>
+
+        </ng-container>
 
         </div>
 

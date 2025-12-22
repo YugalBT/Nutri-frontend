@@ -534,5 +534,33 @@
     "logoutMessage": "Do you really want to logout?",
     "no": "No",
     "yes": "Yes"
-  }
+  },
+  "configuration": {
+  "emailConfiguration": "Manege Email Configuration",
+  "smtpSetup": "SMTP Setup",
+  "smtpHost": "SMTP Host",
+  "smtpHostPlaceholder": "Enter SMTP host",
+  "smtpServerPlaceholder":"Enter SMTP Server",
+  "smtpPort": "SMTP Port",
+  "smtpPortPlaceholder": "Enter SMTP port",
+  "username": "Username",
+  "usernamePlaceholder": "Enter username",
+  "password": "Password",
+  "passwordPlaceholder": "Enter password",
+  "useSSL": "Use SSL",
+  "sameAsPrimaryUser": "Same as Primary User",
+  "accessToken": "Access Token",
+  "accessTokenPlaceholder": "Enter access token",
+  "saveConfiguration": "Save Configuration",
+  "emailType": "Email Type",
+  "selectEmailType": "Select Email Type",
+  "form":"From",
+  "port":"Port",
+  "replyto":"ReplyTo",
+  "fromPlaceholder" :"Enter from email",
+  "smtpServer":"SMTP Server",
+  "replytoPlaceholder" :"Enter reply to email"
+
+}
+
 }

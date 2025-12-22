@@ -1,5 +1,5 @@
-import { Directive, HostListener, Input, inject } from '@angular/core';
-import { FormGroupDirective } from '@angular/forms';
+import { Directive, HostListener, Input, Optional, Self } from '@angular/core';
+import { NgControl } from '@angular/forms';
 
 @Directive({
   selector: '[appImageValidator]',
@@ -7,75 +7,69 @@ import { FormGroupDirective } from '@angular/forms';
 })
 export class ImageValidatorDirective {
 
-  @Input({ required: true }) controlName!: string;
   @Input({ required: true }) width!: number;
   @Input({ required: true }) height!: number;
-  @Input() maxSizeMB: number = 2;
+  @Input() maxSizeMB = 2;
 
-  private formGroupDir = inject(FormGroupDirective);
+  constructor(
+    @Self() @Optional() private readonly ngControl: NgControl
+  ) {}
 
   @HostListener('change', ['$event'])
   onFileChange(event: Event): void {
 
-    const input = event.target as HTMLInputElement;
-    if (!input.files || input.files.length === 0) return;
-
-    const file = input.files[0];
-    const control = this.formGroupDir.form.get(this.controlName);
-
-    if (!control) return;
-
-    control.setErrors(null);
-
-    // ✅ File type validation
-    const allowedTypes = ['image/png', 'image/jpeg', 'image/jpg'];
-    if (!allowedTypes.includes(file.type)) {
-      control.setErrors({ invalidType: true });
-      control.markAsTouched();
-      input.value = '';
+    if (!this.ngControl?.control) {
+      console.error('appImageValidator must be used with formControlName');
       return;
     }
 
-    // ✅ File size validation
+    const input = event.target as HTMLInputElement;
+    const file = input.files?.[0];
+    const control = this.ngControl.control;
+
+    if (!file) {
+      control.setErrors({ required: true });
+      return;
+    }
+
+    const allowedTypes = ['image/png', 'image/jpeg', 'image/jpg'];
+    if (!allowedTypes.includes(file.type)) {
+      this.invalidate(control, input, { invalidType: true });
+      return;
+    }
+
     if (file.size > this.maxSizeMB * 1024 * 1024) {
-      control.setErrors({ maxSizeExceeded: true });
-      control.markAsTouched();
-      input.value = '';
+      this.invalidate(control, input, { maxSizeExceeded: true });
       return;
     }
 
     const reader = new FileReader();
-
     reader.onload = () => {
       const img = new Image();
       img.src = reader.result as string;
 
       img.onload = () => {
-        const actualWidth = img.naturalWidth;
-        const actualHeight = img.naturalHeight;
-
-        // ✅ Dimension validation (REAL pixels)
-        if (actualWidth !== this.width || actualHeight !== this.height) {
-          control.setErrors({
-            invalidDimension: {
-              requiredWidth: this.width,
-              requiredHeight: this.height,
-              actualWidth,
-              actualHeight
-            }
+        if (img.naturalWidth !== this.width || img.naturalHeight !== this.height) {
+          this.invalidate(control, input, {
+            invalidDimension: true
           });
-          control.markAsTouched();
-          input.value = '';
           return;
         }
 
-        // ✅ VALID IMAGE
-        control.setValue(reader.result);
+
+        control.setErrors(null);
         control.markAsTouched();
-        control.updateValueAndValidity();
+        control.updateValueAndValidity({ emitEvent: false });
       };
     };
 
     reader.readAsDataURL(file);
+  }
+
+  private invalidate(control: any, input: HTMLInputElement, error: any) {
+    control.setErrors(error);
+    control.markAsTouched();
+
+    input.value = '';
   }
 }

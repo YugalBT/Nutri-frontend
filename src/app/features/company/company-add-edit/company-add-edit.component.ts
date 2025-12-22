@@ -34,6 +34,8 @@ export class CompanyAddEditComponent implements OnInit {
   showCurrent = false;
   roleList: RoleItem[] = [];
   isSubmitted = false;
+  logoPreview: string | null = null;
+
 
   constructor(
     private fb: FormBuilder,
@@ -77,8 +79,14 @@ export class CompanyAddEditComponent implements OnInit {
       logo: ['', Validators.required],
 
       streetAddress: ['', Validators.required],
-      city: ['', Validators.required, Validators.pattern(/^[A-Za-z\s]+$/)],
-      country: ['', Validators.required, Validators.pattern(/^[A-Za-z\s]+$/)],
+      city: ['', [
+        Validators.required,
+        Validators.pattern(/^[A-Za-z\s]+$/)
+      ]],
+      country: ['', [
+        Validators.required,
+        Validators.pattern(/^[A-Za-z\s]+$/)
+      ]],
       zipCode: ['', [Validators.required, Validators.pattern(/^[0-9]{5,6}$/)]],
 
       // Admin
@@ -113,6 +121,20 @@ export class CompanyAddEditComponent implements OnInit {
         this.copyPrimaryToAdmin();
       }
     });
+    this.form.get('logo')?.valueChanges.subscribe(() => {
+      const input = this.fileInput?.nativeElement;
+      if (!input || !input.files?.length) return;
+
+      const file = input.files[0];
+      const reader = new FileReader();
+
+      reader.onload = () => {
+        this.logoPreview = reader.result as string;
+      };
+
+      reader.readAsDataURL(file);
+    });
+
   }
 
   // -------------------------
@@ -161,19 +183,30 @@ export class CompanyAddEditComponent implements OnInit {
 
     return showError && control.invalid;
   }
- 
+
   openModal(edit = false, data?: any): void {
     this.isEdit = edit;
     this.isSubmitted = false;
 
     if (edit && data) {
-      this.form.patchValue({ ...data, logo: data.logo || '' });
+      // this.form.patchValue({ ...data });
+      // this.form.get('logo')?.reset(); 
+      const { logo, ...rest } = data;   // 🔥 REMOVE LOGO
+      this.form.patchValue(rest);       // SAFE
+      this.form.get('logo')?.reset();   // REQUIRED
+      this.logoPreview = logo ?? null;
 
+      if(logo)
+      {
+        this.form.get('logo')?.setErrors(null);
+        this.form.get('logo')?.updateValueAndValidity();
+      }
       this.form.get('password')?.clearValidators();
-      this.form.get('password')?.setErrors(null);
+      
+      //this.form.get('password')?.setErrors(null);
 
-      this.form.get('roleId')?.clearValidators();
-      this.form.get('roleId')?.setErrors(null);
+      //this.form.get('roleId')?.clearValidators();
+      //this.form.get('roleId')?.setErrors(null);
     } else {
       this.form.reset({
         isActive: true,
@@ -206,13 +239,16 @@ export class CompanyAddEditComponent implements OnInit {
   // -------------------------
   // LOGO
   // -------------------------
-  onLogoChange(event: Event): void {
-    const input = event.target as HTMLInputElement;
-    if (!input.files?.length) return;
+  onLogoSelected(event: Event) {
+    const file = (event.target as HTMLInputElement).files?.[0];
+    if (!file || this.form.get('logo')?.invalid) {
+      this.logoPreview = null;
+      return;
+    }
 
     const reader = new FileReader();
-    reader.onload = () => this.form.patchValue({ logo: reader.result });
-    reader.readAsDataURL(input.files[0]);
+    reader.onload = () => this.logoPreview = reader.result as string;
+    reader.readAsDataURL(file);
   }
 
   onFirstLoginToggle(event: Event): void {
@@ -227,7 +263,8 @@ export class CompanyAddEditComponent implements OnInit {
 
 
   removeLogo(): void {
-    this.form.patchValue({ logo: null });
+    this.logoPreview = null;
+    this.form.get('logo')?.reset();
     this.fileInput.nativeElement.value = '';
   }
 
@@ -242,10 +279,16 @@ export class CompanyAddEditComponent implements OnInit {
     this.form.updateValueAndValidity();
 
     if (this.form.invalid) {
+
+      this.toast.warning('Please fill all required fields correctly');
       return;
     }
 
-    const payload = this.form.value as Company;
+    const payload: Company = {
+      ...this.form.value,
+      logo: this.logoPreview
+    };
+
 
     const request$ = this.isEdit
       ? this.companyService.updateCompany(payload)
@@ -254,11 +297,11 @@ export class CompanyAddEditComponent implements OnInit {
     request$.subscribe({
       next: (res: ApiResponse<any>) => {
         if (res?.isSuccess) {
-          this.toast.success(res.message || 'Success');
+          this.toast.success(res?.message);
           this.companyService.notifyCompaniesChanged();
           this.closeModal();
         } else {
-          this.toast.error(res.message || 'Operation failed');
+          this.toast.error(res?.message);
         }
       },
       error: () => this.toast.error('Something went wrong')

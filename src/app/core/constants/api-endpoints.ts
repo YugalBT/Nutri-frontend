@@ -122,4 +122,8 @@ export const API_ENDPOINTS = {
     UPDATE: '/Common/UpdateSettingById',
     GET_BY_ID: '/Common/SettingById',
   },
+  CONFIGURATION: {
+    UPDATE: '/Configuration/AddOrUpdateEmailConfiguration',
+    GET_CONFIGURATION: '/Configuration/GetEmailConfiguration',
+  },
 };

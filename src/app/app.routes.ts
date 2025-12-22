@@ -191,6 +191,14 @@ export const routes: Routes = [
           import('./features/animal-group/animal-group-list/animal-group-list.component')
             .then(m => m.AnimalGroupListComponent),
       },
+       {
+        path: 'configuration',
+        // canActivate: [permissionGuard],
+        // data: { requiredPermissions: [PERMISSIONS.AnimalGroupAdd, PERMISSIONS.AnimalGroupEdit, PERMISSIONS.AnimalGroupView, PERMISSIONS.AnimalGroupDelete] },
+        loadComponent: () =>
+          import('./features/configuration/configuration.component')
+            .then(m => m.ConfigurationComponent),
+      },
 
 
 

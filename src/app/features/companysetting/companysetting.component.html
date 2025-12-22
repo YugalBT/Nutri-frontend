@@ -22,8 +22,9 @@
           </span>
 
           <!-- SINGLE hidden file input -->
-          <input *ngIf="!companyForm.get('logo')?.value" type="file" id="profileUpload" class="form-control form-control-sm mt-2" accept="image/png,image/jpeg" appImageValidator
-            controlName="logo" [width]="300" [height]="300" [maxSizeMB]="2" />
+          <input #fileInput type="file" (change)="onImageChange($event)" class="form-control" accept="image/png,image/jpeg"
+                                    formControlName="logo" appImageValidator [width]="300" [height]="300"
+                                    [maxSizeMB]="2" />
 
           <!-- DELETE (TRASH) — ACTUALLY DELETES -->
           <button *ngIf="companyForm.get('logo')?.value" type="button" class="upload-btn" (click)="removeImage()">

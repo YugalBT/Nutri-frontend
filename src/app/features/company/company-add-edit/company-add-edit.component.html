@@ -84,47 +84,53 @@
                                 <input type="color" class="form-control form-control-color" formControlName="secondaryColor" title="Choose secondary color">
                             </div> -->
 
+
+
+                            <!-- LOGO INPUT -->
+                            <!-- LOGO INPUT -->
                             <div class="col-md-4 col-12">
                                 <label class="form-label">
                                     {{ 'company.logo' | translate }}
-                                    <sup style="color: #f00; font-size: 12px;">*</sup>
+                                    <sup class="text-danger">*</sup>
                                 </label>
 
                                 <input #fileInput type="file" class="form-control" accept="image/png,image/jpeg"
-                                    appImageValidator controlName="logo" [width]="300" [height]="300" [maxSizeMB]="2" />
+                                    formControlName="logo" appImageValidator [width]="300" [height]="300"
+                                    [maxSizeMB]="2" />
 
                                 <div class="text-danger mt-1" *ngIf="isInvalid('logo')">
-                                    <small *ngIf="form.get('logo')?.errors?.['required']">
-                                        {{ 'imageValidator.imageRequired' | translate }}
-                                    </small>
-                                    <small *ngIf="form.get('logo')?.errors?.['invalidType']">
-                                        {{ 'imageValidator.invalidType' | translate }}
-                                    </small>
-                                    <small *ngIf="form.get('logo')?.errors?.['maxSizeExceeded']">
-                                        {{ 'imageValidator.maxSizeExceeded' | translate }}
-                                    </small>
-                                    <small *ngIf="form.get('logo')?.errors?.['invalidDimension']">
-                                        {{ 'imageValidator.invalidDimensions' | translate }}
-                                    </small>
+                                    <small *ngIf="form.get('logo')?.errors?.['required']">Image required</small>
+                                    <small
+                                        *ngIf="form.get('logo')?.errors?.['invalidType']">{{'imageValidator.invalidType'
+                                        | translate}}</small>
+                                    <small
+                                        *ngIf="form.get('logo')?.errors?.['maxSizeExceeded']">{{'imageValidator.maxSizeExceeded'
+                                        | translate}}</small>
+                                    <small
+                                        *ngIf="form.get('logo')?.errors?.['invalidDimension']">{{'imageValidator.invalidDimensions'
+                                        | translate}}</small>
                                 </div>
-
                             </div>
 
-                            <div class="col-md-4 col-12" *ngIf="form.get('logo')?.value">
+                            <!-- LOGO PREVIEW -->
+                            <!-- <div class="col-md-4 col-12" *ngIf="logoPreview">
                                 <div class="logo-preview-wrapper">
+                                    <img class="logo-preview-img" [src]="logoPreview" />
+                                    <button type="button" class="remove-logo-btn" (click)="removeLogo()">✕</button>
+                                </div>
+                            </div> -->
 
-                                    <img class="logo-preview-img" [src]="form.get('logo')?.value" alt="Logo Preview" />
 
-                                    <button type="button" class="remove-logo-btn" (click)="removeLogo()"
-                                        title="Remove Logo">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="white"
-                                            viewBox="0 0 16 16">
-                                            <path d="M2.5 2.5l11 11m0-11l-11 11" stroke="white" stroke-width="2" />
-                                        </svg>
-                                    </button>
-
+                            <!-- LOGO PREVIEW -->
+                            <div class="col-md-4 col-12" *ngIf="logoPreview">
+                                <div class="logo-preview-wrapper">
+                                    <img class="logo-preview-img" [src]="logoPreview" />
+                                    <button type="button" class="remove-logo-btn" (click)="removeLogo()">✕</button>
                                 </div>
                             </div>
+
+
+
 
 
 

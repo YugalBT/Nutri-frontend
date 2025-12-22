@@ -22,7 +22,7 @@ export class CompanysettingComponent implements OnInit {
 
   companyForm!: FormGroup;
   imagePreview: string | null = null;
-  @ViewChild('fileInput') fileInput!: ElementRef;
+  @ViewChild('fileInput') fileInput!: ElementRef<HTMLInputElement>;
 
   constructor(
     private fb: FormBuilder,
@@ -38,10 +38,16 @@ export class CompanysettingComponent implements OnInit {
    this.setupForm();
     this.companyService.companyDetails().pipe(take(1)).subscribe((res: any) => {
       if (res.isSuccess && res.data) {
-        this.companyForm.patchValue(res.data);
-        this.imagePreview = res.data.logo;
+
+         const { logo, ...rest } = res?.data;
+
+          this.companyForm.patchValue(rest);
+
+          if (logo && typeof logo === 'string' && logo.startsWith('data:image/')) {
+            this.companyForm.get('logo')?.setValue(logo);
+          }
       } else {
-        this.toast.error(res.message || 'Error loading settings');
+        this.toast.error(res?.message);
       }
     });
   }
@@ -61,23 +67,23 @@ export class CompanysettingComponent implements OnInit {
     });
   }
 
-  // onImageChange(event: any) {
-  //   const file = event.target.files[0];
-  //   if (!file) return;
+  onImageChange(event: any) {
+    const file = event.target.files[0];
+    if (!file) return;
 
-  //   if (!['image/png', 'image/jpeg'].includes(file.type)) {
-  //     this.toast.error("Only JPG / PNG allowed");
-  //     this.fileInput.nativeElement.value = '';
-  //     return;
-  //   }
+    if (!['image/png', 'image/jpeg'].includes(file.type)) {
+      this.toast.error("Only JPG / PNG allowed");
+      this.fileInput.nativeElement.value = '';
+      return;
+    }
 
-  //   const reader = new FileReader();
-  //   reader.onload = () => {
-  //     this.imagePreview = reader.result as string;
-  //     this.companyForm.patchValue({ logo: reader.result });
-  //   };
-  //   reader.readAsDataURL(file);
-  // }
+    const reader = new FileReader();
+    reader.onload = () => {
+      this.imagePreview = reader.result as string;
+      this.companyForm.patchValue({ logo: reader.result });
+    };
+    reader.readAsDataURL(file);
+  }
 
   removeImage() {
     this.imagePreview = null;
@@ -99,7 +105,7 @@ export class CompanysettingComponent implements OnInit {
     this.companyService.updateCompanySetting(payload).subscribe({
       next: (res: ApiResponse<any>) => {
         if (res.isSuccess) this.toast.success(res?.message);
-        else this.toast.error(res.message);
+        else this.toast.error(res?.message);
       },
       error: (err: any) => {
         this.toast.error(err?.error?.message);

@@ -28,7 +28,9 @@ export class ProfileComponent implements OnInit {
 
   user$: Observable<User | null>;
   profileForm!: FormGroup;
-  @ViewChild('fileInput') fileInput!: ElementRef;
+  @ViewChild('fileInput')
+  fileInput!: ElementRef<HTMLInputElement>;
+  imagePreview: string | null = null;
 
   constructor(
     private toast: ToastrService,
@@ -57,38 +59,41 @@ export class ProfileComponent implements OnInit {
           lastName: [user?.lastName, [Validators.required, Validators.minLength(3), Validators.maxLength(50), Validators.pattern('^[A-Za-z]+$')]],
           email: [{ value: user.email, disabled: true }, CustomValidators.required],
           phone: [user?.phone || '', [Validators.required, Validators.pattern('^[0-9]{10}$')]],
-          logo: [user?.logo || null],
+           logo: [null]
         });
-        this.imagePreview = user?.logo || null;
-
+       if (user?.logo && user?.logo?.startsWith('data:image/')) {
+          this.imagePreview = user?.logo;
+          this.profileForm.get('logo')?.setValue(user?.logo);
+        }
       } else {
         this.toast.error(res?.message);
       }
     });
+    
   }
-  imagePreview: string | null = null;
 
-  // onProfileImageChange(event: any) {
-  //   const file = event.target.files[0];
-  //   if (!file) return;
+  onImageChange(event: any) {
+    const file = event.target.files[0];
+    if (!file) return;
 
-  //   const allowedTypes = ['image/png', 'image/jpeg', 'image/jpg'];
-  //   if (!allowedTypes.includes(file.type)) {
-  //     this.toast.error("Only PNG/JPEG files allowed");
-  //     this.fileInput.nativeElement.value = '';
-  //     return;
-  //   }
+    if (!['image/png', 'image/jpeg'].includes(file.type)) {
+      this.toast.error("Only JPG / PNG allowed");
+      this.fileInput.nativeElement.value = '';
+      return;
+    }
 
-  //   const reader = new FileReader();
-  //   reader.onload = () => {
-  //     this.imagePreview = reader.result as string;
-  //     this.profileForm.patchValue({ logo: reader.result });
-  //   };
-  //   reader.readAsDataURL(file);
-  // }
+    const reader = new FileReader();
+    reader.onload = () => {
+      this.imagePreview = reader.result as string;
+      this.profileForm.patchValue({ logo: reader.result });
+    };
+    reader.readAsDataURL(file);
+  }
 
-  removeImage() {
+  removeImage(): void {
+    this.imagePreview = null;
     this.profileForm.get('logo')?.reset();
+    this.fileInput.nativeElement.value = '';
   }
 
   // removeImage() {

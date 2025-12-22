@@ -529,5 +529,33 @@
     "logoutMessage": "Vuoi davvero disconnetterti?",
     "no": "No",
     "yes": "Sì"
-  }
+  },
+  "configuration": {
+  "emailConfiguration": "Gestisci la configurazione della posta elettronica",
+  "smtpSetup": "Configurazione SMTP",
+  "smtpHost": "Host SMTP",
+  "smtpHostPlaceholder": "Inserisci host SMTP",
+  "smtpPort": "Porta SMTP",
+  "smtpPortPlaceholder": "Inserisci porta SMTP",
+  "username": "Nome utente",
+  "usernamePlaceholder": "Inserisci nome utente",
+  "password": "Password",
+  "passwordPlaceholder": "Inserisci password",
+  "useSSL": "Usa SSL",
+  "sameAsPrimaryUser": "Uguale all’utente principale",
+  "accessToken": "Token di accesso",
+  "accessTokenPlaceholder": "Inserisci token di accesso",
+  "saveConfiguration": "Salva configurazione",
+  "emailType": "Tipo di email",
+  "selectEmailType": "Seleziona tipo di email",
+  "form":"Modulo",
+  "port":"Porta",
+  "replyto":"risposta a",
+  "smtpServer":"Server SMTP",
+  "fromPlaceholder":"Accedi dall'e-mail",
+  "replytoPlaceholder":"Inserisci la risposta all'e-mail",
+  "smtpServerPlaceholder":"smtpServerPlaceholder"
+
+}
+
 }
