@@ -193,8 +193,8 @@ export const routes: Routes = [
       },
        {
         path: 'configuration',
-        // canActivate: [permissionGuard],
-        // data: { requiredPermissions: [PERMISSIONS.AnimalGroupAdd, PERMISSIONS.AnimalGroupEdit, PERMISSIONS.AnimalGroupView, PERMISSIONS.AnimalGroupDelete] },
+        canActivate: [permissionGuard],
+        data: { requiredPermissions: [PERMISSIONS.EmailConfigurationAdd, PERMISSIONS.EmailConfigurationEdit, PERMISSIONS.EmailConfigurationView, PERMISSIONS.EmailConfigurationDelete] },
         loadComponent: () =>
           import('./features/configuration/configuration.component')
             .then(m => m.ConfigurationComponent),

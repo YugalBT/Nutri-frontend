@@ -4,6 +4,8 @@ import { ConfigurationService } from '../../core/services/configuration/configur
 import { ToastService } from '../../shared/services/toast.service';
 import { SharedModule } from '../../shared/shared.module';
 import { TranslatePipe } from '../../i18n/translate.pipe';
+import { CommonService } from '../../shared/services/common.service';
+import { PERMISSIONS } from '../../core/constants/permissions.constants';
 
 @Component({
   selector: 'app-configuration',
@@ -20,7 +22,8 @@ export class ConfigurationComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private configuration: ConfigurationService,
-    private toast: ToastService
+    private toast: ToastService,
+    private commonService:CommonService
   ) {}
 
   ngOnInit(): void {
@@ -59,6 +62,8 @@ export class ConfigurationComponent implements OnInit {
   }
 
   onSubmit() {
+     if(!this.commonService.checkPermission(PERMISSIONS.EmailConfigurationEdit)|| !this.commonService.checkPermission(PERMISSIONS.EmailConfigurationView))
+          return;
     if (this.emailForm.invalid) {
       this.emailForm.markAllAsTouched();
       return;

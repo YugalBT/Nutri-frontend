@@ -36,7 +36,7 @@ export const SIDEBAR_GROUPS = [
     key: 'settings',
     title: 'sidebarmenu.settings',
     icon: SIDEBAR_ICONS.SETTINGS,
-    items: ['Profile', 'Change Password','Setting','Module']
+    items: ['Profile', 'Change Password','Setting','Module','EmailConfiguration']
   },
  
 ];

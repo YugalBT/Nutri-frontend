@@ -15,6 +15,11 @@ export const PERMISSIONS = {
     ChangePasswordView: 'ChangePasswordView',
     ChangePasswordEdit: 'ChangePasswordEdit',
 
+    EmailConfigurationView: 'EmailConfigurationView',
+    EmailConfigurationEdit: 'EmailConfigurationEdit',
+    EmailConfigurationAdd: 'EmailConfigurationAdd',
+    EmailConfigurationDelete: 'EmailConfigurationDelete',
+
     ProfileView: 'ProfileView',
     ProfileEdit: 'ProfileEdit',
 
