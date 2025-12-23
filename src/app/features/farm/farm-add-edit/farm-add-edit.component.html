@@ -35,7 +35,7 @@
             </div> -->
             <div class="col-md-4">
               <label class="form-label">{{'farm.milkPrice' | translate}} <sup class="text-danger">*</sup></label>
-              <input type="number" formControlName="milkPrice" class="form-control"
+              <input type="number" step="0.01" min="0" formControlName="milkPrice" class="form-control"
                 placeholder="{{'farm.milkPricePlaceholder' | translate}}">
               <div *ngIf="form.get('milkPrice')?.touched && form.get('milkPrice')?.invalid" class="text-danger">
                 <div *ngIf="form.get('milkPrice')?.errors?.['required']">{{'farm.milkPriceRequired' | translate}}.</div>
