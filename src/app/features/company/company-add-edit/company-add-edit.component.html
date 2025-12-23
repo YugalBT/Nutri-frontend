@@ -129,11 +129,6 @@
                                 </div>
                             </div>
 
-
-
-
-
-
                             <div class="col-12 mt-3">
                                 <h5 class="mb-3">{{ 'company.primaryUser' | translate }}</h5>
                             </div>
@@ -158,6 +153,21 @@
                                     {{'validation.maxLength' | translate}}
                                 </div>
 
+                            </div>
+                              <div class="col-md-4 col-12">
+                                <label class="form-label">{{ 'company.middleName' | translate }}<sup
+                                        style="color: #f00; font-size: 12px;">*</sup></label>
+                                <input type="text" class="form-control" formControlName="middleName"
+                                    [placeholder]="'company.middleNamePlaceholder' | translate">
+                                <div *ngIf="form.get('middleName')?.errors?.['pattern']" class="text-danger">
+                                    {{'validation.onlyChars' | translate}}
+                                </div>
+                                <div *ngIf="form.get('middleName')?.errors?.['minlength']" class="text-danger">
+                                    {{'validation.minLength' | translate}}
+                                </div>
+                                <div *ngIf="form.get('middleName')?.errors?.['maxlength']" class="text-danger">
+                                    {{'validation.maxLength' | translate}}
+                                </div>
                             </div>
                             <div class="col-md-4 col-12">
                                 <label class="form-label">{{ 'company.lastName' | translate }}<sup
