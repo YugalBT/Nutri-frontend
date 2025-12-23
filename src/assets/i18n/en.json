@@ -177,6 +177,13 @@
     "smtpSetup": "SMTP Setup"
   },
   "common": {
+    "FailedloadingData": "Failed to load data",
+    "ConfirmDelete": "Are you sure you want to delete this item?",
+    "DoNotPermission": "You do not have permission to perform this action",
+    "failedToLoadModal":"Failed to load required data to open modal",
+    "failedToLoadAnimalTypes": "Failed to load animal types",
+    "failedToLoadFarms": "Failed to load farms",
+    "failedToLoadRoles": "Failed to load roles. Please try again.",
     "selectRole": "Select Role",
     "error": "An error occurred. Please try again.",
     "cancel": "Cancel",

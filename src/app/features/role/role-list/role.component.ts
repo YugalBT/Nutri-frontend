@@ -148,7 +148,7 @@ export class RoleComponent implements OnInit, OnDestroy ,AfterViewInit{
           next: (res: any) => {
             this.spinner.hide();
             if (res?.isSuccess || res?.isSuccess !== false) {
-              this.toast.success(this.translate.instant(res?.message) || 'Role deleted successfully');
+              this.toast.success(res?.message|| 'Role deleted successfully');
               this.loadRoles();
             } else {
               this.toast.error(res?.message || this.translate.instant('common.error') || 'Delete failed');

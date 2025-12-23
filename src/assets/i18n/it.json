@@ -175,6 +175,13 @@
     "smtpSetup": "Configurazione SMTP"
   },
   "common": {
+    "FailedloadingData": "Impossibile caricare i dati!",
+    "ConfirmDelete": "Sei sicuro di voler eliminare questo elemento?",
+    "DoNotPermission": "Non hai il permesso per eseguire questa azione",
+    "failedToLoadModal":"Impossibile caricare i dati richiesti per aprire la finestra modale.",
+    "failedToLoadAnimalTypes":"Impossibile caricare i tipi di animali.",
+    "failedToLoadFarms":"Impossibile caricare le aziende agricole.",
+    "failedToLoadRoles":"Impossibile caricare i ruoli. Riprova.",
     "selectRole": "Seleziona Ruolo",
     "error": "Si è verificato un errore. Riprova.",
     "cancel": "Annulla",

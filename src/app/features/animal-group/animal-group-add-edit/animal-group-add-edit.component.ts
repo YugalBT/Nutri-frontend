@@ -11,6 +11,7 @@ import { ApiResponse } from '../../../core/models/api-response';
 import { PERMISSIONS } from '../../../core/constants/permissions.constants';
 import { CustomValidators } from '../../../core/helpers/validators';
 import { TranslatePipe } from '../../../i18n/translate.pipe';
+import { TranslateService } from '../../../i18n/translate.service';
 
 declare var bootstrap: any;
 
@@ -50,7 +51,8 @@ export class AnimalGroupAddEditComponent implements OnInit, OnDestroy {
     private fb: FormBuilder,
     private animalGroupService: AnimalGroupService,
     private toast: ToastService,
-    private commonService: CommonService
+    private commonService: CommonService,
+    private translate: TranslateService
   ) { }
 
   ngOnInit(): void {
@@ -89,7 +91,7 @@ export class AnimalGroupAddEditComponent implements OnInit, OnDestroy {
         this.farms = Array.isArray(data) ? data.map(r => ({ ...r, farmId: r.farmId != null ? String(r.farmId) : '' })) : [];
       }),
       catchError(err => {
-        this.toast.error('Failed to load farms');
+        this.toast.error(this.translate.instant('common.failedToLoadFarms') || 'Failed to load farms');
         return of([]);
       }),
       finalize(() => this.farmsLoading = false)
@@ -125,7 +127,7 @@ export class AnimalGroupAddEditComponent implements OnInit, OnDestroy {
         this.lactations = Array.isArray(data) ? data.map(l => ({ ...l, animalLactationId: l.animalLactationId != null ? String(l.animalLactationId) : '' })) : [];
       }),
       catchError(err => {
-        this.toast.error('Failed to load animal types');
+        this.toast.error(this.translate.instant('common.failedToLoadAnimalTypes') || 'Failed to load animal types');
         return of([]);
       }),
       finalize(() => this.lactationsLoading = false)
@@ -166,7 +168,7 @@ export class AnimalGroupAddEditComponent implements OnInit, OnDestroy {
         this.modalInstance.show();
       },
       error: () => {
-        this.toast.error('Failed to load required data to open modal');
+        this.toast.error(this.translate.instant('common.failedToLoadModal') || 'Failed to load required data to open modal');
       }
     });
 
@@ -187,12 +189,12 @@ export class AnimalGroupAddEditComponent implements OnInit, OnDestroy {
       : this.commonService.checkPermission(PERMISSIONS.AnimalGroupAdd);
 
     if (!hasPermission) {
-      this.toast.error('You do not have permission to perform this action.');
+      this.toast.error(this.translate.instant('common.DoNotPermission') || 'You do not have permission to perform this action');
       return;
     }
 
     if (!this.form.valid) {
-      this.toast.warning('Please fill all required fields.');
+      this.toast.warning(this.translate.instant('common.formInvalid') || 'Please fill all required fields');
       this.form.markAllAsTouched();
       return;
     }

@@ -11,6 +11,7 @@ import { FeedList } from '../../../core/models/feed-list';
 import { PERMISSIONS } from '../../../core/constants/permissions.constants';
 import { CustomValidators } from '../../../core/helpers/validators';
 import { TranslatePipe } from '../../../i18n/translate.pipe';
+import { TranslateService } from '../../../i18n/translate.service';
 
 declare var bootstrap: any;
 
@@ -45,7 +46,8 @@ export class RationAddEditComponent implements OnInit, OnDestroy {
     private fb: FormBuilder,
     private rationService: RationService,
     private toast: ToastService,
-    private commonService: CommonService
+    private commonService: CommonService,
+    private transalate : TranslateService
   ) { }
 
   ngOnInit() {
@@ -121,7 +123,7 @@ export class RationAddEditComponent implements OnInit, OnDestroy {
       map((res: ApiResponse<any>) => res?.data ?? []),
       tap(data => this.farms = Array.isArray(data) ? data.map(d => ({ ...d, farmId: d.farmId != null ? String(d.farmId) : '' })) : []),
       catchError(err => {
-        this.toast.error('Failed to load farms');
+        this.toast.error(this.transalate.instant('common.FailedloadingData') || 'Failed to load farms');
         return of([]);
       }),
       finalize(() => this.farmsLoading = false)
@@ -149,7 +151,7 @@ export class RationAddEditComponent implements OnInit, OnDestroy {
       map((res: ApiResponse<any>) => res?.data ?? []),
       tap(data => this.animalGroups = Array.isArray(data) ? data.map(d => ({ ...d, animalGroupId: d.animalGroupId != null ? String(d.animalGroupId) : '' })) : []),
       catchError(err => {
-        this.toast.error('Failed to load animal groups');
+        this.toast.error(this.transalate.instant('common.FailedloadingData') || 'Failed to load animal groups');
         return of([]);
       }),
       finalize(() => this.animalGroupsLoading = false)
@@ -210,7 +212,7 @@ export class RationAddEditComponent implements OnInit, OnDestroy {
         this.modalInstance.show();
       },
       error: () => {
-        this.toast.error('Failed to load data for ration form');
+        this.toast.error(this.transalate.instant('common.FailedloadingData') || 'Failed to load data');
       }
     });
     this.subs.push(s);
@@ -224,13 +226,13 @@ export class RationAddEditComponent implements OnInit, OnDestroy {
 
     if (!this.commonService.checkPermission(PERMISSIONS.RationAdd)
       || !this.commonService.checkPermission(PERMISSIONS.RationEdit)) {
-      this.toast.error('You do not have permission');
+      this.toast.error(this.transalate.instant('common.DoNotPermission') || 'You do not have permission');
       return;
     }
 
     if (!this.form.valid) {
       debugger;
-      this.toast.warning('Please fill all required fields');
+      this.toast.warning(this.transalate.instant('common.formInvalid') || 'Please fill all required fields');
       this.form.markAllAsTouched();
       return;
     }

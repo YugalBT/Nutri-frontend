@@ -8,6 +8,7 @@ import { SharedModule } from '../../../shared/shared.module';
 import { TranslatePipe } from '../../../i18n/translate.pipe';
 import { CustomValidators } from '../../../core/helpers/validators';
 import { PERMISSIONS } from '../../../core/constants/permissions.constants';
+import { TranslateService } from '../../../i18n/translate.service';
 
 declare var bootstrap: any;
 
@@ -32,7 +33,8 @@ export class FarmAddEditComponent implements OnInit, OnDestroy {
     private fb: FormBuilder,
     private farmService: FarmService,
     private toast: ToastService,
-    private commonService: CommonService
+    private commonService: CommonService,
+    private transalate : TranslateService
   ) {}
 
   ngOnInit() {
@@ -138,7 +140,7 @@ export class FarmAddEditComponent implements OnInit, OnDestroy {
         return;
     if (!this.form.valid) {
       
-      this.toast.warning('Please fill all required fields');
+      this.toast.warning(this.transalate.instant('common.formInvalid') || 'Please fill all required fields');
       return;
     }
 

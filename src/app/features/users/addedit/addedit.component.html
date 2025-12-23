@@ -114,6 +114,9 @@
                                 <div *ngIf="!rolesLoading && roles.length === 0" class="form-text text-danger small">
                                     {{ rolesError ? (rolesError) : ('users.noRolesAvailable' | translate) }}
                                 </div>
+                                <div *ngIf="form.get('roleId')?.touched && form.get('roleId')?.invalid"
+                                        class="text-danger">
+                                        {{'validation.required' | translate }}</div>
                             </ng-container>
                         </div>
                         <div class="col-md-4">
