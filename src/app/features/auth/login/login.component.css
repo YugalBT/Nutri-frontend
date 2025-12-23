@@ -32,3 +32,33 @@ button.btn.blue-btn:disabled {
 .password-toggle:hover { color: #333; background: rgba(0,0,0,0.02); }
 .dark-mode .password-toggle { color: rgba(230,238,246,0.8); }
 .dark-mode .password-toggle:hover { color: var(--text-color); background: rgba(255,255,255,0.02); }
+
+
+/* RIGHT PANEL LANGUAGE DROPDOWN */
+.language-switcher-right {
+  position: absolute;
+  top: 14px;
+  right: 18px;
+  z-index: 50;
+}
+
+.lang-btn {
+  font-size: 13px;
+  padding: 6px 12px;
+  border-radius: 6px;
+  background-color: #ffffff;
+  color: #1f2937;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+  font-weight: 500;
+}
+
+/* Mobile */
+@media (max-width: 992px) {
+  .language-switcher-right {
+    top: 10px;
+    right: 12px;
+  }
+}
+
+
