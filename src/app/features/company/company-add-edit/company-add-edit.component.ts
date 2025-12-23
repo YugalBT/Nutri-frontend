@@ -323,6 +323,7 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import { CommonService } from '../../../shared/services/common.service';
 import { PERMISSIONS } from '../../../core/constants/permissions.constants';
 import { ImageValidatorDirective } from '../../../image-validator.directive';
+import { PhoneService } from '../../../shared/phone.service';
 
 declare var bootstrap: any;
 
@@ -355,7 +356,8 @@ export class CompanyAddEditComponent implements OnInit {
     private translate: TranslateService,
     private roleService: AddEditRoleService,
     private toast: ToastService,
-    private commonService: CommonService
+    private commonService: CommonService,
+      public phoneService: PhoneService 
   ) {}
 
   // --------------------------------------------------
@@ -433,7 +435,7 @@ export class CompanyAddEditComponent implements OnInit {
   }
 
   // --------------------------------------------------
-  // ADMIN FIELD HELPERS
+  // ADMIN HELPERS
   // --------------------------------------------------
   copyPrimaryToAdmin(): void {
     this.form.patchValue({
@@ -483,7 +485,9 @@ export class CompanyAddEditComponent implements OnInit {
       },
       error: () => {
         this.spinner.hide();
-        this.toast.error(this.translate.instant('common.failedToLoadRoles') || 'Error loading roles');
+        this.toast.error(
+          this.translate.instant('common.failedToLoadRoles') || 'Error loading roles'
+        );
       }
     });
   }
@@ -498,17 +502,28 @@ export class CompanyAddEditComponent implements OnInit {
     if (edit && data) {
       const { logo, ...rest } = data;
       this.form.patchValue(rest);
-      this.logoPreview = logo ?? null;
+
+      // cache-busting for edit mode image
+      this.logoPreview = logo ? `${logo}?t=${Date.now()}` : null;
 
       if (this.form.get('sameAsPrimaryUser')?.value) {
         this.toggleAdminFields(true);
       }
     } else {
+      // 🔥 CREATE MODE – CLEAR EVERYTHING
       this.form.reset({
         isActive: true,
         isFirstLogin: false,
         sameAsPrimaryUser: false
       });
+
+      this.logoPreview = null;
+      this.form.get('logo')?.reset();
+
+      if (this.fileInput) {
+        this.fileInput.nativeElement.value = '';
+      }
+
       this.toggleAdminFields(false);
     }
 
@@ -518,11 +533,20 @@ export class CompanyAddEditComponent implements OnInit {
 
   closeModal(): void {
     this.isSubmitted = false;
+
+    // 🔥 CLEAR LOGO CACHE
+    this.logoPreview = null;
+    this.form.get('logo')?.reset();
+
+    if (this.fileInput) {
+      this.fileInput.nativeElement.value = '';
+    }
+
     this.modalInstance?.hide();
   }
 
   // --------------------------------------------------
-  // REQUIRED BY TEMPLATE ✅
+  // TEMPLATE METHODS
   // --------------------------------------------------
   removeLogo(): void {
     this.logoPreview = null;
@@ -545,7 +569,9 @@ export class CompanyAddEditComponent implements OnInit {
     this.form.markAllAsTouched();
 
     if (this.form.invalid) {
-      this.toast.warning(this.translate.instant('common.formInvalid') || 'Please fill all required fields correctly');
+      this.toast.warning(
+        this.translate.instant('common.formInvalid') || 'Please fill all required fields correctly'
+      );
       return;
     }
 

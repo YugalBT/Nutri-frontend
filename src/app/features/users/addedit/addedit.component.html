@@ -71,7 +71,8 @@
                             <label class="form-label">{{ 'users.phone' | translate }} <sup
                                     style="color: #f00; font-size: 12px;">*</sup></label>
                             <input type="email" formControlName="phone" class="form-control"
-                                placeholder="{{ 'users.phonePlaceholder' | translate }}">
+                                placeholder="{{ 'users.phonePlaceholder' | translate }}"
+                                  (input)="phoneService.enforcePhoneInput($event, form, 'phone', 10)">
                             <div *ngIf="form.get('phone')?.touched" class="text-danger">
 
                                 <!-- Required -->

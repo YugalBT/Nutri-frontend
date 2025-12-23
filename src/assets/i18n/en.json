@@ -48,6 +48,7 @@
     "save": "Save",
     "manage": "Manage Company",
     "addCompany": "Add Company",
+    "selectRole": "Select Role",
     "passwordResetNeeded": "Password reset needed",
     "columns": {
       "logo": "Logo",

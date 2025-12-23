@@ -10,6 +10,7 @@ import { ToastService } from '../../../shared/services/toast.service';
 import { UsersService } from '../../../core/services/users/user.service';
 import { PERMISSIONS } from '../../../core/constants/permissions.constants';
 import { TranslateService } from '../../../i18n/translate.service';
+import { PhoneService } from '../../../shared/phone.service';
 
 declare var bootstrap: any;
 
@@ -37,7 +38,8 @@ export class AddeditComponent implements OnInit, OnDestroy {
     private commonService: CommonService,
     private usersService: UsersService,
     private toast: ToastService,
-    private translate: TranslateService
+    private translate: TranslateService,
+      public phoneService: PhoneService 
   ) { }
 
   ngOnInit() {
