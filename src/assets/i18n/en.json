@@ -561,6 +561,27 @@
   "smtpServer":"SMTP Server",
   "replytoPlaceholder" :"Enter reply to email"
 
+},
+"templateCategory" :{
+  "Heading" :"Manage Template Category",
+  "displayName":"Display Name",
+  "category":"Category",
+  "displayNameplaceholder" :"Enter Display name",
+  "categoryplaceholder" :"Enter Category name",
+  "addCategory":"Add Category",
+  "editCategory" :"Edit Category",
+  "categoryRequired": "Category is required",
+   "columns": {
+      "category": "category",
+      "displayName":"displayName"
+    }
+
+},
+"templateBuilder":{
+  "manageCategoryheading":"Manage Category",
+  "managePlaceholderheading":"Manage Placeholders",
+  "managePlaceholderMappingheading":"Manage Placeholders Mapping"
+
 }
 
 }

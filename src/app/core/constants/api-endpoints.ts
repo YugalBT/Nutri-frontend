@@ -126,4 +126,11 @@ export const API_ENDPOINTS = {
     UPDATE: '/Configuration/AddOrUpdateEmailConfiguration',
     GET_CONFIGURATION: '/Configuration/GetEmailConfiguration',
   },
+   TemplateCategory: {
+    CREATE: '/TemplateCategory/Create',
+    UPDATE: '/TemplateCategory/Update',
+    DELETE: '/TemplateCategory/Delete',
+    ACTIVE_INACTIVE: '/TemplateCategory/ActiveInActive',
+    GET_ALL: '/TemplateCategory/GetAll',
+  },
 };

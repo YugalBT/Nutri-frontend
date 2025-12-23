@@ -191,7 +191,7 @@ export const routes: Routes = [
           import('./features/animal-group/animal-group-list/animal-group-list.component')
             .then(m => m.AnimalGroupListComponent),
       },
-       {
+      {
         path: 'configuration',
         canActivate: [permissionGuard],
         data: { requiredPermissions: [PERMISSIONS.EmailConfigurationAdd, PERMISSIONS.EmailConfigurationEdit, PERMISSIONS.EmailConfigurationView, PERMISSIONS.EmailConfigurationDelete] },
@@ -199,9 +199,14 @@ export const routes: Routes = [
           import('./features/configuration/configuration.component')
             .then(m => m.ConfigurationComponent),
       },
-
-
-
+      {
+        path: 'template',
+        // canActivate: [permissionGuard],
+        // data: { requiredPermissions: [PERMISSIONS.EmailConfigurationAdd, PERMISSIONS.EmailConfigurationEdit, PERMISSIONS.EmailConfigurationView, PERMISSIONS.EmailConfigurationDelete] },
+        loadComponent: () =>
+          import('./features/template-builder/template-builder.component')
+            .then(m => m.TemplateBuilderComponent),
+      },
 
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
     ],

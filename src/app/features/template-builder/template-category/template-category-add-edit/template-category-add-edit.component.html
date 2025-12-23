@@ -1,0 +1,61 @@
+<div #templatecategoryModal class="modal fade" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <!-- <h5 *ngIf="isAddEditPermission" class="modal-title">
+            {{ (isEdit 
+                ? 'templateCategory.editLactationStage' 
+                : 'animalLactationStage.addLactationStage') | translate }}
+        </h5> -->
+         <h5  class="modal-title">
+            {{ (isEdit 
+                ? 'templateCategory.editCategory' 
+                : 'templateCategory.addCategory') | translate }}
+        </h5>
+        <button type="button" class="btn-close" (click)="closeModal()"></button>
+      </div>
+
+      <div class="modal-body">
+        <form [formGroup]="form"  (ngSubmit)="save()">
+            <div class="container-fluid">
+          <div class="row g-3">
+            <div class="col-md-4">
+              <label class="form-label">{{ 'templateCategory.category' | translate }}<sup class="text-danger">*</sup></label>
+              <input type="text" formControlName="category" class="form-control" placeholder="{{ 'templateCategory.categoryplaceholder' | translate }}">
+              <div *ngIf="form.get('category')?.touched && form.get('category')?.invalid" class="text-danger">
+                <div *ngIf="form.get('category')?.errors?.['required']">{{ 'templateCategory.categoryRequired' | translate }}</div>
+                <div *ngIf="form.get('category')?.errors?.['minlength']">{{'validation.minLength'| translate}}</div>
+                <div *ngIf="form.get('category')?.errors?.['maxlength']">{{'validation.maxLength'| translate}}</div>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">{{ 'templateCategory.displayName' | translate }}<sup class="text-danger">*</sup></label>
+              <input type="text" formControlName="displayName" class="form-control" placeholder="{{ 'templateCategory.displayNameplaceholder' | translate }}">
+              <div *ngIf="form.get('displayName')?.touched && form.get('category')?.invalid" class="text-danger">
+                <div *ngIf="form.get('displayName')?.errors?.['required']">{{ 'templateCategory.categoryRequired' | translate }}</div>
+                <div *ngIf="form.get('displayName')?.errors?.['minlength']">{{'validation.minLength'| translate}}</div>
+                <div *ngIf="form.get('displayName')?.errors?.['maxlength']">{{'validation.maxLength'| translate}}</div>
+              </div>
+            </div>
+
+     
+          </div>
+          </div>
+        </form>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn btn-outline-secondary" (click)="closeModal()">{{ 'common.cancel' | translate }}</button>
+        <!-- <button class="btn add-btn" [disabled]="!isAddEditPermission" (click)="save()">
+          {{ isEdit ? ('common.update' |  translate) : ('common.save' | translate) }}
+        </button> -->
+         <button class="btn add-btn" (click)="save()">
+          {{ isEdit ? ('common.update' |  translate) : ('common.save' | translate) }}
+        </button>
+        
+      </div>
+
+    </div>
+  </div>
+</div>
