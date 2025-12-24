@@ -212,7 +212,8 @@
     "loading": "Caricamento...",
     "updating": "Aggiornamento in corso...",
     "noData": "Nessun dato disponibile",
-    "noRecordsMatch": "Nessun record corrisponde alla tua ricerca"
+    "noRecordsMatch": "Nessun record corrisponde alla tua ricerca",
+    "searchByDateOrFarmName": "Search by date or farm name"
   },
   "imageValidator": {
     "invalidType": "Tipo di immagine non valido. I tipi consentiti sono: jpeg, jpg, png.",
@@ -308,6 +309,7 @@
     "profilePhoto": "Foto profilo"
   },
   "ration": {
+    "searchByRationNameOrType": "Search by ration name or type",
     "Heading": "Gestione Razioni",
     "addRation": "Aggiungi razione",
     "editRation": "Modifica razione",
@@ -342,6 +344,7 @@
     }
   },
   "farm": {
+    "searchByFarmTownCountry": "Cerca per nome dell’azienda agricola, città o paese",
     "Heading": "Gestione Aziende Agricole",
     "addFarm": "Aggiungi azienda agricola",
     "editFarm": "Modifica azienda agricola",
@@ -376,6 +379,7 @@
     "state": "Provincia"
   },
   "feed": {
+    "searchByFeedCategoryPrice": "Cerca per nome del mangime, categoria o prezzo",
     "Heading": "Gestione Alimenti",
     "addFeed": "Aggiungi alimento",
     "editFeed": "Modifica alimento",
@@ -433,6 +437,7 @@
     }
   },
   "animalGroup": {
+     "searchByGroupOrFarm": "Cerca per nome del gruppo o azienda agricola",
     "Heading": "Gestione Gruppi Animali",
     "addAnimalGroup": "Aggiungi gruppo animale",
     "editAnimalGroup": "Modifica gruppo animale",
@@ -465,6 +470,7 @@
     }
   },
   "animalLactationStage": {
+     "searchByLactationName": "Cerca per nome della lattazione",
     "Heading": "Gestione Fasi di Lattazione",
     "editLactationStage": "Modifica lattazione",
     "addLactationStage": "Aggiungi lattazione",
@@ -476,6 +482,7 @@
     }
   },
   "animalType": {
+    "searchByAnimalTypeName": "Cerca per nome del tipo di animale",
     "Heading": "Gestione Tipi di Animali",
     "addAnimalType": "Aggiungi tipo di animale",
     "editAnimalType": "Modifica tipo di animale",
@@ -585,6 +592,7 @@
     "managePlaceholderMappingheading": "Gestisci la mappatura dei segnaposto"
   },
   "operator": {
+    "searchByOperatorName": "Cerca per nome dell’operatore",
     "heading": "Gestisci Operatore",
     "operatorName": "Nome Operatore",
     "displayName": "Nome da visualizzare",

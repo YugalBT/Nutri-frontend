@@ -12,7 +12,7 @@
   </div>
 
   <app-global-search
-    [placeholder]="'Search by operator name'"
+    [placeholder]="'operator.searchByOperatorName' | translate"
     [showStatus]="true"
     (search)="onSearch($event)"
     (statusChange)="onStatusChange($event)"

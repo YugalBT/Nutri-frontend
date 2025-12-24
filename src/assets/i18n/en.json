@@ -215,7 +215,8 @@
     "loading": "Loading...",
     "updating": "Updating...",
     "noData": "No data available",
-    "noRecordsMatch": "No records match your search"
+    "noRecordsMatch": "No records match your search",
+     "searchByDateOrFarmName": "Cerca per data o nome dell’azienda agricola"
     
   },
   "imageValidator": {
@@ -312,6 +313,7 @@
     "profilePhoto": "Profile Photo"
   },
   "ration": {
+    "searchByRationNameOrType": "Search by ration name or type",
     "Heading": "Ration Management",
     "addRation": "Add Ration",
     "editRation": "Edit Ration",
@@ -346,6 +348,7 @@
     }
   },
   "farm": {
+    "searchByFarmTownCountry": "Search by farm name, town, or country",
     "Heading": "Farm Management",
     "addFarm": "Add Farm",
     "editFarm": "Edit Farm",
@@ -380,6 +383,7 @@
     "state": "State"
   },
   "feed": {
+    "searchByFeedCategoryPrice": "Search by feed name, category, or price",
     "Heading": "Feed Management",
     "addFeed": "Add Feed",
     "editFeed": "Edit Feed",
@@ -437,6 +441,7 @@
     }
   },
   "animalGroup": {
+    "searchByGroupOrFarm": "Search by group name or farm",
     "Heading": "Animal Group Management",
     "addAnimalGroup": "Add Animal Group",
     "editAnimalGroup": "Edit Animal Group",
@@ -469,6 +474,7 @@
     }
   },
   "animalLactationStage": {
+     "searchByLactationName": "Search by lactation name",
     "Heading": "Lactation Stage Management",
     "editLactationStage": "Edit Lactation",
     "addLactationStage": "Add Lactation",
@@ -480,6 +486,7 @@
     }
   },
   "animalType": {
+    "searchByAnimalTypeName": "Search by animal type name",
     "Heading": "Animal Type Management",
     "addAnimalType": "Add Animal Type",
     "editAnimalType": "Edit Animal Type",
@@ -594,6 +601,7 @@
 
 },
 "operator": {
+  "searchByOperatorName": "Search by operator name",
   "heading": "Manage Operator",
   "operatorName": "Operator Name",
   "displayName": "Display Name",

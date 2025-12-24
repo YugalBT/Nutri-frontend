@@ -12,6 +12,7 @@ import { ConfirmDialogService } from '../../../shared/services/confirm-dialog.se
 import { ApiResponse } from '../../../core/models/api-response';
 import { CommonService } from '../../../shared/services/common.service';
 import { PERMISSIONS } from '../../../core/constants/permissions.constants';
+import { TranslatePipe } from '../../../i18n/translate.pipe';
 
 
 @Component({
@@ -21,7 +22,8 @@ import { PERMISSIONS } from '../../../core/constants/permissions.constants';
     SharedModule,
     ReusableTableComponent,
     GlobalSearchComponent,
-    DayAddEditComponent
+    DayAddEditComponent,
+    TranslatePipe
   ],
   templateUrl: './day-list.component.html',
   styleUrls: ['./day-list.component.css']
