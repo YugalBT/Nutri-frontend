@@ -14,6 +14,7 @@ import { SIDEBAR_GROUPS } from '../../core/constants/sidebar-groups';
 
 interface MenuItem {
   roleDisplayName?: string;
+  roleDisplayNameIt?: string;
   roleName?: string;
   icon?: string;
   url?: string;
@@ -91,6 +92,9 @@ private buildAccordionMenu(flatMenu: MenuItem[]) {
 }
 
 
+get currentLang(): string {
+  return sessionStorage.getItem('lang') || 'en';
+}
 
   logout() {
     this.authService.logout();
