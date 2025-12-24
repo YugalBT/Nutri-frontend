@@ -58,7 +58,11 @@
                                         [routerLinkActiveOptions]="{ exact: true }">
                                         <span class="side-item-icon" [innerHTML]="item.safeIcon"></span>
 
-                                        {{ item.roleDisplayName }}
+
+                                        {{ currentLang === 'it'
+                                        ? item.roleDisplayNameIt || item.roleDisplayName
+                                        : item.roleDisplayName
+                                        }}
                                     </a>
                                 </div>
                             </div>
