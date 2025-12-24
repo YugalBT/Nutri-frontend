@@ -510,7 +510,9 @@
     "reports": "Report e Analisi",
     "settings": "Impostazioni",
     "dashboard": "Dashboard",
-    "logout": "Esci"
+    "logout": "Esci",
+    "templateBuilder": "Costruttore di modelli",
+    "formulas": "Formule"
   },
   "dashboard": {
     "welcome": "Benvenuti nel",
@@ -570,9 +572,37 @@
       "displayName": "Nome da visualizzare"
     }
   },
-  "templateBuilder":{
-  "manageCategoryheading":"Gestisci categoria",
-  "managePlaceholderheading":"Gestisci segnaposto",
-  "managePlaceholderMappingheading":"Gestisci la mappatura dei segnaposto"
-}
+  "templateBuilder": {
+    "manageCategoryheading": "Gestisci categoria",
+    "managePlaceholderheading": "Gestisci segnaposto",
+    "managePlaceholderMappingheading": "Gestisci la mappatura dei segnaposto"
+  },
+  "operator": {
+    "heading": "Gestisci Operatore",
+    "operatorName": "Nome Operatore",
+    "displayName": "Nome da visualizzare",
+    "operatorNamePlaceholder": "Inserisci nome operatore",
+    "displayNamePlaceholder": "Inserisci nome visualizzato",
+    "addOperator": "Aggiungi Operatore",
+    "editOperator": "Modifica Operatore",
+    "operatorRequired": "Il nome operatore è obbligatorio",
+    "displayNameRequired": "Il nome visualizzato è obbligatorio"
+  },
+  "placeholder": {
+    "heading": "Gestisci segnaposto",
+    "add": "Aggiungi segnaposto",
+    "edit": "Modifica segnaposto",
+    "placeholderValue": "Valore segnaposto",
+    "placeholderValuePlaceholder": "Inserisci valore segnaposto",
+    "required": "Il valore del segnaposto è obbligatorio",
+    "columns": {
+      "value": "Valore segnaposto"
+    },
+    "messages": {
+      "created": "Segnaposto creato con successo",
+      "updated": "Segnaposto aggiornato con successo",
+      "deleted": "Segnaposto eliminato con successo",
+      "statusUpdated": "Stato aggiornato con successo"
+    }
+  }
 }

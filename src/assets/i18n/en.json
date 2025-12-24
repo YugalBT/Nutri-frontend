@@ -513,7 +513,9 @@
     "reports": "Reports & Analytics",
     "settings": "Settings",
     "dashboard": "Dashboard",
-    "logout": "Logout"
+    "logout": "Logout",
+    "templateBuilder": "Template Builder",
+    "formulas": "Formulas"
   },
   "dashboard": {
     "welcome": "Welcome to the",
@@ -582,6 +584,36 @@
   "managePlaceholderheading":"Manage Placeholders",
   "managePlaceholderMappingheading":"Manage Placeholders Mapping"
 
-}
+},
+"operator": {
+  "heading": "Manage Operator",
+  "operatorName": "Operator Name",
+  "displayName": "Display Name",
+  "operatorNamePlaceholder": "Enter operator name",
+  "displayNamePlaceholder": "Enter display name",
+  "addOperator": "Add Operator",
+  "editOperator": "Edit Operator",
+  "operatorRequired": "Operator name is required",
+  "displayNameRequired": "Display name is required"
+},
+ "placeholder": {
+    "heading": "Manage Placeholders",
+    "add": "Add Placeholder",
+    "edit": "Edit Placeholder",
+    "placeholderValue": "Placeholder Value",
+    "placeholderValuePlaceholder": "Enter placeholder value",
+    "required": "Placeholder value is required",
+    "columns": {
+      "value": "Placeholder Value"
+    },
+    "messages": {
+      "created": "Placeholder created successfully",
+      "updated": "Placeholder updated successfully",
+      "deleted": "Placeholder deleted successfully",
+      "statusUpdated": "Status updated successfully"
+    }
+  }
+
+
 
 }

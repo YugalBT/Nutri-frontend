@@ -36,7 +36,7 @@
       </button>
     </li>
 
-    <li class="nav-item">
+    <!-- <li class="nav-item">
       <button
         class="nav-link"
         [class.active]="activeTab === 'mapping'"
@@ -51,9 +51,9 @@
               stroke-linecap="round"/>
       </svg>
        {{'templateBuilder.managePlaceholderMappingheading'| translate}}
-       
+
       </button>
-    </li>
+    </li> -->
 
     <!-- <li class="nav-item">
       <button
@@ -79,7 +79,7 @@
     </ng-container>
 
     <ng-container *ngIf="activeTab === 'placeholders'">
-      <app-manage-placeholders></app-manage-placeholders>
+      <app-template-placeholder-list></app-template-placeholder-list>
     </ng-container>
 
     <ng-container *ngIf="activeTab === 'mapping'">

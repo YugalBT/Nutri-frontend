@@ -6,7 +6,7 @@ export const SIDEBAR_GROUPS = [
     key: 'access',
     title: 'sidebarmenu.access',
     icon: SIDEBAR_ICONS.ACCESS,
-    items: ['Users', 'Roles','Companies']
+    items: ['Users', 'Roles', 'Companies']
   },
   {
     key: 'farm',
@@ -18,9 +18,30 @@ export const SIDEBAR_GROUPS = [
     key: 'nutrition',
     title: 'sidebarmenu.nutrition',
     icon: SIDEBAR_ICONS.NUTRITION,
-    items: ['Feed', 'Ration','Animal Type','Animal Lactation Stage']
+    items: ['Feed', 'Ration', 'Animal Type', 'Animal Lactation Stage']
   },
-   {
+  {
+    key: 'templateBuilder',
+    title: 'sidebarmenu.templateBuilder',
+    icon: SIDEBAR_ICONS.TEMPLATE_BUILDER,
+    items: [
+      // 'Email Template Builder',
+      'template',
+    ]
+  },
+  {
+    key: 'formulas',
+    title: 'sidebarmenu.formulas',
+    icon: SIDEBAR_ICONS.FORMULAS,
+    items: [
+      // 'Formula Builder',
+      'operators',
+      // 'Operands'
+    ]
+  },
+
+
+  {
     key: 'reports',
     title: 'sidebarmenu.reports',
     icon: SIDEBAR_ICONS.REPORTS,
@@ -36,7 +57,7 @@ export const SIDEBAR_GROUPS = [
     key: 'settings',
     title: 'sidebarmenu.settings',
     icon: SIDEBAR_ICONS.SETTINGS,
-    items: ['Profile', 'Change Password','Setting','Module','EmailConfiguration']
+    items: ['Profile', 'Change Password', 'Setting', 'Module', 'EmailConfiguration']
   },
- 
+
 ];

@@ -133,4 +133,18 @@ export const API_ENDPOINTS = {
     ACTIVE_INACTIVE: '/TemplateCategory/ActiveInActive',
     GET_ALL: '/TemplateCategory/GetAll',
   },
+   OPERATOR: {
+    CREATE: '/Operator/Create',
+    UPDATE: '/Operator/Update',
+    DELETE: '/Operator/Delete',
+    ACTIVE_INACTIVE: '/Operator/ActiveInActive',
+    GET_ALL: '/Operator/GetAll',
+  },
+   PLACEHOLDER: {
+    CREATE: '/PlaceHolder/Create',
+    UPDATE: '/PlaceHolder/Update',
+    DELETE: '/PlaceHolder/Delete',
+    ACTIVE_INACTIVE: '/PlaceHolder/ActiveInActive',
+    GET_ALL: '/PlaceHolder/GetAll',
+  },
 };

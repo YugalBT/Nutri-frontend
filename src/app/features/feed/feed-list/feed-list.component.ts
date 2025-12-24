@@ -17,7 +17,7 @@ import { TranslatePipe } from '../../../i18n/translate.pipe';
 @Component({
   selector: 'app-feed-list',
   standalone: true,
-  imports: [SharedModule, ReusableTableComponent, GlobalSearchComponent, FeedAddEditComponent,TranslatePipe],
+  imports: [SharedModule, ReusableTableComponent, GlobalSearchComponent, FeedAddEditComponent, TranslatePipe],
   templateUrl: './feed-list.component.html',
   styleUrls: ['./feed-list.component.css']
 })
@@ -41,17 +41,17 @@ export class FeedListComponent {
     private feedService: FeedService,
     private toast: ToastService,
     private confirm: ConfirmDialogService,
-    private commonService : CommonService
+    private commonService: CommonService
   ) {
     this.setColumns();
     this.langSub = this.translate.lang$.subscribe(() => this.setColumns());
   }
 
   ngOnInit(): void {
-    
-    if(!this.commonService.checkPermission(PERMISSIONS.FeedView)
+
+    if (!this.commonService.checkPermission(PERMISSIONS.FeedView)
       || !this.commonService.checkPermission(PERMISSIONS.FeedDelete))
-        return;
+      return;
     this.loadFeeds(1, this.pageSize);
 
     const sub = this.feedService.feedsChanged$.subscribe(() => {
@@ -132,9 +132,9 @@ export class FeedListComponent {
   }
 
   onDelete(row: any): void {
-    
-    if(!this.commonService.checkPermission(PERMISSIONS.FeedDelete))
-        return;
+
+    if (!this.commonService.checkPermission(PERMISSIONS.FeedDelete))
+      return;
     const id = row?.feedId;
     if (!id) {
       this.toast.error("Invalid feed id");
@@ -159,16 +159,16 @@ export class FeedListComponent {
 
   private setColumns(): void {
     this.columns = [
-      this.translate.instant('feed.columns.feed')?? " ",
-    this.translate.instant('feed.columns.category') ?? " ",
-    this.translate.instant('feed.columns.dm') ?? " ",
-    this.translate.instant('feed.columns.cp') ?? " ",
-    this.translate.instant('feed.columns.ndf') ?? " ",
-    this.translate.instant('feed.columns.energy') ?? " ",
-    this.translate.instant('feed.columns.price') ?? " ",
-    this.translate.instant('feed.columns.phosphorus') ?? " ",
-    this.translate.instant('feed.columns.starch') ?? " ",
-    this.translate.instant('common.status') ?? " "
+      this.translate.instant('feed.columns.feed') ?? " ",
+      this.translate.instant('feed.columns.category') ?? " ",
+      this.translate.instant('feed.columns.dm') ?? " ",
+      this.translate.instant('feed.columns.cp') ?? " ",
+      this.translate.instant('feed.columns.ndf') ?? " ",
+      this.translate.instant('feed.columns.energy') ?? " ",
+      this.translate.instant('feed.columns.price') ?? " ",
+      this.translate.instant('feed.columns.phosphorus') ?? " ",
+      this.translate.instant('feed.columns.starch') ?? " ",
+      this.translate.instant('common.status') ?? " "
     ];
 
 

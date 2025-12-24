@@ -1,15 +1,15 @@
 import { Component } from '@angular/core';
 import { SharedModule } from '../../shared/shared.module';
 import { ManagePlaceholderMappingComponent } from './manage-placeholder-mapping/manage-placeholder-mapping.component';
-import { ManagePlaceholdersComponent } from './manage-placeholders/manage-placeholders.component';
 import { TemplateCategoryListComponent } from './template-category/template-category-list/template-category-list.component';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslatePipe } from '../../i18n/translate.pipe';
+import { TemplatePlaceholderListComponent } from './manage-placeholders/placeholder-list/placeholder-list.component';
 
 @Component({
   selector: 'app-template-builder',
   standalone: true,
-  imports: [SharedModule,TemplateCategoryListComponent,ManagePlaceholderMappingComponent,ManagePlaceholdersComponent,TranslatePipe],
+  imports: [SharedModule,TemplateCategoryListComponent,ManagePlaceholderMappingComponent,TemplatePlaceholderListComponent,TranslatePipe],
   templateUrl: './template-builder.component.html',
   styleUrl: './template-builder.component.css'
 })

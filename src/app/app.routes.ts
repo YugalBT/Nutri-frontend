@@ -207,6 +207,14 @@ export const routes: Routes = [
           import('./features/template-builder/template-builder.component')
             .then(m => m.TemplateBuilderComponent),
       },
+      {
+        path: 'operators',
+        // canActivate: [permissionGuard],
+        // data: { requiredPermissions: [PERMISSIONS.EmailConfigurationAdd, PERMISSIONS.EmailConfigurationEdit, PERMISSIONS.EmailConfigurationView, PERMISSIONS.EmailConfigurationDelete] },
+        loadComponent: () =>
+          import('./features/operators/operator-list/operator-list.component')
+            .then(m => m.OperatorListComponent),
+      },
 
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
     ],
