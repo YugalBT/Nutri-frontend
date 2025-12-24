@@ -620,7 +620,24 @@
       "deleted": "Placeholder deleted successfully",
       "statusUpdated": "Status updated successfully"
     }
-  }
+  },
+  "placeholderMapping": {
+  "heading": "Manage Placeholder Mapping",
+  "add": "Add Mapping",
+  "edit": "Edit Mapping",
+  "category": "Template Category",
+  "placeholders": "Placeholders",
+  "selectcategory":"Select Category",
+  "selectplaceholders":"Select Placeholders",
+  "deleteConfirm": "Are you sure you want to delete this mapping?",
+  "columns": {
+      "category": "Category",
+      "placeholders": "Placeholders",
+      "status": "Status"
+    }
+
+}
+
 
 
 

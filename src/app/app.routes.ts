@@ -215,6 +215,7 @@ export const routes: Routes = [
           import('./features/operators/operator-list/operator-list.component')
             .then(m => m.OperatorListComponent),
       },
+      
 
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
     ],
