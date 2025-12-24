@@ -40,6 +40,8 @@ export const API_ENDPOINTS = {
     GET_ALL_ANIMAL_LACTATION: '/Common/GetAllAnimalLactation',
     GET_ALL_ANIMAL_GROUP: '/Common/GetAllAnimalGroup',
     GET_RATION_ITEMS: '/Common/GetRationByRationd',
+    GET_TEMPLATE_CATEGORY: '/Common/GetAllTemplateCategory',
+    GET_TEMPLATE_PLACEHOLDER: '/Common/GetAllPlaceholder',
   },
   
   
@@ -146,5 +148,12 @@ export const API_ENDPOINTS = {
     DELETE: '/PlaceHolder/Delete',
     ACTIVE_INACTIVE: '/PlaceHolder/ActiveInActive',
     GET_ALL: '/PlaceHolder/GetAll',
+  },
+   PLACEHOLDERS_MAPPING: {
+    CREATE: '/PlaceholderMapping/Create',
+    UPDATE: '/PlaceholderMapping/Update',
+    DELETE: '/PlaceholderMapping/Delete',
+    ACTIVE_INACTIVE: '/PlaceholderMapping/ActiveInActive',
+    GET_ALL: '/PlaceholderMapping/GetAll',
   },
 };

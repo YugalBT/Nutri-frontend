@@ -619,5 +619,21 @@
       "deleted": "Segnaposto eliminato con successo",
       "statusUpdated": "Stato aggiornato con successo"
     }
-  }
+  },
+  "placeholderMapping": {
+  "heading": "Gestisci mappatura segnaposto",
+  "add": "Aggiungi mappatura",
+  "edit": "Modifica mappatura",
+  "category": "Categoria modello",
+  "placeholders": "Segnaposto",
+  "selectcategory":"Seleziona Categoria",
+  "selectplaceholders":"Seleziona Segnaposto",
+  "deleteConfirm": "Sei sicuro di voler eliminare questa mappatura?",
+  "columns": {
+      "category": "Categoria",
+      "placeholders": "Segnaposto",
+      "status": "Stato"
+    }
+}
+
 }
