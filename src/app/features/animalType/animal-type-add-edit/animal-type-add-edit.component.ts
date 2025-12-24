@@ -87,7 +87,7 @@ export class AnimalTypeAddEditComponent implements OnInit{
     this.animalTypeService.createAnimalType(payload).subscribe({
       next: (res: any) => {
         if (res?.isSuccess) {
-          this.toast.success("Animal type created successfully!");
+          this.toast.success(res.message || "Animal type created successfully!");
           this.closeModal();
           this.animalTypeService.notifyChanges();
         } else {
@@ -102,7 +102,7 @@ export class AnimalTypeAddEditComponent implements OnInit{
     this.animalTypeService.updateAnimalType(payload).subscribe({
       next: (res: any) => {
         if (res?.isSuccess) {
-          this.toast.success("Animal type updated successfully!");
+          this.toast.success(res.message || "Animal type updated successfully!");
           this.closeModal();
           this.animalTypeService.notifyChanges();
         } else {

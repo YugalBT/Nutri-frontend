@@ -27,6 +27,7 @@ export class LoginComponent implements OnInit {
   form: FormGroup;
   icons = ICONS;
   loading$: Observable<boolean>;
+  currentLang = 'en';
   // companyCode: string = '';
   // logoUrl: string = '';
   // primaryColor: string = '#1d7e8b';
@@ -76,6 +77,13 @@ export class LoginComponent implements OnInit {
     this.showPassword = !this.showPassword;
   }
 
+
+  changeLanguage(lang: string) {
+    if (!lang) return;
+    this.currentLang = lang;
+    sessionStorage.setItem('lang', lang);
+    this.translate.use(lang).subscribe();
+  }
   // loadHomePageContent() {
   //   this.authService.getHomePageContent(this.companyCode).subscribe({
   //     next: (res) => {

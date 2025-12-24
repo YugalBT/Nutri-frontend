@@ -185,9 +185,15 @@ export class AnimalTypeListComponent implements OnInit, OnDestroy {
     this.animalTypeService
       .activeInActiveAnimalType(row.animalTypeId, newStatus)
       .subscribe({
-        next: () => {
+        next: (res: any) => {
           row.isActive = newStatus;
-          this.toast.success('Status updated successfully');
+          if (res?.isSuccess) {
+            this.toast.success(res.message || 'Status updated successfully');
+          } else {
+            this.toast.error(res.message || 'Failed to update status');
+            row.isActive = !newStatus; 
+          }
+          this.toast.success(res.message || 'Status updated successfully');
         },
         error: () => this.toast.error('Failed to update status')
       });

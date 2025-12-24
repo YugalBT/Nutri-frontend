@@ -9,6 +9,8 @@ import { CommonService } from '../../../shared/services/common.service';
 import { ToastService } from '../../../shared/services/toast.service';
 import { UsersService } from '../../../core/services/users/user.service';
 import { PERMISSIONS } from '../../../core/constants/permissions.constants';
+import { TranslateService } from '../../../i18n/translate.service';
+import { PhoneService } from '../../../shared/phone.service';
 
 declare var bootstrap: any;
 
@@ -36,6 +38,8 @@ export class AddeditComponent implements OnInit, OnDestroy {
     private commonService: CommonService,
     private usersService: UsersService,
     private toast: ToastService,
+    private translate: TranslateService,
+      public phoneService: PhoneService 
   ) { }
 
   ngOnInit() {
@@ -83,7 +87,7 @@ export class AddeditComponent implements OnInit, OnDestroy {
       error: (err) => {
         this.roles = [];
         this.rolesLoading = false;
-        this.rolesError = 'Failed to load roles. Please try again.';
+        this.rolesError = this.translate.instant('common.failedToLoadRoles') || 'Failed to load roles. Please try again.';
       }
     });
 
@@ -130,7 +134,7 @@ export class AddeditComponent implements OnInit, OnDestroy {
     if (!this.form.valid) {
       const payload = this.form.getRawValue();
       delete payload.password;
-      this.toast.warning('Please fill all required fields');
+      this.toast.warning(this.translate.instant('common.formInvalid') || 'Please fill all required fields');
       return;
     }
 

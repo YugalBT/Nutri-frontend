@@ -129,11 +129,6 @@
                                 </div>
                             </div>
 
-
-
-
-
-
                             <div class="col-12 mt-3">
                                 <h5 class="mb-3">{{ 'company.primaryUser' | translate }}</h5>
                             </div>
@@ -158,6 +153,20 @@
                                     {{'validation.maxLength' | translate}}
                                 </div>
 
+                            </div>
+                            <div class="col-md-4 col-12">
+                                <label class="form-label">{{ 'company.middleName' | translate }}</label>
+                                <input type="text" class="form-control" formControlName="middleName"
+                                    [placeholder]="'company.middleNamePlaceholder' | translate">
+                                <div *ngIf="form.get('middleName')?.errors?.['pattern']" class="text-danger">
+                                    {{'validation.onlyChars' | translate}}
+                                </div>
+                                <div *ngIf="form.get('middleName')?.errors?.['minlength']" class="text-danger">
+                                    {{'validation.minLength' | translate}}
+                                </div>
+                                <div *ngIf="form.get('middleName')?.errors?.['maxlength']" class="text-danger">
+                                    {{'validation.maxLength' | translate}}
+                                </div>
                             </div>
                             <div class="col-md-4 col-12">
                                 <label class="form-label">{{ 'company.lastName' | translate }}<sup
@@ -197,7 +206,8 @@
                                 <label class="form-label">{{ 'company.phoneNumber' | translate }}<sup
                                         style="color: #f00; font-size: 12px;">*</sup></label>
                                 <input type="tel" class="form-control" formControlName="phoneNumber"
-                                    [placeholder]="'company.userPhonePlaceholder' | translate">
+                                    [placeholder]="'company.userPhonePlaceholder' | translate"
+                                      (input)="phoneService.enforcePhoneInput($event, form, 'phoneNumber', 10)">
                                 <div *ngIf="isInvalid('phoneNumber', 'required')" class="text-danger">
                                     {{ 'phoneValidation.phoneNumberRequired' | translate }}
                                 </div>
@@ -345,8 +355,9 @@
                             <div class="col-md-4 col-12">
                                 <label class="form-label">{{ 'company.phoneNumber' | translate }}<sup
                                         style="color: #f00; font-size: 12px;">*</sup></label>
-                                <input type="tel" class="form-control" formControlName="userPhoneNumber"
-                                    [placeholder]="'company.userPhonePlaceholder' | translate">
+                                <input type="tel" class="form-control" formControlName="userPhoneNumber"  maxlength="10"
+                                    [placeholder]="'company.userPhonePlaceholder' | translate"
+                                      (input)="phoneService.enforcePhoneInput($event, form, 'userPhoneNumber', 10)">
                                 <div *ngIf="form.get('userPhoneNumber')?.touched" class="text-danger">
 
                                     <!-- Required -->
@@ -374,11 +385,21 @@
                             <div class="col-md-4 col-12">
                                 <label class="form-label">{{ 'company.userRole' | translate }}<sup
                                         style="color: #f00; font-size: 12px;">*</sup></label>
-                                <select class="form-select" formControlName="roleId">
-                                    <option value="">{{ 'common.selectRole' | translate }}</option>
+                                <!-- <select class="form-select" formControlName="roleId">
+                                    <option value="">{{ 'company.selectRole' | translate }}</option>
                                     <option *ngFor="let role of roleList" [value]="role.roleId">{{ role.nameEn }}
                                     </option>
+                                </select> -->
+                                <select class="form-select" formControlName="roleId">
+                                    <option [ngValue]="null">
+                                        {{ 'company.selectRole' | translate }}
+                                    </option>
+
+                                    <option *ngFor="let role of roleList" [ngValue]="role.roleId">
+                                        {{ role.nameEn }}
+                                    </option>
                                 </select>
+
                                 <div *ngIf="isInvalid('roleId', 'required')" class="text-danger">
                                     {{ 'companyValidation.roleRequired' | translate }}
                                 </div>

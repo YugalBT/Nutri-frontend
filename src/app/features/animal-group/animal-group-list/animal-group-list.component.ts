@@ -161,7 +161,7 @@ export class AnimalGroupListComponent implements OnInit, OnDestroy {
       return;
     }
 
-    this.confirm.confirm('Are you sure you want to delete this record?').subscribe(confirmed => {
+    this.confirm.confirm(this.translateService.instant('common.ConfirmDelete') || 'Are you sure you want to delete this record?').subscribe(confirmed => {
       if (!confirmed) return;
 
       const s = this.animalGroupService.deleteAnimalGroup(id).subscribe({
