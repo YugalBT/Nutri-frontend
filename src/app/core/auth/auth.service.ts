@@ -11,6 +11,7 @@ import { ToastService } from '../../shared/services/toast.service';
 import { Router } from '@angular/router';
 import { Constants } from '../../shared/utils/constants/constants';
 import { ROUTE_CONST } from '../constants/route.constants';
+import { HttpHeaders } from '@angular/common/http';
 
 
 
@@ -28,27 +29,53 @@ export class AuthService {
     private tokenService: TokenService
   ) { }
 
+  // login(body: LoginRequest): Observable<ApiResponse<any>> {
+  //   const payload: LoginRequest = {
+  //     ...body
+  //     // companyCode: body.companyCode ?? 'login'
+  //   };
+    
+  //   return this.http.post<any>(API_ENDPOINTS.AUTH.LOGIN, payload).pipe(
+  //     tap(res => {
+  //       if (res?.isSuccess && res?.data?.token) {
+
+  //         this.tokenService.setToken(res.data.token);
+  //         this.tokenService.setUserData(JSON.stringify(res.data));
+  //         this.tokenService.setUserName(`${res.data.firstName || ''} ${res.data.lastName || ''}`);
+
+  //       }
+  //       // else {
+  //       //   this.logout();
+  //       // }
+  //     })
+  //   );
+  // }
+
   login(body: LoginRequest): Observable<ApiResponse<any>> {
-    const payload: LoginRequest = {
-      ...body
-      // companyCode: body.companyCode ?? 'login'
-    };
 
-    return this.http.post<any>(API_ENDPOINTS.AUTH.LOGIN, payload).pipe(
+    const language = sessionStorage.getItem('lang') || 'en';
+
+    const headers = new HttpHeaders({
+      'Accept-Language': language
+    });
+
+    return this.http.post<any>(
+      API_ENDPOINTS.AUTH.LOGIN,
+      body,
+      { headers }
+    ).pipe(
       tap(res => {
-        if (res?.isSuccess && res?.data?.token) {
-
+        if (res.isSuccess && res.data?.token) {
           this.tokenService.setToken(res.data.token);
           this.tokenService.setUserData(JSON.stringify(res.data));
-          this.tokenService.setUserName(`${res.data.firstName || ''} ${res.data.lastName || ''}`);
-
+          this.tokenService.setUserName(
+            `${res.data.firstName} ${res.data.lastName}`
+          );
         }
-        // else {
-        //   this.logout();
-        // }
       })
     );
   }
+
   logout() {
     this.confirm.confirm(
       'dialog.logoutMessage'

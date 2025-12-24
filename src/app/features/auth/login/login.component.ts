@@ -31,7 +31,8 @@ export class LoginComponent implements OnInit {
   // companyCode: string = '';
   // logoUrl: string = '';
   // primaryColor: string = '#1d7e8b';
-  constructor(private fb: FormBuilder, private store: Store, private toast: ToastService, private translate: TranslateService, private authService: AuthService, private router: Router, private route: ActivatedRoute) {
+  constructor(private fb: FormBuilder, private store: Store, private toast: ToastService,
+     private translate: TranslateService, private authService: AuthService, private router: Router, private route: ActivatedRoute) {
     this.form = this.fb.group({
       username: ['', [CustomValidators.required()]],
       password: ['', [CustomValidators.required()]]
@@ -47,8 +48,6 @@ export class LoginComponent implements OnInit {
     //   //   this.loadHomePageContent();
     //   // }
     // });
-
-
   }
 
 
