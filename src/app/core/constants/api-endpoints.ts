@@ -42,6 +42,10 @@ export const API_ENDPOINTS = {
     GET_RATION_ITEMS: '/Common/GetRationByRationd',
     GET_TEMPLATE_CATEGORY: '/Common/GetAllTemplateCategory',
     GET_TEMPLATE_PLACEHOLDER: '/Common/GetAllPlaceholder',
+    GET_RATION: '/Common/GetAllRation',
+    GET_OPERATOR: '/Common/GetAllOperator',
+    GET_OPERATORS_AND_RATIONS: '/Common/GetAllOperatorAndRation',
+
   },
   
   
@@ -155,5 +159,12 @@ export const API_ENDPOINTS = {
     DELETE: '/PlaceholderMapping/Delete',
     ACTIVE_INACTIVE: '/PlaceholderMapping/ActiveInActive',
     GET_ALL: '/PlaceholderMapping/GetAll',
+  },
+   FORMULA: {
+    CREATE: '/Formula/Create',
+    UPDATE: '/Formula/Update',
+    DELETE: '/Formula/Delete',
+    ACTIVE_INACTIVE: '/Formula/ActiveInActive',
+    GET_ALL: '/Formula/GetAll',
   },
 };

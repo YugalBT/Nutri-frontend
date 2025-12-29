@@ -5,3 +5,13 @@ export interface OperatorList {
     isActive: boolean;
     [key: string]: any;
 }
+
+export interface OperatorsAndRationsList {
+    id: string
+    name: string
+    displayName: string;
+    isActive: boolean;
+    [key: string]: any;
+}
+
+

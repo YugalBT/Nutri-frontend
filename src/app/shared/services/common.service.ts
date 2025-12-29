@@ -16,6 +16,8 @@ import { AnimallactationList } from '../../core/models/animallactation-list';
 import { AnimalGroupList } from '../../core/models/animal-group-list';
 import { TemplateCategoryList } from '../../core/models/template-builder/template-category-list';
 import { TemplatePlaceholderList } from '../../core/models/template-builder/template-placeholder-list';
+import { RationList } from '../../core/models/ration-list';
+import { OperatorList, OperatorsAndRationsList } from '../../core/models/operator-list';
 
 @Injectable({
   providedIn: 'root'
@@ -68,6 +70,18 @@ export class CommonService {
 
   getAlltemplatePlaceholderList(): Observable<ApiResponse<TemplatePlaceholderList[]>> {
     return this.http.get<TemplatePlaceholderList[]>(API_ENDPOINTS.COMMON_API.GET_TEMPLATE_PLACEHOLDER);
+  }
+
+   getGetAllRationList(): Observable<ApiResponse<RationList[]>> {
+    return this.http.get<RationList[]>(API_ENDPOINTS.COMMON_API.GET_RATION);
+  }
+
+   getGetAllOperatorList(): Observable<ApiResponse<OperatorList[]>> {
+    return this.http.get<OperatorList[]>(API_ENDPOINTS.COMMON_API.GET_OPERATOR);
+  }
+
+  getGetAllOperatorsAndRationsList(): Observable<ApiResponse<OperatorsAndRationsList[]>> {
+    return this.http.get<OperatorsAndRationsList[]>(API_ENDPOINTS.COMMON_API.GET_OPERATORS_AND_RATIONS);
   }
 
 }

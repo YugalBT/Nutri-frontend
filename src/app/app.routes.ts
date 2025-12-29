@@ -215,6 +215,14 @@ export const routes: Routes = [
           import('./features/operators/operator-list/operator-list.component')
             .then(m => m.OperatorListComponent),
       },
+      {
+        path: 'formulas',
+        canActivate: [permissionGuard],
+        data: { requiredPermissions: [PERMISSIONS.FormulaAdd, PERMISSIONS.formulasEdit, PERMISSIONS.formulasView, PERMISSIONS.formulasDelete] },
+        loadComponent: () =>
+          import('./features/expression/expression-list/expression-list.component')
+            .then(m => m.ExpressionListComponent),
+      },
       
 
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },

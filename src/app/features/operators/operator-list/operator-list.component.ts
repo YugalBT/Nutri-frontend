@@ -15,7 +15,7 @@ import { GlobalSearchComponent } from '../../../shared/components/global-search/
 @Component({
   selector: 'app-operator-list',
   standalone: true,
-  imports: [SharedModule, OperatorAddEditComponent, TranslatePipe,ReusableTableComponent,GlobalSearchComponent],
+  imports: [SharedModule, OperatorAddEditComponent, TranslatePipe, ReusableTableComponent, GlobalSearchComponent],
   templateUrl: './operator-list.component.html',
   styleUrl: './operator-list.component.css'
 })
@@ -37,7 +37,7 @@ export class OperatorListComponent {
     private operatorService: OperatorServiceService,
     private toast: ToastService,
     private confirm: ConfirmDialogService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.loadOperators(1, this.pageSize);

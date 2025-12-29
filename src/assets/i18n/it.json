@@ -178,10 +178,10 @@
     "FailedloadingData": "Impossibile caricare i dati!",
     "ConfirmDelete": "Sei sicuro di voler eliminare questo elemento?",
     "DoNotPermission": "Non hai il permesso per eseguire questa azione",
-    "failedToLoadModal":"Impossibile caricare i dati richiesti per aprire la finestra modale.",
-    "failedToLoadAnimalTypes":"Impossibile caricare i tipi di animali.",
-    "failedToLoadFarms":"Impossibile caricare le aziende agricole.",
-    "failedToLoadRoles":"Impossibile caricare i ruoli. Riprova.",
+    "failedToLoadModal": "Impossibile caricare i dati richiesti per aprire la finestra modale.",
+    "failedToLoadAnimalTypes": "Impossibile caricare i tipi di animali.",
+    "failedToLoadFarms": "Impossibile caricare le aziende agricole.",
+    "failedToLoadRoles": "Impossibile caricare i ruoli. Riprova.",
     "selectRole": "Seleziona Ruolo",
     "error": "Si è verificato un errore. Riprova.",
     "cancel": "Annulla",
@@ -613,19 +613,46 @@
     }
   },
   "placeholderMapping": {
-  "heading": "Gestisci mappatura segnaposto",
-  "add": "Aggiungi mappatura",
-  "edit": "Modifica mappatura",
-  "category": "Categoria modello",
-  "placeholders": "Segnaposto",
-  "selectcategory":"Seleziona Categoria",
-  "selectplaceholders":"Seleziona Segnaposto",
-  "deleteConfirm": "Sei sicuro di voler eliminare questa mappatura?",
-  "columns": {
+    "heading": "Gestisci mappatura segnaposto",
+    "add": "Aggiungi mappatura",
+    "edit": "Modifica mappatura",
+    "category": "Categoria modello",
+    "placeholders": "Segnaposto",
+    "selectcategory": "Seleziona Categoria",
+    "selectplaceholders": "Seleziona Segnaposto",
+    "deleteConfirm": "Sei sicuro di voler eliminare questa mappatura?",
+    "columns": {
       "category": "Categoria",
       "placeholders": "Segnaposto",
       "status": "Stato"
     }
-}
-
+  },
+  "formula": {
+    "management": "Gestione Formula",
+    "addFormula": "Aggiungi Formula",
+    "editFormula": "Modifica Formula",
+    "formulaName": "Nome Formula",
+    "formulaNamePlaceholder": "Inserisci nome formula",
+    "expression": "Espressione",
+    "expressionHint": "Clicca operatori o razioni per creare l’espressione",
+    "enterNumber": "Inserisci numero",
+    "add": "Aggiungi",
+    "validate": "Valida",
+    "save": "Salva",
+    "cancel": "Annulla",
+    "searchPlaceholder": "Cerca per nome formula",
+    "operators": "Operatori",
+    "rations": "Razioni",
+    "validation": {
+      "formulaNameRequired": "Il nome della formula è obbligatorio",
+      "expressionRequired": "L’espressione non può essere vuota",
+      "invalidFormulaId": "ID formula non valido",
+      "deleteConfirm": "Sei sicuro di voler eliminare questa espressione?"
+    },
+    "table": {
+      "formulaName": "Nome Formula",
+      "formula": "Formula",
+      "status": "Stato"
+    }
+  }
 }

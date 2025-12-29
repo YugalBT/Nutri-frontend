@@ -1,0 +1,114 @@
+<div #expressionModal class="modal fade">
+    <div class="modal-dialog modal-xl modal-dialog-centered">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    {{ isEdit ? ('formula.editFormula' | translate) : ('formula.addFormula' | translate) }}
+                </h5>
+
+                <button class="btn-close" (click)="closeModal()"></button>
+            </div>
+
+            <div class="modal-body">
+
+                <div class="mb-3 col-md-8">
+                    <label class="form-label">
+                        {{ 'formula.formulaName' | translate }} <span class="text-danger">*</span>
+                    </label>
+                    <input type="text" class="form-control" [(ngModel)]="expressionName"
+                        [placeholder]="'formula.formulaNamePlaceholder' | translate">
+                </div>
+
+                <div class="expression-box mb-4">
+                    <label class="form-label">
+                        {{ 'formula.expression' | translate }}
+                    </label>
+                    <button type="button" class="btn btn-sm btn-add" (click)="clearAll()"
+                        [disabled]="!expressionTokens.length">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M3 12a9 9 0 1 0 3-6.7" stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" />
+                            <path d="M3 4v6h6" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                        </svg>
+
+
+                    </button>
+
+                    <div class="expression-editor">
+
+                        <span class="insert-point" [class.active]="insertIndex === 0" (click)="setInsertIndex(0)">
+                        </span>
+
+                        <ng-container *ngFor="let token of expressionTokens; let i = index">
+
+                            <span class="token" [class.operator]="isOperator(token)" (click)="removeToken(i)">
+                                {{ token }} ✕
+                            </span>
+
+                            <span class="insert-point" [class.active]="insertIndex === i + 1"
+                                (click)="setInsertIndex(i + 1)">
+                            </span>
+
+                        </ng-container>
+
+                        <span *ngIf="!expressionTokens.length" class="text-muted">
+                            Click operators or rations to build expression
+                        </span>
+
+                    </div>
+
+                </div>
+
+                <div class="row">
+
+                    <div class="col-md-12">
+
+                        <!-- OPERATORS -->
+                        <div class="panel mb-3">
+                            <button class="btn btn-light" *ngFor="let item of expressionItems"
+                                (click)="addToken(item.displayName)">
+                                {{ item.displayName }}
+                            </button>
+                        </div>
+
+                        <!-- NUMBER INPUT -->
+                        <div class="d-flex gap-2 mb-3">
+                            <input #numInput class="form-control w-50" [placeholder]="'formula.enterNumber' | translate">
+                            <button class="btn add-btn" (click)="addNumber(numInput.value); numInput.value=''">
+                                {{ 'formula.add' | translate }}
+                            </button>
+                        </div>
+
+                    </div>
+
+                    <!-- RIGHT -->
+                    <!-- <div class="col-md-4">
+                        <h6>Rations</h6>
+                        <div class="tag-group">
+                            <span class="tag" *ngFor="let r of rations" (click)="addToken(r.rationName)">
+                                {{ r.rationName }}
+                            </span>
+                        </div>
+                    </div> -->
+
+                </div>
+
+            </div>
+
+            <!-- FOOTER -->
+            <div class="modal-footer">
+                <button class="btn" (click)="closeModal()">
+                    {{ 'formula.cancel' | translate }}
+                </button>
+                <button class="btn add-btn" (click)="validateExpression()">
+                    {{ 'formula.validate' | translate }}
+                </button>
+                <button class="btn add-btn" (click)="validateExpression()">
+                    {{ 'formula.save' | translate }}
+                </button>
+            </div>
+
+        </div>
+    </div>
+</div>
