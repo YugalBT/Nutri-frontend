@@ -22,11 +22,11 @@ export class CompanyService {
     this.companiesChangedSource.next();
   }
 
-  createCompany(model: Company): Observable<ApiResponse<any>> {
+  createCompany(model: FormData): Observable<ApiResponse<any>> {
     return this.http.post(`${this.baseUrl}/Create`, model);
   }
 
-  updateCompany(model: Company): Observable<ApiResponse<any>> {
+  updateCompany(model: FormData): Observable<ApiResponse<any>> {
     return this.http.post<ApiResponse<any>>(
       `${this.baseUrl}/Update`,
       model
