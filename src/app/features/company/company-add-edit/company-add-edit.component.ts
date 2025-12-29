@@ -22,7 +22,7 @@ declare var bootstrap: any;
 @Component({
   selector: 'app-company-add-edit',
   standalone: true,
-  imports: [SharedModule, TranslatePipe, ImageValidatorDirective],
+  imports: [SharedModule, TranslatePipe,  ImageValidatorDirective],
   templateUrl: './company-add-edit.component.html',
   styleUrls: ['./company-add-edit.component.css']
 })
@@ -32,7 +32,7 @@ export class CompanyAddEditComponent implements OnInit {
   @ViewChild('fileInput') fileInput!: ElementRef<HTMLInputElement>;
 
   private modalInstance: any;
-
+  
   form!: FormGroup;
   isEdit = false;
   isSubmitted = false;
@@ -256,7 +256,8 @@ export class CompanyAddEditComponent implements OnInit {
   }
 
   onLogoSelected(event: any): void {
-    const file = event.target.files[0];
+    const input = event.target as HTMLInputElement;
+    const file = input.files?.[0];
     if (!file) return;
 
     this.logoFile = file;
@@ -281,19 +282,13 @@ export class CompanyAddEditComponent implements OnInit {
       );
       return;
     }
-    var formData = new FormData();
-    // const formValue = this.form.getRawValue();
-    // 🔹 Append all form fields
-    formData = this.formHelper.ConvertToFormData(this.form.getRawValue());
+    var formData = this.formHelper.ConvertToFormData(this.form.getRawValue());
 
     // 🔹 Append LOGO FILE (IMPORTANT)
     if (this.logoFile) {
-      formData.append('Logo', this.logoFile); // must match backend property name
+      formData.append('logo', this.logoFile); // must match backend property name
     }
-    const payload: Company = {
-      ...this.form.getRawValue(),
-      logo: this.logoPreview
-    };
+   
 
     const request$ = this.isEdit
       ? this.companyService.updateCompany(formData)
