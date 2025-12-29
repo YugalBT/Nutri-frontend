@@ -40,7 +40,7 @@ export class SidebarComponent implements OnInit {
   groupedMenus: SidebarGroup[] = [];
   standaloneMenus: MenuItem[] = [];
   user: any = null;
-
+  lang : any = "en";
   constructor(
     private sanitizer: DomSanitizer,
     private authService: AuthService,
@@ -66,6 +66,12 @@ export class SidebarComponent implements OnInit {
     });
   }
 
+
+get currentLang(): string {
+  this.lang = sessionStorage.getItem('lang') || 'en';
+  return this.lang;
+}
+
 private buildAccordionMenu(flatMenu: MenuItem[]) {
 
   const groupedItemNames = SIDEBAR_GROUPS.flatMap(group => group.items);
@@ -83,18 +89,14 @@ private buildAccordionMenu(flatMenu: MenuItem[]) {
       )
     }))
     .filter(group => group.items.length > 0);
-
+    const lang = this.lang;
   // STANDALONE MENUS (neeche)
   this.standaloneMenus = flatMenu.filter(m =>
     !groupedItemNames.includes(m.roleDisplayName || '') &&
-    m.roleDisplayName !== 'Dashboard'
+     m.roleDisplayName !== (lang === 'it' ? 'Pannello di controllo' : 'Dashboard')
   );
 }
 
-
-get currentLang(): string {
-  return sessionStorage.getItem('lang') || 'en';
-}
 
   logout() {
     this.authService.logout();

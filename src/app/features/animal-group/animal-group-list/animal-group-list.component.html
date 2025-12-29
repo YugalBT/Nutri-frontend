@@ -10,7 +10,7 @@
 
   <div class="filters-card mb-3">
     <app-global-search
-      [placeholder]="'Search by group name or farm'"
+      [placeholder]="'animalGroup.searchByGroupOrFarm' | translate"
       [showStatus]="true"
       (search)="onSearch($event)"
       (statusChange)="onStatusChange($event)"

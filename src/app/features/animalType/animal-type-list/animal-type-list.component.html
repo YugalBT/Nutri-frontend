@@ -10,7 +10,7 @@
 
   <div class="filters-card">
     <app-global-search
-      placeholder="Search by Italian or English name"
+      [placeholder]="'animalType.searchByAnimalTypeName' | translate"
       [showStatus]="true"
       (search)="onSearch($event)"
       (statusChange)="onStatusChange($event)"

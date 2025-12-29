@@ -15,7 +15,7 @@
   <!-- Search Filters Section -->
   <div class="filters-card">
     <app-global-search
-      [placeholder]="'Search by farm name , town or country'"
+      [placeholder]="'farm.searchByFarmTownCountry' | translate"
       [showStatus]="true"
       (search)="onSearch($event)"
       (statusChange)="onStatusChange($event)"
