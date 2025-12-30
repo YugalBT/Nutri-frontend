@@ -13,7 +13,7 @@ export class TranslateService {
 
   constructor(private http: HttpClient) {
     // Determine initial language: prefer saved value, else detect from browser locale, else default to 'en'
-    const saved = sessionStorage.getItem('lang');
+    const saved = localStorage.getItem('lang');
     const initial = saved || this.detectDefaultLang() || this.lang;
     this.lang = initial;
     // publish initial language
@@ -27,7 +27,7 @@ export class TranslateService {
     }
     this.lang = lang;
     // persist the chosen language
-    try { sessionStorage.setItem('lang', lang); } catch (e) { /* ignore */ }
+    try { localStorage.setItem('lang', lang); } catch (e) { /* ignore */ }
     // load translations and notify listeners when load succeeds
     return this.load(lang).pipe(
       tap((ok) => {

@@ -327,7 +327,7 @@
     "rationitems": "Componenti razione",
     "selectFeed": "Seleziona alimento",
     "feedRequired": "L'alimento è obbligatorio",
-    "perKg": "Per Kg (kg/giorno per capo)",
+    "perKg": "Quantità (kg)",
     "perKgRequired": "Il valore per Kg è obbligatorio",
     "perKgMin": "Il valore per Kg deve essere maggiore di 0",
     "perKgPlaceholder": "Inserisci valore per Kg",

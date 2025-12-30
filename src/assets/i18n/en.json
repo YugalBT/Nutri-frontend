@@ -328,7 +328,7 @@
     "rationitems": "Ration Items",
     "selectFeed": "Select Feed",
     "feedRequired": "Feed is required",
-    "perKg": "Per Kg (kg/day per cow)",
+    "perKg": "Qty (kg)",
     "perKgRequired": "Per Kg is required",
     "perKgMin": "Per Kg must be greater than 0",
     "perKgPlaceholder": "Enter per kg",

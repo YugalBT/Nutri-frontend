@@ -8,19 +8,19 @@ export class TokenService {
 
 
   setToken(token: string) {
-    sessionStorage.setItem(Constants.AUTHTOKEN, token);
+    localStorage.setItem(Constants.AUTHTOKEN, token);
   }
   setUserData(token: string) {
-    sessionStorage.setItem(Constants.USERDATA, token);
+    localStorage.setItem(Constants.USERDATA, token);
   }
   setUserName(token: string) {
-    sessionStorage.setItem(Constants.USERNAME, token);
+    localStorage.setItem(Constants.USERNAME, token);
   }
   setIsSuperAdmin(isSuperAdmin: boolean | false) {
-    sessionStorage.setItem(Constants.IsSuperAdmin, isSuperAdmin.toString());
+    localStorage.setItem(Constants.IsSuperAdmin, isSuperAdmin.toString());
   }
   getToken(): string | null {
-    return sessionStorage.getItem(Constants.AUTHTOKEN);
+    return localStorage.getItem(Constants.AUTHTOKEN);
   }
 
  
@@ -50,26 +50,26 @@ export class TokenService {
 
 
   getUserData(): string | null {
-    return sessionStorage.getItem(Constants.USERDATA);
+    return localStorage.getItem(Constants.USERDATA);
   }
 
   getUserName(): string | null {
-    return sessionStorage.getItem(Constants.USERNAME);
+    return localStorage.getItem(Constants.USERNAME);
   }
 
   removeToken() {
-    sessionStorage.removeItem(Constants.AUTHTOKEN);
+    localStorage.removeItem(Constants.AUTHTOKEN);
   }
   removeUserData() {
-    sessionStorage.removeItem(Constants.USERDATA);
+    localStorage.removeItem(Constants.USERDATA);
   }
   removeUserUserName() {
-    sessionStorage.removeItem(Constants.USERNAME);
+    localStorage.removeItem(Constants.USERNAME);
   }
 
 
   clearAll() {
-    sessionStorage.clear();
+    localStorage.clear();
   }
 
   isLoggedIn(): boolean {

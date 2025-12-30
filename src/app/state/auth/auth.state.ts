@@ -9,8 +9,8 @@ export interface AuthState {
 }
 
 export const initialAuthState: AuthState = {
-  user: JSON.parse(sessionStorage.getItem(Constants.USERDATA) || 'null'),
-  token: sessionStorage.getItem(Constants.AUTHTOKEN) || null,
+  user: JSON.parse(localStorage.getItem(Constants.USERDATA) || 'null'),
+  token: localStorage.getItem(Constants.AUTHTOKEN) || null,
   loading: false,
   error: null
 };

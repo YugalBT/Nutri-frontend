@@ -68,7 +68,7 @@ export class SidebarComponent implements OnInit {
 
 
 get currentLang(): string {
-  this.lang = sessionStorage.getItem('lang') || 'en';
+  this.lang = localStorage.getItem('lang') || 'en';
   return this.lang;
 }
 

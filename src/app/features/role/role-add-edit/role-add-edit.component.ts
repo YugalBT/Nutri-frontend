@@ -63,7 +63,7 @@ export class UserRoleAddEditComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     // Check permission to manage roles
-    sessionStorage.getItem('isSuperAdmin') === 'true' ? this.isSuperAdmin = true : this.isSuperAdmin = false;
+    localStorage.getItem('isSuperAdmin') === 'true' ? this.isSuperAdmin = true : this.isSuperAdmin = false;
     // const canManageSub = this.store.select(selectCanManageRoles).pipe(take(1)).subscribe((canManage) => {
     //   if (!canManage) {
     //     this.toast.error(this.translate.instant('common.noPermission') || 'You do not have permission to manage roles');

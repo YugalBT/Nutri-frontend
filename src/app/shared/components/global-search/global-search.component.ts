@@ -36,7 +36,7 @@ export class GlobalSearchComponent implements OnInit, OnDestroy {
   private subs: Subscription[] = [];
 
   ngOnInit(): void {
-    sessionStorage.getItem('isSuperAdmin') === 'true' ? this.isSuperAdmin = true : this.isSuperAdmin = false;
+    localStorage.getItem('isSuperAdmin') === 'true' ? this.isSuperAdmin = true : this.isSuperAdmin = false;
     this.subs.push(
       this.searchControl.valueChanges
         .pipe(debounceTime(this.debounceTime), distinctUntilChanged())
