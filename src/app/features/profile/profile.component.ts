@@ -65,7 +65,7 @@ export class ProfileComponent implements OnInit {
           phone: [user?.phone || '', [Validators.required, Validators.pattern('^[0-9]{10}$')]],
            logo: [null]
         });
-       if (user?.logo && user?.logo?.startsWith('data:image/')) {
+       if (user?.logo) {
           this.imagePreview = user?.logo;
           this.profileForm.get('logo')?.setValue(user?.logo);
         }

@@ -27,8 +27,7 @@
             </span>
 
             <!-- SINGLE hidden file input -->
-            <input #fileInput type="file" (change)="onLogoSelected($event)" class="form-control" accept="image/png,image/jpeg"
-                                    formControlName="logo" appImageValidator [width]="300" [height]="300"
+            <input #fileInput type="file" (change)="onLogoSelected($event)" class="form-control" formControlName="logo" appImageValidator [width]="300" [height]="300"
                                     [maxSizeMB]="2" />
 
             <!--- DELETE --->
