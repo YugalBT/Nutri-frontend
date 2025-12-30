@@ -10,6 +10,7 @@ import { CommonService } from '../../shared/services/common.service';
 import { PERMISSIONS } from '../../core/constants/permissions.constants';
 import { ImageValidatorDirective } from '../../image-validator.directive';
 import { TranslatePipe } from '../../i18n/translate.pipe';
+import { FormHelper } from '../../core/helpers/form.helper';
 
 @Component({
   selector: 'app-companysetting',
@@ -22,9 +23,11 @@ export class CompanysettingComponent implements OnInit {
 
   companyForm!: FormGroup;
   imagePreview: string | null = null;
+    logoFile!: File;
   @ViewChild('fileInput') fileInput!: ElementRef<HTMLInputElement>;
 
   constructor(
+    private formHelper: FormHelper,
     private fb: FormBuilder,
     private toast: ToastService,
     private companyService: CompanysettingService,
@@ -67,21 +70,34 @@ export class CompanysettingComponent implements OnInit {
     });
   }
 
-  onImageChange(event: any) {
-    const file = event.target.files[0];
+  // onImageChange(event: any) {
+  //   const file = event.target.files[0];
+  //   if (!file) return;
+
+  //   if (!['image/png', 'image/jpeg'].includes(file.type)) {
+  //     this.toast.error("Only JPG / PNG allowed");
+  //     this.fileInput.nativeElement.value = '';
+  //     return;
+  //   }
+
+  //   const reader = new FileReader();
+  //   reader.onload = () => {
+  //     this.imagePreview = reader.result as string;
+  //     this.companyForm.patchValue({ logo: reader.result });
+  //   };
+  //   reader.readAsDataURL(file);
+  // }
+
+    onLogoSelected(event: any): void {
+    const input = event.target as HTMLInputElement;
+    const file = input.files?.[0];
     if (!file) return;
 
-    if (!['image/png', 'image/jpeg'].includes(file.type)) {
-      this.toast.error("Only JPG / PNG allowed");
-      this.fileInput.nativeElement.value = '';
-      return;
-    }
+    this.logoFile = file;
 
+    // Optional preview
     const reader = new FileReader();
-    reader.onload = () => {
-      this.imagePreview = reader.result as string;
-      this.companyForm.patchValue({ logo: reader.result });
-    };
+    reader.onload = () => this.imagePreview = reader.result as string;
     reader.readAsDataURL(file);
   }
 
@@ -100,9 +116,15 @@ export class CompanysettingComponent implements OnInit {
       return;
     }
 
-    const payload = this.companyForm.getRawValue();
+    var formData = this.formHelper.ConvertToFormData(this.companyForm.getRawValue());
 
-    this.companyService.updateCompanySetting(payload).subscribe({
+    // 🔹 Append LOGO FILE (IMPORTANT)
+    if (this.logoFile) {
+      formData.append('logo', this.logoFile); // must match backend property name
+    }
+   
+
+    this.companyService.updateCompanySetting(formData).subscribe({
       next: (res: ApiResponse<any>) => {
         if (res.isSuccess) this.toast.success(res?.message);
         else this.toast.error(res?.message);

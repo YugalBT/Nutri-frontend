@@ -16,6 +16,8 @@ import { CommonService } from '../../shared/services/common.service';
 import { PERMISSIONS } from '../../core/constants/permissions.constants';
 import { ImageValidatorDirective } from '../../image-validator.directive'; 
 import { TranslatePipe } from '../../i18n/translate.pipe';
+import { FormHelper } from '../../core/helpers/form.helper';
+
 
 @Component({
   selector: 'app-profile',
@@ -31,8 +33,10 @@ export class ProfileComponent implements OnInit {
   @ViewChild('fileInput')
   fileInput!: ElementRef<HTMLInputElement>;
   imagePreview: string | null = null;
+  logoFile!: File;
 
   constructor(
+      private formHelper: FormHelper,
     private toast: ToastrService,
     private store: Store,
     private fb: FormBuilder,
@@ -72,21 +76,34 @@ export class ProfileComponent implements OnInit {
     
   }
 
-  onImageChange(event: any) {
-    const file = event.target.files[0];
+  // onImageChange(event: any) {
+  //   const file = event.target.files[0];
+  //   if (!file) return;
+
+  //   if (!['image/png', 'image/jpeg'].includes(file.type)) {
+  //     this.toast.error("Only JPG / PNG allowed");
+  //     this.fileInput.nativeElement.value = '';
+  //     return;
+  //   }
+
+  //   const reader = new FileReader();
+  //   reader.onload = () => {
+  //     this.imagePreview = reader.result as string;
+  //     this.profileForm.patchValue({ logo: reader.result });
+  //   };
+  //   reader.readAsDataURL(file);
+  // }
+
+    onLogoSelected(event: any): void {
+    const input = event.target as HTMLInputElement;
+    const file = input.files?.[0];
     if (!file) return;
 
-    if (!['image/png', 'image/jpeg'].includes(file.type)) {
-      this.toast.error("Only JPG / PNG allowed");
-      this.fileInput.nativeElement.value = '';
-      return;
-    }
+    this.logoFile = file;
 
+    // Optional preview
     const reader = new FileReader();
-    reader.onload = () => {
-      this.imagePreview = reader.result as string;
-      this.profileForm.patchValue({ logo: reader.result });
-    };
+    reader.onload = () => this.imagePreview = reader.result as string;
     reader.readAsDataURL(file);
   }
 
@@ -110,11 +127,16 @@ export class ProfileComponent implements OnInit {
       this.toast.error('Please correct the errors in the form before submitting.');
       return;
     }
-
     const payload = this.profileForm.getRawValue();
-    delete payload.email;
+       delete payload.email;
+    var formData = this.formHelper.ConvertToFormData(payload);
 
-    this.profileService.updateProfile(payload).subscribe({
+    // 🔹 Append LOGO FILE (IMPORTANT)
+    if (this.logoFile) {
+      formData.append('logo', this.logoFile); // must match backend property name
+    }
+   
+    this.profileService.updateProfile(formData).subscribe({
       next: (res: any) => {
         if (res.isSuccess) {
           this.toast.success(res?.message);

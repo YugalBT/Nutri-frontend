@@ -15,7 +15,7 @@ export class CompanysettingService {
 
   }
 
-  updateCompanySetting(payload: any): Observable<ApiResponse<any>> {
+  updateCompanySetting(payload: FormData): Observable<ApiResponse<any>> {
     return this.http.post<any>(API_ENDPOINTS.COMPANY.UPDATE, payload);
   }
 

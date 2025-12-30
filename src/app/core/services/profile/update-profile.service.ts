@@ -19,7 +19,7 @@ export class UpdateProfileService {
     this.authInit.initializeAuthState();
   }
 
-  updateProfile(payload: any): Observable<ApiResponse<any>> {
+  updateProfile(payload: FormData): Observable<ApiResponse<any>> {
     return this.http.post<any>(API_ENDPOINTS.AUTH.PROFILE_UPDATE, payload);
   }
 
