@@ -80,7 +80,7 @@ export class LoginComponent implements OnInit {
   changeLanguage(lang: string) {
     if (!lang) return;
     this.currentLang = lang;
-    sessionStorage.setItem('lang', lang);
+    localStorage.setItem('lang', lang);
     this.translate.use(lang).subscribe();
   }
   // loadHomePageContent() {

@@ -38,7 +38,7 @@ export class HeaderComponent implements OnInit {
   ) {
     this.user$ = this.store.select(selectAuthUser);
     // initialize language from sessionStorage (if previously selected)
-    const saved = sessionStorage.getItem('lang');
+    const saved = localStorage.getItem('lang');
     if (saved) {
       this.currentLang = saved;
       this.translate.use(this.currentLang).subscribe();
@@ -46,7 +46,7 @@ export class HeaderComponent implements OnInit {
       this.translate.use(this.currentLang).subscribe();
     }
     // initialize theme from sessionStorage
-    const theme = sessionStorage.getItem('theme');
+    const theme = localStorage.getItem('theme');
     this.darkMode = theme === 'dark';
     this.applyTheme();
   }
@@ -82,13 +82,13 @@ export class HeaderComponent implements OnInit {
   changeLanguage(lang: string) {
     if (!lang) return;
     this.currentLang = lang;
-    sessionStorage.setItem('lang', lang);
+    localStorage.setItem('lang', lang);
     this.translate.use(lang).subscribe();
   }
 
   toggleDarkMode() {
     this.darkMode = !this.darkMode;
-    sessionStorage.setItem('theme', this.darkMode ? 'dark' : 'light');
+    localStorage.setItem('theme', this.darkMode ? 'dark' : 'light');
     this.applyTheme();
   }
 

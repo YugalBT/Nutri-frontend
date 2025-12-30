@@ -36,7 +36,7 @@ export const SIDEBAR_GROUPS = [
     items: [
       // 'Formula Builder',
       'operators',
-      // 'Operands'
+      'formulas'
     ]
   },
 

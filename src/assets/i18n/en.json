@@ -79,7 +79,8 @@
     "forgotTitle": "Forgot Your Password?",
     "forgotDescription": "Don’t worry! Resetting your password is easy. Enter the email you registered with.",
     "send": "Send",
-    "fillRequired": "Please fill all required fields"
+    "fillRequired": "Please fill all required fields",
+    "LOGIN_SUCCESS" :"Login successful!"
   },
   "header": {
     "searchPlaceholder": "Search...",
@@ -102,7 +103,6 @@
     "logout": "Logout",
     "confirmLogout": "Do you really want to logout?",
     "logoutSuccess": "Logout successful!"
-    
   },
   "users": {
     "searchFilters": "Search Filters",
@@ -181,7 +181,7 @@
     "FailedloadingData": "Failed to load data",
     "ConfirmDelete": "Are you sure you want to delete this item?",
     "DoNotPermission": "You do not have permission to perform this action",
-    "failedToLoadModal":"Failed to load required data to open modal",
+    "failedToLoadModal": "Failed to load required data to open modal",
     "failedToLoadAnimalTypes": "Failed to load animal types",
     "failedToLoadFarms": "Failed to load farms",
     "failedToLoadRoles": "Failed to load roles. Please try again.",
@@ -215,9 +215,7 @@
     "loading": "Loading...",
     "updating": "Updating...",
     "noData": "No data available",
-    "noRecordsMatch": "No records match your search",
-     "searchByDateOrFarmName": "Cerca per data o nome dell’azienda agricola"
-    
+    "noRecordsMatch": "No records match your search"
   },
   "imageValidator": {
     "invalidType": "Invalid image type. Allowed types are: jpeg,jpg,png.",
@@ -330,7 +328,7 @@
     "rationitems": "Ration Items",
     "selectFeed": "Select Feed",
     "feedRequired": "Feed is required",
-    "perKg": "Per Kg (kg/day per cow)",
+    "perKg": "Qty (kg)",
     "perKgRequired": "Per Kg is required",
     "perKgMin": "Per Kg must be greater than 0",
     "perKgPlaceholder": "Enter per kg",
@@ -514,7 +512,7 @@
     "noNotifications": "No notifications found",
     "seeAll": "See All",
     "searchPlaceholder": "Search notifications...",
-     "columns": {
+    "columns": {
       "title": "Title",
       "description": "Description",
       "createdDate": "Create Date",
@@ -553,66 +551,62 @@
     "yes": "Yes"
   },
   "configuration": {
-  "emailConfiguration": "Manege Email Configuration",
-  "smtpSetup": "SMTP Setup",
-  "smtpHost": "SMTP Host",
-  "smtpHostPlaceholder": "Enter SMTP host",
-  "smtpServerPlaceholder":"Enter SMTP Server",
-  "smtpPort": "SMTP Port",
-  "smtpPortPlaceholder": "Enter SMTP port",
-  "username": "Username",
-  "usernamePlaceholder": "Enter username",
-  "password": "Password",
-  "passwordPlaceholder": "Enter password",
-  "useSSL": "Use SSL",
-  "sameAsPrimaryUser": "Same as Primary User",
-  "accessToken": "Access Token",
-  "accessTokenPlaceholder": "Enter access token",
-  "saveConfiguration": "Save Configuration",
-  "emailType": "Email Type",
-  "selectEmailType": "Select Email Type",
-  "form":"From",
-  "port":"Port",
-  "replyto":"ReplyTo",
-  "fromPlaceholder" :"Enter from email",
-  "smtpServer":"SMTP Server",
-  "replytoPlaceholder" :"Enter reply to email"
-
-},
-"templateCategory" :{
-  "Heading" :"Manage Template Category",
-  "displayName":"Display Name",
-  "category":"Category",
-  "displayNameplaceholder" :"Enter Display name",
-  "categoryplaceholder" :"Enter Category name",
-  "addCategory":"Add Category",
-  "editCategory" :"Edit Category",
-  "categoryRequired": "Category is required",
-   "columns": {
-      "category": "category",
-      "displayName":"displayName"
+    "emailConfiguration": "Manege Email Configuration",
+    "smtpSetup": "SMTP Setup",
+    "smtpHost": "SMTP Host",
+    "smtpHostPlaceholder": "Enter SMTP host",
+    "smtpServerPlaceholder": "Enter SMTP Server",
+    "smtpPort": "SMTP Port",
+    "smtpPortPlaceholder": "Enter SMTP port",
+    "username": "Username",
+    "usernamePlaceholder": "Enter username",
+    "password": "Password",
+    "passwordPlaceholder": "Enter password",
+    "useSSL": "Use SSL",
+    "sameAsPrimaryUser": "Same as Primary User",
+    "accessToken": "Access Token",
+    "accessTokenPlaceholder": "Enter access token",
+    "saveConfiguration": "Save Configuration",
+    "emailType": "Email Type",
+    "selectEmailType": "Select Email Type",
+    "form": "From",
+    "port": "Port",
+    "replyto": "ReplyTo",
+    "fromPlaceholder": "Enter from email",
+    "smtpServer": "SMTP Server",
+    "replytoPlaceholder": "Enter reply to email"
+  },
+  "templateCategory": {
+    "Heading": "Manage Template Category",
+    "displayName": "Display Name",
+    "category": "Category",
+    "displayNameplaceholder": "Enter Display name",
+    "categoryplaceholder": "Enter Category name",
+    "addCategory": "Add Category",
+    "editCategory": "Edit Category",
+    "categoryRequired": "Category is required",
+    "columns": {
+      "category": "Category",
+      "displayName": "Display Name"
     }
-
-},
-"templateBuilder":{
-  "manageCategoryheading":"Manage Category",
-  "managePlaceholderheading":"Manage Placeholders",
-  "managePlaceholderMappingheading":"Manage Placeholders Mapping"
-
-},
-"operator": {
-  "searchByOperatorName": "Search by operator name",
-  "heading": "Manage Operator",
-  "operatorName": "Operator Name",
-  "displayName": "Display Name",
-  "operatorNamePlaceholder": "Enter operator name",
-  "displayNamePlaceholder": "Enter display name",
-  "addOperator": "Add Operator",
-  "editOperator": "Edit Operator",
-  "operatorRequired": "Operator name is required",
-  "displayNameRequired": "Display name is required"
-},
- "placeholder": {
+  },
+  "templateBuilder": {
+    "manageCategoryheading": "Manage Category",
+    "managePlaceholderheading": "Manage Placeholders",
+    "managePlaceholderMappingheading": "Manage Placeholders Mapping"
+  },
+  "operator": {
+    "heading": "Manage Operator",
+    "operatorName": "Operator Name",
+    "displayName": "Display Name",
+    "operatorNamePlaceholder": "Enter operator name",
+    "displayNamePlaceholder": "Enter display name",
+    "addOperator": "Add Operator",
+    "editOperator": "Edit Operator",
+    "operatorRequired": "Operator name is required",
+    "displayNameRequired": "Display name is required"
+  },
+  "placeholder": {
     "heading": "Manage Placeholders",
     "add": "Add Placeholder",
     "edit": "Edit Placeholder",
@@ -630,23 +624,52 @@
     }
   },
   "placeholderMapping": {
-  "heading": "Manage Placeholder Mapping",
-  "add": "Add Mapping",
-  "edit": "Edit Mapping",
-  "category": "Template Category",
-  "placeholders": "Placeholders",
-  "selectcategory":"Select Category",
-  "selectplaceholders":"Select Placeholders",
-  "deleteConfirm": "Are you sure you want to delete this mapping?",
-  "columns": {
+    "heading": "Manage Placeholder Mapping",
+    "add": "Add Mapping",
+    "edit": "Edit Mapping",
+    "category": "Template Category",
+    "placeholders": "Placeholders",
+    "selectcategory": "Select Category",
+    "selectplaceholders": "Select Placeholders",
+    "deleteConfirm": "Are you sure you want to delete this mapping?",
+    "columns": {
       "category": "Category",
       "placeholders": "Placeholders",
       "status": "Status"
     }
-
-}
-
-
-
-
+  },
+  "formula": {
+    "management": "Formula Management",
+    "addFormula": "Add Formula",
+    "editFormula": "Edit Formula",
+    "formulaName": "Formula Name",
+    "formulaNamePlaceholder": "Enter Formula Name",
+    "expression": "Expression",
+    "expressionHint": "Click operators or rations to build expression",
+    "enterNumber": "Enter Number",
+    "add": "Add",
+    "validate": "Validate",
+    "save": "Save",
+    "cancel": "Cancel",
+    "searchPlaceholder": "Search by expression name",
+    "operators": "Operators",
+    "rations": "Rations",
+    "FormulaValidation": {
+      "formulaNameRequired": "Formula name is required",
+      "expressionRequired": "Expression cannot be empty",
+      "invalidFormulaId": "Invalid formula id",
+      "deleteConfirm": "Are you sure you want to delete this expression?"
+    },
+    "table": {
+      "formulaName": "Formula Name",
+      "formula": "Formula",
+      "status": "Status"
+    }
+  },
+  "toast" : {
+    "success" :"Success",
+    "error" :"Error",
+    "warning" :"Warning"
+    
+  }
 }

@@ -1,7 +1,7 @@
 export interface FeedList {
-    feedName?: string;
-	feedId?: string;
-	category?: string;
+  feedName?: string;
+  feedId?: string;
+  category?: string;
 
   dryMatter: number;
   protein: number;
@@ -15,7 +15,7 @@ export interface FeedList {
   calcium?: number;
   phosphorus?: number;
   starch?: number | null;
-	isActive?: boolean;
-	[key: string]: any;
+  isActive?: boolean;
+  [key: string]: any;
 }
 

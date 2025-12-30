@@ -71,9 +71,8 @@ export class PlaceholderMappingListComponent {
         this.mappings = (res.data ?? []).map(item => ({
           ...item,
           placeholdersDisplay: item.placeholders
-            ?.filter(p => p.isActive)
-            .map(p => p.placeholderName)
-            .join(', ')
+             ?.map(p => p.placeholderName)
+        .join(', ')
         }));
         this.totalRecords = res.totalRecords ?? 0;
       },

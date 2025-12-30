@@ -19,6 +19,7 @@ export const PERMISSIONS = {
     EmailConfigurationEdit: 'EmailConfigurationEdit',
     EmailConfigurationAdd: 'EmailConfigurationAdd',
     EmailConfigurationDelete: 'EmailConfigurationDelete',
+    
 
     ProfileView: 'ProfileView',
     ProfileEdit: 'ProfileEdit',
@@ -81,6 +82,11 @@ export const PERMISSIONS = {
     AnimalGroupEdit: 'AnimalGroupEdit',
     AnimalGroupDelete: 'AnimalGroupDelete',
     AnimalGroupView: 'AnimalGroupView',
+
+    FormulaAdd: 'formulasAdd',
+    formulasEdit: 'formulasEdit',
+    formulasDelete: 'formulasDelete',
+    formulasView: 'formulasView',
     
 } as const;
 

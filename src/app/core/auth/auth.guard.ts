@@ -14,9 +14,9 @@ export const authGuard: CanActivateFn = (route, state) => {
   return store.select(selectAuthUser).pipe(
     take(1),
     map((user) => {
-      const token = sessionStorage.getItem('token');
+      const token = localStorage.getItem('token');
       if (!user && token) {
-        const storedUser = sessionStorage.getItem('user');
+        const storedUser = localStorage.getItem('user');
         if (storedUser) {
           store.dispatch(loginSuccess({ token, user: JSON.parse(storedUser) }));
           return true;

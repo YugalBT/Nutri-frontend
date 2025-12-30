@@ -53,7 +53,7 @@ export class AuthService {
 
   login(body: LoginRequest): Observable<ApiResponse<any>> {
 
-    const language = sessionStorage.getItem('lang') || 'en';
+    const language = localStorage.getItem('lang') || 'en';
 
     const headers = new HttpHeaders({
       'Accept-Language': language
@@ -82,7 +82,7 @@ export class AuthService {
     ).subscribe(result => {
       if (result) {
         let companyCode = '';
-        const rawCompany = sessionStorage.getItem('companyInfo');
+        const rawCompany = localStorage.getItem('companyInfo');
         if (rawCompany) {
           try {
             const parsed = JSON.parse(rawCompany);
@@ -96,7 +96,7 @@ export class AuthService {
             companyCode = rawCompany;
           }
         }
-        sessionStorage.clear();
+        localStorage.clear();
         this.toast.success(Constants.LOGOUT_SUCCESS);
         //const normalizedCompany = companyCode ? companyCode.toString().replace(/^\/+|\/+$/g, '') : '';
         // const target = normalizedCompany ? `/${normalizedCompany}/login` : '/404';

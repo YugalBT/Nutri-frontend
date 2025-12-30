@@ -1,0 +1,65 @@
+.expression-box {
+  border: 1px solid #ddd;
+  padding: 12px;
+  border-radius: 6px;
+  background: #f9f9f9;
+}
+
+.expression-editor {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px;
+}
+
+
+.token {
+  padding: 6px 10px;
+  border-radius: 4px;
+  background: #2CA28F;
+  color: #fff;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.token.operator {
+  background: #198754;
+}
+
+.panel button {
+  margin: 4px;
+}
+
+.tag-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.tag {
+  background: #e9ecef;
+  padding: 6px 10px;
+  border-radius: 20px;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.tag:hover,
+.token:hover {
+  opacity: 0.85;
+}
+.insert-point {
+  width: 4px;
+  height: 24px;
+  cursor: pointer;
+}
+
+.insert-point:hover {
+  background-color: #20a98a;
+}
+
+.insert-point.active {
+  background-color: #198754;
+}
+
+
