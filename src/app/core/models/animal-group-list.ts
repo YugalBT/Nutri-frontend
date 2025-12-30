@@ -1,7 +1,14 @@
 export interface AnimalGroupList {
-    animalLactationId: string,
-    lactationNameEn: string,
-    lactationNameIt: string,
+    animalGroupId: string
+    farmId: string
+    farmName: string
+    animalTypeId: string
+    typeNameEn: string
+    animalLactationId: string
+    lactationNameEn: string
+    animalGroupNameEn: string
+    avgMilkPerDay: any
+    numberOfAnimal: any
     isActive: boolean,
     [key: string]: any;
 }

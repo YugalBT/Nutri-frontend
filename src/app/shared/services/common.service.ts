@@ -84,4 +84,11 @@ export class CommonService {
     return this.http.get<OperatorsAndRationsList[]>(API_ENDPOINTS.COMMON_API.GET_OPERATORS_AND_RATIONS);
   }
 
+  getAnimalGroupByFarmID(FarmId: string): Observable<ApiResponse<AnimalGroupList[]>> {
+    return this.http.get<AnimalGroupList[]>(`${API_ENDPOINTS.COMMON_API.GET_ANIMALGROUPS_BY_FARM_ID}?FarmId=${FarmId}`,);
+  }
+  getFeedByFarmID(FarmId: string): Observable<ApiResponse<FeedList[]>> {
+    return this.http.get<FeedList[]>(`${API_ENDPOINTS.COMMON_API.GET_FEEDS_BY_FARM_ID}?FarmId=${FarmId}`,);
+  }
+
 }

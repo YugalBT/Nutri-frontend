@@ -48,7 +48,7 @@
 
             <div class="col-md-6">
               <label class="form-label">{{ 'ration.animalGroup' | translate }} <sup class="text-danger">*</sup></label>
-              <select class="form-select" formControlName="animalGroupId" [disabled]="animalGroupsLoading">
+              <select class="form-select" formControlName="animalGroupId" [disabled]="!form.get('farmId')?.value || animalGroupsLoading">
                 <option [ngValue]="null">{{ 'ration.selectAnimalGroup' | translate }}</option>
                 <option *ngFor="let an of animalGroups" [ngValue]="an.animalGroupId">
                   {{ an.animalGroupNameEn }}
@@ -75,8 +75,8 @@
               <!-- FEED DROPDOWN -->
               <div class="col-md-4">
                 <label class="form-label">{{ 'ration.selectFeed' | translate }} <sup class="text-danger">*</sup></label>
-                <select class="form-select" (change)="onFeedChangeUI(item)" formControlName="feedId">
-                  <option [ngValue]="null">{{ 'ration.selectFeed' | translate }}</option>
+                <select class="form-select" (change)="onFeedChangeUI(item)" formControlName="feedId" [disabled]="!form.get('farmId')?.value || feedsLoading">
+                  <option [ngValue]="null">{{ 'ration.selectFeed' | translate   }} </option>
                   <option *ngFor="let feed of feeds" [ngValue]="feed.feedId">
                     {{ feed.feedName }}
                   </option>

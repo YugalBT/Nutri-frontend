@@ -79,7 +79,8 @@
     "forgotTitle": "Forgot Your Password?",
     "forgotDescription": "Don’t worry! Resetting your password is easy. Enter the email you registered with.",
     "send": "Send",
-    "fillRequired": "Please fill all required fields"
+    "fillRequired": "Please fill all required fields",
+    "LOGIN_SUCCESS" :"Login successful!"
   },
   "header": {
     "searchPlaceholder": "Search...",
@@ -585,8 +586,8 @@
     "editCategory": "Edit Category",
     "categoryRequired": "Category is required",
     "columns": {
-      "category": "category",
-      "displayName": "displayName"
+      "category": "Category",
+      "displayName": "Display Name"
     }
   },
   "templateBuilder": {
@@ -664,5 +665,11 @@
       "formula": "Formula",
       "status": "Status"
     }
+  },
+  "toast" : {
+    "success" :"Success",
+    "error" :"Error",
+    "warning" :"Warning"
+    
   }
 }

@@ -45,6 +45,8 @@ export const API_ENDPOINTS = {
     GET_RATION: '/Common/GetAllRation',
     GET_OPERATOR: '/Common/GetAllOperator',
     GET_OPERATORS_AND_RATIONS: '/Common/GetAllOperatorAndRation',
+    GET_ANIMALGROUPS_BY_FARM_ID: '/Common/GetAnimalGroupByFarmId',
+    GET_FEEDS_BY_FARM_ID: '/Common/GetFeedByFarmId'
 
   },
   

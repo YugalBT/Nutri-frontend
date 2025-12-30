@@ -78,7 +78,8 @@
     "forgotTitle": "Hai dimenticato la password?",
     "forgotDescription": "Non preoccuparti! Reimpostare la password è facile. Inserisci l'E-mail con cui ti sei registrato.",
     "send": "Invia",
-    "fillRequired": "Compila tutti i campi obbligatori"
+    "fillRequired": "Compila tutti i campi obbligatori",
+    "LOGIN_SUCCESS" :"Accesso riuscito!"
   },
   "header": {
     "searchPlaceholder": "Cerca...",
@@ -662,5 +663,11 @@
       "formula": "Formula",
       "status": "Stato"
     }
+  },
+  "toast" : {
+    "success" :"Successo",
+    "error" :"Errore",
+    "warning" :"Avviso"
+    
   }
 }

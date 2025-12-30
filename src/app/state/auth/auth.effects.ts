@@ -13,6 +13,8 @@ import { ToastService } from '../../shared/services/toast.service';
 import { UpdateProfileService } from '../../core/services/profile/update-profile.service';
 import { ROUTE_CONST } from '../../core/constants/route.constants';
 import { use } from 'echarts';
+import { TranslatePipe } from '../../i18n/translate.pipe';
+import { TranslateService } from '../../i18n/translate.service';
 
 @Injectable()
 
@@ -33,7 +35,9 @@ export class AuthEffects {
     private tokenService: TokenService,
     private toast: ToastService,
     private spinner: NgxSpinnerService,
-    private updateProfileService: UpdateProfileService
+    private updateProfileService: UpdateProfileService,
+    private translate: TranslateService
+
   ) {
     this.login$ = createEffect(() =>
       this.actions$.pipe(
@@ -93,7 +97,11 @@ export class AuthEffects {
             }
 
             if (!silent) {
-              this.toast.success('Login successful!');
+              // use translate pipe 
+
+              const successMessage = this.translate.instant('auth.LOGIN_SUCCESS')??"";
+
+              this.toast.success(successMessage);
               if(!user?.isFirstLogin) {
                 this.router.navigate([ROUTE_CONST.RESET_PASSWORD]);
                 return;
