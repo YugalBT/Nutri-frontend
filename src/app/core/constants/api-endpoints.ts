@@ -46,8 +46,8 @@ export const API_ENDPOINTS = {
     GET_OPERATOR: '/Common/GetAllOperator',
     GET_OPERATORS_AND_RATIONS: '/Common/GetAllOperatorAndRation',
     GET_ANIMALGROUPS_BY_FARM_ID: '/Common/GetAnimalGroupByFarmId',
-    GET_FEEDS_BY_FARM_ID: '/Common/GetFeedByFarmId'
-
+    GET_FEEDS_BY_FARM_ID: '/Common/GetFeedByFarmId',
+    GET_PLACEHOLDER_BY_CATEGORY_ID: '/Common/GetAllPlaceholderByCategoryId'
   },
   
   
@@ -140,6 +140,14 @@ export const API_ENDPOINTS = {
     DELETE: '/TemplateCategory/Delete',
     ACTIVE_INACTIVE: '/TemplateCategory/ActiveInActive',
     GET_ALL: '/TemplateCategory/GetAll',
+  },
+
+  Template: {
+    CREATE: '/Template/Create',
+    UPDATE: '/Template/Update',
+    DELETE: '/Template/Delete',
+    ACTIVE_INACTIVE: '/Template/ActiveInActive',
+    GET_ALL: '/Template/GetAll',
   },
    OPERATOR: {
     CREATE: '/Operator/Create',

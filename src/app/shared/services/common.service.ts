@@ -91,4 +91,7 @@ export class CommonService {
     return this.http.get<FeedList[]>(`${API_ENDPOINTS.COMMON_API.GET_FEEDS_BY_FARM_ID}?FarmId=${FarmId}`,);
   }
 
+  GetAllPlaceholderByCategoryId(categoryId: string): Observable<ApiResponse<TemplatePlaceholderList[]>> {
+    return this.http.get<TemplatePlaceholderList[]>(`${API_ENDPOINTS.COMMON_API.GET_PLACEHOLDER_BY_CATEGORY_ID}?CategoryId=${categoryId}`,);
+  }
 }

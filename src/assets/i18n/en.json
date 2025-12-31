@@ -671,5 +671,20 @@
     "error" :"Error",
     "warning" :"Warning"
     
+  },
+  "templates": {
+    "heading": "Templates Management",
+    "add": "Add Templates",
+    "edit": "Edit Templates",
+    "template": "Template",
+    "selectcategory": "Select Category",
+    "selectType": "Select Type",
+    "deleteConfirm": "Are you sure you want to delete this template?",
+    "columns": {
+      "category": "Category",
+      "type": "Type",
+      "subject": "Subject",
+      "status": "Status"
+    }
   }
 }
