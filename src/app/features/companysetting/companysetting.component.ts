@@ -23,7 +23,7 @@ export class CompanysettingComponent implements OnInit {
 
   companyForm!: FormGroup;
   imagePreview: string | null = null;
-    logoFile!: File;
+  logoFile!: File;
   @ViewChild('fileInput') fileInput!: ElementRef<HTMLInputElement>;
 
   constructor(
@@ -31,24 +31,25 @@ export class CompanysettingComponent implements OnInit {
     private fb: FormBuilder,
     private toast: ToastService,
     private companyService: CompanysettingService,
-    private commonService : CommonService
+    private commonService: CommonService
   ) { }
 
   ngOnInit(): void {
 
-  if(!this.commonService.checkPermission(PERMISSIONS.SettingEdit)|| !this.commonService.checkPermission(PERMISSIONS.SettingView))
+    if (!this.commonService.checkPermission(PERMISSIONS.SettingEdit) || !this.commonService.checkPermission(PERMISSIONS.SettingView))
       return;
-   this.setupForm();
+    this.setupForm();
     this.companyService.companyDetails().pipe(take(1)).subscribe((res: any) => {
       if (res.isSuccess && res.data) {
 
-         const { logo, ...rest } = res?.data;
+        const { logo, ...rest } = res?.data;
 
-          this.companyForm.patchValue(rest);
+        this.companyForm.patchValue(rest);
 
-          if (logo && typeof logo === 'string' && logo.startsWith('data:image/')) {
-            this.companyForm.get('logo')?.setValue(logo);
-          }
+        if (logo && typeof logo === 'string') {
+          this.imagePreview = logo;
+          this.companyForm.get('logo')?.setValue(logo);
+        }
       } else {
         this.toast.error(res?.message);
       }
@@ -88,7 +89,7 @@ export class CompanysettingComponent implements OnInit {
   //   reader.readAsDataURL(file);
   // }
 
-    onLogoSelected(event: any): void {
+  onLogoSelected(event: any): void {
     const input = event.target as HTMLInputElement;
     const file = input.files?.[0];
     if (!file) return;
@@ -108,9 +109,9 @@ export class CompanysettingComponent implements OnInit {
   }
 
   onSubmit() {
-      if(!this.commonService.checkPermission(PERMISSIONS.SettingEdit)|| !this.commonService.checkPermission(PERMISSIONS.SettingView))
+    if (!this.commonService.checkPermission(PERMISSIONS.SettingEdit) || !this.commonService.checkPermission(PERMISSIONS.SettingView))
       return;
-     if (this.companyForm.invalid) {
+    if (this.companyForm.invalid) {
       this.companyForm.markAllAsTouched();
       this.toast.error("Please fill all required fields correctly");
       return;
@@ -122,7 +123,7 @@ export class CompanysettingComponent implements OnInit {
     if (this.logoFile) {
       formData.append('logo', this.logoFile); // must match backend property name
     }
-   
+
 
     this.companyService.updateCompanySetting(formData).subscribe({
       next: (res: ApiResponse<any>) => {

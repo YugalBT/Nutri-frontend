@@ -176,6 +176,7 @@
     "smtpSetup": "Configurazione SMTP"
   },
   "common": {
+    "BacktoHome":"Ritorno a casa",
     "FailedloadingData": "Impossibile caricare i dati!",
     "ConfirmDelete": "Sei sicuro di voler eliminare questo elemento?",
     "DoNotPermission": "Non hai il permesso per eseguire questa azione",

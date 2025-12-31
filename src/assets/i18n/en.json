@@ -178,6 +178,7 @@
     "smtpSetup": "SMTP Setup"
   },
   "common": {
+    "BacktoHome":"Back To Home",
     "FailedloadingData": "Failed to load data",
     "ConfirmDelete": "Are you sure you want to delete this item?",
     "DoNotPermission": "You do not have permission to perform this action",
