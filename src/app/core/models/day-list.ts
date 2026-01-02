@@ -1,9 +1,7 @@
-export interface DayList {
-    feedName?: string;
-	farmId?: string;
-	dayId?: string;
-	date?: string;
+export interface KpiList {
+    FormulaId?: string;
+	Kpiid?: string;
+	Kpiname?: string;
 	isActive?: boolean;
-	IsClosed?: boolean;
 	[key: string]: any;
 }

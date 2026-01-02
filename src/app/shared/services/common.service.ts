@@ -8,7 +8,6 @@ import { API_ENDPOINTS } from '../../core/constants/api-endpoints';
 import { GetAllModulesResponse } from '../../core/models/add-edit-role';
 import { FarmList } from '../../core/models/farm-list';
 import { FeedList } from '../../core/models/feed-list';
-import { DayList } from '../../core/models/day-list';
 import { StorageHelper } from '../../core/helpers/storage.helper';
 import { ToastService } from './toast.service';
 import { TranslateService } from '../../i18n/translate.service';
@@ -18,6 +17,8 @@ import { TemplateCategoryList } from '../../core/models/template-builder/templat
 import { TemplatePlaceholderList } from '../../core/models/template-builder/template-placeholder-list';
 import { RationList } from '../../core/models/ration-list';
 import { OperatorList, OperatorsAndRationsList } from '../../core/models/operator-list';
+import { FormulaList } from '../../core/models/formula-list';
+import { KpiList } from '../../core/models/day-list';
 
 @Injectable({
   providedIn: 'root'
@@ -50,8 +51,8 @@ export class CommonService {
   getFeedList(): Observable<ApiResponse<FeedList>> {
     return this.http.get<FeedList>(API_ENDPOINTS.COMMON_API.GET_ALL_FEED);
   }
-  getDayList(): Observable<ApiResponse<DayList>> {
-    return this.http.get<DayList>(API_ENDPOINTS.COMMON_API.GET_ALL_Days);
+  getDayList(): Observable<ApiResponse<KpiList>> {
+    return this.http.get<KpiList>(API_ENDPOINTS.COMMON_API.GET_ALL_Days);
   }
   getAnimalTypeList(): Observable<ApiResponse<any>> {
     return this.http.get<FarmList>(API_ENDPOINTS.COMMON_API.GET_ALL_ANIMALTYPE);
@@ -91,4 +92,11 @@ export class CommonService {
     return this.http.get<FeedList[]>(`${API_ENDPOINTS.COMMON_API.GET_FEEDS_BY_FARM_ID}?FarmId=${FarmId}`,);
   }
 
+  GetAllPlaceholderByCategoryId(categoryId: string): Observable<ApiResponse<TemplatePlaceholderList[]>> {
+    return this.http.get<TemplatePlaceholderList[]>(`${API_ENDPOINTS.COMMON_API.GET_PLACEHOLDER_BY_CATEGORY_ID}?CategoryId=${categoryId}`,);
+  }
+
+   getFormulaList(): Observable<ApiResponse<FormulaList>> {
+    return this.http.get<FormulaList>(API_ENDPOINTS.COMMON_API.GET_ALL_FORMULA_LIST);
+  }
 }

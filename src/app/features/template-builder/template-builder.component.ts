@@ -5,11 +5,12 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { TranslatePipe } from '../../i18n/translate.pipe';
 import { TemplatePlaceholderListComponent } from './manage-placeholders/placeholder-list/placeholder-list.component';
 import { PlaceholderMappingListComponent } from "./manage-placeholder-mapping/placeholder-mapping-list/placeholder-mapping-list.component";
+import { TemplateListComponent } from './manage-template/template-list/template-list.component';
 
 @Component({
   selector: 'app-template-builder',
   standalone: true,
-  imports: [SharedModule, TemplateCategoryListComponent, PlaceholderMappingListComponent, TemplatePlaceholderListComponent, TranslatePipe, PlaceholderMappingListComponent],
+  imports: [SharedModule, TemplateListComponent, TemplateCategoryListComponent, PlaceholderMappingListComponent, TemplatePlaceholderListComponent, TranslatePipe, PlaceholderMappingListComponent],
   templateUrl: './template-builder.component.html',
   styleUrl: './template-builder.component.css'
 })

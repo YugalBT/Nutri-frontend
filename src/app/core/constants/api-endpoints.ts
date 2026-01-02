@@ -46,8 +46,9 @@ export const API_ENDPOINTS = {
     GET_OPERATOR: '/Common/GetAllOperator',
     GET_OPERATORS_AND_RATIONS: '/Common/GetAllOperatorAndRation',
     GET_ANIMALGROUPS_BY_FARM_ID: '/Common/GetAnimalGroupByFarmId',
-    GET_FEEDS_BY_FARM_ID: '/Common/GetFeedByFarmId'
-
+    GET_FEEDS_BY_FARM_ID: '/Common/GetFeedByFarmId',
+    GET_PLACEHOLDER_BY_CATEGORY_ID: '/Common/GetAllPlaceholderByCategoryId',
+    GET_ALL_FORMULA_LIST: '/Common/GetAllFormula',
   },
   
   
@@ -89,12 +90,12 @@ export const API_ENDPOINTS = {
     ACTIVE_INACTIVE: '/Feed/ActiveInActive',
     GET_ALL: '/Feed/GetAll',
   },
-   DAY: {
-    CREATE: '/Day/Create',
-    UPDATE: '/Day/Update',
-    DELETE: '/Day/Delete',
-    ACTIVE_INACTIVE: '/Day/ActiveInActive',
-    GET_ALL: '/Day/GetAll',
+   KPI: {
+    CREATE: '/Kpi/Create',
+    UPDATE: '/Kpi/Update',
+    DELETE: '/Kpi/Delete',
+    ACTIVE_INACTIVE: '/Kpi/ActiveInActive',
+    GET_ALL: '/Kpi/GetAll',
   },
    CALVES: {
     CREATE: '/Calves/Create',
@@ -140,6 +141,14 @@ export const API_ENDPOINTS = {
     DELETE: '/TemplateCategory/Delete',
     ACTIVE_INACTIVE: '/TemplateCategory/ActiveInActive',
     GET_ALL: '/TemplateCategory/GetAll',
+  },
+
+  Template: {
+    CREATE: '/Template/Create',
+    UPDATE: '/Template/Update',
+    DELETE: '/Template/Delete',
+    ACTIVE_INACTIVE: '/Template/ActiveInActive',
+    GET_ALL: '/Template/GetAll',
   },
    OPERATOR: {
     CREATE: '/Operator/Create',

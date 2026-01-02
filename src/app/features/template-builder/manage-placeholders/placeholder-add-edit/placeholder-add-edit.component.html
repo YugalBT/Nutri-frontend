@@ -10,10 +10,13 @@
       <div class="modal-body">
         <form [formGroup]="form">
           <label class="form-label">Placeholder Value <span class="text-danger">*</span></label>
-          <input
-            class="form-control"
-            formControlName="placeholderValue"
-            placeholder="Enter placeholder value">
+          <input class="form-control" formControlName="placeholderValue" placeholder="Enter placeholder value">
+
+
+          <div class="text-danger"
+            *ngIf="form.get('placeholderValue')?.touched && form.get('placeholderValue')?.errors?.['maxlength']">
+            Placeholder Value must be at least 50 characters
+          </div>
         </form>
       </div>
 

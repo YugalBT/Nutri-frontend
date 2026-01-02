@@ -52,10 +52,10 @@ export const PERMISSIONS = {
     ReportsAdd: 'ReportsAdd',
     ReportsDelete: 'ReportsDelete',
 
-    DayView: 'DayView',
-    DayEdit: 'DayEdit',
-    DayAdd: 'DayAdd',
-    DayDelete: 'DayDelete',
+    KpiView: 'KpiView',
+    KpiEdit: 'KpiEdit',
+    KpiAdd: 'KpiAdd',
+    KpiDelete: 'KpiDelete',
 
     CalvesRationView: 'CalvesRationView',
     CalvesRationEdit: 'CalvesRationEdit',

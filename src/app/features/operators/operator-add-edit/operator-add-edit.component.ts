@@ -35,8 +35,8 @@ export class OperatorAddEditComponent {
 
   ngOnInit(): void {
     this.form = this.fb.group({
-      operatorName: ['', [Validators.required]],
-      operatorDisplayName: ['', [Validators.required]]
+      operatorName: ['', Validators.required,Validators.minLength(50)],
+      operatorDisplayName: ['', Validators.required,Validators.maxLength(50)]
     });
 
     this.modalInstance = new bootstrap.Modal(this.operatorModal.nativeElement, {

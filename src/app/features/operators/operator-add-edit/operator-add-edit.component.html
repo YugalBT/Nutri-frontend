@@ -19,7 +19,7 @@
                 {{ 'operator.operatorName' | translate }} <sup class="text-danger">*</sup>
               </label>
               <input type="text" class="form-control" formControlName="operatorName"
-                     [placeholder]="'operator.operatorNamePlaceholder' | translate">
+                [placeholder]="'operator.operatorNamePlaceholder' | translate">
 
               <div *ngIf="form.get('operatorName')?.touched && form.get('operatorName')?.invalid" class="text-danger">
                 <div *ngIf="form.get('operatorName')?.errors?.['required']">
@@ -29,6 +29,11 @@
                   {{ 'validation.minLength' | translate }}
                 </div> -->
               </div>
+
+               <div class="text-danger"
+                *ngIf="form.get('operatorName')?.touched && form.get('operatorName')?.errors?.['maxlength']">
+                {{ 'operator.operatorName' | translate }} must be at least 50 characters
+              </div>
             </div>
 
             <!-- Display Name -->
@@ -37,12 +42,17 @@
                 {{ 'operator.displayName' | translate }} <sup class="text-danger">*</sup>
               </label>
               <input type="text" class="form-control" formControlName="operatorDisplayName"
-                     [placeholder]="'operator.displayNamePlaceholder' | translate">
+                [placeholder]="'operator.displayNamePlaceholder' | translate">
 
-              <div *ngIf="form.get('operatorDisplayName')?.touched && form.get('operatorDisplayName')?.invalid" class="text-danger">
+              <div *ngIf="form.get('operatorDisplayName')?.touched && form.get('operatorDisplayName')?.invalid"
+                class="text-danger">
                 <div *ngIf="form.get('operatorDisplayName')?.errors?.['required']">
                   {{ 'operator.displayNameRequired' | translate }}
                 </div>
+              </div>
+              <div class="text-danger"
+                *ngIf="form.get('operatorDisplayName')?.touched && form.get('operatorDisplayName')?.errors?.['maxlength']">
+                {{ 'operator.displayName' | translate }} must be at least 50 characters
               </div>
             </div>
 

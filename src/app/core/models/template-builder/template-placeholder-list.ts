@@ -3,3 +3,4 @@ export interface TemplatePlaceholderList {
     id: string
     [key: string]: any;
 }
+

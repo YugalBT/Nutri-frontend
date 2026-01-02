@@ -48,6 +48,7 @@ export class LoginComponent implements OnInit {
     //   //   this.loadHomePageContent();
     //   // }
     // });
+    this.changeLanguage(this.currentLang)
   }
 
 

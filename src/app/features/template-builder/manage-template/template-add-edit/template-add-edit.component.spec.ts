@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { DayListComponent } from './day-list.component';
+import { TemplateAddEditComponent } from './template-add-edit.component';
 
-describe('DayListComponent', () => {
-  let component: DayListComponent;
-  let fixture: ComponentFixture<DayListComponent>;
+describe('TemplateAddEditComponent', () => {
+  let component: TemplateAddEditComponent;
+  let fixture: ComponentFixture<TemplateAddEditComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [DayListComponent]
+      imports: [TemplateAddEditComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(DayListComponent);
+    fixture = TestBed.createComponent(TemplateAddEditComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

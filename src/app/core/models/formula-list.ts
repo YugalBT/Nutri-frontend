@@ -1,10 +1,6 @@
 export interface FormulaList {
-     farmName?: string;
-	farmId?: string;
-	town?: string;
-	city?: string;
-	country?: string;
-	tenantId?: string;
+	formulaName?: string;
+	formulaId?: string;
 	isActive?: boolean;
 	[key: string]: any;
 }
