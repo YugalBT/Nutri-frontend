@@ -22,7 +22,7 @@ declare var bootstrap: any;
 @Component({
   selector: 'app-company-add-edit',
   standalone: true,
-  imports: [SharedModule, TranslatePipe,  ImageValidatorDirective],
+  imports: [SharedModule, TranslatePipe, ImageValidatorDirective],
   templateUrl: './company-add-edit.component.html',
   styleUrls: ['./company-add-edit.component.css']
 })
@@ -32,7 +32,7 @@ export class CompanyAddEditComponent implements OnInit {
   @ViewChild('fileInput') fileInput!: ElementRef<HTMLInputElement>;
 
   private modalInstance: any;
-  
+
   form!: FormGroup;
   isEdit = false;
   isSubmitted = false;
@@ -41,6 +41,7 @@ export class CompanyAddEditComponent implements OnInit {
   roleList: RoleItem[] = [];
   logoPreview: string | null = null;
   logoFile!: File;
+  existingLogoUrl: any;
 
   constructor(
     private formHelper: FormHelper,
@@ -78,7 +79,7 @@ export class CompanyAddEditComponent implements OnInit {
       companyName: ['', [Validators.required, Validators.minLength(3)]],
       code: ['', [Validators.required, Validators.minLength(3)]],
       url: ['', [Validators.pattern(/^(https?:\/\/).+/)]],
-      logo: ['', Validators.required],
+      logo: [''],
 
       // Address
       streetAddress: ['', Validators.required],
@@ -196,7 +197,7 @@ export class CompanyAddEditComponent implements OnInit {
     if (edit && data) {
       const { logo, ...rest } = data;
       this.form.patchValue(rest);
-
+      this.existingLogoUrl = logo || null;
       // cache-busting for edit mode image
       this.logoPreview = logo ? `${logo}?t=${Date.now()}` : null;
 
@@ -245,9 +246,13 @@ export class CompanyAddEditComponent implements OnInit {
   removeLogo(): void {
     this.logoPreview = null;
     this.form.get('logo')?.reset();
+    this.existingLogoUrl = null;
     if (this.fileInput) {
       this.fileInput.nativeElement.value = '';
     }
+    // force validation error
+    this.form.get('logo')?.setErrors({ required: true });
+    this.form.get('logo')?.markAsTouched();
   }
 
   onFirstLoginToggle(event: Event): void {
@@ -258,10 +263,11 @@ export class CompanyAddEditComponent implements OnInit {
   onLogoSelected(event: any): void {
     const input = event.target as HTMLInputElement;
     const file = input.files?.[0];
+
     if (!file) return;
 
     this.logoFile = file;
-
+    this.existingLogoUrl = null;
     // Optional preview
     const reader = new FileReader();
     reader.onload = () => this.logoPreview = reader.result as string;
@@ -284,11 +290,12 @@ export class CompanyAddEditComponent implements OnInit {
     }
     var formData = this.formHelper.ConvertToFormData(this.form.getRawValue());
 
+
     // 🔹 Append LOGO FILE (IMPORTANT)
     if (this.logoFile) {
       formData.append('logo', this.logoFile); // must match backend property name
     }
-   
+
 
     const request$ = this.isEdit
       ? this.companyService.updateCompany(formData)
