@@ -3,19 +3,19 @@
   <!-- Page Header -->
   <div class="page-header">
     <div>
-      <h3 class="page-title">Day Management</h3>
+      <h3 class="page-title">{{ 'kpi.management' | translate }}</h3>
     </div>
 
-    <button class="btn add-btn" (click)="dayModal.openModal()">
+    <button class="btn add-btn" (click)="KpiModal.openModal()">
       <i class="bi bi-plus-lg me-2"></i>
-      Add Day
+      {{ 'kpi.addKpi' | translate }}
     </button>
   </div>
 
   <!-- Search Filters Section -->
   <div class="filters-card">
     <app-global-search
-      [placeholder]="'common.searchByDateOrFarmName' | translate"
+      [placeholder]="'kpi.searchPlaceholder' | translate"
       [showStatus]="true"
       (search)="onSearch($event)"
       (statusChange)="onStatusChange($event)"
@@ -28,7 +28,7 @@
     <app-reusable-table
       [columns]="columns"
       [showActions]="true"
-      [data]="days"
+      [data]="kpis"
       [columnFields]="columnFields"
       [pageable]="true"
       [totalRecords]="totalRecords"
@@ -37,11 +37,11 @@
       (pageChange)="onPageChange($event)"
       (toggleActive)="onToggleActive($event)"
       (deleteRow)="onDelete($event)"
-      (editRow)="dayModal.openModal(true, $event)">
+      (editRow)="KpiModal.openModal(true, $event)">
     </app-reusable-table>
   </div>
 
   <!-- Add/Edit Modal -->
-  <app-day-add-edit #dayModal></app-day-add-edit>
+<app-kpi-add-edit #KpiModal></app-kpi-add-edit>
 
 </div>

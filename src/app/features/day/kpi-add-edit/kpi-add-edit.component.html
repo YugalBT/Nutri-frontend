@@ -1,0 +1,71 @@
+<div #kpiModal class="modal fade" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    {{ isEdit ? ('kpi.editKpi' | translate) : ('kpi.addKpi' | translate) }}
+                </h5>
+
+                <button type="button" class="btn-close" (click)="closeModal()"></button>
+            </div>
+
+            <div class="modal-body">
+                <form [formGroup]="form">
+
+                    <div class="row g-3">
+
+                        <!-- Farm -->
+                        <div class="col-md-4">
+                            <label class="form-label">Formula <sup class="text-danger">*</sup></label>
+                            <select formControlName="formulaId" class="form-select" [disabled]="formulasLoading">
+                                <option [ngValue]="null">Select Formula</option>
+                                <option *ngFor="let f of formula" [ngValue]="f.formulaId">{{ f.formulaName }}
+                                </option>
+                            </select>
+
+                            <div class="text-danger"
+                                *ngIf="form.get('formulaId')?.touched && form.get('formulaId')?.invalid">
+                                Formula is required.
+                            </div>
+                        </div>
+
+                        <!-- Date -->
+                        <div class="col-md-4">
+                            <label class="form-label">{{ 'kpi.kpiName' | translate }} <sup
+                                    class="text-danger">*</sup></label>
+
+                            <input class="form-control" formControlName="kpiname"
+                                [placeholder]="'kpi.kpiNamePlaceholder' | translate" />
+
+                            <div class="text-danger"
+                                *ngIf="form.get('kpiname')?.touched && form.get('kpiname')?.errors?.['required']">
+                                {{ 'kpi.validation.kpiNameRequired' | translate }}
+                            </div>
+
+                            <div class="text-danger"
+                                *ngIf="form.get('kpiname')?.touched && form.get('kpiname')?.errors?.['maxlength']">
+                                {{ 'kpi.validation.kpiNameMaxLength' | translate }}
+                            </div>
+
+
+
+                        </div>
+
+
+
+                    </div>
+
+                </form>
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn btn-outline-secondary" (click)="closeModal()">Cancel</button>
+                <button class="btn add-btn" (click)="savekpi()">
+                    {{ isEdit ? 'Update' : 'Save' }}
+                </button>
+            </div>
+
+        </div>
+    </div>
+</div>

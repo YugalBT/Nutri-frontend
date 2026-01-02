@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { DayAddEditComponent } from './day-add-edit.component';
+import { KpiAddEditComponent } from './kpi-add-edit.component';
 
 describe('DayAddEditComponent', () => {
-  let component: DayAddEditComponent;
-  let fixture: ComponentFixture<DayAddEditComponent>;
+  let component: KpiAddEditComponent;
+  let fixture: ComponentFixture<KpiAddEditComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [DayAddEditComponent]
+      imports: [KpiAddEditComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(DayAddEditComponent);
+    fixture = TestBed.createComponent(KpiAddEditComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

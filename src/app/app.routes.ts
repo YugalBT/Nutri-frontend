@@ -150,21 +150,21 @@ export const routes: Routes = [
             .then(m => m.ReportsComponent),
       },
       {
-        path: 'day',
+        path: 'kpi',
         canActivate: [permissionGuard],
-        data: { requiredPermissions: [PERMISSIONS.DayView, PERMISSIONS.DayEdit, PERMISSIONS.DayAdd, PERMISSIONS.DayDelete] },
+        data: { requiredPermissions: [PERMISSIONS.KpiView, PERMISSIONS.KpiEdit, PERMISSIONS.KpiAdd, PERMISSIONS.KpiDelete] },
         loadComponent: () =>
-          import('./features/day/day-list/day-list.component')
-            .then(m => m.DayListComponent),
+          import('./features/day/kpi-list/kpi-list.component')
+            .then(m => m.KpiListComponent),
       },
-      {
-        path: 'calvesration',
-        canActivate: [permissionGuard],
-        data: { requiredPermissions: [PERMISSIONS.CalvesRationView, PERMISSIONS.CalvesRationEdit, PERMISSIONS.CalvesRationAdd, PERMISSIONS.CalvesRationDelete] },
-        loadComponent: () =>
-          import('./features/calves/calves-list/calves-list.component')
-            .then(m => m.CalvesListComponent),
-      },
+      // {
+      //   path: 'calvesration',
+      //   canActivate: [permissionGuard],
+      //   data: { requiredPermissions: [PERMISSIONS.CalvesRationView, PERMISSIONS.CalvesRationEdit, PERMISSIONS.CalvesRationAdd, PERMISSIONS.CalvesRationDelete] },
+      //   loadComponent: () =>
+      //     import('./features/calves/calves-list/calves-list.component')
+      //       .then(m => m.CalvesListComponent),
+      // },
 
       {
         path: 'animalType',

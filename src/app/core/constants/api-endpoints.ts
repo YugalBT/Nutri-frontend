@@ -47,7 +47,8 @@ export const API_ENDPOINTS = {
     GET_OPERATORS_AND_RATIONS: '/Common/GetAllOperatorAndRation',
     GET_ANIMALGROUPS_BY_FARM_ID: '/Common/GetAnimalGroupByFarmId',
     GET_FEEDS_BY_FARM_ID: '/Common/GetFeedByFarmId',
-    GET_PLACEHOLDER_BY_CATEGORY_ID: '/Common/GetAllPlaceholderByCategoryId'
+    GET_PLACEHOLDER_BY_CATEGORY_ID: '/Common/GetAllPlaceholderByCategoryId',
+    GET_ALL_FORMULA_LIST: '/Common/GetAllFormula',
   },
   
   
@@ -89,12 +90,12 @@ export const API_ENDPOINTS = {
     ACTIVE_INACTIVE: '/Feed/ActiveInActive',
     GET_ALL: '/Feed/GetAll',
   },
-   DAY: {
-    CREATE: '/Day/Create',
-    UPDATE: '/Day/Update',
-    DELETE: '/Day/Delete',
-    ACTIVE_INACTIVE: '/Day/ActiveInActive',
-    GET_ALL: '/Day/GetAll',
+   KPI: {
+    CREATE: '/Kpi/Create',
+    UPDATE: '/Kpi/Update',
+    DELETE: '/Kpi/Delete',
+    ACTIVE_INACTIVE: '/Kpi/ActiveInActive',
+    GET_ALL: '/Kpi/GetAll',
   },
    CALVES: {
     CREATE: '/Calves/Create',

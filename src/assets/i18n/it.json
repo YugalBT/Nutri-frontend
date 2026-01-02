@@ -670,5 +670,34 @@
     "error" :"Errore",
     "warning" :"Avviso"
     
+  },
+  "kpi": {
+  "management": "Gestione KPI",
+  "addKpi": "Aggiungi KPI",
+  "editKpi": "Modifica KPI",
+  "kpiName": "Nome KPI",
+  "kpiNamePlaceholder": "Inserisci nome KPI",
+  "formula": "Formula",
+  "selectFormula": "Seleziona formula",
+  "status": "Stato",
+  "active": "Attivo",
+  "inactive": "Inattivo",
+  "save": "Salva",
+  "cancel": "Annulla",
+  "searchPlaceholder": "Cerca per nome KPI",
+  "validation": {
+    "kpiNameRequired": "Il nome del KPI è obbligatorio",
+    "kpiNameMaxLength": "Il nome del KPI non può superare i 20 caratteri",
+    "formulaRequired": "La formula è obbligatoria",
+    "invalidKpiId": "ID KPI non valido",
+    "deleteConfirm": "Sei sicuro di voler eliminare questo KPI?",
+    "permissionDenied": "Non hai il permesso per eseguire questa azione"
+  },
+  "table": {
+    "formulaName": "Nome Formula",
+    "kpiName": "Nome KPI",
+    "status": "Stato"
   }
+}
+
 }

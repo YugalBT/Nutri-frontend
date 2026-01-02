@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { DayListComponent } from './day-list.component';
+import { KpiListComponent } from './kpi-list.component';
 
 describe('DayListComponent', () => {
-  let component: DayListComponent;
-  let fixture: ComponentFixture<DayListComponent>;
+  let component: KpiListComponent;
+  let fixture: ComponentFixture<KpiListComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [DayListComponent]
+      imports: [KpiListComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(DayListComponent);
+    fixture = TestBed.createComponent(KpiListComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

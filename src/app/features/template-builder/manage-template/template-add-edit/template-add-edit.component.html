@@ -37,36 +37,33 @@
 
             <div class="col-md-4">
               <label class="form-label">Document Name *</label>
-              <input
-                class="form-control"
-                formControlName="subject"
-                placeholder="Enter Document Name" />
+              <input class="form-control" formControlName="subject" placeholder="Enter Document Name" />
+              <div class="text-danger"
+                *ngIf="form.get('subject')?.touched && form.get('subject')?.errors?.['required']">
+                Document name is required
+              </div>
+
+              <div class="text-danger"
+                *ngIf="form.get('subject')?.touched && form.get('subject')?.errors?.['maxlength']">
+                Document name must be at least 50 characters
+              </div>
             </div>
           </div>
 
-          <!-- EDITOR + PLACEHOLDERS -->
           <div class="row mt-3">
             <div class="col-md-8">
-              <textarea
-                id="ng-ckeditor-textarea"
-                class="form-control"
-                style="min-height:300px">
+              <textarea id="ng-ckeditor-textarea" class="form-control" style="min-height:300px">
               </textarea>
             </div>
 
             <div class="col-md-4">
               <label class="form-label">Placeholders</label>
 
-              <input
-              #searchInput
-                class="form-control mb-2"
-                placeholder="Search Placeholders"
+              <input #searchInput class="form-control mb-2" placeholder="Search Placeholders"
                 (input)="onPlaceholderSearch(searchInput.value)" />
 
               <div class="chip-wrapper">
-                <span
-                  class="chip-item"
-                  *ngFor="let p of filteredPlaceholders"
+                <span class="chip-item" *ngFor="let p of filteredPlaceholders"
                   (click)="insertPlaceholder(p.placeholderValue)">
                   {{ p.placeholderValue }}
                   <!-- <span class="chip-icon">+</span> -->

@@ -1,10 +1,5 @@
 import { AfterViewInit, Component, ElementRef, OnDestroy, ViewChild } from '@angular/core';
-import {
-  FormBuilder,
-  FormGroup,
-  ReactiveFormsModule,
-  Validators
-} from '@angular/forms';
+import { FormBuilder, FormGroup, MinLengthValidator, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
 
 import { ToastService } from '../../../../shared/services/toast.service';
@@ -15,6 +10,7 @@ import { TemplatePlaceholderList } from '../../../../core/models/template-builde
 import { TemplateCategoryList } from '../../../../core/models/template-builder/template-category-list';
 import { SharedModule } from '../../../../shared/shared.module';
 import { TranslatePipe } from '../../../../i18n/translate.pipe';
+import { CustomValidators } from '../../../../core/helpers/validators';
 
 declare const bootstrap: any;
 declare const CKEDITOR: any;
@@ -55,9 +51,9 @@ export class TemplateAddEditComponent
     private commonService: CommonService
   ) {
     this.form = this.fb.group({
-      categoryId: [null, Validators.required],
+      categoryId: [null, Validators.required, CustomValidators],
       type: ['', Validators.required],
-      subject: ['', Validators.required],
+      subject: ['', Validators.required, Validators.minLength(50)],
       body: ['', Validators.required]
     });
   }
@@ -66,13 +62,13 @@ export class TemplateAddEditComponent
   ngOnInit(): void {
     this.loadCategories();
     this.categoryChangeSub = this.form.get('categoryId')?.valueChanges.subscribe(categoryId => {
-    if (categoryId) {
-      this.loadPlaceholdersByCategory(categoryId);
-    } else {
-      this.placeholders = [];
-      this.filteredPlaceholders = [];
-    }
-  });
+      if (categoryId) {
+        this.loadPlaceholdersByCategory(categoryId);
+      } else {
+        this.placeholders = [];
+        this.filteredPlaceholders = [];
+      }
+    });
 
     this.modalInstance = new bootstrap.Modal(
       this.templateModal.nativeElement,
@@ -83,7 +79,7 @@ export class TemplateAddEditComponent
   ngAfterViewInit(): void {
     CKEDITOR.replace('ng-ckeditor-textarea', {
       height: 300,
-      allowedContent: true, 
+      allowedContent: true,
       extraAllowedContent: '*(*);*{*}',
       removePlugins: 'elementspath',
       resize_enabled: false,
@@ -136,15 +132,15 @@ export class TemplateAddEditComponent
 
 
 
- ngOnDestroy(): void {
-  this.subs.forEach(s => s.unsubscribe());
-  this.categoryChangeSub?.unsubscribe();
+  ngOnDestroy(): void {
+    this.subs.forEach(s => s.unsubscribe());
+    this.categoryChangeSub?.unsubscribe();
 
-  const editor = CKEDITOR.instances['ng-ckeditor-textarea'];
-  if (editor) {
-    editor.destroy(true);
+    const editor = CKEDITOR.instances['ng-ckeditor-textarea'];
+    if (editor) {
+      editor.destroy(true);
+    }
   }
-}
 
 
 
@@ -217,9 +213,8 @@ export class TemplateAddEditComponent
         this.placeholders = res?.data ?? [];
         this.filteredPlaceholders = this.placeholders;
       },
-      error: () => 
-      {
-         this.placeholders = [];
+      error: () => {
+        this.placeholders = [];
         this.filteredPlaceholders = [];
         this.toast.error('Failed to load placeholders')
       }

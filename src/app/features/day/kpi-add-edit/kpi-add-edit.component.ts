@@ -4,32 +4,34 @@ import { Subscription } from 'rxjs';
 import { SharedModule } from '../../../shared/shared.module';
 import { ToastService } from '../../../shared/services/toast.service';
 import { CommonService } from '../../../shared/services/common.service';
-import { DayService } from '../../../core/services/day/day.service';
+import { KpiService } from '../../../core/services/day/kpi.service';
 import { ApiResponse } from '../../../core/models/api-response';
 import { FarmList } from '../../../core/models/farm-list';
 import { PERMISSIONS } from '../../../core/constants/permissions.constants';
+import { FormulaList } from '../../../core/models/formula-list';
+import { TranslatePipe } from '../../../i18n/translate.pipe';
 
 declare var bootstrap: any;
 
 @Component({
-  selector: 'app-day-add-edit',
+  selector: 'app-kpi-add-edit',
   standalone: true,
-  imports: [SharedModule],
-  templateUrl: './day-add-edit.component.html',
-  styleUrl: './day-add-edit.component.css'
+  imports: [SharedModule,TranslatePipe],
+  templateUrl: './kpi-add-edit.component.html',
+  styleUrl: './kpi-add-edit.component.css'
 })
-export class DayAddEditComponent implements OnInit, OnDestroy {
+export class KpiAddEditComponent implements OnInit, OnDestroy {
 
-  @ViewChild('dayModal') dayModal!: ElementRef;
+  @ViewChild('kpiModal') kpiModal!: ElementRef;
 
   form!: FormGroup;
   modalInstance: any;
 
   isEdit = false;
-  currentDayId: string | null = null;
+  currentKpiId: string | null = null;
 
-  farms: FarmList[] = [];
-  farmsLoading = false;
+  formula: FormulaList[] = [];
+  formulasLoading = false;
 
   subs: Subscription[] = [];
 
@@ -37,14 +39,14 @@ export class DayAddEditComponent implements OnInit, OnDestroy {
     private fb: FormBuilder,
     private toast: ToastService,
     private commonService: CommonService,
-    private dayService: DayService
-  ) {}
+    private kpiService: KpiService
+  ) { }
 
   ngOnInit() {
-    if(!this.commonService.checkPermission(PERMISSIONS.DayAdd)|| !this.commonService.checkPermission(PERMISSIONS.DayEdit))
-        return;
+    if (!this.commonService.checkPermission(PERMISSIONS.KpiAdd) || !this.commonService.checkPermission(PERMISSIONS.KpiEdit))
+      return;
     this.initializeForm();
-    this.loadFarmList();
+    this.loadFormulaList();
   }
 
   ngOnDestroy() {
@@ -53,23 +55,23 @@ export class DayAddEditComponent implements OnInit, OnDestroy {
 
   private initializeForm() {
     this.form = this.fb.group({
-      farmId: ['', Validators.required],
-      date: ['', Validators.required],
-      isClosed: [false]
+      formulaId: ['', Validators.required],
+      kpiname: ['', [Validators.required, Validators.maxLength(20)]],
     });
+
   }
 
-  private loadFarmList() {
-    this.farmsLoading = true;
+  private loadFormulaList() {
+    this.formulasLoading = true;
 
-    const sub = this.commonService.getFarmsList().subscribe({
+    const sub = this.commonService.getFormulaList().subscribe({
       next: (res: ApiResponse<any>) => {
-        this.farms = Array.isArray(res?.data) ? res.data : [];
-        this.farmsLoading = false;
+        this.formula = Array.isArray(res?.data) ? res.data : [];
+        this.formulasLoading = false;
       },
       error: (err: ApiResponse<any>) => {
-        this.farmsLoading = false;
-        this.farms = [];
+        this.formulasLoading = false;
+        this.formula = [];
         this.toast.error(err.message);
       }
     });
@@ -80,21 +82,20 @@ export class DayAddEditComponent implements OnInit, OnDestroy {
   openModal(edit = false, data?: any) {
     this.isEdit = edit;
     this.form.reset();
-    this.form.patchValue({ isClosed: false });
 
     if (edit && data) {
       this.form.patchValue({
-        farmId: data.farmId,
-        date: data.date,
-        isClosed: data.isClosed
+        kpiname: data.kpiname,
+        kpiid:data.kpiid,
+        formulaId: data.formulaId,
       });
 
-      this.currentDayId = data.dayId;
+      this.currentKpiId = data.kpiid;
     } else {
-      this.currentDayId = null;
+      this.currentKpiId = null;
     }
 
-    this.modalInstance = new bootstrap.Modal(this.dayModal.nativeElement);
+    this.modalInstance = new bootstrap.Modal(this.kpiModal.nativeElement);
     this.modalInstance.show();
   }
 
@@ -102,21 +103,22 @@ export class DayAddEditComponent implements OnInit, OnDestroy {
     this.modalInstance?.hide();
   }
 
-  saveDay() {
-      if(!this.commonService.checkPermission(PERMISSIONS.DayAdd)|| 
-      !this.commonService.checkPermission(PERMISSIONS.DayEdit))
+  savekpi() {
+    if (!this.commonService.checkPermission(PERMISSIONS.KpiAdd) ||
+      !this.commonService.checkPermission(PERMISSIONS.KpiEdit))
       return;
     if (!this.form.valid) {
+      debugger;
       this.toast.warning('Please fill all required fields');
       return;
     }
 
     const payload = { ...this.form.value };
 
-    if (this.isEdit && this.currentDayId) {
-      payload.dayId = this.currentDayId;
+    if (this.isEdit && this.currentKpiId) {
+      payload.kpiid = this.currentKpiId;
 
-      const sub = this.dayService.updateDays(payload).subscribe(res => {
+      const sub = this.kpiService.updateKpis(payload).subscribe(res => {
         if (res.isSuccess) {
           this.toast.success(res.message);
           this.closeModal();
@@ -127,7 +129,7 @@ export class DayAddEditComponent implements OnInit, OnDestroy {
 
       this.subs.push(sub);
     } else {
-      const sub = this.dayService.createDays(payload).subscribe(res => {
+      const sub = this.kpiService.createkpis(payload).subscribe(res => {
         if (res.isSuccess) {
           this.toast.success(res.message);
           this.closeModal();
