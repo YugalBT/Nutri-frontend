@@ -13,11 +13,13 @@ import { ConfirmDialogService } from "../../../../shared/services/confirm-dialog
 @Component({
   selector: 'app-template-list',
   standalone: true,
-  imports: [SharedModule,
+  imports: [
+    SharedModule,
     ReusableTableComponent,
     GlobalSearchComponent,
     TranslatePipe,
-    TemplateAddEditComponent],
+    TemplateAddEditComponent
+  ],
   templateUrl: './template-list.component.html',
   styleUrl: './template-list.component.css'
 })

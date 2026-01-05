@@ -34,7 +34,7 @@ export class CompanyListComponent implements OnInit, OnDestroy {
   companies: CompanyList[] = [];
 
   totalRecords = 0;
-  pageSize = 5;
+  pageSize = 10;
   pageIndex = 0;
 
   searchValue = '';

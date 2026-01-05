@@ -7,7 +7,7 @@ export interface TemplatePlaceholderMappingList {
 }
 export interface Placeholder {
   placeholderId: string;
-  placeholderName: string;
+  placeholderValue: string;
   isActive: boolean;
 }
 

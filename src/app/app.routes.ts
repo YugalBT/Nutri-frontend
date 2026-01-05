@@ -223,6 +223,16 @@ export const routes: Routes = [
           import('./features/expression/expression-list/expression-list.component')
             .then(m => m.ExpressionListComponent),
       },
+      {
+        path: 'technicalReport',
+        // canActivate: [permissionGuard],
+        // data: { requiredPermissions: [PERMISSIONS.FormulaAdd, PERMISSIONS.formulasEdit, PERMISSIONS.formulasView, PERMISSIONS.formulasDelete] },
+        loadComponent: () =>
+          import('./features/technicalReport/technical-report-list/technical-report-list.component')
+            .then(m => m.TechnicalReportListComponent),
+      },
+      
+
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
     ],
   },

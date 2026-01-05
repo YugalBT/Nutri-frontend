@@ -73,8 +73,8 @@ export class PlaceholderMappingAddEditComponent {
       this.form.patchValue({ categoryId: data.categoryId });
 
       data.placeholders?.forEach((p: any) => {
-        if (p.placeholderId) {
-          this.placeholderIds.push(this.fb.control(p.placeholderId));
+        if (p.id) {
+          this.placeholderIds.push(this.fb.control(p.id));
         }
       });
 

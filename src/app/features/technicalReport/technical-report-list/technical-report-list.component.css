@@ -1,0 +1,18 @@
+/* KPI CARD LOOK */
+.kpi-card {
+  border-radius: 12px;
+  border: 1px solid #e3e6ea;
+  
+}
+
+/* KPI VALUE */
+.kpi-value {
+  font-size: 22px;
+  font-weight: 600;
+}
+
+/* KPI ARROW */
+.kpi-arrow {
+  font-size: 18px;
+  font-weight: 600;
+}

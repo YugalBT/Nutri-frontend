@@ -51,17 +51,31 @@ export class TemplateAddEditComponent
     private commonService: CommonService
   ) {
     this.form = this.fb.group({
-      categoryId: [null, Validators.required, CustomValidators],
-      type: ['', Validators.required],
-      subject: ['', Validators.required, Validators.minLength(50)],
-      body: ['', Validators.required]
+      categoryId: [
+        null,
+        [Validators.required]
+      ],
+      type: [
+        null,
+        [Validators.required]
+      ],
+      subject: [
+        '',
+        [Validators.required, Validators.maxLength(50)]
+      ],
+      body: [
+        '',
+        [Validators.required]
+      ]
     });
+
   }
 
 
   ngOnInit(): void {
     this.loadCategories();
     this.categoryChangeSub = this.form.get('categoryId')?.valueChanges.subscribe(categoryId => {
+      debugger;
       if (categoryId) {
         this.loadPlaceholdersByCategory(categoryId);
       } else {

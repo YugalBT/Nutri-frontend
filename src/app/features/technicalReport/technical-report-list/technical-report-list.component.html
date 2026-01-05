@@ -1,0 +1,99 @@
+<div class="pagecls">
+
+  <!-- PAGE HEADER -->
+  <div class="page-header d-flex justify-content-between align-items-start flex-wrap gap-3">
+    <div>
+      <h3 class="page-title mb-1">Feed Contribution</h3>
+
+      <h6 class="fw-semibold text-muted mb-3">
+        Nutritional analysis and feed breakdown
+      </h6>
+
+      <!-- KPI CARDS -->
+      <div class="row g-3">
+
+        <!-- KPI CARD -->
+        <div class="col-xl-4 col-md-6">
+          <div class="card h-100 kpi-card">
+            <div class="card-body">
+              <div class="fw-semibold mb-2">Total DM</div>
+
+              <div class="d-flex align-items-center gap-2">
+                <span class="kpi-value text-success">16.85</span>
+                <span class="kpi-arrow text-success">↑</span>
+              </div>
+
+              <small class="text-muted">kg</small>
+            </div>
+          </div>
+        </div>
+
+        <!-- KPI CARD -->
+        <div class="col-xl-4 col-md-6">
+          <div class="card h-100 kpi-card">
+            <div class="card-body">
+              <div class="fw-semibold mb-2">Crude Protein</div>
+
+              <div class="d-flex align-items-center gap-2">
+                <span class="kpi-value text-success">3.86</span>
+                <span class="kpi-arrow text-success">↑</span>
+              </div>
+
+              <small class="text-muted">kg</small>
+            </div>
+          </div>
+        </div>
+
+        <!-- KPI CARD -->
+        <div class="col-xl-4 col-md-6">
+          <div class="card h-100 kpi-card">
+            <div class="card-body">
+              <div class="fw-semibold mb-2">Energy MJ</div>
+
+              <div class="d-flex align-items-center gap-2">
+                <span class="kpi-value text-dark">303.50</span>
+                <span class="kpi-arrow text-secondary">–</span>
+              </div>
+
+              <small class="text-muted">MJ</small>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- SAVE BUTTON -->
+    <button class="btn add-btn d-flex align-items-center gap-2 mt-2"
+            (click)="ReportModal.openModal()">
+
+      <svg xmlns="http://www.w3.org/2000/svg"
+           width="20" height="20" viewBox="0 0 24 24"
+           fill="none" stroke="#D2D2D2"
+           stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M5 3h12l4 4v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z"></path>
+        <path d="M7 3v6h8V3"></path>
+        <rect x="7" y="14" width="10" height="5" rx="1"></rect>
+      </svg>
+
+      Save Daily Result
+    </button>
+  </div>
+
+  <!-- TABLE -->
+  <div class="table-card mt-4">
+    <app-reusable-table
+      [columns]="columns"
+      [data]="reports"
+      [columnFields]="columnFields"
+      [totalRecords]="totalRecords"
+      [pageSize]="pageSize"
+      [pageIndex]="pageIndex"
+      (pageChange)="onPageChange($event)">
+    </app-reusable-table>
+  </div>
+
+  <!-- ADD / EDIT MODAL -->
+  <app-technical-report-add-edit #ReportModal></app-technical-report-add-edit>
+
+</div>

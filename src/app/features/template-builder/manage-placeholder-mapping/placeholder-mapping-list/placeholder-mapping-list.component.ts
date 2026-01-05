@@ -67,11 +67,12 @@ export class PlaceholderMappingListComponent {
     };
 
     this.mappingService.getPlaceholderMappingDetails(payload).subscribe({
+      
       next: (res: ApiResponse<TemplatePlaceholderMappingList[]>) => {
         this.mappings = (res.data ?? []).map(item => ({
           ...item,
           placeholdersDisplay: item.placeholders
-             ?.map(p => p.placeholderName)
+             ?.map(p => p.placeholderValue)
         .join(', ')
         }));
         this.totalRecords = res.totalRecords ?? 0;

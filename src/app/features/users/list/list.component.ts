@@ -31,7 +31,7 @@ export class ListComponent implements OnInit, OnDestroy {
   // Data & Pagination
   users: UserList[] = [];
   totalRecords = 0;
-  pageSize = 5;
+  pageSize = 10;
   pageIndex = 0;
   searchValue = '';
   filterStatus: number | null = 2;

@@ -36,7 +36,7 @@ export class RoleComponent implements OnInit, OnDestroy ,AfterViewInit{
   searchValue = '';
   statusFilter: number | null = null;
   totalRecords = 0;
-  pageSize = 5;
+  pageSize = 10;
   pageIndex = 0;
   isShow = false;
   

@@ -28,7 +28,7 @@ export class AnimalLactationListComponent {
 
   days: AnimallactationList[] = [];
   totalRecords = 0;
-  pageSize = 5;
+  pageSize = 10;
   pageIndex = 0;
   searchValue = '';
   filterStatus: number | null = 2;
