@@ -185,4 +185,11 @@ export const API_ENDPOINTS = {
     ACTIVE_INACTIVE: '/TechnicalReport/ActiveInActive',
     GET_ALL: '/TechnicalReport/GetAll',
   },
+  LANGUAGE: {
+    CREATE: '/Language/Create',
+    UPDATE: '/Language/Update',
+    DELETE: '/Language/Delete',
+    ACTIVE_INACTIVE: '/Language/ActiveInActive',
+    GET_ALL: '/Language/GetAll',
+  },
 };

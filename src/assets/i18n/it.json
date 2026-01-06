@@ -698,6 +698,23 @@
     "kpiName": "Nome KPI",
     "status": "Stato"
   }
+},
+ "language": {
+    "heading": "Gestione lingue",
+    "addLanguage": "Aggiungi lingua",
+    "editLanguage": "Modifica lingua",
+    "languageCode": "Codice lingua",
+    "languageName": "Nome lingua",
+    "languageCodePlaceholder": "Inserisci il codice della lingua",
+    "languageNamePlaceholder": "Inserisci il nome della lingua",
+    "languageCodeRequired": "Il codice della lingua è obbligatorio",
+    "languageNameRequired": "Il nome della lingua è obbligatorio",
+    "searchFilters": "Cerca lingue",
+    "searchPlaceholder": "Cerca per codice o nome",
+    "columns": {
+      "code": "Codice",
+      "name": "Nome della lingua",
+      "status": "Stato"
+    }
 }
-
 }

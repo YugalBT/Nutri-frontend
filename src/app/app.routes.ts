@@ -231,11 +231,16 @@ export const routes: Routes = [
           import('./features/technicalReport/technical-report-list/technical-report-list.component')
             .then(m => m.TechnicalReportListComponent),
       },
-      
-
-      { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
-    ],
-  },
+      {
+      path: 'language',
+       // canActivate: [permissionGuard],
+        // data: { requiredPermissions: [PERMISSIONS.FormulaAdd, PERMISSIONS.formulasEdit, PERMISSIONS.formulasView, PERMISSIONS.formulasDelete] },
+      loadComponent: () =>
+        import('./features/language/language-list/language-list.component')
+          .then(m => m.LanguageListComponent),
+      },
+     { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
+    ],},
 
   {
     path: '404',
