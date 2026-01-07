@@ -1,99 +1,122 @@
 <div class="pagecls">
 
-  <!-- PAGE HEADER -->
-  <div class="page-header d-flex justify-content-between align-items-start flex-wrap gap-3">
+  <!-- ================= HEADER ================= -->
+  <div class="page-header">
     <div>
-      <h3 class="page-title mb-1">Feed Contribution</h3>
+      <h2 class="page-title">{{ ration.rationName }}</h2>
+      <p class="page-subtitle">{{ ration.animalGroupName }}</p>
+    </div>
 
-      <h6 class="fw-semibold text-muted mb-3">
-        Nutritional analysis and feed breakdown
-      </h6>
+    <div class="d-flex align-items-center gap-3 flex-wrap">
+      <div class="text-center">
+        <div class="text-muted small">Animals</div>
+        <strong>{{ ration.numberOfAnimal }}</strong>
+      </div>
 
-      <!-- KPI CARDS -->
-      <div class="row g-3">
+      <div class="text-center">
+        <div class="text-muted small">Avg Milk / Day</div>
+        <strong>{{ ration.avgMilkPerDay }} L</strong>
+      </div>
 
-        <!-- KPI CARD -->
-        <div class="col-xl-4 col-md-6">
-          <div class="card h-100 kpi-card">
-            <div class="card-body">
-              <div class="fw-semibold mb-2">Total DM</div>
+      <!-- <button class="btn add-btn">Calculate</button>
+      <button class="btn add-btn">Save</button> -->
+    </div>
+  </div>
 
-              <div class="d-flex align-items-center gap-2">
-                <span class="kpi-value text-success">16.85</span>
-                <span class="kpi-arrow text-success">↑</span>
-              </div>
+  <!-- ================= KPI SUMMARY ================= -->
+  <div class="row g-3 mb-4">
 
-              <small class="text-muted">kg</small>
-            </div>
-          </div>
-        </div>
-
-        <!-- KPI CARD -->
-        <div class="col-xl-4 col-md-6">
-          <div class="card h-100 kpi-card">
-            <div class="card-body">
-              <div class="fw-semibold mb-2">Crude Protein</div>
-
-              <div class="d-flex align-items-center gap-2">
-                <span class="kpi-value text-success">3.86</span>
-                <span class="kpi-arrow text-success">↑</span>
-              </div>
-
-              <small class="text-muted">kg</small>
-            </div>
-          </div>
-        </div>
-
-        <!-- KPI CARD -->
-        <div class="col-xl-4 col-md-6">
-          <div class="card h-100 kpi-card">
-            <div class="card-body">
-              <div class="fw-semibold mb-2">Energy MJ</div>
-
-              <div class="d-flex align-items-center gap-2">
-                <span class="kpi-value text-dark">303.50</span>
-                <span class="kpi-arrow text-secondary">–</span>
-              </div>
-
-              <small class="text-muted">MJ</small>
-            </div>
-          </div>
-        </div>
-
+    <!-- Dry Matter -->
+    <div class="col-xl-3 col-md-4">
+      <div class="white-with-shadow">
+        <p class="text-muted mb-1">Dry Matter</p>
+        <h4 class="fw-bold mb-0">{{ totalDM }}</h4>
+        <small class="text-muted">kg</small>
       </div>
     </div>
 
-    <!-- SAVE BUTTON -->
-    <button class="btn add-btn d-flex align-items-center gap-2 mt-2"
-            (click)="ReportModal.openModal()">
+    <!-- Protein -->
+    <div class="col-xl-3 col-md-4">
+      <div class="white-with-shadow">
+        <p class="text-muted mb-1">Crude Protein</p>
+        <h4 class="fw-bold mb-0">{{ totalProtein }}</h4>
+        <small class="text-muted">kg</small>
+      </div>
+    </div>
 
-      <svg xmlns="http://www.w3.org/2000/svg"
-           width="20" height="20" viewBox="0 0 24 24"
-           fill="none" stroke="#D2D2D2"
-           stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M5 3h12l4 4v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z"></path>
-        <path d="M7 3v6h8V3"></path>
-        <rect x="7" y="14" width="10" height="5" rx="1"></rect>
-      </svg>
+    <!-- Energy -->
+    <div class="col-xl-3 col-md-4">
+      <div class="white-with-shadow">
+        <p class="text-muted mb-1">Energy</p>
+        <h4 class="fw-bold mb-0">{{ totalEnergy }}</h4>
+        <small class="text-muted">MJ</small>
+      </div>
+    </div>
 
-      Save Daily Result
-    </button>
+    <!-- ADF -->
+    <div class="col-xl-3 col-md-4">
+      <div class="white-with-shadow">
+        <p class="text-muted mb-1">ADF</p>
+        <h4 class="fw-bold mb-0">{{ totalADF }}</h4>
+        <small class="text-muted">kg</small>
+      </div>
+    </div>
+
+    <!-- Fat -->
+    <div class="col-xl-3 col-md-4">
+      <div class="white-with-shadow">
+        <p class="text-muted mb-1">Fat</p>
+        <h4 class="fw-bold mb-0">{{ totalFat }}</h4>
+        <small class="text-muted">kg</small>
+      </div>
+    </div>
+
+    <!-- Calcium -->
+    <div class="col-xl-3 col-md-4">
+      <div class="white-with-shadow">
+        <p class="text-muted mb-1">Calcium</p>
+        <h4 class="fw-bold mb-0">{{ totalCalcium }}</h4>
+        <small class="text-muted">kg</small>
+      </div>
+    </div>
+
+    <!-- Phosphorus -->
+    <div class="col-xl-3 col-md-4">
+      <div class="white-with-shadow">
+        <p class="text-muted mb-1">Phosphorus</p>
+        <h4 class="fw-bold mb-0">{{ totalPhosphorus }}</h4>
+        <small class="text-muted">kg</small>
+      </div>
+    </div>
+
+    <!-- Starch -->
+    <div class="col-xl-3 col-md-4">
+      <div class="white-with-shadow">
+        <p class="text-muted mb-1">Starch</p>
+        <h4 class="fw-bold mb-0">{{ totalStarch }}</h4>
+        <small class="text-muted">kg</small>
+      </div>
+    </div>
+
   </div>
 
-  <!-- TABLE -->
-  <div class="table-card mt-4">
-    <app-reusable-table
-      [columns]="columns"
-      [data]="reports"
-      [columnFields]="columnFields"
-      [totalRecords]="totalRecords"
-      [pageSize]="pageSize"
-      [pageIndex]="pageIndex"
-      (pageChange)="onPageChange($event)">
-    </app-reusable-table>
-  </div>
+  <app-reusable-table [columns]="columns" [columnFields]="columnFields" [data]="feeds" [pageable]="false"
+    [showActions]="false" [showFooter]="true" [footerTotals]="tableTotals">
 
-  <!-- ADD / EDIT MODAL -->
-  <app-technical-report-add-edit #ReportModal></app-technical-report-add-edit>
+    <!-- Quantity input cell -->
+    <ng-template let-row="row" let-field="field">
+      <ng-container [ngSwitch]="field">
+
+        <input *ngSwitchCase="'quantityPerKg'" type="number" min="0" class="form-control form-control-sm"
+          [(ngModel)]="row.quantityPerKg" />
+
+        <span *ngSwitchDefault>
+          {{ row[field] }}
+        </span>
+
+      </ng-container>
+    </ng-template>
+
+  </app-reusable-table>
 
 </div>

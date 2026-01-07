@@ -3,17 +3,20 @@ import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { MatBadgeModule } from '@angular/material/badge';
 import { TranslatePipe } from '../../../i18n/translate.pipe';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @Component({
   selector: 'app-reusable-table',
   standalone: true,
-  imports: [CommonModule, MatPaginatorModule, MatBadgeModule,TranslatePipe],
+  imports: [CommonModule, MatPaginatorModule, MatBadgeModule, TranslatePipe, MatTooltipModule],
   templateUrl: './reusable-table.component.html',
   styleUrls: ['./reusable-table.component.css']
 })
 export class ReusableTableComponent implements OnChanges {
 
   NoImagePath: string = '/assets/image/no-image.png';
+  @Input() showFooter: boolean = false;   //  default OFF
+  @Input() footerTotals?: Record<string, number>;
 
   @Input() columns: string[] = [];
   @Input() columnFields?: string[];

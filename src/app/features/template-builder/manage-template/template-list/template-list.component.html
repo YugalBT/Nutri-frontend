@@ -1,20 +1,23 @@
 <div class="pagecls">
-    <!-- Page Header -->
-    <div class="page-header d-flex justify-content-between align-items-center">
-        <div>
-            <h3 class="page-title">Manage Templates </h3>
-        </div>
 
-        <button class="btn add-btn" (click)="templateModal.openModal()">
-            <i class="bi bi-plus-lg me-2"></i>
-             Add Template
-        </button>
+  <!-- Page Header -->
+  <div class="page-header d-flex justify-content-between align-items-center">
+    <div>
+      <h3 class="page-title">
+        {{ 'templates.heading' | translate }}
+      </h3>
     </div>
 
-    <!-- Search Filters Section -->
-    <div class="filters-card">
+    <button class="btn add-btn" (click)="templateModal.openModal()">
+      <i class="bi bi-plus-lg me-2"></i>
+      {{ 'templates.add' | translate }}
+    </button>
+  </div>
+
+  <!-- Search Filters Section -->
+  <div class="filters-card">
     <app-global-search
-      [placeholder]="'Search by  name .'"
+      [placeholder]="'common.searchByName' | translate"
       [showStatus]="true"
       (search)="onSearch($event)"
       (statusChange)="onStatusChange($event)"
@@ -22,15 +25,25 @@
     </app-global-search>
   </div>
 
-    <!-- Farms Table -->
-    <div class="table-card">
-        <app-reusable-table [columns]="columns" [columnFields]="columnFields" [data]="templates" [showActions]="true"
-            [pageable]="true" [totalRecords]="totalRecords" [pageSize]="pageSize" [pageIndex]="pageIndex"
-            (pageChange)="onPageChange($event)" (toggleActive)="onToggleActive($event)" (deleteRow)="onDelete($event)"
-            (editRow)="templateModal.openModal(true, $event)">
-        </app-reusable-table>
-    </div>
+  <!-- Templates Table -->
+  <div class="table-card">
+    <app-reusable-table
+      [columns]="columns"
+      [columnFields]="columnFields"
+      [data]="templates"
+      [showActions]="true"
+      [pageable]="true"
+      [totalRecords]="totalRecords"
+      [pageSize]="pageSize"
+      [pageIndex]="pageIndex"
+      (pageChange)="onPageChange($event)"
+      (toggleActive)="onToggleActive($event)"
+      (deleteRow)="onDelete($event)"
+      (editRow)="templateModal.openModal(true, $event)">
+    </app-reusable-table>
+  </div>
 
-    <!-- Add/Edit Modal component instance -->
-    <app-template-add-edit #templateModal></app-template-add-edit>
+  <!-- Add/Edit Modal -->
+  <app-template-add-edit #templateModal></app-template-add-edit>
+
 </div>

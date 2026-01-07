@@ -4,6 +4,7 @@ import { Observable, Subject, tap } from 'rxjs';
 import { ApiResponse } from '../../models/api-response';
 import { API_ENDPOINTS } from '../../constants/api-endpoints';
 import { TechnicalReport } from '../../models/technical-report';
+import { TechnicalReportDetails } from '../../models/technical-report-details';
 
 @Injectable({
   providedIn: 'root'
@@ -49,5 +50,9 @@ export class TechnicalReportService {
       return this.http.post<any>(url, {}).pipe(
         tap(res => { if (res.isSuccess) this.notifytechnicalReportsChanged(); })
       );
+    }
+
+     getTechnicalReport(): Observable<ApiResponse<TechnicalReportDetails[]>> {
+      return this.http.get<TechnicalReportDetails[]>(API_ENDPOINTS.TECHNICAL_REPORT.GET_TECHNICAL_REPORT);
     }
 }

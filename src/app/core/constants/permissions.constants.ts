@@ -19,7 +19,7 @@ export const PERMISSIONS = {
     EmailConfigurationEdit: 'EmailConfigurationEdit',
     EmailConfigurationAdd: 'EmailConfigurationAdd',
     EmailConfigurationDelete: 'EmailConfigurationDelete',
-    
+
 
     ProfileView: 'ProfileView',
     ProfileEdit: 'ProfileEdit',
@@ -66,7 +66,7 @@ export const PERMISSIONS = {
     TenantEdit: 'TenantEdit',
     TenantAdd: 'TenantAdd',
     TenantDelete: 'TenantDelete',
-    
+
 
     AnimalTypeView: 'AnimalTypeView',
     AnimalTypeEdit: 'AnimalTypeEdit',
@@ -87,7 +87,27 @@ export const PERMISSIONS = {
     formulasEdit: 'formulasEdit',
     formulasDelete: 'formulasDelete',
     formulasView: 'formulasView',
-    
+
+    PlaceholderView: 'PlaceholderView',
+    PlaceholderEdit: 'PlaceholderEdit',
+    PlaceholderAdd: 'PlaceholderAdd',
+    PlaceholderDelete: 'PlaceholderDelete',
+
+    CategoryMappingView: 'CategoryMappingView',
+    CategoryMappingEdit: 'CategoryMappingEdit',
+    CategoryMappingAdd: 'CategoryMappingAdd',
+    CategoryMappingDelete: 'CategoryMappingDelete',
+
+    TemplateCategoryView: 'TemplateCategoryView',
+    TemplateCategoryEdit: 'TemplateCategoryEdit',
+    TemplateCategoryAdd: 'TemplateCategoryAdd',
+    TemplateCategoryDelete: 'TemplateCategoryDelete',
+
+    TemplateView: 'templateView',
+    TemplateEdit: 'templateEdit',
+    TemplateAdd: 'templateAdd',
+    TemplateDelete: 'templateDelete',
+
 } as const;
 
 export type PermissionKey = keyof typeof PERMISSIONS;

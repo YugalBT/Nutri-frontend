@@ -24,9 +24,14 @@ interface MenuItem {
 interface SidebarGroup {
   key: string;
   title: string;
-   icon?: SafeHtml;
+  icon?: SafeHtml;
   items: MenuItem[];
 }
+const HIDDEN_MENU_NAMES = [
+  'Placeholder',
+  'CategoryMapping',
+  'TemplateCategory'
+];
 
 @Component({
   selector: 'app-sidebar',
@@ -37,15 +42,17 @@ interface SidebarGroup {
 })
 export class SidebarComponent implements OnInit {
 
+
+  
   groupedMenus: SidebarGroup[] = [];
   standaloneMenus: MenuItem[] = [];
   user: any = null;
-  lang : any = "en";
+  lang: any = "en";
   constructor(
     private sanitizer: DomSanitizer,
     private authService: AuthService,
     private store: Store
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.store.select(selectAuthUser).pipe(take(1)).subscribe((authUser: any) => {
@@ -53,7 +60,8 @@ export class SidebarComponent implements OnInit {
       const menuSource = authUser?.menu || authUser?.data?.menu;
 
       if (Array.isArray(menuSource)) {
-        const flatMenu = menuSource.map((m: any) => ({
+        const flatMenu = menuSource.filter((m: any) => !HIDDEN_MENU_NAMES.includes(m.roleDisplayName))
+        .map((m: any) => ({
           ...m,
           url: m.url || m.link || m.path || m.route,
           safeIcon: m.icon ? this.sanitizeIcon(m.icon) : ''
@@ -67,35 +75,33 @@ export class SidebarComponent implements OnInit {
   }
 
 
-get currentLang(): string {
-  this.lang = localStorage.getItem('lang') || 'en';
-  return this.lang;
-}
+  get currentLang(): string {
+    this.lang = localStorage.getItem('lang') || 'en';
+    return this.lang;
+  }
 
-private buildAccordionMenu(flatMenu: MenuItem[]) {
+  private buildAccordionMenu(flatMenu: MenuItem[]) {
 
-  const groupedItemNames = SIDEBAR_GROUPS.flatMap(group => group.items);
+    const groupedItemNames = SIDEBAR_GROUPS.flatMap(group => group.items);
 
-  // GROUPED MENUS WITH ICON
-  this.groupedMenus = SIDEBAR_GROUPS
-    .map(group => ({
-      key: group.key,
-      title: group.title,
-      icon: group.icon
-        ? this.sanitizer.bypassSecurityTrustHtml(group.icon)
-        : undefined,
-      items: flatMenu.filter(m =>
-        group.items.includes(m.roleDisplayName || '')
-      )
-    }))
-    .filter(group => group.items.length > 0);
+    this.groupedMenus = SIDEBAR_GROUPS
+      .map(group => ({
+        key: group.key,
+        title: group.title,
+        icon: group.icon
+          ? this.sanitizer.bypassSecurityTrustHtml(group.icon)
+          : undefined,
+        items: flatMenu.filter(m =>
+          group.items.includes(m.roleDisplayName || '')
+        )
+      }))
+      .filter(group => group.items.length > 0);
     const lang = this.lang;
-  // STANDALONE MENUS (neeche)
-  this.standaloneMenus = flatMenu.filter(m =>
-    !groupedItemNames.includes(m.roleDisplayName || '') &&
-     m.roleDisplayName !== (lang === 'it' ? 'Pannello di controllo' : 'Dashboard')
-  );
-}
+    this.standaloneMenus = flatMenu.filter(m =>
+      !groupedItemNames.includes(m.roleDisplayName || '') &&
+      m.roleDisplayName !== (lang === 'it' ? 'Pannello di controllo' : 'Dashboard')
+    );
+  }
 
 
   logout() {

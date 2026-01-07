@@ -216,7 +216,11 @@
     "loading": "Loading...",
     "updating": "Updating...",
     "noData": "No data available",
-    "noRecordsMatch": "No records match your search"
+    "noRecordsMatch": "No records match your search",
+    "searchByName": "Search by name",
+    "maxlength50": "Maximum 50 characters allowed",
+    "submit": "Submit",
+    "deleteFailed": "Failed to delete template"
   },
   "imageValidator": {
     "invalidType": "Invalid image type. Allowed types are: jpeg,jpg,png.",
@@ -594,7 +598,9 @@
   "templateBuilder": {
     "manageCategoryheading": "Manage Category",
     "managePlaceholderheading": "Manage Placeholders",
-    "managePlaceholderMappingheading": "Manage Placeholders Mapping"
+    "managePlaceholderMappingheading": "Manage Placeholders Mapping",
+    "manageEmailTemplate": "Manage Email Templates"
+
   },
   "operator": {
     "heading": "Manage Operator",
@@ -673,21 +679,7 @@
     "warning" :"Warning"
     
   },
-  "templates": {
-    "heading": "Templates Management",
-    "add": "Add Templates",
-    "edit": "Edit Templates",
-    "template": "Template",
-    "selectcategory": "Select Category",
-    "selectType": "Select Type",
-    "deleteConfirm": "Are you sure you want to delete this template?",
-    "columns": {
-      "category": "Category",
-      "type": "Type",
-      "subject": "Subject",
-      "status": "Status"
-    }
-  },
+  
   "kpi": {
   "management": "KPI Management",
   "addKpi": "Add KPI",
@@ -715,6 +707,36 @@
     "kpiName": "KPI Name",
     "status": "Status"
   }
+},
+
+  "templates": {
+    "heading": "Templates Management",
+    "add": "Add Template",
+    "edit": "Edit Template",
+    "template": "Template",
+    "selectcategory": "Select Category",
+    "selectType": "Select Type",
+    "deleteConfirm": "Are you sure you want to delete this template?",
+    "columns": {
+      "category": "Category",
+      "type": "Type",
+      "subject": "Document Name",
+      "status": "Status"
+    }
+  },
+
+  "managetemplateBuilder": {
+    "manageCategoryheading": "Manage Categories",
+    "managePlaceholderheading": "Manage Placeholders",
+    "managePlaceholderMappingheading": "Manage Placeholder Mapping"
+  },
+
+  "placeholders": {
+    "heading": "Placeholders",
+    "search": "Search Placeholders"
+  }
+
+  
 }
 
-}
+

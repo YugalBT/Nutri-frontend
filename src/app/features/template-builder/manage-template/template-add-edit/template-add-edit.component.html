@@ -1,11 +1,14 @@
-<div #templateModal class="modal fade " tabindex="-1">
+<div #templateModal class="modal fade" tabindex="-1">
   <div class="modal-dialog modal-xl modal-dialog-centered">
     <div class="modal-content">
 
       <!-- HEADER -->
       <div class="modal-header">
         <h5 class="modal-title">
-          {{ isEdit ? 'Edit Template' : 'Add Template' }}
+          {{ isEdit
+            ? ('templates.edit' | translate)
+            : ('templates.add' | translate)
+          }}
         </h5>
         <button class="btn-close" (click)="closeModal()"></button>
       </div>
@@ -16,57 +19,87 @@
 
           <!-- BASIC DETAILS -->
           <div class="row g-3">
+
+            <!-- CATEGORY -->
             <div class="col-md-4">
-              <label class="form-label">Category *</label>
+              <label class="form-label">
+                {{ 'templates.columns.category' | translate }} *
+              </label>
               <select class="form-select" formControlName="categoryId">
-                <option [ngValue]="null">Select Category</option>
+                <option [ngValue]="null">
+                  {{ 'templates.selectcategory' | translate }}
+                </option>
                 <option *ngFor="let c of categories" [value]="c.categoryId">
                   {{ c.displayName || c.category }}
                 </option>
               </select>
             </div>
 
+            <!-- TEMPLATE TYPE -->
             <div class="col-md-4">
-              <label class="form-label">Template Type *</label>
+              <label class="form-label">
+                {{ 'templates.selectType' | translate }} *
+              </label>
               <select class="form-select" formControlName="type">
-                <option [ngValue]="null">Select Type</option>
+                <option [ngValue]="null">
+                  {{ 'templates.selectType' | translate }}
+                </option>
                 <option value="Email">Email</option>
                 <option value="PDF">PDF</option>
               </select>
             </div>
 
+            <!-- DOCUMENT NAME -->
             <div class="col-md-4">
-              <label class="form-label">Document Name *</label>
-              <input class="form-control" formControlName="subject" placeholder="Enter Document Name" />
+              <label class="form-label">
+                {{ 'templates.columns.subject' | translate }} *
+              </label>
+              <input
+                class="form-control"
+                formControlName="subject"
+                [placeholder]="'templates.columns.subject' | translate"
+              />
+
               <div class="text-danger"
                 *ngIf="form.get('subject')?.touched && form.get('subject')?.errors?.['required']">
-                Document name is required
+                {{ 'common.required' | translate }}
               </div>
 
               <div class="text-danger"
                 *ngIf="form.get('subject')?.touched && form.get('subject')?.errors?.['maxlength']">
-                Document name must be at least 50 characters
+                {{ 'common.maxlength50' | translate }}
               </div>
             </div>
+
           </div>
 
+          <!-- EDITOR + PLACEHOLDERS -->
           <div class="row mt-3">
             <div class="col-md-8">
-              <textarea id="ng-ckeditor-textarea" class="form-control" style="min-height:300px">
+              <textarea
+                id="ng-ckeditor-textarea"
+                class="form-control"
+                style="min-height:300px">
               </textarea>
             </div>
 
             <div class="col-md-4">
-              <label class="form-label">Placeholders</label>
+              <label class="form-label">
+                {{ 'placeholders.heading' | translate }}
+              </label>
 
-              <input #searchInput class="form-control mb-2" placeholder="Search Placeholders"
+              <input
+                #searchInput
+                class="form-control mb-2"
+                [placeholder]="'placeholders.search' | translate"
                 (input)="onPlaceholderSearch(searchInput.value)" />
 
               <div class="chip-wrapper">
-                <span class="chip-item" *ngFor="let p of filteredPlaceholders"
+                <span
+                  class="chip-item"
+                  *ngFor="let p of filteredPlaceholders"
                   (click)="insertPlaceholder(p.placeholderValue)">
                   {{ p.placeholderValue }}
-                  <!-- <span class="chip-icon">+</span> -->
                 </span>
               </div>
             </div>
@@ -78,10 +111,10 @@
       <!-- FOOTER -->
       <div class="modal-footer">
         <button class="btn btn-outline-secondary" (click)="closeModal()">
-          Cancel
+          {{ 'common.cancel' | translate }}
         </button>
         <button class="btn add-btn" (click)="save()">
-          Submit
+          {{ 'common.submit' | translate }}
         </button>
       </div>
 

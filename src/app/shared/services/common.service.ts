@@ -29,12 +29,20 @@ export class CommonService {
     private translate: TranslateService
   ) { }
 
-  checkPermission(roleName: string) {
-    if (!StorageHelper.CheckRole(roleName)) {
-      this.toast.error(this.translate.instant('common.noPermission') || 'No permission');
-      return false;
-    }
-    return true;
+  checkPermission(roleName: string,showAlert: boolean = true) {
+    // if (!StorageHelper.CheckRole(roleName)) {
+    //   this.toast.error(this.translate.instant('common.noPermission') || 'No permission');
+    //   return false;
+    // }
+    // return true;
+    const hasPermission = StorageHelper.CheckRole(roleName);
+  if (!hasPermission && showAlert) {
+    this.toast.error(
+      this.translate.instant('common.noPermission') || 'No permission'
+    );
+  }
+
+  return hasPermission;
   }
   getRoles(): Observable<ApiResponse<RoleList[]>> {
     return this.http.get<RoleList[]>(API_ENDPOINTS.COMMON_API.GET_ALL_ROLES);

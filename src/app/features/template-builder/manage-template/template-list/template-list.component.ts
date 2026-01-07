@@ -9,6 +9,7 @@ import { GlobalSearchComponent } from "../../../../shared/components/global-sear
 import { TranslatePipe } from "../../../../i18n/translate.pipe";
 import { TemplateAddEditComponent } from "../template-add-edit/template-add-edit.component";
 import { ConfirmDialogService } from "../../../../shared/services/confirm-dialog.service";
+import { TranslateService } from "../../../../i18n/translate.service";
 
 @Component({
   selector: 'app-template-list',
@@ -35,13 +36,16 @@ export class TemplateListComponent {
   searchValue = '';
   filterStatus: number | null = 2;
   subs: Subscription[] = [];
+  private langSub: Subscription | undefined;
 
   constructor(
     private templateService: ManageTemplateService,
     private toast: ToastService,
-    private confirm: ConfirmDialogService
+    private confirm: ConfirmDialogService,
+    private translate :TranslateService
   ) {
     this.setColumns();
+    this.langSub = this.translate.lang$.subscribe(() => this.setColumns());
   }
 
   ngOnInit() {
@@ -126,7 +130,7 @@ export class TemplateListComponent {
 
   onDelete(row: TemplateList): void {
     this.confirm
-      .confirm('Are you sure you want to delete this template?')
+      .confirm(this.translate.instant('templates.deleteConfirm')??"")
       .subscribe(confirmed => {
         if (!confirmed) return;
 
@@ -149,11 +153,19 @@ export class TemplateListComponent {
 
 
   private setColumns() {
-    this.columns = ['Category', 'Type', 'Subject', 'Status'];
+      this.columns = [
+    this.translate.instant('templates.columns.category')??"",
+    this.translate.instant('templates.columns.type')??"",
+    this.translate.instant('templates.columns.subject')??"",
+    this.translate.instant('templates.columns.status')??""
+  ];
+
     this.columnFields = ['categoryName', 'type', 'subject', 'isActive'];
   }
 
   ngOnDestroy() {
     this.subs.forEach(s => s.unsubscribe());
+    this.langSub?.unsubscribe()
   }
+   
 }

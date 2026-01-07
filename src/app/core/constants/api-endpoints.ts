@@ -184,5 +184,6 @@ export const API_ENDPOINTS = {
     DELETE: '/TechnicalReport/Delete',
     ACTIVE_INACTIVE: '/TechnicalReport/ActiveInActive',
     GET_ALL: '/TechnicalReport/GetAll',
+    GET_TECHNICAL_REPORT :'/Ration/GetByEconomicReport'
   },
 };

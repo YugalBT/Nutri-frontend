@@ -215,7 +215,11 @@
     "updating": "Aggiornamento in corso...",
     "noData": "Nessun dato disponibile",
     "noRecordsMatch": "Nessun record corrisponde alla tua ricerca",
-    "searchByDateOrFarmName": "Search by date or farm name"
+    "searchByDateOrFarmName": "Search by date or farm name",
+    "searchByName": "Cerca per nome",
+    "maxlength50": "Massimo 50 caratteri consentiti",
+    "submit": "Invia",
+    "deleteFailed": "Impossibile eliminare il modello"
   },
   "imageValidator": {
     "invalidType": "Tipo di immagine non valido. I tipi consentiti sono: jpeg, jpg, png.",
@@ -591,8 +595,11 @@
   "templateBuilder": {
     "manageCategoryheading": "Gestisci categoria",
     "managePlaceholderheading": "Gestisci segnaposto",
-    "managePlaceholderMappingheading": "Gestisci la mappatura dei segnaposto"
+    "managePlaceholderMappingheading": "Gestisci la mappatura dei segnaposto",
+    "manageEmailTemplate": "Gestisci modelli di posta elettronica"
+
   },
+  
   "operator": {
     "searchByOperatorName": "Cerca per nome dell’operatore",
     "heading": "Gestisci Operatore",
@@ -698,6 +705,36 @@
     "kpiName": "Nome KPI",
     "status": "Stato"
   }
+},
+
+  "templates": {
+    "heading": "Gestione dei Modelli",
+    "add": "Aggiungi Modello",
+    "edit": "Modifica Modello",
+    "template": "Modello",
+    "selectcategory": "Seleziona Categoria",
+    "selectType": "Seleziona Tipo",
+    "deleteConfirm": "Sei sicuro di voler eliminare questo modello?",
+    "columns": {
+      "category": "Categoria",
+      "type": "Tipo",
+      "subject": "Nome Documento",
+      "status": "Stato"
+    }
+  },
+
+  "managetemplateBuilder": {
+    "manageCategoryheading": "Gestione Categorie",
+    "managePlaceholderheading": "Gestione Segnaposto",
+    "managePlaceholderMappingheading": "Gestione Mappatura Segnaposto"
+  },
+
+  "placeholders": {
+    "heading": "Segnaposto",
+    "search": "Cerca Segnaposto"
+  }
+
+  
 }
 
-}
+
