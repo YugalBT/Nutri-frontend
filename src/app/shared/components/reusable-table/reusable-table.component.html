@@ -1,134 +1,125 @@
 <div class="table-wrapper ">
 
   <!-- No Data Found Message -->
-  
+
 
   <!-- Table -->
-   <div class="table-responsive custom-table-responsive">
-  <table  class="table modern-table align-middle table-responsive">
+  <div class="table-responsive custom-table-responsive">
+    <table class="table modern-table align-middle table-responsive">
 
-    <!-- Table Header -->
-    <thead>
-      <tr>
-        <th *ngFor="let col of columns">{{ col }}</th>
-        <th *ngIf="showActions" class="text-center">{{ 'common.actions' | translate }}</th>
-      </tr>
-    </thead>
+      <!-- Table Header -->
+      <thead>
+        <tr>
+          <th *ngFor="let col of columns">{{ col }}</th>
+          <th *ngIf="showActions" class="text-center">{{ 'common.actions' | translate }}</th>
+        </tr>
+      </thead>
 
-    <!-- Table Body -->
-    <tbody *ngIf="data && data.length > 0">
-      <tr *ngFor="let row of data">
+      <!-- Table Body -->
+      <tbody *ngIf="data && data.length > 0">
+        <tr *ngFor="let row of data">
 
-        <!-- CELL LOOP -->
-        <td *ngFor="let col of columns; let i = index">
-          <ng-container *ngIf="getCell(row, columnFields?.[i] || col.toLowerCase()) as cell">
+          <!-- CELL LOOP -->
+          <td *ngFor="let col of columns; let i = index">
+            <ng-container *ngIf="getCell(row, columnFields?.[i] || col.toLowerCase()) as cell">
 
-            <!-- LOGO -->
-            <ng-container *ngIf="cell.type === 'logo'">
-              <img [src]="cell.value" class="cell-logo" (error)="onImgError($event)" />
-            </ng-container>
+              <!-- LOGO -->
+              <ng-container *ngIf="cell.type === 'logo'">
+                <img [src]="cell.value" class="cell-logo" (error)="onImgError($event)" />
+              </ng-container>
 
-            <!-- COLOR SWATCH -->
-            <ng-container *ngIf="cell.type === 'color'">
-              <span class="color-swatch" [style.background]="cell.value"></span>
-            </ng-container>
+              <!-- COLOR SWATCH -->
+              <ng-container *ngIf="cell.type === 'color'">
+                <span class="color-swatch" [style.background]="cell.value"></span>
+              </ng-container>
 
-            <!-- IMAGE GALLERY -->
-            <ng-container *ngIf="cell.type === 'images'">
-              <div class="image-grid">
-                <div class="image-cell" *ngFor="let img of cell.value">
-                  <img [src]="img" loading="lazy" (error)="onImgError($event)" />
+              <!-- IMAGE GALLERY -->
+              <ng-container *ngIf="cell.type === 'images'">
+                <div class="image-grid">
+                  <div class="image-cell" *ngFor="let img of cell.value">
+                    <img [src]="img" loading="lazy" (error)="onImgError($event)" />
+                  </div>
                 </div>
-              </div>
-            </ng-container>
+              </ng-container>
 
-            <ng-container *ngIf="cell.type === 'switch'">
-              <label class="switch">
-                <input type="checkbox" [checked]="cell.value" [checked]="cell.value"
-                  (change)="toggleActive.emit({ row, isActive: $any($event.target).checked })">
-                <span class="slider"></span>
-              </label>
+              <ng-container *ngIf="cell.type === 'switch'">
+                <label class="switch">
+                  <input type="checkbox" [checked]="cell.value" [checked]="cell.value"
+                    (change)="toggleActive.emit({ row, isActive: $any($event.target).checked })">
+                  <span class="slider"></span>
+                </label>
+              </ng-container>
+              <ng-container *ngIf="cell.type === 'boolean'">
+                <span class="badge" [class.active]="cell.value" [class.inactive]="!cell.value">
+                  {{ cell.value ? 'Active' : 'Inactive' }}
+                </span>
+              </ng-container>
+
+              <ng-container *ngIf="cell.type === 'text'">
+
+                <a style="color:#2CA28F !important ;"
+                  *ngIf="clickableField === (columnFields?.[i] || col.toLowerCase())" href="javascript:void(0)"
+                  class=" fw-semibold" (click)="onCellClick(columnFields?.[i] || col.toLowerCase(), row)">
+                  {{ cell.value }}
+                </a>
+
+                <span *ngIf="clickableField !== (columnFields?.[i] || col.toLowerCase())">
+                  {{ cell.value }}
+                </span>
+
+              </ng-container>
             </ng-container>
-            <ng-container *ngIf="cell.type === 'boolean'">
-              <span class="badge" [class.active]="cell.value" [class.inactive]="!cell.value">
-                {{ cell.value ? 'Active' : 'Inactive' }}
+          </td>
+
+          <td *ngIf="showActions" class="text-center actions-col">
+            <div class="d-flex justify-content-center gap-3">
+
+              <!-- Edit -->
+              <span class="action-icon edit-icon" role="button" tabindex="0" (click)="editRow.emit(row)"
+                title="{{ 'common.edit' | translate }}">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                  stroke="#237d02" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M12 20h9" />
+                  <path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4 12.5-12.5z" />
+                </svg>
               </span>
-            </ng-container>
 
-            <ng-container *ngIf="cell.type === 'text'">
-
-              <a style="color:#2CA28F !important ;" *ngIf="clickableField === (columnFields?.[i] || col.toLowerCase())" href="javascript:void(0)"
-                class=" fw-semibold" (click)="onCellClick(columnFields?.[i] || col.toLowerCase(), row)">
-                {{ cell.value }}
-              </a>
-
-              <span *ngIf="clickableField !== (columnFields?.[i] || col.toLowerCase())">
-                {{ cell.value }}
+              <!-- Delete -->
+              <span class="action-icon delete-icon" role="button" tabindex="0" (click)="deleteRow.emit(row)"
+                title="{{ 'common.delete' | translate }}">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                  stroke="#f5000c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="3 6 5 6 21 6" />
+                  <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6" />
+                  <path d="M10 11v6" />
+                  <path d="M14 11v6" />
+                  <path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2" />
+                </svg>
               </span>
 
-            </ng-container>
-          </ng-container>
-        </td>
+              <!-- IMPORT (ONLY FOR LANGUAGE) -->
+              <span *ngIf="showImportExport" class="action-icon import-icon" role="button" tabindex="0"
+                (click)="importRow.emit(row)" title="{{ 'common.import' | translate }}">
+                <i class="bi bi-box-arrow-in-down"></i>
+              </span>
 
-     <td *ngIf="showActions" class="text-center actions-col">
-  <div class="d-flex justify-content-center gap-3">
 
-    <!-- Edit -->
-    <span
-      class="action-icon edit-icon"
-      role="button"
-      tabindex="0"
-      (click)="editRow.emit(row)"
-      title="{{ 'common.edit' | translate }}"
-    >
-      <svg xmlns="http://www.w3.org/2000/svg"
-           width="20" height="20"
-           viewBox="0 0 24 24"
-           fill="none"
-           stroke="#237d02"
-           stroke-width="2"
-           stroke-linecap="round"
-           stroke-linejoin="round">
-        <path d="M12 20h9"/>
-        <path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4 12.5-12.5z"/>
-      </svg>
-    </span>
+              <!-- EXPORT (ONLY FOR LANGUAGE) -->
+              <span *ngIf="showImportExport" class="action-icon export-icon" role="button" tabindex="0"
+                (click)="exportRow.emit(row)" title="{{ 'common.export' | translate }}">
+                <i class="bi bi-box-arrow-in-up"></i>
+              </span>
+            </div>
+          </td>
 
-    <!-- Delete -->
-    <span
-      class="action-icon delete-icon"
-      role="button"
-      tabindex="0"
-      (click)="deleteRow.emit(row)"
-      title="{{ 'common.delete' | translate }}"
-    >
-      <svg xmlns="http://www.w3.org/2000/svg"
-           width="20" height="20"
-           viewBox="0 0 24 24"
-           fill="none"
-           stroke="#f5000c"
-           stroke-width="2"
-           stroke-linecap="round"
-           stroke-linejoin="round">
-        <polyline points="3 6 5 6 21 6"/>
-        <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
-        <path d="M10 11v6"/>
-        <path d="M14 11v6"/>
-        <path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/>
-      </svg>
-    </span>
 
+        </tr>
+      </tbody>
+
+
+    </table>
   </div>
-</td>
-
-
-      </tr>
-    </tbody>
-    
-
-  </table>
-</div>
-<div *ngIf="!data || data.length === 0" class="no-data-container">
+  <div *ngIf="!data || data.length === 0" class="no-data-container">
     <div class="no-data-content">
       <img loading="lazy" src="assets/image/no-data.png" alt="No Data" class="no-data-icon" />
       <h3 class="no-data-title">{{ 'common.noData' | translate }}</h3>
