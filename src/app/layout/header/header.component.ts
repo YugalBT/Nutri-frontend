@@ -151,11 +151,12 @@ import { NotificationList } from '../../core/models/notification-list';
 import { AuthService } from '../../core/auth/auth.service';
 import { LocalizationService } from '../../core/services/localization/localization.service';
 import { LanguageList } from '../../core/models/language-list';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [RouterLink, CommonModule, TranslatePipe, ConfirmDialogComponent],
+  imports: [RouterLink, CommonModule, TranslatePipe, ConfirmDialogComponent, FormsModule],
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.css']
 })
@@ -184,24 +185,21 @@ export class HeaderComponent implements OnInit {
 
   ngOnInit(): void {
 
-    // 🔹 Load languages for dropdown
-    this.localizationService.getAllLanguages().subscribe(res => {
-      if (res?.isSuccess) {
-        this.languages = res.data ?? [];
-      }
-    });
+  this.localizationService.getAllLanguages().subscribe(res => {
+    this.languages = res?.data ?? [];
+  });
 
-    // 🔹 Init language (English default)
-    this.localizationService.initLanguage().subscribe(() => {
-      this.currentLang = this.localizationService.getCurrentLanguage();
-    });
+  this.localizationService.getCurrentLanguage$().subscribe(lang => {
+    this.currentLang = lang;
+  });
 
-    // 🔹 Theme
-    const theme = localStorage.getItem('theme');
-    this.darkMode = theme === 'dark';
-    this.applyTheme();
+  this.localizationService.initLanguage().subscribe();
 
-    this.loadNotifications();
+  const theme = localStorage.getItem('theme');
+  this.darkMode = theme === 'dark';
+  this.applyTheme();
+
+  this.loadNotifications();
   }
 
   /** 🔥 Language dropdown */

@@ -6,7 +6,7 @@ import { API_ENDPOINTS } from '../../../core/constants/api-endpoints';
 import { HttpService } from '../../../shared/services/http.service';
 import { HttpBackend } from '@angular/common/http';
 import { HttpParams } from '@angular/common/http';
-import { Observable, of } from 'rxjs';
+import { BehaviorSubject, Observable, of } from 'rxjs';
 import { tap } from 'rxjs/operators';
 
 @Injectable({
@@ -17,8 +17,8 @@ export class LocalizationService {
   private readonly STORAGE_KEY = 'lang';
   private readonly DEFAULT_LANG = 'en';
 
-  private currentLang = this.DEFAULT_LANG;
-
+  private currentLang: string = this.DEFAULT_LANG;
+  private currentLang$ = new BehaviorSubject<string>(this.DEFAULT_LANG);
   constructor(
     private translate: TranslateService,
     private http: HttpService,
@@ -36,9 +36,9 @@ export class LocalizationService {
     const savedLang =
       (localStorage.getItem(this.STORAGE_KEY) || this.DEFAULT_LANG).toLowerCase();
 
-    this.currentLang = savedLang;
-
-    return this.loadLanguageFromApi(savedLang);
+      this.currentLang = savedLang;
+this.currentLang$.next(this.currentLang);
+return this.loadLanguageFromApi(savedLang);
   }
 
   changeLanguage(lang: string): Observable<any> {
@@ -54,9 +54,14 @@ export class LocalizationService {
     }
 
     this.currentLang = lang;
-    localStorage.setItem(this.STORAGE_KEY, lang);
+localStorage.setItem(this.STORAGE_KEY, lang);
+this.currentLang$.next(lang);
+return this.loadLanguageFromApi(lang);
 
-    return this.loadLanguageFromApi(lang);
+    // this.currentLang = lang;
+    // localStorage.setItem(this.STORAGE_KEY, lang);
+
+    // return this.loadLanguageFromApi(lang);
   }
 
 
@@ -73,9 +78,11 @@ export class LocalizationService {
       })
     );
   }
+getCurrentLanguage$(): Observable<string> {
+  return this.currentLang$.asObservable();
+}
 
-  getCurrentLanguage(): string {
-    return this.currentLang;
-
-  }
+getCurrentLanguage(): string {
+  return this.currentLang;
+}
 }
