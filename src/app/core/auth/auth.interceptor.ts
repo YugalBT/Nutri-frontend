@@ -8,7 +8,7 @@ import { ROUTE_CONST } from '../constants/route.constants';
 
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const tokenService = inject(TokenService);
-  const authService = inject(AuthService);
+  //const authService = inject(AuthService);
   const router = inject(Router);
 
   const token = tokenService.getToken();
@@ -29,7 +29,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
   return next(req).pipe(
     catchError((error: HttpErrorResponse) => {
       if (error.status === 401) {
-        authService.logout();  
+        //authService.logout();  
         router.navigate([ROUTE_CONST.LOGIN]);
       }
       return throwError(() => error);
