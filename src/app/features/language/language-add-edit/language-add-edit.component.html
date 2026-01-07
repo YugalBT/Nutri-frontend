@@ -30,6 +30,8 @@
               <sup style="color: #f00; font-size: 12px;">*</sup>
             <input type="text" class="form-control"
                    formControlName="languageCode"
+                    [readonly]="isEdit"
+                    [class.readonly-input]="isEdit"
                    placeholder="{{ 'language.languageCodePlaceholder' | translate }}">
             <div class="text-danger" *ngIf="isInvalid('languageCode')">
               {{ 'language.languageCodeRequired' | translate }}

@@ -36,9 +36,18 @@
       (pageChange)="onPageChange($event)"
       (toggleActive)="toggleLanguageStatus($event)"
       (editRow)="languageAddEdit.openModal(true, $event)"
-      (deleteRow)="deleteLanguage($event)">
+      (deleteRow)="deleteLanguage($event)"
+       [showImportExport]="true"
+      (importRow)="importLanguage($event)"
+      (exportRow)="exportLanguage($event)">
     </app-reusable-table>
   </div>
+<input
+  type="file"
+  #importFileInput
+  hidden
+  accept=".xlsx,.xls"
+  (change)="onImportFileSelected($event)" />
 
 
 <app-language-add-edit #languageAddEdit></app-language-add-edit>

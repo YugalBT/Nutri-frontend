@@ -49,6 +49,7 @@ export const API_ENDPOINTS = {
     GET_FEEDS_BY_FARM_ID: '/Common/GetFeedByFarmId',
     GET_PLACEHOLDER_BY_CATEGORY_ID: '/Common/GetAllPlaceholderByCategoryId',
     GET_ALL_FORMULA_LIST: '/Common/GetAllFormula',
+    GET_Language_LIST: '/Common/GetAllLanguage',
   },
   
   
@@ -191,5 +192,8 @@ export const API_ENDPOINTS = {
     DELETE: '/Language/Delete',
     ACTIVE_INACTIVE: '/Language/ActiveInActive',
     GET_ALL: '/Language/GetAll',
+    Export: '/Language/ExportLanguageExcel',
+    Import: '/Language/ImportLanguageExcel',
+    LanguageByCulture: '/Language/LanguageByCulture',
   },
 };

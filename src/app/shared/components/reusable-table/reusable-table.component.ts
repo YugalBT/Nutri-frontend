@@ -15,6 +15,11 @@ export class ReusableTableComponent implements OnChanges {
 
   NoImagePath: string = '/assets/image/no-image.png';
 
+  @Input() showImportExport = false;
+
+@Output() importRow = new EventEmitter<any>();
+@Output() exportRow = new EventEmitter<any>();
+
   @Input() columns: string[] = [];
   @Input() columnFields?: string[];
   @Input() data: Record<string, any>[] = [];

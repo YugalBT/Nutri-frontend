@@ -1,0 +1,5 @@
+.readonly-input {
+  background-color: #e9ecef;   /* Bootstrap disabled color */
+  color: #6c757d;              /* Muted text */
+  cursor: not-allowed;
+}

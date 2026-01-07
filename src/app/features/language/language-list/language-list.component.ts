@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { TranslateService } from '../../../i18n/translate.service';
 import { TranslatePipe } from '../../../i18n/translate.pipe';
 import { LanguageService } from '../../../core/services/language/language.service';
@@ -13,6 +13,7 @@ import { ReusableTableComponent } from '../../../shared/components/reusable-tabl
 import { CommonService } from '../../../shared/services/common.service';
 //import { PERMISSIONS } from '../../../core/constants/permissions.constants';
 import { LanguageAddEditComponent } from '../language-add-edit/language-add-edit.component';
+import { base64ToBlob, downloadBlob } from '../../../core/helpers/file.helper';
 
 
 @Component({
@@ -28,6 +29,11 @@ import { LanguageAddEditComponent } from '../language-add-edit/language-add-edit
   styleUrls: ['./language-list.component.css']
 })
 export class LanguageListComponent implements OnInit, OnDestroy {
+
+  @ViewChild('importFileInput') importFileInput!: ElementRef<HTMLInputElement>;
+
+selectedCulture = '';
+isImporting = false;
 
   columns: string[] = [];
   columnFields: string[] = [];
@@ -200,6 +206,81 @@ export class LanguageListComponent implements OnInit, OnDestroy {
         error: () => this.toast.error('Failed to update status')
       });
   }
+
+exportLanguage(row: any): void {
+  const culture = row.languageCode;
+
+  this.languageService.exportLanguage(culture).subscribe({
+    next: (res) => {
+      const base64 = res?.data;
+
+      if (!base64) {
+        this.toast.error('Export failed: empty file');
+        return;
+      }
+
+      const blob = base64ToBlob(
+        base64,
+        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+      );
+
+      downloadBlob(blob, `Messages.${culture}.xlsx`);
+
+      this.toast.success('Language exported successfully');
+    },
+    error: () => {
+      this.toast.error('Failed to export language');
+    }
+  });
+}
+
+importLanguage(row: any): void {
+  this.selectedCulture = row.languageCode; // 👈 culture captured here
+
+  // Reset input so same file can be selected again
+  this.importFileInput.nativeElement.value = '';
+  this.importFileInput.nativeElement.click();
+}
+
+
+onImportFileSelected(event: Event): void {
+  const input = event.target as HTMLInputElement;
+  const file = input.files?.[0];
+
+  if (!file) return;
+
+  if (!file.name.endsWith('.xlsx')) {
+    this.toast.warning('Please upload a valid Excel (.xlsx) file');
+    return;
+  }
+
+  const formData = new FormData();
+
+  // 👇 MUST match backend parameter names
+  formData.append('file', file);                     // IFormFile file
+  formData.append('culture', this.selectedCulture);  // string culture
+
+  this.isImporting = true;
+
+  this.languageService.importLanguage(formData).subscribe({
+    next: (res) => {
+      this.isImporting = false;
+
+      if (res?.isSuccess) {
+        this.toast.success(res.message || 'Language imported successfully');
+        this.reloadLanguages();
+      } else {
+        this.toast.error(res.message || 'Import failed');
+      }
+    },
+    error: () => {
+      this.isImporting = false;
+      this.toast.error('Failed to import language');
+    }
+  });
+}
+
+
 
   reloadLanguages(): void {
     this.loadLanguages(this.pageIndex + 1, this.pageSize);
