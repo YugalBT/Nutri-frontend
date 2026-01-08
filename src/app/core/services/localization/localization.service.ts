@@ -36,9 +36,9 @@ export class LocalizationService {
     const savedLang =
       (localStorage.getItem(this.STORAGE_KEY) || this.DEFAULT_LANG).toLowerCase();
 
-      this.currentLang = savedLang;
-this.currentLang$.next(this.currentLang);
-return this.loadLanguageFromApi(savedLang);
+    this.currentLang = savedLang;
+    this.currentLang$.next(this.currentLang);
+    return this.loadLanguageFromApi(savedLang);
   }
 
   changeLanguage(lang: string): Observable<any> {
@@ -54,9 +54,9 @@ return this.loadLanguageFromApi(savedLang);
     }
 
     this.currentLang = lang;
-localStorage.setItem(this.STORAGE_KEY, lang);
-this.currentLang$.next(lang);
-return this.loadLanguageFromApi(lang);
+    localStorage.setItem(this.STORAGE_KEY, lang);
+    this.currentLang$.next(lang);
+    return this.loadLanguageFromApi(lang);
 
     // this.currentLang = lang;
     // localStorage.setItem(this.STORAGE_KEY, lang);
@@ -78,11 +78,11 @@ return this.loadLanguageFromApi(lang);
       })
     );
   }
-getCurrentLanguage$(): Observable<string> {
-  return this.currentLang$.asObservable();
-}
+  getCurrentLanguage$(): Observable<string> {
+    return this.currentLang$.asObservable();
+  }
 
-getCurrentLanguage(): string {
-  return this.currentLang;
-}
+  getCurrentLanguage(): string {
+    return this.currentLang;
+  }
 }

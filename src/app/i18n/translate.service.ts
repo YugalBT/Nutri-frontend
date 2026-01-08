@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, of } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
 import { API_ENDPOINTS } from '../core/constants/api-endpoints';
+import { HttpService } from '../shared/services/http.service';
 
 interface LocalizationApiResponse {
   isSuccess: boolean;
@@ -20,7 +21,7 @@ export class TranslateService {
   private loaded$ = new BehaviorSubject<boolean>(false);
   public lang$ = new BehaviorSubject<string>(this.lang);
 
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpService) {
     const saved = localStorage.getItem('lang');
     this.lang = saved || this.detectDefaultLang() || 'en';
 
@@ -56,7 +57,7 @@ export class TranslateService {
 private load(lang: string): Observable<boolean> {
   return this.http
     .post<any>(
-      'https://localhost:44392/api/Language/LanguageByCulture',
+      API_ENDPOINTS.LANGUAGE.LanguageByCulture,
       { culture: lang || 'en' }
     )
     .pipe(
