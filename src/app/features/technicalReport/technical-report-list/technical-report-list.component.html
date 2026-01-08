@@ -3,112 +3,95 @@
   <!-- ================= HEADER ================= -->
   <div class="page-header">
     <div>
-      <h2 class="page-title">{{ ration.rationName }}</h2>
-      <p class="page-subtitle">{{ ration.animalGroupName }}</p>
+      <h2 class="page-title">
+        <svg width="18" height="18" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+
+          <path d="M6 14C6 9.582 9.582 6 14 6H16C20.418 6 24 9.582 24 14" stroke="black" stroke-width="2"
+            stroke-linecap="round" />
+
+          <path d="M7 14H23L21 22H9L7 14Z" stroke="black" stroke-width="2" stroke-linejoin="round" />
+
+          <path d="M11 11H11.01M15 10H15.01M19 11H19.01" stroke="black" stroke-width="2" stroke-linecap="round" />
+        </svg>
+
+        Ration : {{ ration?.rationName }}
+      </h2>
+      <p class="page-subtitle">
+        <svg width="18" height="18" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+
+          <circle cx="15" cy="10" r="3" stroke="black" stroke-width="2" />
+          <circle cx="9" cy="14" r="2.5" stroke="black" stroke-width="2" />
+          <circle cx="21" cy="14" r="2.5" stroke="black" stroke-width="2" />
+
+          <path d="M6 22C6 18.686 8.686 16 12 16H18C21.314 16 24 18.686 24 22" stroke="black" stroke-width="2"
+            stroke-linecap="round" />
+        </svg>
+
+       Animal Group : {{ ration?.animalGroup?.name }}
+      </p>
     </div>
 
     <div class="d-flex align-items-center gap-3 flex-wrap">
       <div class="text-center">
         <div class="text-muted small">Animals</div>
-        <strong>{{ ration.numberOfAnimal }}</strong>
+        <strong>{{ ration?.animalGroup?.numberOfAnimals }}</strong>
       </div>
 
       <div class="text-center">
         <div class="text-muted small">Avg Milk / Day</div>
-        <strong>{{ ration.avgMilkPerDay }} L</strong>
+        <strong>{{ ration?.animalGroup?.avgMilkPerDay }} L</strong>
       </div>
-
-      <!-- <button class="btn add-btn">Calculate</button>
-      <button class="btn add-btn">Save</button> -->
     </div>
   </div>
 
-  <!-- ================= KPI SUMMARY ================= -->
+  <!-- ================= GLOBAL KPI CARDS ================= -->
   <div class="row g-3 mb-4">
 
-    <!-- Dry Matter -->
-    <div class="col-xl-3 col-md-4">
-      <div class="white-with-shadow">
-        <p class="text-muted mb-1">Dry Matter</p>
-        <h4 class="fw-bold mb-0">{{ totalDM }}</h4>
-        <small class="text-muted">kg</small>
-      </div>
-    </div>
+    <div class="col-lg-3 col-md-6 col-sm-12" *ngFor="let g of globalCards; let i = index">
 
-    <!-- Protein -->
-    <div class="col-xl-3 col-md-4">
-      <div class="white-with-shadow">
-        <p class="text-muted mb-1">Crude Protein</p>
-        <h4 class="fw-bold mb-0">{{ totalProtein }}</h4>
-        <small class="text-muted">kg</small>
-      </div>
-    </div>
+      <div class="overview-card d-flex gap-3 align-items-center" [class.active]="true">
 
-    <!-- Energy -->
-    <div class="col-xl-3 col-md-4">
-      <div class="white-with-shadow">
-        <p class="text-muted mb-1">Energy</p>
-        <h4 class="fw-bold mb-0">{{ totalEnergy }}</h4>
-        <small class="text-muted">MJ</small>
-      </div>
-    </div>
 
-    <!-- ADF -->
-    <div class="col-xl-3 col-md-4">
-      <div class="white-with-shadow">
-        <p class="text-muted mb-1">ADF</p>
-        <h4 class="fw-bold mb-0">{{ totalADF }}</h4>
-        <small class="text-muted">kg</small>
-      </div>
-    </div>
+        <div class="ov-icon">
+          <svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
 
-    <!-- Fat -->
-    <div class="col-xl-3 col-md-4">
-      <div class="white-with-shadow">
-        <p class="text-muted mb-1">Fat</p>
-        <h4 class="fw-bold mb-0">{{ totalFat }}</h4>
-        <small class="text-muted">kg</small>
-      </div>
-    </div>
+            <path d="M6 20L12 14L16 18L24 10" stroke="black" stroke-width="1.8" stroke-linecap="round"
+              stroke-linejoin="round" />
 
-    <!-- Calcium -->
-    <div class="col-xl-3 col-md-4">
-      <div class="white-with-shadow">
-        <p class="text-muted mb-1">Calcium</p>
-        <h4 class="fw-bold mb-0">{{ totalCalcium }}</h4>
-        <small class="text-muted">kg</small>
-      </div>
-    </div>
+            <circle cx="6" cy="20" r="1.6" fill="black" />
+            <circle cx="12" cy="14" r="1.6" fill="black" />
+            <circle cx="16" cy="18" r="1.6" fill="black" />
+            <circle cx="24" cy="10" r="1.6" fill="black" />
 
-    <!-- Phosphorus -->
-    <div class="col-xl-3 col-md-4">
-      <div class="white-with-shadow">
-        <p class="text-muted mb-1">Phosphorus</p>
-        <h4 class="fw-bold mb-0">{{ totalPhosphorus }}</h4>
-        <small class="text-muted">kg</small>
-      </div>
-    </div>
+          </svg>
 
-    <!-- Starch -->
-    <div class="col-xl-3 col-md-4">
-      <div class="white-with-shadow">
-        <p class="text-muted mb-1">Starch</p>
-        <h4 class="fw-bold mb-0">{{ totalStarch }}</h4>
-        <small class="text-muted">kg</small>
+        </div>
+
+        <!-- CONTENT -->
+        <div class="ov-content">
+          <span>{{ g.name }}</span>
+          <h3>€ {{ g.value }}</h3>
+        </div>
+
       </div>
+
     </div>
 
   </div>
 
-  <app-reusable-table [columns]="columns" [columnFields]="columnFields" [data]="feeds" [pageable]="false"
-    [showActions]="false" [showFooter]="true" [footerTotals]="tableTotals">
 
-    <!-- Quantity input cell -->
+
+
+  <!-- ================= TABLE ================= -->
+  <app-reusable-table [columns]="columns" [columnFields]="columnFields" [data]="feeds" [pageable]="false"
+    [showActions]="false" [showFooter]="showFooter" [footerTotals]="tableTotals">
+
+    <!-- Editable quantity -->
     <ng-template let-row="row" let-field="field">
       <ng-container [ngSwitch]="field">
 
-        <input *ngSwitchCase="'quantityPerKg'" type="number" min="0" class="form-control form-control-sm"
-          [(ngModel)]="row.quantityPerKg" />
+        <input *ngSwitchCase="'quantity_kg'" type="number" min="0" class="form-control form-control-sm"
+          [(ngModel)]="row.quantity_kg" (ngModelChange)="calculateTableTotals()" />
 
         <span *ngSwitchDefault>
           {{ row[field] }}

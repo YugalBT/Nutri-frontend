@@ -1,62 +1,47 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Subscription } from 'rxjs';
-import { TechnicalReportAddEditComponent } from '../technical-report-add-edit/technical-report-add-edit.component';
-import { TechnicalReportService } from '../../../core/services/technical-report/technical-report.service';
+import { Component, OnInit } from '@angular/core';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { SharedModule } from '../../../shared/shared.module';
 import { ReusableTableComponent } from '../../../shared/components/reusable-table/reusable-table.component';
 import {
   TechnicalReportDetails,
   Feed,
-  FeedTotals
+  Global
 } from '../../../core/models/technical-report-details';
-import { SharedModule } from '../../../shared/shared.module';
-import { CommonModule } from '@angular/common';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { TechnicalReportService } from '../../../core/services/technical-report/technical-report.service';
 
-interface TechnicalReportRow {
+interface FeedTableRow {
+  feedId: string;
   feedName: string;
-  quantityKg: number;
-  totalDM: number;
-  crudeProtein: number;
-  energyMJ: number;
+  quantity_kg: number;
+  totalPerFeed: number;
+  [key: string]: string | number;
 }
 
 @Component({
   selector: 'app-technical-report-list',
   standalone: true,
-  imports: [SharedModule, ReactiveFormsModule, FormsModule,ReusableTableComponent],
+  imports: [SharedModule, ReactiveFormsModule, FormsModule, ReusableTableComponent],
   templateUrl: './technical-report-list.component.html',
   styleUrls: ['./technical-report-list.component.css']
 })
 export class TechnicalReportListComponent implements OnInit {
 
-  ration!: TechnicalReportDetails;
+  ration?: TechnicalReportDetails;
 
-  
 
-  feeds: Feed[] = [];
-  filteredFeeds: Feed[] = [];
+  // dynamic table
+  columns: string[] = [];
+  columnFields: string[] = [];
+  feeds: FeedTableRow[] = [];
 
-  search = '';
-  filter: 'ALL' | 'HIGH_ENERGY' | 'HIGH_PROTEIN' = 'ALL';
+  // global cards
+  globalCards: Global[] = [];
 
-  // KPI totals
-  totalDM = 0;
-  totalProtein = 0;
-  totalEnergy = 0;
-  totalADF = 0;
-  totalFat = 0;
-  totalCalcium = 0;
-  totalPhosphorus = 0;
-  totalStarch = 0;
+  // footer totals
   tableTotals: Record<string, number> = {};
-showFooter = true;
+  showFooter = true;
 
-
-  expandedFeeds = new Set<string>();
-
-  constructor(private service: TechnicalReportService) { 
-    this.setColumns();
-  }
+  constructor(private service: TechnicalReportService) {}
 
   ngOnInit(): void {
     this.loadReport();
@@ -67,114 +52,71 @@ showFooter = true;
       if (!res?.data?.length) return;
 
       this.ration = res.data[0];
-      this.feeds = [...this.ration.feeds];
-      this.filteredFeeds = [...this.feeds];
 
-      this.calculateTableTotals();
+      this.buildTable(this.ration.feeds);
+      this.buildGlobalCards(this.ration.global);
     });
   }
 
-  columns: string[] = [];
-columnFields: string[] = [];
+  // ------------------ BUILD TABLE ------------------
 
-private setColumns(): void {
- this.columns = [
-    'Feed',
-    'Quantity (kg)',
-    'Dry Matter (%)',
-    'Protein (%)',
-    'Energy',
-    'ADF (%)',
-    'Fat Content (%)',
-    'Calcium (%)',
-    'Phosphorus (%)',
-    'Starch (%)',
-    'Quantity (kg)'
-  ];
+  private buildTable(feeds: Feed[]): void {
+    const kpiNames = new Set<string>();
 
-  this.columnFields = [
-    'feedName',
-    'quantityPerKg',
-    'dryMatter',
-    'protein',
-    'energy',
-    'adf',
-    'fatContent',
-    'calcium',
-    'phosphorus',
-    'starch',
-    'quantityPerKg',
+    feeds.forEach(feed =>
+      feed.kpIs.forEach(kpi => kpiNames.add(kpi.kpiName))
+    );
 
-  ];
-}
+    // Static columns
+    this.columns = ['Feed', 'Quantity (kg)'];
+    this.columnFields = ['feedName', 'quantity_kg'];
 
-
-  // ---------------- Filters ----------------
-
-  applyFilter(): void {
-    this.filteredFeeds = this.feeds.filter(feed => {
-
-      if (this.filter === 'HIGH_ENERGY' && feed.energy < 1000) return false;
-      if (this.filter === 'HIGH_PROTEIN' && feed.protein < 15) return false;
-
-      return feed.feedName
-        .toLowerCase()
-        .includes(this.search.toLowerCase());
+    // Dynamic KPI columns
+    kpiNames.forEach(kpi => {
+      this.columns.push(kpi);
+      this.columnFields.push(kpi);
     });
-  }
 
-  toggleExpand(feedId: string): void {
-    this.expandedFeeds.has(feedId)
-      ? this.expandedFeeds.delete(feedId)
-      : this.expandedFeeds.add(feedId);
-  }
+    // Map rows
+    this.feeds = feeds.map(feed => {
+      const row: FeedTableRow = {
+        feedId: feed.feedId,
+        feedName: feed.feedName,
+        quantity_kg: feed.quantity_kg,
+        totalPerFeed: feed.totalPerFeed
+      };
 
-  // ---------------- Calculations ----------------
+      feed.kpIs.forEach(kpi => {
+        row[kpi.kpiName] = kpi.value;
+      });
 
-calculateTableTotals(): void {
-  const totals: Record<string, number> = {};
-
-  const fields = [
-    'quantityPerKg',
-    'dryMatter',
-    'protein',
-    'energy',
-    'adf',
-    'fatContent',
-    'calcium',
-    'phosphorus',
-    'starch'
-  ];
-
-  fields.forEach(f => totals[f] = 0);
-
-  this.feeds.forEach(feed => {
-    fields.forEach(field => {
-      totals[field] += Number(feed[field as keyof Feed] ?? 0);
+      return row;
     });
-  });
 
-  this.tableTotals = totals;
-}
-
-
-
-
-
-  calcDM(feed: Feed): number {
-    return (feed.quantityPerKg || 0) * feed.dryMatter / 100;
+    this.calculateTableTotals();
   }
 
-  calcProtein(feed: Feed): number {
-    return (feed.quantityPerKg || 0) * feed.protein / 100;
+  // ------------------ GLOBAL KPIs ------------------
+
+  private buildGlobalCards(globals: Global[]): void {
+    this.globalCards = globals;
   }
 
-  calcEnergy(feed: Feed): number {
-    return (feed.quantityPerKg || 0) * feed.energy;
-  }
+  // ------------------ FOOTER TOTALS ------------------
 
-  getEnergyContribution(feed: Feed): number {
-    if (!this.totalEnergy) return 0;
-    return +((this.calcEnergy(feed) / this.totalEnergy) * 100).toFixed(1);
+  calculateTableTotals(): void {
+    const totals: Record<string, number> = {};
+
+    this.columnFields.forEach(f => (totals[f] = 0));
+
+    this.feeds.forEach(row => {
+      this.columnFields.forEach(field => {
+        if (typeof row[field] === 'number') {
+          totals[field] += Number(row[field]);
+        }
+      });
+    });
+
+    this.tableTotals = totals;
   }
 }

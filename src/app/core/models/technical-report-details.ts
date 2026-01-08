@@ -1,47 +1,42 @@
 export interface TechnicalReportDetails {
+  rationId: string;
+  rationName: string;
+  animalGroup: AnimalGroup;
+  farm: Farm;
+  feeds: Feed[];
+  global: Global[];
+}
 
-    rationId: string
-    rationName: string
-    animalGroupId: string
-    animalGroupName: string
-    avgMilkPerDay: number
-    numberOfAnimal: number
-    feeds: Feed[]
+export interface AnimalGroup {
+  id: string;
+  name: string;
+  lactationStageId: string;
+  lactationStageName: string;
+  numberOfAnimals: number;
+  avgMilkPerDay: number;
+}
+
+export interface Farm {
+  id: string;
+  name: string;
+  milkPrice: number;
 }
 
 export interface Feed {
-    feedId: string
-    feedName: string
-    dryMatter: number
-    protein: number
-    energy: number
-    adf: number
-    fatContent: number
-    calcium: number
-    phosphorus: number
-    starch: number
-    quantityPerKg: number
-    kpIs: KpI[]
+  feedId: string;
+  feedName: string;
+  quantity_kg: number;
+  totalPerFeed: number;
+  kpIs: KpI[];
 }
 
 export interface KpI {
-    kpiId: string
-    kpiName: string
-    formula: string
-    calculatedValue: number
+  kpiId: string;
+  kpiName: string;
+  value: number;
 }
 
-export interface FeedTotals {
-  quantityPerKg: number;
-  dryMatter: number;
-  protein: number;
-  energy: number;
-  adf: number;
-  fatContent: number;
-  calcium: number;
-  phosphorus: number;
-  starch: number;
+export interface Global {
+  name: string;
+  value: number;
 }
-
-
-

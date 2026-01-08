@@ -86,23 +86,26 @@
         </tr>
       </tbody>
       <tfoot *ngIf="showFooter && footerTotals">
-    <tr class="fw-semibold bg-light">
-      <td *ngFor="let col of columns; let i = index">
+  <tr class="fw-semibold bg-light">
 
-        <ng-container
-          *ngIf="footerTotals[columnFields?.[i] || col.toLowerCase()] !== undefined;
-                 else empty">
+    <td *ngFor="let col of columns; let i = index">
 
-          {{ footerTotals[columnFields?.[i] || col.toLowerCase()] | number:'1.2-2' }}
+    
+      <ng-container *ngIf="i === 0">
+        Total
+      </ng-container>
 
-        </ng-container>
+      
+      <ng-container *ngIf="i !== 0">
+        {{ footerTotals[columnFields?.[i] || col.toLowerCase()] | number:'1.2-2' }}
+      </ng-container>
 
-        <ng-template #empty>Total</ng-template>
-      </td>
+    </td>
 
-      <td *ngIf="showActions"></td>
-    </tr>
-  </tfoot>
+    <td *ngIf="showActions"></td>
+  </tr>
+</tfoot>
+
     </table>
   </div>
   <div *ngIf="!data || data.length === 0" class="no-data-container">
