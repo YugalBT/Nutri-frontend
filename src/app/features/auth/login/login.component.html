@@ -68,28 +68,32 @@
                 </div>
             </div>
             <div class="col-lg-5 gradient_bg">
+                <!-- LANGUAGE DROPDOWN -->
+
                 <div class="language-switcher-right">
                     <div class="dropdown">
-                        <button class="btn btn-light dropdown-toggle lang-btn" type="button" data-bs-toggle="dropdown">
-                            {{ currentLang === 'it' ? 'Italiano' : 'English' }}
+                        <button class="btn btn-light dropdown-toggle" data-bs-toggle="dropdown">
+                            {{ currentLanguageName }}
                         </button>
 
                         <ul class="dropdown-menu dropdown-menu-end">
-                            <li>
-                                <button class="dropdown-item" (click)="changeLanguage('en')">English</button>
-                            </li>
-                            <li>
-                                <button class="dropdown-item" (click)="changeLanguage('it')">Italiano</button>
+                            <li *ngFor="let lang of languages">
+                                <button class="dropdown-item" (click)="changeLanguage(lang.languageCode)">
+                                    {{ lang.languageName }}
+                                </button>
                             </li>
                         </ul>
                     </div>
+
+
                 </div>
+
+
                 <div class="inner_content_two">
 
                     <!-- <a class="" href="#" data-discover="true"><img class="img-fluid" alt=""
                             [src]="logoUrl || 'assets/image/logo.png'"></a> -->
-                    <a class=""  data-discover="true"><img class="img-fluid" alt=""
-                            [src]="'assets/image/logo.png'"></a>
+                    <a class="" data-discover="true"><img class="img-fluid" alt="" [src]="'assets/image/logo.png'"></a>
                     <div class="login-right-content">
                         <h2 class="login-right-heading">Smarter feed. Healthier herds. Stronger economics.
                         </h2>

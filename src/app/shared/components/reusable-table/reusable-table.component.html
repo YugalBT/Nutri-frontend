@@ -1,23 +1,41 @@
 <div class="table-wrapper ">
+
+  <!-- No Data Found Message -->
+
+
+  <!-- Table -->
+  <div class="table-responsive custom-table-responsive">
+    <table class="table modern-table align-middle table-responsive">
   <div class="table-responsive custom-table-responsive">
     <table class="table modern-table align-middle table-responsive">
 
+      <!-- Table Header -->
       <thead>
         <tr>
           <th *ngFor="let col of columns">{{ col }}</th>
           <th *ngIf="showActions" class="text-center">{{ 'common.actions' | translate }}</th>
         </tr>
       </thead>
+
+      <!-- Table Body -->
       <tbody *ngIf="data && data.length > 0">
         <tr *ngFor="let row of data">
+
+          <!-- CELL LOOP -->
           <td *ngFor="let col of columns; let i = index">
             <ng-container *ngIf="getCell(row, columnFields?.[i] || col.toLowerCase()) as cell">
+
+              <!-- LOGO -->
               <ng-container *ngIf="cell.type === 'logo'">
                 <img [src]="cell.value" class="cell-logo" (error)="onImgError($event)" />
               </ng-container>
+
+              <!-- COLOR SWATCH -->
               <ng-container *ngIf="cell.type === 'color'">
                 <span class="color-swatch" [style.background]="cell.value"></span>
               </ng-container>
+
+              <!-- IMAGE GALLERY -->
               <ng-container *ngIf="cell.type === 'images'">
                 <div class="image-grid">
                   <div class="image-cell" *ngFor="let img of cell.value">
@@ -38,9 +56,27 @@
                   {{ cell.value ? 'Active' : 'Inactive' }}
                 </span>
               </ng-container>
+              <ng-container *ngIf="cell.type === 'switch'">
+                <label class="switch">
+                  <input type="checkbox" [checked]="cell.value" [checked]="cell.value"
+                    (change)="toggleActive.emit({ row, isActive: $any($event.target).checked })">
+                  <span class="slider"></span>
+                </label>
+              </ng-container>
+              <ng-container *ngIf="cell.type === 'boolean'">
+                <span class="badge" [class.active]="cell.value" [class.inactive]="!cell.value">
+                  {{ cell.value ? 'Active' : 'Inactive' }}
+                </span>
+              </ng-container>
 
               <ng-container *ngIf="cell.type === 'text'">
+              <ng-container *ngIf="cell.type === 'text'">
 
+                <a style="color:#2CA28F !important ;"
+                  *ngIf="clickableField === (columnFields?.[i] || col.toLowerCase())" href="javascript:void(0)"
+                  class=" fw-semibold" (click)="onCellClick(columnFields?.[i] || col.toLowerCase(), row)">
+                  {{ cell.value }}
+                </a>
                 <a style="color:#2CA28F !important ;"
                   *ngIf="clickableField === (columnFields?.[i] || col.toLowerCase())" href="javascript:void(0)"
                   class=" fw-semibold" (click)="onCellClick(columnFields?.[i] || col.toLowerCase(), row)">
@@ -50,7 +86,13 @@
                 <span *ngIf="clickableField !== (columnFields?.[i] || col.toLowerCase())">
                   {{ cell.value }}
                 </span>
+                <span *ngIf="clickableField !== (columnFields?.[i] || col.toLowerCase())">
+                  {{ cell.value }}
+                </span>
 
+              </ng-container>
+            </ng-container>
+          </td>
               </ng-container>
             </ng-container>
           </td>
@@ -80,32 +122,29 @@
                 </svg>
               </span>
 
+              <!-- IMPORT (ONLY FOR LANGUAGE) -->
+              <span *ngIf="showImportExport" class="action-icon import-icon" role="button" tabindex="0"
+                (click)="importRow.emit(row)" title="{{ 'common.import' | translate }}">
+                <i class="bi bi-box-arrow-in-down"></i>
+              </span>
 
+
+              <!-- EXPORT (ONLY FOR LANGUAGE) -->
+              <span *ngIf="showImportExport" class="action-icon export-icon" role="button" tabindex="0"
+                (click)="exportRow.emit(row)" title="{{ 'common.export' | translate }}">
+                <i class="bi bi-box-arrow-in-up"></i>
+              </span>
             </div>
           </td>
+
+
         </tr>
       </tbody>
-      <tfoot *ngIf="showFooter && footerTotals">
-  <tr class="fw-semibold bg-light">
 
-    <td *ngFor="let col of columns; let i = index">
 
-    
-      <ng-container *ngIf="i === 0">
-        Total
-      </ng-container>
-
-      
-      <ng-container *ngIf="i !== 0">
-        {{ footerTotals[columnFields?.[i] || col.toLowerCase()] | number:'1.2-2' }}
-      </ng-container>
-
-    </td>
-
-    <td *ngIf="showActions"></td>
-  </tr>
-</tfoot>
-
+    </table>
+  </div>
+  <div *ngIf="!data || data.length === 0" class="no-data-container">
     </table>
   </div>
   <div *ngIf="!data || data.length === 0" class="no-data-container">

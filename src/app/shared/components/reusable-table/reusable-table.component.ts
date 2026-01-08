@@ -18,6 +18,11 @@ export class ReusableTableComponent implements OnChanges {
   @Input() showFooter: boolean = false;   //  default OFF
   @Input() footerTotals?: Record<string, number>;
 
+  @Input() showImportExport = false;
+
+@Output() importRow = new EventEmitter<any>();
+@Output() exportRow = new EventEmitter<any>();
+
   @Input() columns: string[] = [];
   @Input() columnFields?: string[];
   @Input() data: Record<string, any>[] = [];
