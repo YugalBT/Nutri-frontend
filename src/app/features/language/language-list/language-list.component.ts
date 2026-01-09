@@ -19,6 +19,7 @@ import { ReusableTableComponent } from '../../../shared/components/reusable-tabl
 import { LanguageAddEditComponent } from '../language-add-edit/language-add-edit.component';
 import { base64ToBlob, downloadBlob } from '../../../core/helpers/file.helper';
 import { NgxSpinnerModule } from 'ngx-spinner';
+import { LocalizationService } from '../../../core/services/localization/localization.service';
 
 @Component({
   selector: 'app-language-list',
@@ -54,13 +55,15 @@ export class LanguageListComponent implements OnInit, OnDestroy {
   private subs: Subscription[] = [];
   private langSub?: Subscription;
   private searchDebounce: any;
+  currentLang: any = '';
 
   constructor(
     private translate: TranslateService,
     private languageService: LanguageService,
     private spinner: NgxSpinnerService,
     private toast: ToastService,
-    private confirm: ConfirmDialogService
+    private confirm: ConfirmDialogService,
+    private localizationService: LocalizationService
   ) {
     this.setColumns();
     this.langSub = this.translate.lang$.subscribe(() => this.setColumns());
@@ -70,17 +73,27 @@ export class LanguageListComponent implements OnInit, OnDestroy {
   // INIT
   // --------------------------------------------------
   ngOnInit(): void {
-    this.loadLanguages(1, this.pageSize);
+  // Load languages list
+  this.loadLanguages(1, this.pageSize);
 
-    const langChangedSub =
-      this.languageService.languagesChanged$?.subscribe(() => {
-        this.reloadLanguages();
-      });
+  // Reload languages if language CRUD changes
+  const langChangedSub =
+    this.languageService.languagesChanged$?.subscribe(() => {
+      this.reloadLanguages();
+    });
 
-    if (langChangedSub) {
-      this.subs.push(langChangedSub);
-    }
+  if (langChangedSub) {
+    this.subs.push(langChangedSub);
   }
+
+  // 🔥 IMPORTANT: react to language change
+  const activeLangSub = this.translate.lang$.subscribe(() => {
+    this.currentLang = this.localizationService.getCurrentLanguage();
+  });
+
+  this.subs.push(activeLangSub);
+}
+
 
   // --------------------------------------------------
   // COLUMNS
@@ -275,37 +288,78 @@ export class LanguageListComponent implements OnInit, OnDestroy {
   }
 
   onImportFileSelected(event: Event): void {
-    const input = event.target as HTMLInputElement;
-    const file = input.files?.[0];
+  const input = event.target as HTMLInputElement;
+  const file = input.files?.[0];
 
-    if (!file) return;
+  if (!file) return;
 
-    if (!file.name.endsWith('.xlsx')) {
-      this.toast.warning('Please upload a valid Excel (.xlsx) file');
-      return;
-    }
-
-    const formData = new FormData();
-    formData.append('file', file);
-    formData.append('culture', this.selectedCulture);
-
-    this.spinner.show();
-
-    this.languageService
-      .importLanguage(formData)
-      .pipe(finalize(() => this.spinner.hide()))
-      .subscribe({
-        next: (res) => {
-          if (res?.isSuccess) {
-            this.toast.success(res.message || 'Language imported successfully');
-            this.reloadLanguages();
-          } else {
-            this.toast.error(res.message || 'Import failed');
-          }
-        },
-        error: () => this.toast.error('Failed to import language')
-      });
+  if (!file.name.endsWith('.xlsx')) {
+    this.toast.warning('Please upload a valid Excel (.xlsx) file');
+    return;
   }
+
+  const formData = new FormData();
+  formData.append('file', file);
+  formData.append('culture', this.selectedCulture);
+
+  this.spinner.show();
+
+  this.languageService.importLanguage(formData).subscribe({
+    next: (res) => {
+      this.spinner.hide();
+
+      if (res?.isSuccess) {
+        this.toast.success(res.message || 'Language imported successfully');
+
+        // ✅ 🔥 THIS IS THE MISSING LINE
+        this.localizationService
+          .changeLanguage(this.localizationService.getCurrentLanguage())
+          .subscribe();
+
+        this.reloadLanguages();
+      } else {
+        this.toast.error(res.message || 'Import failed');
+      }
+    },
+    error: () => {
+      this.spinner.hide();
+      this.toast.error('Failed to import language');
+    }
+  });
+}
+
+  // onImportFileSelected(event: Event): void {
+  //   const input = event.target as HTMLInputElement;
+  //   const file = input.files?.[0];
+
+  //   if (!file) return;
+
+  //   if (!file.name.endsWith('.xlsx')) {
+  //     this.toast.warning('Please upload a valid Excel (.xlsx) file');
+  //     return;
+  //   }
+
+  //   const formData = new FormData();
+  //   formData.append('file', file);
+  //   formData.append('culture', this.selectedCulture);
+
+  //   this.spinner.show();
+
+  //   this.languageService
+  //     .importLanguage(formData)
+  //     .pipe(finalize(() => this.spinner.hide()))
+  //     .subscribe({
+  //       next: (res) => {
+  //         if (res?.isSuccess) {
+  //           this.toast.success(res.message || 'Language imported successfully');
+  //           this.reloadLanguages();
+  //         } else {
+  //           this.toast.error(res.message || 'Import failed');
+  //         }
+  //       },
+  //       error: () => this.toast.error('Failed to import language')
+  //     });
+  // }
 
   reloadLanguages(): void {
     this.loadLanguages(this.pageIndex + 1, this.pageSize);

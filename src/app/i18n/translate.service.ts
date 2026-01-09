@@ -81,13 +81,26 @@ private load(lang: string): Observable<boolean> {
 
 
 
+
+  setTranslations(data: any) {
+    this.translations = data;
+    this.lang$.next(data); // Notify subscribers
+  }
+
+// translate.service.ts
+
+instant(key: string): string {
+  // Since your data is flat, we just look up the key directly.
+  // If the key doesn't exist, we return the original key as a fallback.
+  return this.translations && this.translations[key] ? this.translations[key] : key;
+}
   /**
    * Instant translation (used by pipe)
    */
-  instant(key: string): string {
-    if (!key) return key;
-    return this.translations[key] ?? key;
-  }
+  // instant(key: string): string {
+  //   if (!key) return key;
+  //   return this.translations[key] ?? key;
+  // }
 
   /**
    * Optional async get
@@ -115,10 +128,15 @@ private load(lang: string): Observable<boolean> {
       return 'en';
     }
   }
-  setTranslations(data: Record<string, string>): void {
-  this.translations = data || {};
-  this.loaded$.next(true);
-  this.lang$.next(this.lang);
-}
+//   setTranslations(data: Record<string, string>): void {
+//   this.translations = data || {};
+//   this.loaded$.next(true);
+//   this.lang$.next(this.lang);
+// }
+// setTranslations(translations: Record<string, string>) {
+//   this.translations = translations;
+//   this.loaded$.next(true);
+// }
+
 
 }

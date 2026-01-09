@@ -6,6 +6,7 @@
       </h4>
 
       <app-global-search
+       [label]="'role.searchFilters' | translate"
         [placeholder]="'notifications.searchPlaceholder' | translate"
         [showStatus]="false"
         (search)="onSearch($event)"

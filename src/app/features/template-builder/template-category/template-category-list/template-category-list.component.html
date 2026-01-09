@@ -14,7 +14,8 @@
   <!-- Search Filters Section -->
   <div class="filters-card">
     <app-global-search
-      [placeholder]="'Search by  name .'"
+     [label]="'role.searchFilters' | translate"
+      [placeholder]="'templateBuilder.searchbyname' | translate"
       [showStatus]="true"
       (search)="onSearch($event)"
       (statusChange)="onStatusChange($event)"

@@ -13,6 +13,7 @@
   
 
   <app-global-search
+   [label]="'role.searchFilters' | translate"
     [showStatus]="true"
     [placeholder]="'Search by  name .'"
     (search)="searchValue = $event; loadMappings(1, pageSize)"

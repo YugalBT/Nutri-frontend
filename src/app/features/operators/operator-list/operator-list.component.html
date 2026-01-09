@@ -12,6 +12,7 @@
   </div>
 
   <app-global-search
+   [label]="'role.searchFilters' | translate"
     [placeholder]="'operator.searchByOperatorName' | translate"
     [showStatus]="true"
     (search)="onSearch($event)"

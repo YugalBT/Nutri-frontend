@@ -11,6 +11,7 @@ import { AuthState } from './state/auth/auth.state';
 import { User } from './state/auth/auth.models';
 import { TokenService } from './shared/services/token.service';
 import { NgxSpinnerModule, NgxSpinnerService } from 'ngx-spinner';
+import { LocalizationService } from './core/services/localization/localization.service';
 @Component({
   selector: 'app-root',
   standalone: true,
@@ -25,7 +26,8 @@ export class AppComponent implements OnInit {
     private router: Router,
     private store: Store<{ auth: AuthState }>,
     private tokenService: TokenService,
-    private spinner: NgxSpinnerService
+    private spinner: NgxSpinnerService,
+    private localizationService: LocalizationService
   ) { }
 
   ngOnInit() {
@@ -51,6 +53,7 @@ export class AppComponent implements OnInit {
   //     }
   //   }
   // });
+    this.localizationService.initLanguage().subscribe();
 }
 
 }

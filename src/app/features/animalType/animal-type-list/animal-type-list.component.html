@@ -10,6 +10,7 @@
 
   <div class="filters-card">
     <app-global-search
+      [label]="'role.searchFilters' | translate"
       [placeholder]="'animalType.searchByAnimalTypeName' | translate"
       [showStatus]="true"
       (search)="onSearch($event)"

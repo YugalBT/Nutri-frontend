@@ -64,20 +64,37 @@ export class LocalizationService {
     // return this.loadLanguageFromApi(lang);
   }
 
-
   private loadLanguageFromApi(lang: string): Observable<any> {
 
-    const culture = encodeURIComponent(lang || 'en');
-    const url = `${API_ENDPOINTS.LANGUAGE.LanguageByCulture}?request=${culture}`;
+  const culture = encodeURIComponent(lang || 'en');
+  const url = `${API_ENDPOINTS.LANGUAGE.LanguageByCulture}?request=${culture}`;
 
-    return this.http.post<any>(url, null).pipe(
-      tap(res => {
-        if (res?.isSuccess && res.data) {
-          this.translate.setTranslations(res.data);
-        }
-      })
-    );
-  }
+  return this.http.post<any>(url, null).pipe(
+    tap(res => {
+      if (res?.isSuccess && res.data) {
+        this.translate.setTranslations(res.data);
+
+        // ✅ FORCE RE-RENDER
+        this.translate.use(lang);
+      }
+    })
+  );
+}
+
+
+  // private loadLanguageFromApi(lang: string): Observable<any> {
+
+  //   const culture = encodeURIComponent(lang || 'en');
+  //   const url = `${API_ENDPOINTS.LANGUAGE.LanguageByCulture}?request=${culture}`;
+
+  //   return this.http.post<any>(url, null).pipe(
+  //     tap(res => {
+  //       if (res?.isSuccess && res.data) {
+  //         this.translate.setTranslations(res.data);
+  //       }
+  //     })
+  //   );
+  // }
   getCurrentLanguage$(): Observable<string> {
     return this.currentLang$.asObservable();
   }

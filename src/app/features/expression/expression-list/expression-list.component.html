@@ -14,6 +14,7 @@
 
   <!-- SEARCH -->
   <app-global-search
+   [label]="'role.searchFilters' | translate"
     [showStatus]="true"
     [placeholder]="'Search by expression name'"
     (search)="onSearch($event)"

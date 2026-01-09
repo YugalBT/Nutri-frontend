@@ -4,7 +4,7 @@
   <div class="page-header">
     <div>
       <h3 class="page-title">{{ 'role.Heading' | translate }}</h3>
-      <p class="page-subtitle">{{ 'role.manageDesc' | translate }}</p>
+      <!-- <p class="page-subtitle">{{ 'role.manageDesc' | translate }}</p> -->
     </div>
 
     <button class="btn add-btn" (click)="roleAddEdit.openModal(false)">
@@ -30,7 +30,7 @@
   <!-- Table Section -->
   <div class="table-card">
     <app-reusable-table
-[columns]="columns"
+      [columns]="columns"
       [showActions]="true"
       [data]="roles"
       [columnFields]="columnFields"

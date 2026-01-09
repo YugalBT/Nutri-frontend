@@ -15,6 +15,7 @@
   <!-- Search Filters Section -->
   <div class="filters-card">
     <app-global-search
+     [label]="'role.searchFilters' | translate"
       [placeholder]="'feed.searchByFeedCategoryPrice'| translate"
       [showStatus]="true"
       (search)="onSearch($event)"
