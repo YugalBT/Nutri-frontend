@@ -8,6 +8,7 @@ import {
   Global
 } from '../../../core/models/technical-report-details';
 import { TechnicalReportService } from '../../../core/services/technical-report/technical-report.service';
+import { TechnicalReportAddEditComponent } from '../technical-report-add-edit/technical-report-add-edit.component';
 
 interface FeedTableRow {
   feedId: string;
@@ -20,7 +21,12 @@ interface FeedTableRow {
 @Component({
   selector: 'app-technical-report-list',
   standalone: true,
-  imports: [SharedModule, ReactiveFormsModule, FormsModule, ReusableTableComponent],
+  imports: [
+    SharedModule,
+    ReactiveFormsModule,
+    FormsModule,
+    ReusableTableComponent,
+    TechnicalReportAddEditComponent],
   templateUrl: './technical-report-list.component.html',
   styleUrls: ['./technical-report-list.component.css']
 })
@@ -41,7 +47,7 @@ export class TechnicalReportListComponent implements OnInit {
   tableTotals: Record<string, number> = {};
   showFooter = true;
 
-  constructor(private service: TechnicalReportService) {}
+  constructor(private service: TechnicalReportService) { }
 
   ngOnInit(): void {
     this.loadReport();

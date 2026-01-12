@@ -180,7 +180,7 @@ export const API_ENDPOINTS = {
     GET_ALL: '/Formula/GetAll',
   },
   TECHNICAL_REPORT: {
-    CREATE: '/TechnicalReport/Create',
+    CREATE: '/Ration/SaveTechnicalRecord',
     UPDATE: '/TechnicalReport/Update',
     DELETE: '/TechnicalReport/Delete',
     ACTIVE_INACTIVE: '/TechnicalReport/ActiveInActive',

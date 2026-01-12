@@ -239,6 +239,17 @@ export const routes: Routes = [
         import('./features/language/language-list/language-list.component')
           .then(m => m.LanguageListComponent),
       },
+       {
+      path: 'economic-report',
+       // canActivate: [permissionGuard],
+        // data: { requiredPermissions: [PERMISSIONS.FormulaAdd, PERMISSIONS.formulasEdit, PERMISSIONS.formulasView, PERMISSIONS.formulasDelete] },
+      loadComponent: () =>
+        import('./features/economic-report/economic-report-list/economic-report-list.component')
+          .then(m => m.EconomicReportListComponent),
+      },
+      
+
+      
      { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
     ],},
 

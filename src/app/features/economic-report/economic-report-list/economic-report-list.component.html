@@ -1,0 +1,87 @@
+<div class="pagecls">
+
+  <!-- HEADER -->
+  <div class="mb-3">
+    <h3 class="page-title">Economic Report</h3>
+    <p class="text-muted">Financial analysis and profitability metrics</p>
+   
+  </div>
+
+ 
+
+  <!-- KPI CARDS -->
+  <div class="row mb-4">
+    <div class="col-md-4">
+      <div class="kpi-card">
+        <p class="kpi-title">Cost Per Animal</p>
+        <h4 class="kpi-value text-success">₹{{ costPerAnimal }}</h4>
+        <small>Per Animal</small>
+      </div>
+    </div>
+
+    <div class="col-md-4">
+      <div class="kpi-card">
+        <p class="kpi-title">Income Per Animal</p>
+        <h4 class="kpi-value">₹{{ incomePerAnimal }}</h4>
+        <small>Per Animal</small>
+      </div>
+    </div>
+
+    <div class="col-md-4">
+      <div class="kpi-card">
+        <p class="kpi-title">Margin Per Animal</p>
+        <h4 class="kpi-value text-success">₹{{ marginPerAnimal }}</h4>
+        <small>Per Animal</small>
+      </div>
+    </div>
+  </div>
+
+  <!-- CHARTS -->
+  <div class="row mb-4">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-header">Cost vs Income</div>
+        <div class="card-body">
+          <div echarts [options]="costIncomeChart" style="height:300px;"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- <div class="col-md-6">
+      <div class="card">
+        <div class="card-header">Margin Trend</div>
+        <div class="card-body">
+          <div echarts [options]="marginTrendChart" style="height:300px;"></div>
+        </div>
+      </div>
+    </div> -->
+  </div>
+
+  <!-- BOTTOM KPI -->
+  <div class="row">
+    <div class="col-md-4">
+      <div class="kpi-card">
+        <p class="kpi-title">Feed Efficiency</p>
+        <h4>{{ feedEfficiency }}%</h4>
+        <small>Return on Feed Cost</small>
+      </div>
+    </div>
+
+    <div class="col-md-4">
+      <div class="kpi-card">
+        <p class="kpi-title">Margin Percentage</p>
+        <h4 class="text-success">{{ marginPercentage }}%</h4>
+        <small>Profit Margin</small>
+      </div>
+    </div>
+
+    <div class="col-md-4">
+      <div class="kpi-card">
+        <p class="kpi-title">Cost Per Liter</p>
+        <h4>₹{{ costPerLiter }}</h4>
+        <small>Feed Cost / Milk Yield</small>
+      </div>
+    </div>
+  </div>
+
+</div>

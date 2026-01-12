@@ -48,7 +48,8 @@ export const SIDEBAR_GROUPS = [
     icon: SIDEBAR_ICONS.REPORTS,
     items: [
       'Reports',
-      'TechnicalReport'
+      'TechnicalReport',
+      'EconomicReport'
       // 'Monthly Report',
       // 'Cost vs Income',
       // 'Margin Analysis',

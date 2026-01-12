@@ -30,45 +30,25 @@ export class TechnicalReportAddEditComponent {
     private toast: ToastService
   ) {
     this.form = this.fb.group({
-      reportDate: [null, Validators.required],
-      animalCount: [null, [Validators.required, Validators.min(1)]],
+      rationId: [null, Validators.required],
+      reportDate: [{ value: null, disabled: true }],
+      animalCount: [null, [Validators.required, Validators.min(1)]]
     });
+
   }
 
-openModal(edit = false, data?: any) {
-  this.isEdit = edit;
-  this.form.reset();
-
-  if (edit && data) {
-
-    const dateValue = data.reportDate?.split('T')[0];
-
-    this.form.patchValue({
-      reportDate: dateValue,
-      animalCount: data.animalCount
-    });
-
-    // 🔥 Disable date if it's today
-    if (this.isToday(dateValue)) {
-      this.form.get('reportDate')?.disable();
-    } else {
-      this.form.get('reportDate')?.enable();
-    }
-
-    this.currentId = data.technicalReportId;
-
-  } else {
-    this.currentId = null;
-
-    // For ADD → default today & disable
+  openModal(rationId: string) {
+    this.form.reset();
     const today = new Date().toISOString().split('T')[0];
-    this.form.patchValue({ reportDate: today });
-    this.form.get('reportDate')?.disable();
+    this.form.patchValue({
+      rationId: rationId,
+      //reportDate: today
+    });
+
+    this.modal = new bootstrap.Modal(this.reportModal.nativeElement);
+    this.modal.show();
   }
 
-  this.modal = new bootstrap.Modal(this.reportModal.nativeElement);
-  this.modal.show();
-}
 
 
   closeModal() {
@@ -79,43 +59,43 @@ openModal(edit = false, data?: any) {
     this.dateInput.nativeElement.showPicker();
   }
   private isToday(date: string | Date | null): boolean {
-  if (!date) return false;
+    if (!date) return false;
 
-  const selected = new Date(date);
-  const today = new Date();
+    const selected = new Date(date);
+    const today = new Date();
 
-  return (
-    selected.getFullYear() === today.getFullYear() &&
-    selected.getMonth() === today.getMonth() &&
-    selected.getDate() === today.getDate()
-  );
-}
-
-
-save() {
-  if (this.form.invalid) {
-    this.toast.warning('Please fill all required fields');
-    return;
+    return (
+      selected.getFullYear() === today.getFullYear() &&
+      selected.getMonth() === today.getMonth() &&
+      selected.getDate() === today.getDate()
+    );
   }
 
-  const payload = { ...this.form.getRawValue() };
+
+  save() {
+    if (this.form.invalid) {
+      this.toast.warning('Please fill all required fields');
+      return;
+    }
+
+    const payload = { ...this.form.getRawValue() };
 
 
-  if (this.isEdit && this.currentId) {
-    payload.technicalReportId = this.currentId;
-    this.service.updateTechnicalReports(payload).subscribe(res => {
-      this.toast.success(res.message);
-      this.service.notifytechnicalReportsChanged();
-      this.closeModal();
-    });
-  } else {
-    this.service.createTechnicalReports(payload).subscribe(res => {
-      this.toast.success(res.message);
-      this.service.notifytechnicalReportsChanged();
-      this.closeModal();
-    });
+    if (this.isEdit && this.currentId) {
+      payload.technicalReportId = this.currentId;
+      this.service.updateTechnicalReports(payload).subscribe(res => {
+        this.toast.success(res.message);
+        this.service.notifytechnicalReportsChanged();
+        this.closeModal();
+      });
+    } else {
+      this.service.createTechnicalReports(payload).subscribe(res => {
+        this.toast.success(res.message);
+        this.service.notifytechnicalReportsChanged();
+        this.closeModal();
+      });
+    }
   }
-}
 
 
 

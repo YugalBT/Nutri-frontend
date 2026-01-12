@@ -13,18 +13,11 @@
             <!-- BODY -->
             <div class="modal-body">
                 <form [formGroup]="form">
-
                     <div class="row g-3">
-
-
-
-                        <!-- DATE -->
                         <div class="col-md-6">
                             <label class="form-label">Date <span class="text-danger">*</span></label>
-
                             <div class="date-box" [class.disabled]="form.get('reportDate')?.disabled"
                                 (click)="!form.get('reportDate')?.disabled && openDatePicker()">
-
                                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none"
                                     stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
                                     stroke-linejoin="round" viewBox="0 0 24 24">
@@ -50,14 +43,9 @@
                             <input type="number" min="1" class="form-control" formControlName="animalCount"
                                 [placeholder]="'Enter Number of Animal'">
                         </div>
-
- 
-
                     </div>
-
                 </form>
             </div>
-
             <!-- FOOTER -->
             <div class="modal-footer">
                 <button class="btn " (click)="closeModal()">Cancel</button>
@@ -65,7 +53,6 @@
                     {{ isEdit ? 'Update' : 'Save' }}
                 </button>
             </div>
-
         </div>
     </div>
 </div>
