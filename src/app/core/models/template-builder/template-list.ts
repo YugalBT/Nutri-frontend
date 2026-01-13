@@ -4,6 +4,7 @@ export interface TemplateList {
     categoryName?: string;
     type: string;
     subject: string;
+    isMasterData: boolean;
     body: string;
     isActive?: boolean;
 }

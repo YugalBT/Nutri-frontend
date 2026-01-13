@@ -10,6 +10,7 @@ import { TokenService } from '../../shared/services/token.service';
 import { AuthService } from '../../core/auth/auth.service';
 import { selectAuthUser } from '../../state/auth/auth.selectors';
 import { SIDEBAR_GROUPS } from '../../core/constants/sidebar-groups';
+import { SharedModule } from '../../shared/shared.module';
 
 
 interface MenuItem {
@@ -29,14 +30,14 @@ interface SidebarGroup {
 }
 const HIDDEN_MENU_NAMES = [
   'Placeholder',
-  'CategoryMapping',
-  'TemplateCategory'
+  'Category Mapping',
+  'Template Category'
 ];
 
 @Component({
   selector: 'app-sidebar',
   standalone: true,
-  imports: [RouterLink, RouterModule, TranslatePipe, NgFor, NgIf, LowerCasePipe],
+  imports: [RouterLink, RouterModule, TranslatePipe,SharedModule],
   templateUrl: './sidebar.component.html',
   styleUrls: ['./sidebar.component.css']
 })

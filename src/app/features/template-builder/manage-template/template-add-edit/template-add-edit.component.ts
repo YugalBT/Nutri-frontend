@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, ElementRef, OnDestroy, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, MinLengthValidator, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Subscription } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 
 import { ToastService } from '../../../../shared/services/toast.service';
 import { ManageTemplateService } from '../../../../core/services/template-builder/manage-template/manage-template.service';
@@ -11,6 +11,9 @@ import { TemplateCategoryList } from '../../../../core/models/template-builder/t
 import { SharedModule } from '../../../../shared/shared.module';
 import { TranslatePipe } from '../../../../i18n/translate.pipe';
 import { CustomValidators } from '../../../../core/helpers/validators';
+import { User } from '../../../../state/auth/auth.models';
+import { Store } from '@ngrx/store';
+import { selectAuthUser } from '../../../../state/auth/auth.selectors';
 
 declare const bootstrap: any;
 declare const CKEDITOR: any;
@@ -18,16 +21,12 @@ declare const CKEDITOR: any;
 @Component({
   selector: 'app-template-add-edit',
   standalone: true,
-  imports: [
-    SharedModule,
-    ReactiveFormsModule,
-    TranslatePipe
-  ],
+  imports: [SharedModule,ReactiveFormsModule,TranslatePipe],
   templateUrl: './template-add-edit.component.html',
   styleUrl: './template-add-edit.component.css'
 })
 export class TemplateAddEditComponent
-  implements AfterViewInit, OnDestroy {
+implements AfterViewInit, OnDestroy {
 
   @ViewChild('templateModal', { static: true })
   templateModal!: ElementRef<HTMLDivElement>;
@@ -35,17 +34,18 @@ export class TemplateAddEditComponent
   modalInstance: any;
   isEdit = false;
   currentTemplateId: string | null = null;
-
+  isMasterData: boolean = false;
   categories: TemplateCategoryList[] = [];
   placeholders: TemplatePlaceholderList[] = [];
   filteredPlaceholders: TemplatePlaceholderList[] = [];
 
   subs: Subscription[] = [];
   private categoryChangeSub?: Subscription;
-
+  user$: Observable<User | null>;
 
   constructor(
     private fb: FormBuilder,
+    private store: Store,
     private toast: ToastService,
     private templateService: ManageTemplateService,
     private commonService: CommonService
@@ -63,12 +63,15 @@ export class TemplateAddEditComponent
         '',
         [Validators.required, Validators.maxLength(50)]
       ],
+      isMasterData: [
+        false
+      ],
       body: [
         '',
         [Validators.required]
       ]
     });
-
+  this.user$ = this.store.select(selectAuthUser);
   }
 
 
@@ -178,6 +181,7 @@ export class TemplateAddEditComponent
           categoryId: data.categoryId,
           type: data.type,
           subject: data.subject,
+          isMasterData: data.isMasterData=== true,
           body: data.body
         });
 
@@ -247,8 +251,7 @@ export class TemplateAddEditComponent
 
     const payload = {
       ...this.form.value,
-      isAvailableForCompany: true,
-      isMasterData: true
+      // isAvailableForCompany: true,
     };
 
     const req$ =

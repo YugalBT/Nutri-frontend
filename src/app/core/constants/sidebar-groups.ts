@@ -12,21 +12,21 @@ export const SIDEBAR_GROUPS = [
     key: 'farm',
     title: 'sidebarmenu.farm',
     icon: SIDEBAR_ICONS.FARM,
-    items: ['Farm', 'Animal Group', 'Day']
+    items: ['Farm', 'Animal Group', 'Feed', 'Ration', 'Animal Type', 'Animal Lactation Stage']
   },
-  {
-    key: 'nutrition',
-    title: 'sidebarmenu.nutrition',
-    icon: SIDEBAR_ICONS.NUTRITION,
-    items: ['Feed', 'Ration', 'Animal Type', 'Animal Lactation Stage']
-  },
+  // {
+  //   key: 'nutrition',
+  //   title: 'sidebarmenu.nutrition',
+  //   icon: SIDEBAR_ICONS.NUTRITION,
+  //   items: []
+  // },
   {
     key: 'templateBuilder',
     title: 'sidebarmenu.templateBuilder',
     icon: SIDEBAR_ICONS.TEMPLATE_BUILDER,
     items: [
       // 'Email Template Builder',
-      'template',
+      'Template',
     ]
   },
   {
@@ -35,8 +35,8 @@ export const SIDEBAR_GROUPS = [
     icon: SIDEBAR_ICONS.FORMULAS,
     items: [
       // 'Formula Builder',
-      'operators',
-      'formulas',
+      'Operators',
+      'Formulas',
       'Kpi'
     ]
   },
@@ -48,8 +48,8 @@ export const SIDEBAR_GROUPS = [
     icon: SIDEBAR_ICONS.REPORTS,
     items: [
       'Reports',
-      'TechnicalReport',
-      'EconomicReport'
+      'Technical Report',
+      'Economic Report'
       // 'Monthly Report',
       // 'Cost vs Income',
       // 'Margin Analysis',
@@ -60,7 +60,7 @@ export const SIDEBAR_GROUPS = [
     key: 'settings',
     title: 'sidebarmenu.settings',
     icon: SIDEBAR_ICONS.SETTINGS,
-    items: ['Profile', 'Change Password', 'Setting', 'Module', 'EmailConfiguration', 'Language']
+    items: ['Profile', 'Change Password', 'Setting', 'Module', 'Email Configuration', 'Language']
   },
 
 ];
