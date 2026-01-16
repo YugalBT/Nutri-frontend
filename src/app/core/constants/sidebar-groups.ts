@@ -12,7 +12,7 @@ export const SIDEBAR_GROUPS = [
     key: 'farm',
     title: 'sidebarmenu.farm',
     icon: SIDEBAR_ICONS.FARM,
-    items: ['Farm', 'Animal Group', 'Feed', 'Ration', 'Animal Type', 'Animal Lactation Stage']
+    items: ['Farm', 'Feed', 'Animal Type', 'Animal Lactation Stage']
   },
   // {
   //   key: 'nutrition',

@@ -247,6 +247,14 @@ export const routes: Routes = [
         import('./features/economic-report/economic-report-list/economic-report-list.component')
           .then(m => m.EconomicReportListComponent),
       },
+       {
+      path: 'nutrition',
+       // canActivate: [permissionGuard],
+        // data: { requiredPermissions: [PERMISSIONS.FormulaAdd, PERMISSIONS.formulasEdit, PERMISSIONS.formulasView, PERMISSIONS.formulasDelete] },
+      loadComponent: () =>
+        import('./features/nutrition/nutrition/nutrition.component')
+          .then(m => m.NutritionComponent),
+      },
       
 
       

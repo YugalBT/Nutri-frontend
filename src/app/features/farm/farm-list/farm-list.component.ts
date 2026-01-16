@@ -11,6 +11,8 @@ import { ReusableTableComponent } from '../../../shared/components/reusable-tabl
 import { GlobalSearchComponent } from '../../../shared/components/global-search/global-search.component';
 import { CommonService } from '../../../shared/services/common.service';
 import { PERMISSIONS } from '../../../core/constants/permissions.constants';
+import { ROUTE_CONST } from '../../../core/constants/route.constants';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-farm-list',
@@ -41,7 +43,8 @@ export class FarmListComponent {
     private farmService: FarmService,
     private toast: ToastService,
     private confirm: ConfirmDialogService,
-    private commonService: CommonService
+    private commonService: CommonService,
+    private router: Router
   ) {
     this.setColumns();
     this.langSub = this.translate.lang$.subscribe(() => this.setColumns());
@@ -77,6 +80,16 @@ export class FarmListComponent {
       });
 
     this.subs.push(sub);
+  }
+
+    onCellClick(event: { field: string; row: any }): void {
+    if (event.field !== 'farmName') return;
+  
+    this.router.navigate([ROUTE_CONST.NUTRITION], {
+      queryParams: {
+        farmId: event?.row?.farmId
+      }
+    });
   }
 
   onSearch(value: string): void {

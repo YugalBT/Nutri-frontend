@@ -31,7 +31,10 @@ interface SidebarGroup {
 const HIDDEN_MENU_NAMES = [
   'Placeholder',
   'Category Mapping',
-  'Template Category'
+  'Template Category',
+  'Animal Group',
+  'Ration',
+  'Feed'
 ];
 
 @Component({

@@ -33,6 +33,8 @@
       [columnFields]="columnFields"
       [pageable]="true"
       [totalRecords]="totalRecords"
+      [clickableField]="'farmName'"
+      (cellClick)="onCellClick($event)"
       [pageSize]="pageSize"
       [pageIndex]="pageIndex"
       (pageChange)="onPageChange($event)"

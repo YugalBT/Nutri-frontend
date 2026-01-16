@@ -43,7 +43,10 @@
 
                 <a style="color:#2CA28F !important ;"
                   *ngIf="clickableField === (columnFields?.[i] || col.toLowerCase())" href="javascript:void(0)"
-                  class=" fw-semibold" (click)="onCellClick(columnFields?.[i] || col.toLowerCase(), row)">
+                  class=" fw-semibold" 
+                   matTooltip="View"
+                  matTooltipPosition="above"
+                  (click)="onCellClick(columnFields?.[i] || col.toLowerCase(), row)">
                   {{ cell.value }}
                 </a>
 
@@ -57,6 +60,7 @@
 
           <td *ngIf="showActions" class="text-center actions-col">
             <div class="d-flex justify-content-center gap-3">
+              
               <span class="action-icon edit-icon" role="button" tabindex="0"
                 matTooltip="{{ 'common.edit' | translate }}" matTooltipPosition="above" (click)="editRow.emit(row)">
 
