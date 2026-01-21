@@ -1,25 +1,30 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { ChangePasswordService } from '../../../core/services/change-password/change-password.service';
 import { ApiResponse } from '../../../core/models/api-response';
 import { CommonModule } from '@angular/common';
 import { ROUTE_CONST } from '../../../core/constants/route.constants';
+import { TranslatePipe } from '../../../i18n/translate.pipe';
 
 @Component({
   selector: 'app-reset-password',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule,TranslatePipe],
   templateUrl: './reset-password.component.html',
-  styleUrl: './reset-password.component.css'
+  styleUrl: './reset-password.component.css',
 })
 export class ResetPasswordComponent implements OnInit {
-
   resetForm!: FormGroup;
   showPassword = false;
-  oldPasswordShow =false;
-  newPasswordShow =false;
+  oldPasswordShow = false;
+  newPasswordShow = false;
   isSubmitted = false;
   isLoading = false;
 
@@ -37,24 +42,19 @@ export class ResetPasswordComponent implements OnInit {
           '',
           [
             Validators.required,
-            Validators.minLength(6),
-          ]
+            Validators.minLength(8),
+            Validators.pattern(/^(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}$/),
+          ],
         ],
-        
-        oldPassWord: [
-          '',
-          [
-            Validators.required,
-          ]
-        ],
+
+        oldPassWord: ['', [Validators.required]],
         confirmPassWord: this.fb.control('', {
-          validators: [Validators.required]
-        })
+          validators: [Validators.required],
+        }),
       },
       { validators: this.passwordMatchValidator.bind(this) }
     );
   }
-
 
   passwordMatchValidator(form: FormGroup) {
     debugger;
@@ -70,7 +70,7 @@ export class ResetPasswordComponent implements OnInit {
     this.oldPasswordShow = !this.oldPasswordShow;
   }
 
-   toggleNewPassword() {
+  toggleNewPassword() {
     this.newPasswordShow = !this.newPasswordShow;
   }
 
@@ -86,7 +86,7 @@ export class ResetPasswordComponent implements OnInit {
     const payload = {
       passWord: this.resetForm.value.passWord,
       oldPassWord: this.resetForm.value.oldPassWord,
-      confirmPassWord: this.resetForm.value.confirmPassWord
+      confirmPassWord: this.resetForm.value.confirmPassWord,
     };
 
     this.isLoading = true;
@@ -97,7 +97,7 @@ export class ResetPasswordComponent implements OnInit {
         if (res.isSuccess) {
           this.toast.success(res?.message);
           this.resetForm.reset();
-         this.router.navigate([ROUTE_CONST.DASHBOARD]);
+          this.router.navigate([ROUTE_CONST.DASHBOARD]);
         } else {
           this.toast.error(res.message);
         }
@@ -105,7 +105,7 @@ export class ResetPasswordComponent implements OnInit {
       error: (err) => {
         this.isLoading = false;
         this.toast.error(err?.message);
-      }
+      },
     });
   }
 }
