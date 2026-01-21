@@ -66,7 +66,7 @@ export class LocalizationService {
 
   private loadLanguageFromApi(lang: string): Observable<any> {
 
-  const culture = encodeURIComponent(lang || 'en');
+  const culture = encodeURIComponent(lang || 'it');
   const url = `${API_ENDPOINTS.LANGUAGE.LanguageByCulture}?request=${culture}`;
 
   return this.http.post<any>(url, null).pipe(

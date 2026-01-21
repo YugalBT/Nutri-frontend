@@ -38,7 +38,6 @@ export class ResetPasswordComponent implements OnInit {
           [
             Validators.required,
             Validators.minLength(6),
-            Validators.pattern(/^(?=.*[A-Z])(?=.*[0-9]).+$/) 
           ]
         ],
         
@@ -46,20 +45,19 @@ export class ResetPasswordComponent implements OnInit {
           '',
           [
             Validators.required,
-            Validators.minLength(10),
-
           ]
         ],
         confirmPassWord: this.fb.control('', {
           validators: [Validators.required]
         })
       },
-      { validators: this.passwordMatchValidator }
+      { validators: this.passwordMatchValidator.bind(this) }
     );
   }
 
 
   passwordMatchValidator(form: FormGroup) {
+    debugger;
     const password = form.get('passWord')?.value;
     const confirm = form.get('confirmPassWord')?.value;
     return password === confirm ? null : { passwordMismatch: true };
@@ -77,10 +75,11 @@ export class ResetPasswordComponent implements OnInit {
   }
 
   onSubmit() {
+    debugger;
     this.isSubmitted = true;
     this.resetForm.markAllAsTouched();
     if (this.resetForm.invalid) {
-      this.toast.error('Please fix validation errors.');
+      this.toast.warning('Please Enter Valid Paswwords.');
       return;
     }
 

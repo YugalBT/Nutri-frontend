@@ -97,8 +97,8 @@ export class CompanyAddEditComponent implements OnInit {
       sameAsPrimaryUser: [false],
 
       password: ['', [
-        Validators.minLength(8),
-        Validators.pattern(/^(?=.*[A-Za-z])(?=.*\d).{8,}$/)
+        Validators.minLength(6),
+        Validators.pattern(/^(?=.*[A-Za-z])(?=.*\d).{6,}$/)
       ]],
 
       roleId: ['', Validators.required],

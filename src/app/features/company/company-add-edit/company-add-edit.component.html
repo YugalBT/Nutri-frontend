@@ -427,13 +427,28 @@
                                         <i class="fa" [ngClass]="showCurrent ? 'fa-eye' : 'fa-eye-slash'"></i>
                                     </span>
                                 </div>
-                                <div *ngIf="!isEdit && isInvalid('password', 'required')" class="text-danger">
-                                    {{ 'companyValidation.passwordRequired' | translate }}
-                                </div>
+                               <!-- PASSWORD ERRORS (REAL TIME) -->
+<div
+  *ngIf="!isEdit && form.get('password')?.dirty"
+  class="text-danger">
 
-                                <div *ngIf="!isEdit && isInvalid('password', 'minlength')" class="text-danger">
-                                    {{ 'companyValidation.passwordMinlength' | translate }}
-                                </div>
+  <!-- REQUIRED -->
+  <span *ngIf="form.get('password')?.errors?.['required']">
+    {{ 'companyValidation.passwordRequired' | translate }}
+  </span>
+
+  <!-- MIN LENGTH -->
+  <span *ngIf="form.get('password')?.errors?.['minlength']">
+    {{ 'companyValidation.passwordMinlength' | translate }}
+  </span>
+
+  <!-- PATTERN -->
+  <span *ngIf="form.get('password')?.errors?.['pattern']">
+    {{ 'companyValidation.passwordPattern' | translate }}
+  </span>
+
+</div>
+
 
                             </div>
                             <div class="col-md-6 col-12 d-flex align-items-end" *ngIf="!isEdit">
