@@ -164,7 +164,7 @@ export class HeaderComponent implements OnInit {
 
   user$: Observable<User | null>;
   languages: LanguageList[] = [];
-  currentLang = 'en';
+  currentLang = 'it';
 
   darkMode = false;
   showNotificationPopup = false;
@@ -219,7 +219,7 @@ export class HeaderComponent implements OnInit {
     l => l.languageCode === this.currentLang
   );
 
-  return lang?.languageName || 'English';
+  return lang?.languageName || 'Italian';
 }
 
   // get currentLanguageName(): string {

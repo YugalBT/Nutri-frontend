@@ -15,7 +15,7 @@ interface LocalizationApiResponse {
 @Injectable({ providedIn: 'root' })
 export class TranslateService {
 
-  private lang = 'en';
+  private lang = 'it';
   private translations: Record<string, string> = {};
 
   private loaded$ = new BehaviorSubject<boolean>(false);
@@ -23,7 +23,7 @@ export class TranslateService {
 
   constructor(private http: HttpService) {
     const saved = localStorage.getItem('lang');
-    this.lang = saved || this.detectDefaultLang() || 'en';
+    this.lang = saved || this.detectDefaultLang() || 'it';
 
     this.lang$.next(this.lang);
 
@@ -39,7 +39,7 @@ export class TranslateService {
       return of(true);
     }
 
-    this.lang = lang || 'en';
+    this.lang = lang || 'it';
 
     try {
       localStorage.setItem('lang', this.lang);
@@ -58,7 +58,7 @@ private load(lang: string): Observable<boolean> {
   return this.http
     .post<any>(
       API_ENDPOINTS.LANGUAGE.LanguageByCulture,
-      { culture: lang || 'en' }
+      { culture: lang || 'it' }
     )
     .pipe(
       tap(res => {
@@ -123,9 +123,9 @@ instant(key: string): string {
     try {
       const locale = navigator?.language || '';
       const code = locale.split('-')[0].toLowerCase();
-      return code === 'it' ? 'it' : 'en';
+      return code === 'it' ? 'it' : 'it';
     } catch {
-      return 'en';
+      return 'it';
     }
   }
 //   setTranslations(data: Record<string, string>): void {
