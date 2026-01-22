@@ -1,6 +1,12 @@
-// addedit.component.ts
 import { Component, ElementRef, OnInit, ViewChild, OnDestroy } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroup,
+  Validators,
+  FormArray,
+  FormsModule,
+  ReactiveFormsModule
+} from '@angular/forms';
 import { SharedModule } from '../../../shared/shared.module';
 import { TranslatePipe } from '../../../i18n/translate.pipe';
 import { RoleList } from '../../../core/models/rolelist';
@@ -11,25 +17,43 @@ import { UsersService } from '../../../core/services/users/user.service';
 import { PERMISSIONS } from '../../../core/constants/permissions.constants';
 import { TranslateService } from '../../../i18n/translate.service';
 import { PhoneService } from '../../../shared/phone.service';
+import { CompanyService } from '../../../core/services/company/company.service';
+import { CompanyList } from '../../../core/models/company-list';
 
 declare var bootstrap: any;
 
 @Component({
   selector: 'app-addedit',
   standalone: true,
-  imports: [SharedModule, TranslatePipe],
+  imports: [
+    SharedModule,
+    TranslatePipe,
+    FormsModule,
+    ReactiveFormsModule
+  ],
   templateUrl: './addedit.component.html',
   styleUrls: ['./addedit.component.css']
 })
 export class AddeditComponent implements OnInit, OnDestroy {
+
   @ViewChild('userModal') userModal!: ElementRef;
-  private modalInstance: any;
+
   form!: FormGroup;
+  modalInstance: any;
+
   isEdit = false;
   showCurrent = false;
+
   roles: RoleList[] = [];
   rolesLoading = false;
   rolesError: string | null = null;
+
+  companies: CompanyList[] = [];
+  filteredCompanies: CompanyList[] = [];
+
+  searchCompany = '';
+  showCompanyDropdown = false;
+
   private subs: Subscription[] = [];
   private currentUserId: string | null = null;
 
@@ -39,64 +63,144 @@ export class AddeditComponent implements OnInit, OnDestroy {
     private usersService: UsersService,
     private toast: ToastService,
     private translate: TranslateService,
-      public phoneService: PhoneService 
+    public phoneService: PhoneService,
+    private companiesService: CompanyService
   ) { }
 
-  ngOnInit() {
-    
-  if(!this.commonService.checkPermission(PERMISSIONS.UserAdd)
-    || !this.commonService.checkPermission(PERMISSIONS.UserEdit))
+  ngOnInit(): void {
+
+    if (
+      !this.commonService.checkPermission(PERMISSIONS.UserAdd) &&
+      !this.commonService.checkPermission(PERMISSIONS.UserEdit)
+    ) {
       return;
+    }
+
     this.initializeForm();
     this.loadRoles();
+    this.loadCompanies();
   }
 
   ngOnDestroy(): void {
     this.subs.forEach(s => s.unsubscribe());
   }
 
-  private initializeForm() {
+  /* ---------------- FORM ---------------- */
+
+  private initializeForm(): void {
     this.form = this.fb.group({
       name: ['', [Validators.required, Validators.pattern(/^[A-Za-z]+$/)]],
       middleName: ['', [Validators.pattern(/^[A-Za-z]+$/)]],
       lastName: ['', [Validators.required, Validators.pattern(/^[A-Za-z]+$/)]],
       email: ['', [Validators.required, Validators.email]],
-      phone: ['', [Validators.pattern(/^[0-9]+$/), Validators.minLength(10), Validators.maxLength(10),
-      Validators.required]],
+      phone: ['', [
+        Validators.required,
+        Validators.pattern(/^[0-9]+$/),
+        Validators.minLength(10),
+        Validators.maxLength(10)
+      ]],
       roleId: [null, Validators.required],
-      password: ['', [Validators.required, Validators.minLength(8), Validators.pattern(/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*#?&]{8,}$/)]],
+      companyIds: this.fb.array([], Validators.required),
+      password: ['', [
+        Validators.required,
+        Validators.minLength(8),
+        Validators.pattern(/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*#?&]{8,}$/)
+      ]],
       isActive: [true]
     });
   }
 
-  private loadRoles(force = false): void {
-    if (!force && this.roles.length > 0) return;
+  get companyIds(): FormArray {
+    return this.form.get('companyIds') as FormArray;
+  }
 
+  /* ---------------- ROLES ---------------- */
+
+  private loadRoles(): void {
     this.rolesLoading = true;
     this.rolesError = null;
 
     const sub = this.commonService.getRoles().subscribe({
-      next: (res) => {
+      next: res => {
         this.roles = res?.data || [];
         this.rolesLoading = false;
-        const currentRole = this.form.get('roleId')?.value;
-        if (!currentRole && this.roles.length > 0) {
-          this.form.patchValue({ roleId: this.roles[0].roleId });
-        }
       },
-      error: (err) => {
+      error: () => {
         this.roles = [];
         this.rolesLoading = false;
-        this.rolesError = this.translate.instant('common.failedToLoadRoles') || 'Failed to load roles. Please try again.';
+        this.rolesError =
+          this.translate.instant('common.failedToLoadRoles') ||
+          'Failed to load roles';
       }
     });
 
     this.subs.push(sub);
   }
 
-  openModal(edit = false, data?: any) {
+  /* ---------------- COMPANIES ---------------- */
+
+  loadCompanies(): void {
+    const payload = { pageNumber: 1, pageSize: 100, searchText: '' };
+
+    const sub = this.companiesService.getAllCompaniesPaginated(payload)
+      .subscribe(res => {
+        this.companies = res?.data || [];
+        this.filteredCompanies = [...this.companies];
+      });
+
+    this.subs.push(sub);
+  }
+
+  toggleCompanyDropdown(): void {
+    this.showCompanyDropdown = !this.showCompanyDropdown;
+    if (this.showCompanyDropdown) {
+      this.filteredCompanies = [...this.companies];
+    }
+  }
+
+  onSearchCompany(): void {
+    const term = this.searchCompany.trim().toLowerCase();
+
+    if (!term) {
+      this.filteredCompanies = [...this.companies];
+      return;
+    }
+
+    this.filteredCompanies = this.companies.filter(c =>
+      c.companyName?.toLowerCase().includes(term)
+    );
+  }
+
+  onCompanyCheckboxChange(id: string, event: Event): void {
+    const checked = (event.target as HTMLInputElement).checked;
+
+    if (checked && !this.companyIds.value.includes(id)) {
+      this.companyIds.push(this.fb.control(id));
+    }
+
+    if (!checked) {
+      const index = this.companyIds.controls.findIndex(c => c.value === id);
+      if (index > -1) this.companyIds.removeAt(index);
+    }
+  }
+
+  removeCompanyChip(id: string): void {
+    const index = this.companyIds.controls.findIndex(c => c.value === id);
+    if (index > -1) this.companyIds.removeAt(index);
+  }
+
+  getCompanyName(id: string): string {
+    return this.companies.find(c => c.tenantId === id)?.companyName ?? '';
+  }
+
+  /* ---------------- MODAL ---------------- */
+
+  openModal(edit = false, data?: any): void {
     this.isEdit = edit;
     this.form.reset({ isActive: true });
+    this.companyIds.clear();
+    this.searchCompany = '';
+    this.showCompanyDropdown = false;
 
     if (edit && data) {
       this.form.patchValue({
@@ -108,33 +212,43 @@ export class AddeditComponent implements OnInit, OnDestroy {
         roleId: data.roleId,
         isActive: data.isActive
       });
+
+      data.companyIds?.forEach((id: string) => {
+        this.companyIds.push(this.fb.control(id));
+      });
+
       this.currentUserId = data.userId;
       this.form.get('password')?.clearValidators();
       this.form.get('password')?.updateValueAndValidity();
-    } else {
-      this.currentUserId = null;
-
     }
 
     this.modalInstance = new bootstrap.Modal(this.userModal.nativeElement);
     this.modalInstance.show();
   }
 
-  closeModal() {
-    if (this.modalInstance) {
-      this.modalInstance.hide();
-    }
+  closeModal(): void {
+    this.showCompanyDropdown = false;
+    this.searchCompany = '';
+    this.modalInstance?.hide();
   }
 
-  saveUser() {
-    
-    if(!this.commonService.checkPermission(PERMISSIONS.UserAdd)
-      || !this.commonService.checkPermission(PERMISSIONS.UserEdit))
-        return;
-    if (!this.form.valid) {
-      const payload = this.form.getRawValue();
-      delete payload.password;
-      this.toast.warning(this.translate.instant('common.formInvalid') || 'Please fill all required fields');
+  /* ---------------- SAVE ---------------- */
+
+  saveUser(): void {
+
+    if (
+      !this.commonService.checkPermission(PERMISSIONS.UserAdd) &&
+      !this.commonService.checkPermission(PERMISSIONS.UserEdit)
+    ) {
+      return;
+    }
+
+    if (this.form.invalid) {
+      this.form.markAllAsTouched();
+      this.toast.warning(
+        this.translate.instant('common.formInvalid') ||
+        'Please fill all required fields'
+      );
       return;
     }
 
@@ -146,37 +260,23 @@ export class AddeditComponent implements OnInit, OnDestroy {
       email: v.email,
       phone: v.phone,
       roleId: v.roleId,
+      companyIds: v.companyIds,
       password: v.password
     };
 
     if (this.isEdit && this.currentUserId) {
       payload.userId = this.currentUserId;
-
-      const sub = this.usersService.updateUser(payload).subscribe(res => {
-        if (res.isSuccess) {
-          this.toast.success(res.message);
-          this.afterSuccess();
-        } else {
-          this.toast.error(res.message);
-        }
+      this.usersService.updateUser(payload).subscribe(res => {
+        res.isSuccess ? this.afterSuccess() : this.toast.error(res.message);
       });
-      this.subs.push(sub);
-
     } else {
-      const sub = this.usersService.createUser(payload).subscribe(res => {
-        if (res?.isSuccess) {
-          this.toast.success(res.message);
-          this.afterSuccess();
-        } else {
-          this.toast.error(res.message);
-        }
+      this.usersService.createUser(payload).subscribe(res => {
+        res.isSuccess ? this.afterSuccess() : this.toast.error(res.message);
       });
-      this.subs.push(sub);
     }
   }
 
-
-  private afterSuccess() {
+  private afterSuccess(): void {
     this.usersService.notifyUsersChanged();
     this.closeModal();
   }

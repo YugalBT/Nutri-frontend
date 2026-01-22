@@ -18,7 +18,7 @@
                             <input type="text" formControlName="name" class="form-control"
                                 placeholder="{{ 'users.firstNamePlaceholder' | translate }}">
                             <div *ngIf="form.get('name')?.touched && form.get('name')?.invalid" class="text-danger">
-                               {{'validation.required' | translate }}
+                                {{'validation.required' | translate }}
                             </div>
 
                             <div *ngIf="form.get('name')?.errors?.['pattern']" class="text-danger">
@@ -72,7 +72,7 @@
                                     style="color: #f00; font-size: 12px;">*</sup></label>
                             <input type="email" formControlName="phone" class="form-control"
                                 placeholder="{{ 'users.phonePlaceholder' | translate }}"
-                                  (input)="phoneService.enforcePhoneInput($event, form, 'phone', 10)">
+                                (input)="phoneService.enforcePhoneInput($event, form, 'phone', 10)">
                             <div *ngIf="form.get('phone')?.touched" class="text-danger">
 
                                 <!-- Required -->
@@ -82,7 +82,7 @@
 
                                 <!-- Minimum length -->
                                 <div *ngIf="form.get('phone')?.errors?.['minlength']">
-                                   {{'phoneValidation.minLength' | translate }}
+                                    {{'phoneValidation.minLength' | translate }}
                                 </div>
                                 <!-- Maximum length -->
                                 <div *ngIf="form.get('phone')?.errors?.['maxlength']">
@@ -107,8 +107,8 @@
                                     <option *ngFor="let r of roles" [value]="r.roleId">{{ r.nameEn || r.nameEn }}
                                     </option>
                                 </select>
-                                 <span *ngIf="rolesLoading" class="select-spinner spinner-border spinner-border-sm">
-                            </span>
+                                <span *ngIf="rolesLoading" class="select-spinner spinner-border spinner-border-sm">
+                                </span>
 
                                 <!-- <div *ngIf="rolesLoading" class="form-text text-muted small">{{ 'common.loading' |
                                     translate }}</div> -->
@@ -116,12 +116,14 @@
                                     {{ rolesError ? (rolesError) : ('users.noRolesAvailable' | translate) }}
                                 </div>
                                 <div *ngIf="form.get('roleId')?.touched && form.get('roleId')?.invalid"
-                                        class="text-danger">
-                                        {{'validation.required' | translate }}</div>
+                                    class="text-danger">
+                                    {{'validation.required' | translate }}</div>
                             </ng-container>
                         </div>
+
+
                         <div class="col-md-4">
-                            <label class="form-label">{{ 'users.password' | translate }} 
+                            <label class="form-label">{{ 'users.password' | translate }}
                                 <sup style="color: #f00; font-size: 12px;" *ngIf="!isEdit">*</sup>
                             </label>
                             <div class="input-group">
@@ -143,6 +145,51 @@
                                 {{'validation.passwordPattern' | translate}}
                             </div>
                         </div>
+                        <div class="col-md-4 position-relative">
+                            <label class="form-label">
+                                Companies <span class="text-danger">*</span>
+                            </label>
+
+                            <!-- SELECT BOX -->
+                            <div class="multi-select-input" (click)="toggleCompanyDropdown()">
+                                <span class="text-muted" *ngIf="!companyIds.length">
+                                    Select companies
+                                </span>
+                                <span *ngIf="companyIds.length">
+                                    {{ companyIds.length }} selected
+                                </span>
+                            </div>
+
+                            <!-- DROPDOWN -->
+                            <div class="multi-dropdown" *ngIf="showCompanyDropdown" (click)="$event.stopPropagation()">
+
+                                <!-- SEARCH -->
+                                <input type="text" class="form-control mb-2" placeholder="Search..."
+                                    [(ngModel)]="searchCompany" [ngModelOptions]="{ standalone: true }"
+                                    (input)="onSearchCompany()" />
+
+                                <!-- LIST -->
+                                <div class="multi-list">
+                                    <div *ngFor="let c of filteredCompanies" class="form-check">
+                                        <input class="form-check-input" type="checkbox"
+                                            [checked]="companyIds.value.includes(c.tenantId)"
+                                            (change)="onCompanyCheckboxChange(c.tenantId, $event)" />
+                                        <label class="form-check-label">
+                                            {{ c.companyName }}
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <!-- ACTION -->
+                                <div class="text-end mt-2">
+                                    <button type="button" class="btn btn-success btn-sm"
+                                        (click)="showCompanyDropdown = false">
+                                        OK
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
                     </div>
                 </form>
             </div>
