@@ -100,7 +100,7 @@ export class AddeditComponent implements OnInit, OnDestroy {
         Validators.maxLength(10)
       ]],
       roleId: [null, Validators.required],
-      companyIds: this.fb.array([], Validators.required),
+      tenantIds: this.fb.array([], Validators.required),
       password: ['', [
         Validators.required,
         Validators.minLength(8),
@@ -110,8 +110,8 @@ export class AddeditComponent implements OnInit, OnDestroy {
     });
   }
 
-  get companyIds(): FormArray {
-    return this.form.get('companyIds') as FormArray;
+  get tenantIds(): FormArray {
+    return this.form.get('tenantIds') as FormArray;
   }
 
   /* ---------------- ROLES ---------------- */
@@ -174,19 +174,19 @@ export class AddeditComponent implements OnInit, OnDestroy {
   onCompanyCheckboxChange(id: string, event: Event): void {
     const checked = (event.target as HTMLInputElement).checked;
 
-    if (checked && !this.companyIds.value.includes(id)) {
-      this.companyIds.push(this.fb.control(id));
+    if (checked && !this.tenantIds.value.includes(id)) {
+      this.tenantIds.push(this.fb.control(id));
     }
 
     if (!checked) {
-      const index = this.companyIds.controls.findIndex(c => c.value === id);
-      if (index > -1) this.companyIds.removeAt(index);
+      const index = this.tenantIds.controls.findIndex(c => c.value === id);
+      if (index > -1) this.tenantIds.removeAt(index);
     }
   }
 
   removeCompanyChip(id: string): void {
-    const index = this.companyIds.controls.findIndex(c => c.value === id);
-    if (index > -1) this.companyIds.removeAt(index);
+    const index = this.tenantIds.controls.findIndex(c => c.value === id);
+    if (index > -1) this.tenantIds.removeAt(index);
   }
 
   getCompanyName(id: string): string {
@@ -198,7 +198,7 @@ export class AddeditComponent implements OnInit, OnDestroy {
   openModal(edit = false, data?: any): void {
     this.isEdit = edit;
     this.form.reset({ isActive: true });
-    this.companyIds.clear();
+    this.tenantIds.clear();
     this.searchCompany = '';
     this.showCompanyDropdown = false;
 
@@ -213,8 +213,8 @@ export class AddeditComponent implements OnInit, OnDestroy {
         isActive: data.isActive
       });
 
-      data.companyIds?.forEach((id: string) => {
-        this.companyIds.push(this.fb.control(id));
+      data.tenantIds?.forEach((id: string) => {
+        this.tenantIds.push(this.fb.control(id));
       });
 
       this.currentUserId = data.userId;
@@ -260,7 +260,7 @@ export class AddeditComponent implements OnInit, OnDestroy {
       email: v.email,
       phone: v.phone,
       roleId: v.roleId,
-      companyIds: v.companyIds,
+      tenantIds: v.tenantIds,
       password: v.password
     };
 

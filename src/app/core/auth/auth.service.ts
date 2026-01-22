@@ -117,7 +117,12 @@ export class AuthService {
   //     `${API_ENDPOINTS.AUTH.HOMEPAGE_CONTENT}?CompanyCode=${companyCode}`
   //   );
   // }
-
+impersonateCompany(tenantId: string) {
+  return this.http.post<ApiResponse<any>>(
+    `${API_ENDPOINTS.AUTH.IMPERSONATE}?CompanyId=${tenantId}`,
+    {}
+  );
+}
 
   isLoggedIn(): boolean {
     return this.tokenService.isLoggedIn();

@@ -146,49 +146,59 @@
                             </div>
                         </div>
                         <div class="col-md-4 position-relative">
-                            <label class="form-label">
-                                Companies <span class="text-danger">*</span>
-                            </label>
+  <label class="form-label">
+    Companies <span class="text-danger">*</span>
+  </label>
 
-                            <!-- SELECT BOX -->
-                            <div class="multi-select-input" (click)="toggleCompanyDropdown()">
-                                <span class="text-muted" *ngIf="!companyIds.length">
-                                    Select companies
-                                </span>
-                                <span *ngIf="companyIds.length">
-                                    {{ companyIds.length }} selected
-                                </span>
-                            </div>
+  <!-- SELECT INPUT -->
+  <div class="custom-multiselect" (click)="toggleCompanyDropdown()">
+    <span class="placeholder" *ngIf="!tenantIds.length">
+      Select companies
+    </span>
 
-                            <!-- DROPDOWN -->
-                            <div class="multi-dropdown" *ngIf="showCompanyDropdown" (click)="$event.stopPropagation()">
+    <div class="chips" *ngIf="tenantIds.length">
+      {{ tenantIds.length }} selected
+    </div>
 
-                                <!-- SEARCH -->
-                                <input type="text" class="form-control mb-2" placeholder="Search..."
-                                    [(ngModel)]="searchCompany" [ngModelOptions]="{ standalone: true }"
-                                    (input)="onSearchCompany()" />
+    <span class="arrow">&#9662;</span>
+  </div>
 
-                                <!-- LIST -->
-                                <div class="multi-list">
-                                    <div *ngFor="let c of filteredCompanies" class="form-check">
-                                        <input class="form-check-input" type="checkbox"
-                                            [checked]="companyIds.value.includes(c.tenantId)"
-                                            (change)="onCompanyCheckboxChange(c.tenantId, $event)" />
-                                        <label class="form-check-label">
-                                            {{ c.companyName }}
-                                        </label>
-                                    </div>
-                                </div>
+  <!-- DROPDOWN -->
+  <div class="dropdown-panel" *ngIf="showCompanyDropdown" (click)="$event.stopPropagation()">
 
-                                <!-- ACTION -->
-                                <div class="text-end mt-2">
-                                    <button type="button" class="btn btn-success btn-sm"
-                                        (click)="showCompanyDropdown = false">
-                                        OK
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
+    <!-- SEARCH -->
+    <input
+      type="text"
+      class="form-control search-input"
+      placeholder="Search company..."
+      [(ngModel)]="searchCompany"
+      [ngModelOptions]="{ standalone: true }"
+      (input)="onSearchCompany()"
+    />
+
+    <!-- LIST -->
+    <div class="dropdown-list">
+      <label class="dropdown-item" *ngFor="let c of filteredCompanies">
+        <input
+          type="checkbox"
+          [checked]="tenantIds.value.includes(c.tenantId)"
+          (change)="onCompanyCheckboxChange(c.tenantId, $event)"
+        />
+        <span class="checkmark"></span>
+        {{ c.companyName }}
+      </label>
+    </div>
+
+    <!-- FOOTER -->
+    <div class="dropdown-footer">
+      <button class="btn btn-sm w-50"
+              (click)="showCompanyDropdown = false">
+        OK
+      </button>
+    </div>
+  </div>
+</div>
+
 
                     </div>
                 </form>

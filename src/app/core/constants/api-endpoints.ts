@@ -9,7 +9,7 @@ export const API_ENDPOINTS = {
     PROFILE_DETAILS: '/Auth/ProfileDetails',
     CHANGE_PASSWORD: '/Auth/ResetPassword',
     HOMEPAGE_CONTENT: '/Auth/HomePageContent',
-
+    IMPERSONATE: '/Auth/ImpersonateCompany',
 
 
   },

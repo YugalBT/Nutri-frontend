@@ -53,4 +53,10 @@ export class CompanyService {
       payload
     );
   }
+   getAllMappedCompanies(payload: any): Observable<ApiResponse<any>> {
+    return this.http.post<ApiResponse<any>>(
+      `${this.baseUrl}/GetMappedCompanies`,
+      payload
+    );
+  }
 }

@@ -133,7 +133,8 @@ import {
   EventEmitter,
   OnInit,
   Output,
-  ViewChild
+  ViewChild,
+
 } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
@@ -152,11 +153,16 @@ import { AuthService } from '../../core/auth/auth.service';
 import { LocalizationService } from '../../core/services/localization/localization.service';
 import { LanguageList } from '../../core/models/language-list';
 import { FormsModule } from '@angular/forms';
+import { CompanyList } from '../../core/models/company-list';
+import { CompanyService } from '../../core/services/company/company.service';
+import { ApiResponse } from '../../core/models/api-response';
+import { MatSelectModule } from '@angular/material/select';
+import { MatFormFieldModule } from '@angular/material/form-field';
 
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [RouterLink, CommonModule, TranslatePipe, ConfirmDialogComponent, FormsModule],
+  imports: [RouterLink, CommonModule, TranslatePipe, ConfirmDialogComponent, FormsModule, MatSelectModule, MatFormFieldModule],
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.css']
 })
@@ -169,7 +175,16 @@ export class HeaderComponent implements OnInit {
   darkMode = false;
   showNotificationPopup = false;
   notificationsData: any[] = [];
-
+   companies: CompanyList[] = [];
+  
+    totalRecords = 0;
+    pageSize = 10;
+    pageIndex = 0;
+  
+    searchValue = '';
+    selectedTenantId: string = '';
+    impersonated = false;
+    isImpersonating = false;
   @ViewChild(ConfirmDialogComponent) confirmDialog!: ConfirmDialogComponent;
   @Output() toggleSidebar = new EventEmitter<void>();
 
@@ -178,7 +193,8 @@ export class HeaderComponent implements OnInit {
     private authService: AuthService,
     private notificationService: NotificationService,
     private localizationService: LocalizationService,
-    private router: Router
+    private router: Router,
+    private companyService: CompanyService,
   ) {
     this.user$ = this.store.select(selectAuthUser);
   }
@@ -187,6 +203,8 @@ export class HeaderComponent implements OnInit {
 
   this.localizationService.getAllLanguages().subscribe(res => {
     this.languages = res?.data ?? [];
+
+    this.loadCompanies(this.pageIndex, this.pageSize);
   });
 
   this.localizationService.getCurrentLanguage$().subscribe(lang => {
@@ -287,4 +305,100 @@ export class HeaderComponent implements OnInit {
       ? root.classList.add('dark-mode')
       : root.classList.remove('dark-mode');
   }
+
+
+  private loadCompanies(pageNo: number, recordPerPage: number) {
+    debugger;
+    const payload = {
+      searchValue: this.searchValue ?? '',
+      pageNo,
+      recordPerPage,
+      status: 1,
+    };
+
+
+    const sub = this.companyService.getAllMappedCompanies(payload)
+      .subscribe({
+        next: (res: ApiResponse<any>) => {
+          this.companies = (res.data ?? []).map((item: any) => ({
+            ...item,
+            fullName: `${item.firstName ?? ''} ${item.lastName ?? ''}`.trim()
+          }));
+
+          this.totalRecords = res.totalRecords
+            ?? res.data?.totalRecords
+            ?? this.companies.length;
+        },
+        error: () => {
+          this.companies = [];
+          this.totalRecords = 0;
+        }
+      });
+
+      
+   
+  }
+  onCompanyChange(tenantId: string) {
+  if (!tenantId) return;
+
+  // store admin session ONCE
+  if (!localStorage.getItem('adminSnapshot')) {
+    localStorage.setItem(
+      'adminSnapshot',
+      JSON.stringify({
+        token: localStorage.getItem('authToken'),
+        user: localStorage.getItem('userdata')
+      })
+    );
+  }
+
+  
+
+  this.authService.impersonateCompany(tenantId)
+    .subscribe(res => {
+      if (res.isSuccess && res.data) {
+        this.activateImpersonation(res.data);
+        this.impersonated = true;
+      }
+    });
+}
+callApi() {
+  if (!this.selectedTenantId || this.isImpersonating) return;
+
+  this.isImpersonating = true;
+  this.onCompanyChange(this.selectedTenantId);
+}
+private activateImpersonation(data: any) {
+  localStorage.setItem('authToken', data.token);
+  localStorage.setItem('userdata', JSON.stringify(data));
+  localStorage.setItem('ImpersonateTenant', 'Yes');
+  
+  this.store.dispatch(AuthActions.loginSuccess({ user: data , token: data.token}));
+
+  this.router.navigateByUrl('/', { replaceUrl: true });
+}
+
+backToAdmin(): void {
+  const snapshot = localStorage.getItem('adminSnapshot');
+  if (!snapshot) return;
+
+  const admin = JSON.parse(snapshot);
+
+  localStorage.setItem('authToken', admin.token);
+  localStorage.setItem('userdata', admin.user);
+  localStorage.removeItem('ImpersonateTenant');
+  localStorage.removeItem('adminSnapshot');
+
+  this.store.dispatch(
+    AuthActions.loginSuccess({
+      user: JSON.parse(admin.user),
+      token: admin.token
+    })
+  );
+
+  this.impersonated = false;
+  this.router.navigateByUrl('/', { replaceUrl: true });
+}
+
+
 }
