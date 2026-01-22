@@ -147,9 +147,9 @@ export class LoginComponent implements OnInit {
   loading$!: Observable<boolean>;
   showPassword = false;
 
-  /** 🌍 Language support */
+  /** Language support */
   languages: LanguageList[] = [];
-  currentLang = 'en';
+  currentLang = 'it';
 
   constructor(
     private fb: FormBuilder,
@@ -159,7 +159,7 @@ export class LoginComponent implements OnInit {
 
   ngOnInit(): void {
 
-    // 🔹 Build login form
+    // Build login form
     this.form = this.fb.group({
       username: ['', Validators.required],
       password: ['', Validators.required]
@@ -167,12 +167,12 @@ export class LoginComponent implements OnInit {
 
     this.loading$ = this.store.select(selectAuthLoading);
 
-    // 🔹 Load languages for dropdown
+    // Load languages for dropdown
     this.localizationService.getAllLanguages().subscribe(res => {
       this.languages = res?.data ?? [];
     });
 
-    // 🔹 Initialize language (default EN)
+    //  Initialize language (default EN)
     this.localizationService.initLanguage().subscribe(() => {
       this.currentLang = this.localizationService.getCurrentLanguage();
     });

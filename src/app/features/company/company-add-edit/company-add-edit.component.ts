@@ -55,9 +55,7 @@ export class CompanyAddEditComponent implements OnInit {
     public phoneService: PhoneService
   ) { }
 
-  // --------------------------------------------------
-  // INIT
-  // --------------------------------------------------
+
   ngOnInit(): void {
 
     if (
@@ -97,8 +95,9 @@ export class CompanyAddEditComponent implements OnInit {
       sameAsPrimaryUser: [false],
 
       password: ['', [
-        Validators.minLength(8),
-        Validators.pattern(/^(?=.*[A-Za-z])(?=.*\d).{8,}$/)
+        Validators.required,
+    Validators.minLength(8),
+    Validators.pattern(/^(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}$/)
       ]],
 
       roleId: ['', Validators.required],
@@ -129,9 +128,7 @@ export class CompanyAddEditComponent implements OnInit {
     });
   }
 
-  // --------------------------------------------------
-  // ADMIN HELPERS
-  // --------------------------------------------------
+
   copyPrimaryToAdmin(): void {
     this.form.patchValue({
       userFirstName: this.form.get('firstName')?.value,
@@ -158,9 +155,7 @@ export class CompanyAddEditComponent implements OnInit {
     });
   }
 
-  // --------------------------------------------------
-  // ROLES
-  // --------------------------------------------------
+
   loadRoles(): void {
     this.spinner.show();
 
@@ -205,7 +200,7 @@ export class CompanyAddEditComponent implements OnInit {
         this.toggleAdminFields(true);
       }
     } else {
-      // 🔥 CREATE MODE – CLEAR EVERYTHING
+      //  CREATE MODE – CLEAR EVERYTHING
       this.form.reset({
         isActive: true,
         isFirstLogin: false,
@@ -229,7 +224,7 @@ export class CompanyAddEditComponent implements OnInit {
   closeModal(): void {
     this.isSubmitted = false;
 
-    // 🔥 CLEAR LOGO CACHE
+    //  CLEAR LOGO CACHE
     this.logoPreview = null;
     this.form.get('logo')?.reset();
 
@@ -281,7 +276,9 @@ export class CompanyAddEditComponent implements OnInit {
 
     this.isSubmitted = true;
     this.form.markAllAsTouched();
-
+    const passwordControl = this.form.get('password');
+  passwordControl?.clearValidators();
+  passwordControl?.updateValueAndValidity({ emitEvent: false });
     if (this.form.invalid) {
       this.toast.warning(
         this.translate.instant('common.formInvalid') || 'Please fill all required fields correctly'
@@ -291,7 +288,7 @@ export class CompanyAddEditComponent implements OnInit {
     var formData = this.formHelper.ConvertToFormData(this.form.getRawValue());
 
 
-    // 🔹 Append LOGO FILE (IMPORTANT)
+    //  Append LOGO FILE (IMPORTANT)
     if (this.logoFile) {
       formData.append('logo', this.logoFile); // must match backend property name
     }

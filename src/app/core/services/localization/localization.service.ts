@@ -15,7 +15,7 @@ import { tap } from 'rxjs/operators';
 export class LocalizationService {
 
   private readonly STORAGE_KEY = 'lang';
-  private readonly DEFAULT_LANG = 'en';
+  private readonly DEFAULT_LANG = 'it';
 
   private currentLang: string = this.DEFAULT_LANG;
   private currentLang$ = new BehaviorSubject<string>(this.DEFAULT_LANG);
@@ -66,7 +66,7 @@ export class LocalizationService {
 
   private loadLanguageFromApi(lang: string): Observable<any> {
 
-  const culture = encodeURIComponent(lang || 'en');
+  const culture = encodeURIComponent(lang || 'it');
   const url = `${API_ENDPOINTS.LANGUAGE.LanguageByCulture}?request=${culture}`;
 
   return this.http.post<any>(url, null).pipe(
