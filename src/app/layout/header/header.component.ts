@@ -199,13 +199,15 @@ export class HeaderComponent implements OnInit {
     private notificationService: NotificationService,
     private localizationService: LocalizationService,
     private router: Router,
-    private companyService: CompanyService
+    private companyService: CompanyService,
   ) {
     this.user$ = this.store.select(selectAuthUser);
+    this.companyService.notifyCompaniesChanged();
   }
 
   ngOnInit(): void {
     this.impersonated = localStorage.getItem('ImpersonateTenant') === 'Yes';
+
     this.localizationService.getAllLanguages().subscribe((res) => {
       this.languages = res?.data ?? [];
 
@@ -227,7 +229,7 @@ export class HeaderComponent implements OnInit {
      
   }
 
-  /** 🔥 Language dropdown */
+  /** Language dropdown */
   changeLanguage(lang: string): void {
     this.localizationService.changeLanguage(lang).subscribe(() => {
       this.currentLang = lang;

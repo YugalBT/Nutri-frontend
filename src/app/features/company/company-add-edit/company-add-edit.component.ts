@@ -1,4 +1,3 @@
-
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { SharedModule } from '../../../shared/shared.module';
@@ -24,10 +23,9 @@ declare var bootstrap: any;
   standalone: true,
   imports: [SharedModule, TranslatePipe, ImageValidatorDirective],
   templateUrl: './company-add-edit.component.html',
-  styleUrls: ['./company-add-edit.component.css']
+  styleUrls: ['./company-add-edit.component.css'],
 })
 export class CompanyAddEditComponent implements OnInit {
-
   @ViewChild('companyModal') companyModal!: ElementRef;
   @ViewChild('fileInput') fileInput!: ElementRef<HTMLInputElement>;
 
@@ -53,25 +51,41 @@ export class CompanyAddEditComponent implements OnInit {
     private toast: ToastService,
     private commonService: CommonService,
     public phoneService: PhoneService
-  ) { }
-
+  ) {}
 
   ngOnInit(): void {
-
     if (
       !this.commonService.checkPermission(PERMISSIONS.TenantAdd) &&
       !this.commonService.checkPermission(PERMISSIONS.TenantEdit)
-    ) return;
+    )
+      return;
 
     this.form = this.fb.group({
       tenantId: [''],
 
       // Primary user
-      firstName: ['', [Validators.required, Validators.minLength(3), Validators.pattern(/^[A-Za-z]+$/)]],
+      firstName: [
+        '',
+        [
+          Validators.required,
+          Validators.minLength(3),
+          Validators.pattern(/^[A-Za-z]+$/),
+        ],
+      ],
       middleName: ['', [Validators.pattern(/^[A-Za-z]*$/)]],
-      lastName: ['', [Validators.required, Validators.minLength(3), Validators.pattern(/^[A-Za-z]+$/)]],
+      lastName: [
+        '',
+        [
+          Validators.required,
+          Validators.minLength(3),
+          Validators.pattern(/^[A-Za-z]+$/),
+        ],
+      ],
       email: ['', [Validators.required, Validators.email]],
-      phoneNumber: ['', [Validators.required, Validators.pattern(/^[0-9]{10}$/)]],
+      phoneNumber: [
+        '',
+        [Validators.required, Validators.pattern(/^[0-9]{10}$/)],
+      ],
 
       // Company
       companyName: ['', [Validators.required, Validators.minLength(3)]],
@@ -90,32 +104,40 @@ export class CompanyAddEditComponent implements OnInit {
       userMiddleName: [''],
       userLastName: ['', Validators.required],
       userEmail: ['', [Validators.required, Validators.email]],
-      userPhoneNumber: ['', [Validators.required, Validators.pattern(/^[0-9]{10}$/)]],
+      userPhoneNumber: [
+        '',
+        [Validators.required, Validators.pattern(/^[0-9]{10}$/)],
+      ],
 
       sameAsPrimaryUser: [false],
 
-      password: ['', [
-        Validators.required,
-    Validators.minLength(8),
-    Validators.pattern(/^(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}$/)
-      ]],
+      password: [
+        '',
+        [
+          Validators.required,
+          Validators.minLength(8),
+          Validators.pattern(/^(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}$/),
+        ],
+      ],
 
       roleId: ['', Validators.required],
       isActive: [true],
-      isFirstLogin: [false]
+      isFirstLogin: [false],
     });
 
     this.loadRoles();
 
     // Same as primary user logic
-    this.form.get('sameAsPrimaryUser')?.valueChanges.subscribe((checked: boolean) => {
-      if (checked) {
-        this.copyPrimaryToAdmin();
-        this.toggleAdminFields(true);
-      } else {
-        this.toggleAdminFields(false);
-      }
-    });
+    this.form
+      .get('sameAsPrimaryUser')
+      ?.valueChanges.subscribe((checked: boolean) => {
+        if (checked) {
+          this.copyPrimaryToAdmin();
+          this.toggleAdminFields(true);
+        } else {
+          this.toggleAdminFields(false);
+        }
+      });
 
     // Logo preview
     this.form.get('logo')?.valueChanges.subscribe(() => {
@@ -123,11 +145,10 @@ export class CompanyAddEditComponent implements OnInit {
       if (!input || !input.files?.length) return;
 
       const reader = new FileReader();
-      reader.onload = () => this.logoPreview = reader.result as string;
+      reader.onload = () => (this.logoPreview = reader.result as string);
       reader.readAsDataURL(input.files[0]);
     });
   }
-
 
   copyPrimaryToAdmin(): void {
     this.form.patchValue({
@@ -135,7 +156,7 @@ export class CompanyAddEditComponent implements OnInit {
       userMiddleName: this.form.get('middleName')?.value,
       userLastName: this.form.get('lastName')?.value,
       userEmail: this.form.get('email')?.value,
-      userPhoneNumber: this.form.get('phoneNumber')?.value
+      userPhoneNumber: this.form.get('phoneNumber')?.value,
     });
   }
 
@@ -145,41 +166,45 @@ export class CompanyAddEditComponent implements OnInit {
       'userMiddleName',
       'userLastName',
       'userEmail',
-      'userPhoneNumber'
+      'userPhoneNumber',
     ];
 
-    fields.forEach(field => {
+    fields.forEach((field) => {
       const control = this.form.get(field);
       if (!control) return;
-      disable ? control.disable({ emitEvent: false }) : control.enable({ emitEvent: false });
+      disable
+        ? control.disable({ emitEvent: false })
+        : control.enable({ emitEvent: false });
     });
   }
-
 
   loadRoles(): void {
     this.spinner.show();
 
-    this.roleService.getRoles({
-      pageNo: 1,
-      recordPerPage: 1000,
-      status: 2,
-      isShow: true
-    }).subscribe({
-      next: (res: any) => {
-        this.roleList = Array.isArray(res?.data)
-          ? res.data
-          : Array.isArray(res?.items)
+    this.roleService
+      .getRoles({
+        pageNo: 1,
+        recordPerPage: 1000,
+        status: 2,
+        isShow: true,
+      })
+      .subscribe({
+        next: (res: any) => {
+          this.roleList = Array.isArray(res?.data)
+            ? res.data
+            : Array.isArray(res?.items)
             ? res.items
             : [];
-        this.spinner.hide();
-      },
-      error: () => {
-        this.spinner.hide();
-        this.toast.error(
-          this.translate.instant('common.failedToLoadRoles') || 'Error loading roles'
-        );
-      }
-    });
+          this.spinner.hide();
+        },
+        error: () => {
+          this.spinner.hide();
+          this.toast.error(
+            this.translate.instant('common.failedToLoadRoles') ||
+              'Error loading roles'
+          );
+        },
+      });
   }
 
   // --------------------------------------------------
@@ -204,7 +229,7 @@ export class CompanyAddEditComponent implements OnInit {
       this.form.reset({
         isActive: true,
         isFirstLogin: false,
-        sameAsPrimaryUser: false
+        sameAsPrimaryUser: false,
       });
 
       this.logoPreview = null;
@@ -265,7 +290,7 @@ export class CompanyAddEditComponent implements OnInit {
     this.existingLogoUrl = null;
     // Optional preview
     const reader = new FileReader();
-    reader.onload = () => this.logoPreview = reader.result as string;
+    reader.onload = () => (this.logoPreview = reader.result as string);
     reader.readAsDataURL(file);
   }
 
@@ -273,26 +298,24 @@ export class CompanyAddEditComponent implements OnInit {
   // SAVE
   // --------------------------------------------------
   saveCompany(): void {
-
     this.isSubmitted = true;
     this.form.markAllAsTouched();
     const passwordControl = this.form.get('password');
-  passwordControl?.clearValidators();
-  passwordControl?.updateValueAndValidity({ emitEvent: false });
+    passwordControl?.clearValidators();
+    passwordControl?.updateValueAndValidity({ emitEvent: false });
     if (this.form.invalid) {
       this.toast.warning(
-        this.translate.instant('common.formInvalid') || 'Please fill all required fields correctly'
+        this.translate.instant('common.formInvalid') ||
+          'Please fill all required fields correctly'
       );
       return;
     }
     var formData = this.formHelper.ConvertToFormData(this.form.getRawValue());
 
-
     //  Append LOGO FILE (IMPORTANT)
     if (this.logoFile) {
       formData.append('logo', this.logoFile); // must match backend property name
     }
-
 
     const request$ = this.isEdit
       ? this.companyService.updateCompany(formData)
@@ -308,7 +331,7 @@ export class CompanyAddEditComponent implements OnInit {
           this.toast.error(res.message);
         }
       },
-      error: () => this.toast.error('Something went wrong')
+      error: () => this.toast.error('Something went wrong'),
     });
   }
 
