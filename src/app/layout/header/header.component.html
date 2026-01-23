@@ -1,89 +1,50 @@
 <header class="sticky-top">
   <div class="container-fluid">
     <div class="header-inner justify-content-between">
-      
-      <div class="company-select-wrapper d-flex ">
+      <div class="company-select-wrapper d-flex align-items-center">
         <button
-        class="btn sidebar-toggle-btn me-2"
-        (click)="toggleSidebar.emit()"
-        aria-label="Toggle sidebar"
-      >
-        ☰
-      </button>
-      
-      <select class="form-select" [(ngModel)]="selectedTenantId">
-  <option value="">Select Company</option>
-  <option *ngFor="let company of companies" [value]="company.tenantId">
-    {{ company.companyName }}
-  </option>
-</select>
+          class="btn sidebar-toggle-btn me-2"
+          (click)="toggleSidebar.emit()"
+          aria-label="Toggle sidebar"
+        >
+          ☰
+        </button>
 
-<ng-container *ngIf="selectedTenantId && !impersonated">
-  <button
-    class="btn btn-primary ms-2 d-flex align-items-center"
-    (click)="callApi()"
-    [disabled]="isImpersonating"
-  >
+        @if (companies.length > 0 && !impersonated) {
+        <select
+          class="form-select"
+          [value]="selectedTenantId"
+          (change)="onCompanyChange($event)"
+        >
+          <option value="">Select Company</option>
 
-    <!-- Spinner -->
-    <span
-      *ngIf="isImpersonating"
-      class="spinner-border spinner-border-sm me-2"
-      role="status"
-      aria-hidden="true">
-    </span>
-
-    <!-- Icon -->
-    <svg *ngIf="!isImpersonating"
-         xmlns="http://www.w3.org/2000/svg"
-         width="16" height="16"
-         class="me-1"
-         viewBox="0 0 24 24"
-         fill="none"
-         stroke="currentColor"
-         stroke-width="2"
-         stroke-linecap="round"
-         stroke-linejoin="round">
-      <path d="M16 3h5v5" />
-      <path d="M21 3l-7 7" />
-      <circle cx="9" cy="9" r="4" />
-      <path d="M3 21v-1a6 6 0 0 1 6-6h4" />
-    </svg>
-
-    <span>
-      {{ isImpersonating ? 'Impersonating...' : 'Impersonate' }}
-    </span>
-
-  </button>
-</ng-container>
-
-
-<ng-container *ngIf="impersonated">
-  <button
-    class="btn btn-outline-danger ms-2"
-    (click)="backToAdmin()"
-  >
-    <svg xmlns="http://www.w3.org/2000/svg"
-         width="16" height="16"
-         class="me-1"
-         viewBox="0 0 24 24"
-         fill="none"
-         stroke="currentColor"
-         stroke-width="2"
-         stroke-linecap="round"
-         stroke-linejoin="round">
-      <polyline points="15 18 9 12 15 6" />
-    </svg>
-    Back
-  </button>
-</ng-container>
-
-
-
-
-
-
-
+          @for (company of companies; track company.tenantId) {
+          <option [value]="company.tenantId">
+            {{ company.companyName }}
+          </option>
+          }
+        </select>
+       
+        @if (companiesLoading) {
+         <span class="select-spinner spinner-border spinner-border-sm"></span>
+        } } @if (impersonated) {
+        <button class="btn add-btn ms-2" (click)="backToAdmin()">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <polyline points="15 18 9 12 15 6" />
+          </svg>
+          Exit
+        </button>
+        }
       </div>
 
       <div class="header-right d-flex align-items-center gap-2">

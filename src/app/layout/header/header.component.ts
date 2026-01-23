@@ -29,7 +29,6 @@
 //   notificationsData: any[] = [];
 //   @Output() toggleSidebar = new EventEmitter<void>();
 
-
 //   constructor(private store: Store,
 //     private translate: TranslateService,
 //     private authService: AuthService,
@@ -105,8 +104,6 @@
 //     }
 //   }
 
-
-
 //   loadNotifications(): void {
 //     this.notificationService.getNotificationList().subscribe({
 //       next: (res) => {
@@ -134,7 +131,6 @@ import {
   OnInit,
   Output,
   ViewChild,
-
 } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
@@ -162,12 +158,19 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [RouterLink, CommonModule, TranslatePipe, ConfirmDialogComponent, FormsModule, MatSelectModule, MatFormFieldModule],
+  imports: [
+    RouterLink,
+    CommonModule,
+    TranslatePipe,
+    ConfirmDialogComponent,
+    FormsModule,
+    MatSelectModule,
+    MatFormFieldModule,
+  ],
   templateUrl: './header.component.html',
-  styleUrls: ['./header.component.css']
+  styleUrls: ['./header.component.css'],
 })
 export class HeaderComponent implements OnInit {
-
   user$: Observable<User | null>;
   languages: LanguageList[] = [];
   currentLang = 'it';
@@ -175,16 +178,18 @@ export class HeaderComponent implements OnInit {
   darkMode = false;
   showNotificationPopup = false;
   notificationsData: any[] = [];
-   companies: CompanyList[] = [];
-  
-    totalRecords = 0;
-    pageSize = 10;
-    pageIndex = 0;
-  
-    searchValue = '';
-    selectedTenantId: string = '';
-    impersonated = false;
-    isImpersonating = false;
+  companies: CompanyList[] = [];
+
+  totalRecords = 0;
+  pageSize = 10;
+  pageIndex = 0;
+
+  searchValue = '';
+  selectedTenantId: string | null = null;
+  impersonated = false;
+  isImpersonating = false;
+  companiesLoading = false;
+
   @ViewChild(ConfirmDialogComponent) confirmDialog!: ConfirmDialogComponent;
   @Output() toggleSidebar = new EventEmitter<void>();
 
@@ -194,30 +199,32 @@ export class HeaderComponent implements OnInit {
     private notificationService: NotificationService,
     private localizationService: LocalizationService,
     private router: Router,
-    private companyService: CompanyService,
+    private companyService: CompanyService
   ) {
     this.user$ = this.store.select(selectAuthUser);
   }
 
   ngOnInit(): void {
+    this.impersonated = localStorage.getItem('ImpersonateTenant') === 'Yes';
+    this.localizationService.getAllLanguages().subscribe((res) => {
+      this.languages = res?.data ?? [];
 
-  this.localizationService.getAllLanguages().subscribe(res => {
-    this.languages = res?.data ?? [];
+      this.loadCompanies(this.pageIndex, this.pageSize);
+    });
 
-    this.loadCompanies(this.pageIndex, this.pageSize);
-  });
+    this.localizationService.getCurrentLanguage$().subscribe((lang) => {
+      this.currentLang = lang;
+    });
 
-  this.localizationService.getCurrentLanguage$().subscribe(lang => {
-    this.currentLang = lang;
-  });
+    this.localizationService.initLanguage().subscribe();
 
-  this.localizationService.initLanguage().subscribe();
+    const theme = localStorage.getItem('theme');
+    this.darkMode = theme === 'dark';
+    this.applyTheme();
 
-  const theme = localStorage.getItem('theme');
-  this.darkMode = theme === 'dark';
-  this.applyTheme();
+    this.loadNotifications();
 
-  this.loadNotifications();
+     
   }
 
   /** 🔥 Language dropdown */
@@ -228,17 +235,16 @@ export class HeaderComponent implements OnInit {
   }
 
   get currentLanguageName(): string {
+    if (!this.currentLang) {
+      return 'Select Language';
+    }
 
-  if (!this.currentLang) {
-    return 'Select Language';
+    const lang = this.languages.find(
+      (l) => l.languageCode === this.currentLang
+    );
+
+    return lang?.languageName || 'Italian';
   }
-
-  const lang = this.languages.find(
-    l => l.languageCode === this.currentLang
-  );
-
-  return lang?.languageName || 'Italian';
-}
 
   // get currentLanguageName(): string {
   //   const lang = this.languages.find(
@@ -282,13 +288,13 @@ export class HeaderComponent implements OnInit {
             createdDate: n.createdDate
               ? new Date(n.createdDate).toLocaleDateString()
               : '',
-            type: n.type
+            type: n.type,
           }));
         } else {
           this.notificationsData = [];
         }
       },
-      error: err => console.error(err)
+      error: (err) => console.error(err),
     });
   }
 
@@ -306,9 +312,8 @@ export class HeaderComponent implements OnInit {
       : root.classList.remove('dark-mode');
   }
 
-
   private loadCompanies(pageNo: number, recordPerPage: number) {
-    debugger;
+ this.companiesLoading = true;
     const payload = {
       searchValue: this.searchValue ?? '',
       pageNo,
@@ -316,89 +321,88 @@ export class HeaderComponent implements OnInit {
       status: 1,
     };
 
+    const sub = this.companyService.getAllMappedCompanies(payload).subscribe({
+      next: (res: ApiResponse<any>) => {
+        this.companies = (res.data ?? []).map((item: any) => ({
+          ...item,
+          fullName: `${item.firstName ?? ''} ${item.lastName ?? ''}`.trim(),
+        }));
 
-    const sub = this.companyService.getAllMappedCompanies(payload)
-      .subscribe({
-        next: (res: ApiResponse<any>) => {
-          this.companies = (res.data ?? []).map((item: any) => ({
-            ...item,
-            fullName: `${item.firstName ?? ''} ${item.lastName ?? ''}`.trim()
-          }));
-
-          this.totalRecords = res.totalRecords
-            ?? res.data?.totalRecords
-            ?? this.companies.length;
-        },
-        error: () => {
-          this.companies = [];
-          this.totalRecords = 0;
-        }
-      });
-
-      
-   
+        this.totalRecords =
+          res.totalRecords ?? res.data?.totalRecords ?? this.companies.length;
+          this.companiesLoading = false;
+      },
+      error: () => {
+        this.companies = [];
+        this.totalRecords = 0;
+        this.companiesLoading = false;
+      },
+    });
   }
-  onCompanyChange(tenantId: string) {
-  if (!tenantId) return;
+  onCompanyChange(event: Event) {
+    const select = event.target as HTMLSelectElement;
+    const tenantId = select.value;
 
-  // store admin session ONCE
-  if (!localStorage.getItem('adminSnapshot')) {
-    localStorage.setItem(
-      'adminSnapshot',
-      JSON.stringify({
-        token: localStorage.getItem('authToken'),
-        user: localStorage.getItem('userdata')
-      })
-    );
-  }
+    if (!tenantId || this.impersonated) return;
 
-  
+    this.selectedTenantId = tenantId;
 
-  this.authService.impersonateCompany(tenantId)
-    .subscribe(res => {
+    if (!localStorage.getItem('adminSnapshot')) {
+      localStorage.setItem(
+        'adminSnapshot',
+        JSON.stringify({
+          token: localStorage.getItem('authToken'),
+          user: localStorage.getItem('userdata'),
+        })
+      );
+    }
+
+    this.authService.impersonateCompany(tenantId).subscribe((res) => {
       if (res.isSuccess && res.data) {
         this.activateImpersonation(res.data);
         this.impersonated = true;
       }
     });
+  }
+
+  private activateImpersonation(data: any) {
+    localStorage.setItem('authToken', data.token);
+    localStorage.setItem('userdata', JSON.stringify(data));
+    localStorage.setItem('ImpersonateTenant', 'Yes');
+
+    this.store.dispatch(
+      AuthActions.loginSuccess({ user: data, token: data.token })
+    );
+
+    this.forceAppReload();
+  }
+
+  backToAdmin(): void {
+    const snapshot = localStorage.getItem('adminSnapshot');
+    if (!snapshot) return;
+
+    const admin = JSON.parse(snapshot);
+
+    localStorage.setItem('authToken', admin.token);
+    localStorage.setItem('userdata', admin.user);
+    localStorage.removeItem('ImpersonateTenant');
+    localStorage.removeItem('adminSnapshot');
+
+    this.store.dispatch(
+      AuthActions.loginSuccess({
+        user: JSON.parse(admin.user),
+        token: admin.token,
+      })
+    );
+
+    this.impersonated = false;
+    this.selectedTenantId = null;
+
+      this.forceAppReload();
+  }
+
+  private forceAppReload(): void {
+  window.location.href = window.location.origin;
 }
-callApi() {
-  if (!this.selectedTenantId || this.isImpersonating) return;
-
-  this.isImpersonating = true;
-  this.onCompanyChange(this.selectedTenantId);
-}
-private activateImpersonation(data: any) {
-  localStorage.setItem('authToken', data.token);
-  localStorage.setItem('userdata', JSON.stringify(data));
-  localStorage.setItem('ImpersonateTenant', 'Yes');
-  
-  this.store.dispatch(AuthActions.loginSuccess({ user: data , token: data.token}));
-
-  this.router.navigateByUrl('/', { replaceUrl: true });
-}
-
-backToAdmin(): void {
-  const snapshot = localStorage.getItem('adminSnapshot');
-  if (!snapshot) return;
-
-  const admin = JSON.parse(snapshot);
-
-  localStorage.setItem('authToken', admin.token);
-  localStorage.setItem('userdata', admin.user);
-  localStorage.removeItem('ImpersonateTenant');
-  localStorage.removeItem('adminSnapshot');
-
-  this.store.dispatch(
-    AuthActions.loginSuccess({
-      user: JSON.parse(admin.user),
-      token: admin.token
-    })
-  );
-
-  this.impersonated = false;
-  this.router.navigateByUrl('/', { replaceUrl: true });
-}
-
 
 }

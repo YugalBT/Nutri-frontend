@@ -10,7 +10,7 @@ import {
 import { SharedModule } from '../../../shared/shared.module';
 import { TranslatePipe } from '../../../i18n/translate.pipe';
 import { RoleList } from '../../../core/models/rolelist';
-import { Subscription } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { CommonService } from '../../../shared/services/common.service';
 import { ToastService } from '../../../shared/services/toast.service';
 import { UsersService } from '../../../core/services/users/user.service';
@@ -19,6 +19,9 @@ import { TranslateService } from '../../../i18n/translate.service';
 import { PhoneService } from '../../../shared/phone.service';
 import { CompanyService } from '../../../core/services/company/company.service';
 import { CompanyList } from '../../../core/models/company-list';
+import { Store } from '@ngrx/store';
+import { User } from '../../../state/auth/auth.models';
+import { selectAuthUser } from '../../../state/auth/auth.selectors';
 
 declare var bootstrap: any;
 
@@ -56,7 +59,7 @@ export class AddeditComponent implements OnInit, OnDestroy {
 
   private subs: Subscription[] = [];
   private currentUserId: string | null = null;
-
+ user$: Observable<User | null>;
   constructor(
     private fb: FormBuilder,
     private commonService: CommonService,
@@ -64,8 +67,10 @@ export class AddeditComponent implements OnInit, OnDestroy {
     private toast: ToastService,
     private translate: TranslateService,
     public phoneService: PhoneService,
-    private companiesService: CompanyService
-  ) { }
+    private companiesService: CompanyService,
+    private store: Store
+  ) { this.user$ = this.store.select(selectAuthUser);}
+
 
   ngOnInit(): void {
 
@@ -79,6 +84,9 @@ export class AddeditComponent implements OnInit, OnDestroy {
     this.initializeForm();
     this.loadRoles();
     this.loadCompanies();
+
+    // if not superadmin then disable companies selection
+
   }
 
   ngOnDestroy(): void {
