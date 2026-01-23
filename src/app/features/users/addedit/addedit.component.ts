@@ -108,7 +108,7 @@ export class AddeditComponent implements OnInit, OnDestroy {
         Validators.maxLength(10)
       ]],
       roleId: [null, Validators.required],
-      tenantIds: this.fb.array([], Validators.required),
+      tenantIds: this.fb.array([]),
       password: ['', [
         Validators.required,
         Validators.minLength(8),
@@ -180,17 +180,24 @@ export class AddeditComponent implements OnInit, OnDestroy {
   }
 
   onCompanyCheckboxChange(id: string, event: Event): void {
-    const checked = (event.target as HTMLInputElement).checked;
+  const checked = (event.target as HTMLInputElement).checked;
+  const values = [...this.tenantIds.value];
 
-    if (checked && !this.tenantIds.value.includes(id)) {
-      this.tenantIds.push(this.fb.control(id));
+  if (checked) {
+    if (!values.includes(id)) {
+      values.push(id);
     }
-
-    if (!checked) {
-      const index = this.tenantIds.controls.findIndex(c => c.value === id);
-      if (index > -1) this.tenantIds.removeAt(index);
+  } else {
+    const index = values.indexOf(id);
+    if (index > -1) {
+      values.splice(index, 1);
     }
   }
+
+  this.tenantIds.clear();
+  values.forEach(v => this.tenantIds.push(this.fb.control(v)));
+}
+
 
   removeCompanyChip(id: string): void {
     const index = this.tenantIds.controls.findIndex(c => c.value === id);

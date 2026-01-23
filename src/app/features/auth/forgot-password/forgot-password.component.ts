@@ -20,6 +20,7 @@ export class ForgotPasswordComponent {
   companyCode: string = '';
   logoUrl: string = '';
   primaryColor: string = '#1d7e8b';
+  buttonColor: string = '#F4F5F9';
 
   constructor(private fb: FormBuilder,
               private forgotService: ForgotPasswordService,
