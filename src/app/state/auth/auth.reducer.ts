@@ -1,6 +1,7 @@
 import { createReducer, on } from '@ngrx/store';
 import * as AuthActions from './auth.actions';
 import { AuthState, initialAuthState } from './auth.state';
+import { updateFirstLogin } from './auth.actions';
 
 export const authReducer = createReducer(
   initialAuthState,
@@ -54,6 +55,14 @@ on(AuthActions.updateProfileFailure, (state, { error }) => ({
   ...state,
   loading: false,
   error,
-}))
+})),
+
+on(AuthActions.updateFirstLogin, (state, { isFirstLogin }) => ({
+    ...state,
+    user: state.user
+      ? { ...state.user, isFirstLogin }
+      : state.user
+  }))
+
 
 );

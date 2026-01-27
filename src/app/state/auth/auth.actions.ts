@@ -43,3 +43,8 @@ export const updateProfileFailure = createAction(
   props<{ error: any }>()
 );
 
+export const updateFirstLogin = createAction(
+  '[Auth] Update First Login',
+  props<{ isFirstLogin: boolean }>()
+);
+

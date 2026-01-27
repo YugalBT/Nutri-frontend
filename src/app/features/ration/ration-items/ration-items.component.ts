@@ -20,6 +20,7 @@ export class RationItemsComponent implements OnInit {
 
   rationId!: string;
   rationName!: string;
+  farmId!: string;
 
   items: any[] = [];
   totalRecords = 0;
@@ -34,15 +35,17 @@ export class RationItemsComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.route.queryParams.subscribe(params => {
-      this.rationId = params['rationId'];
-      if (!this.rationId) {
-        this.router.navigate([ROUTE_CONST.RATION_LIST]);
-        return;
-      }
+this.route.queryParams.subscribe(params => {
+    this.rationId = params['rationId'];
+    this.farmId = params['farmId']; 
 
-      this.loadRationItems();
-    });
+    if (!this.rationId) {
+      this.goBack();
+      return;
+    }
+
+    this.loadRationItems();
+  });
   }
 
   loadRationItems(): void {
@@ -63,7 +66,12 @@ export class RationItemsComponent implements OnInit {
 
 
   goBack(): void {
-    this.router.navigate([ROUTE_CONST.RATION_LIST]);
+    this.router.navigate(['/nutrition'], {
+    queryParams: {
+      farmId: this.farmId,
+      tab: 'ration'
+    }
+  });
   }
 
 }

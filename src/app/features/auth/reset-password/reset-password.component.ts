@@ -12,11 +12,13 @@ import { ApiResponse } from '../../../core/models/api-response';
 import { CommonModule } from '@angular/common';
 import { ROUTE_CONST } from '../../../core/constants/route.constants';
 import { TranslatePipe } from '../../../i18n/translate.pipe';
+import { updateFirstLogin } from '../../../state/auth/auth.actions';
+import { Store } from '@ngrx/store';
 
 @Component({
   selector: 'app-reset-password',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule,TranslatePipe],
+  imports: [CommonModule, ReactiveFormsModule, TranslatePipe],
   templateUrl: './reset-password.component.html',
   styleUrl: './reset-password.component.css',
 })
@@ -32,7 +34,8 @@ export class ResetPasswordComponent implements OnInit {
     private fb: FormBuilder,
     private router: Router,
     private toast: ToastrService,
-    private passwordService: ChangePasswordService
+    private passwordService: ChangePasswordService,
+    private store: Store,
   ) {}
 
   ngOnInit(): void {
@@ -52,7 +55,7 @@ export class ResetPasswordComponent implements OnInit {
           validators: [Validators.required],
         }),
       },
-      { validators: this.passwordMatchValidator.bind(this) }
+      { validators: this.passwordMatchValidator.bind(this) },
     );
   }
 
@@ -96,8 +99,20 @@ export class ResetPasswordComponent implements OnInit {
         this.isLoading = false;
         if (res.isSuccess) {
           this.toast.success(res?.message);
+
+          const storedUser = JSON.parse(localStorage.getItem('user') || '{}');
+          const updatedUser = {
+            ...storedUser,
+            isFirstLogin: true,
+          };
+          localStorage.setItem('user', JSON.stringify(updatedUser));
+
+          this.store.dispatch(updateFirstLogin({ isFirstLogin: true }));
+
           this.resetForm.reset();
-          this.router.navigate([ROUTE_CONST.DASHBOARD]);
+          this.router.navigate([ROUTE_CONST.DASHBOARD], {
+            replaceUrl: true,
+          });
         } else {
           this.toast.error(res.message);
         }

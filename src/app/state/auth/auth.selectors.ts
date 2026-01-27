@@ -20,3 +20,9 @@ export const selectUserPermissions = createSelector(
   (user) => user?.permissions || []
 );
 
+export const selectIsFirstLogin = createSelector(
+  selectAuthUser,
+  (user) => user?.isFirstLogin
+);
+
+

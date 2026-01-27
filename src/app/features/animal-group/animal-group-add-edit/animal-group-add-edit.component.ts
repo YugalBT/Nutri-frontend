@@ -44,7 +44,6 @@ export class AnimalGroupAddEditComponent implements OnInit, OnDestroy {
 
   subs: Subscription[] = [];
 
-  // permission for current mode (set in openModal)
   isAddEditPermission = false;
 
   constructor(
@@ -57,7 +56,6 @@ export class AnimalGroupAddEditComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.initializeForm();
-    // create modal instance once; we'll call show() after data loads
     this.modalInstance = new bootstrap.Modal(this.animalGroupModal.nativeElement, { backdrop: 'static' });
   }
 
@@ -141,6 +139,7 @@ export class AnimalGroupAddEditComponent implements OnInit, OnDestroy {
     this.form.reset();
     this.currentAnimalGroupId = data?.animalGroupId ?? null;
 
+    const farmIdFromQuery = data?.farmId ? String(data.farmId) : null;
     this.isAddEditPermission = edit
       ? this.commonService.checkPermission(PERMISSIONS.AnimalGroupEdit)
       : this.commonService.checkPermission(PERMISSIONS.AnimalGroupAdd);
@@ -153,7 +152,11 @@ export class AnimalGroupAddEditComponent implements OnInit, OnDestroy {
 
     const s = join$.subscribe({
       next: () => {
+      if (!edit && farmIdFromQuery) {
+        this.form.patchValue({ farmId: farmIdFromQuery });
 
+        this.form.get('farmId')?.disable();
+      }
         if (edit && data) {
           this.form.patchValue({
             farmId: data?.farmId != null ? String(data?.farmId) : '',
@@ -164,6 +167,7 @@ export class AnimalGroupAddEditComponent implements OnInit, OnDestroy {
             numberOfAnimal: data?.numberOfAnimal,
             avgMilkPerDay: data?.avgMilkPerDay,
           });
+           this.form.get('farmId')?.disable();
         }
         this.modalInstance.show();
       },
@@ -199,7 +203,7 @@ export class AnimalGroupAddEditComponent implements OnInit, OnDestroy {
       return;
     }
 
-    const payload: any = { ...this.form.value, animalGroupId: this.currentAnimalGroupId ?? undefined };
+    const payload: any = { ...this.form.getRawValue(), animalGroupId: this.currentAnimalGroupId ?? undefined };
 
     if (this.isEdit && this.currentAnimalGroupId) {
       const sub = this.animalGroupService.updateAnimalGroup(payload).subscribe({

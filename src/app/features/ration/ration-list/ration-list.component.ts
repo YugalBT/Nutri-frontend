@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input, ViewChild } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { selectUserRoles } from '../../../state/auth/auth.selectors';
 import { PERMISSIONS } from '../../../core/constants/permissions.constants';
@@ -28,6 +28,7 @@ export class RationListComponent {
 
   columns: string[] = [];
   columnFields: string[] = [];
+  @Input() farmId!: string;
 
   ration: RationList[] = [];
 
@@ -42,6 +43,9 @@ export class RationListComponent {
   // permissions
   userRoles: string[] = [];
   canAddRation = false;
+  @ViewChild(RationAddEditComponent) rationModalRef!: RationAddEditComponent;
+
+
 
   constructor(
     private translate: TranslateService,
@@ -58,6 +62,7 @@ export class RationListComponent {
 
   ngOnInit(): void {
     
+    this.searchValue = this.farmId || '';
     if(!this.commonService.checkPermission(PERMISSIONS.RationAdd)
       || !this.commonService.checkPermission(PERMISSIONS.RationView))
         return;
@@ -178,7 +183,9 @@ export class RationListComponent {
 
   this.router.navigate([ROUTE_CONST.RATION_ITEMS], {
     queryParams: {
-      rationId: event.row.rationId
+      rationId: event.row.rationId,
+       farmId: this.farmId,     
+      returnTab: 'ration'
     }
   });
 }
@@ -200,5 +207,12 @@ export class RationListComponent {
     this.langSub?.unsubscribe();
     this.subs.forEach((s) => s.unsubscribe());
   }
+
+  openAddRationModal(): void {
+  this.rationModalRef.openModal(false, {
+    farmId: this.farmId 
+  });
+}
+
 
 }

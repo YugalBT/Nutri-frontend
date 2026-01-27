@@ -260,8 +260,15 @@ export class RationAddEditComponent implements OnInit, OnDestroy {
     this.currentRationId = null;
     this.form.reset();
     this.resetRationItems();
+    const farmIdFromQuery = data?.farmId ? String(data.farmId) : null;
 
     const sub = this.loadFarmList().subscribe(() => {
+
+    if (!edit && farmIdFromQuery) {
+      this.form.patchValue({ farmId: farmIdFromQuery });
+      this.form.get('farmId')?.disable(); 
+    }
+
       if (edit && data) {
         this.currentRationId = data.rationId;
 
@@ -270,6 +277,7 @@ export class RationAddEditComponent implements OnInit, OnDestroy {
           animalGroupId: String(data.animalGroupId),
           name: data.rationName
         });
+      this.form.get('farmId')?.disable();
 
         this.rationItems.clear();
         data.items?.forEach((it: any) => {
@@ -306,7 +314,7 @@ export class RationAddEditComponent implements OnInit, OnDestroy {
     }
 
     const payload = {
-      ...this.form.value,
+      ...this.form.getRawValue(),
       rationId: this.currentRationId ?? undefined
     };
 

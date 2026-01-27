@@ -166,15 +166,15 @@
   <!-- TAB CONTENT -->
   <div class="tab-content">
     <ng-container *ngIf="activeTab === 'animalGroup'">
-      <app-animal-group-list></app-animal-group-list>
+      <app-animal-group-list [farmId]="farmId" ></app-animal-group-list>
     </ng-container>
 
     <ng-container *ngIf="activeTab === 'feed'">
-      <app-feed-list></app-feed-list>
+      <app-feed-list [farmId]="farmId" ></app-feed-list>
     </ng-container>
 
     <ng-container *ngIf="activeTab === 'ration'">
-      <app-ration-list></app-ration-list>
+      <app-ration-list [farmId]="farmId" ></app-ration-list>
     </ng-container>
   </div>
 </div>

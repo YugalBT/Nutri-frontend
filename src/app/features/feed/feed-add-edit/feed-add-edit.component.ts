@@ -95,7 +95,7 @@ export class FeedAddEditComponent implements OnInit, OnDestroy {
   openModal(edit = false, data?: any) {
     this.isEdit = edit;
     this.form.reset();
-
+    const farmIdFromQuery = data?.farmId ? String(data.farmId) : null;
     if (edit && data) {
       this.form.patchValue({
         clientId: data.clientId,
@@ -115,14 +115,23 @@ export class FeedAddEditComponent implements OnInit, OnDestroy {
         phosphorus: data.phosphorus,
         starch : data.starch
       });
+      this.form.get('farmId')?.disable();
 
       this.currentFeedId = data.feedId;
-    } else {
-      this.currentFeedId = null;
-    }
+    }  // ADD MODE + QUERY PARAM FARM
+  if (!edit && farmIdFromQuery) {
+    this.form.patchValue({
+      farmId: farmIdFromQuery
+    });
 
-    this.modalInstance = new bootstrap.Modal(this.feedModal.nativeElement);
-    this.modalInstance.show();
+    this.form.get('farmId')?.disable();
+  }
+
+  this.modalInstance = new bootstrap.Modal(this.feedModal.nativeElement, {
+    backdrop: 'static'
+  });
+
+  this.modalInstance.show();
   }
 
 
@@ -136,7 +145,10 @@ export class FeedAddEditComponent implements OnInit, OnDestroy {
       return;
     }
 
-    const payload = this.form.value;
+     const payload: any = {
+    ...this.form.getRawValue(),
+    feedId: this.currentFeedId ?? undefined
+  };
 
 
     if (this.isEdit && this.currentFeedId) {

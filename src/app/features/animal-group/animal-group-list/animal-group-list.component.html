@@ -3,7 +3,7 @@
 
   <div class="page-header d-flex justify-content-between align-items-center mb-3">
     <h3 class="page-title">{{ 'animalGroup.Heading' | translate }}</h3>
-    <button class="btn add-btn" (click)="animalGroupModalRef.openModal()" [disabled]="!canAdd">
+    <button class="btn add-btn" (click)="openAddModal()" [disabled]="!canAdd">
       <i class="bi bi-plus-lg me-2"></i> {{ 'animalGroup.addAnimalGroup' | translate }}
     </button>
   </div>
