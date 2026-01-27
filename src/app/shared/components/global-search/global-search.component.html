@@ -1,5 +1,4 @@
 <div class="global-search-modern container-fluid py-3" role="search">
-
   <!-- Label Row -->
   <div class="row mb-1" *ngIf="label">
     <div class="col-12">
@@ -12,9 +11,8 @@
   <!-- ================= ADMIN LAYOUT ================= -->
   <ng-container *ngIf="isSuperAdmin; else normalLayout">
     <div class="row g-3">
-      
       <!-- Search -->
-      <div class="col-md-4 col-sm-12">
+      <div class="col-md-4 col-sm-4">
         <div class="search-wrapper-modern">
           <span class="search-icon-modern">
             <!-- svg unchanged -->
@@ -32,42 +30,46 @@
           <button
             class="clear-btn-modern"
             *ngIf="searchControl.value"
-            (click)="doClear()">
+            (click)="doClear()"
+          >
             <i class="bi bi-x-lg"></i>
           </button>
         </div>
       </div>
 
-      <!-- Status -->
-      <div class="col-md-4 col-sm-6" *ngIf="showStatus">
-        <select class="form-select form-control" [formControl]="statusControl">
-          <option value="">{{ 'common.all' | translate }}</option>
-          <option value="1">{{ 'common.active' | translate }}</option>
-          <option value="0">{{ 'common.inactive' | translate }}</option>
-        </select>
-      </div>
-
       <!-- Checkbox -->
-      <div class="col-md-4 col-sm-6" *ngIf="ShowCheckBox">
-        <label class="form-label">
-          {{ 'role.roleIsShow' | translate }}
-        </label>
-        <label class="switch">
+      <div
+        class="col-md-4 col-sm-4 d-flex align-items-center gap-3"
+        *ngIf="ShowCheckBox"
+      >
+        <span>
+          {{ "role.roleIsShow" | translate }}
+        </span>
+
+        <label class="switch mb-0">
           <input
             type="checkbox"
             [checked]="!isShow"
-            (change)="isShow.emit($any($event.target).checked)">
+            (change)="isShow.emit($any($event.target).checked)"
+          />
           <span class="slider"></span>
         </label>
       </div>
 
+      <!-- Status -->
+      <div class="col-md-3 col-sm-4" *ngIf="showStatus">
+        <select class="form-select form-control" [formControl]="statusControl">
+          <option value="">{{ "common.all" | translate }}</option>
+          <option value="1">{{ "common.active" | translate }}</option>
+          <option value="0">{{ "common.inactive" | translate }}</option>
+        </select>
+      </div>
     </div>
   </ng-container>
 
   <!-- ================= NORMAL (EXISTING) UI ================= -->
   <ng-template #normalLayout>
     <div class="row g-3">
-
       <!-- Search Input -->
       <div class="col-md-10 col-sm-12">
         <div class="search-wrapper-modern">
@@ -87,7 +89,8 @@
           <button
             class="clear-btn-modern"
             *ngIf="searchControl.value"
-            (click)="doClear()">
+            (click)="doClear()"
+          >
             <i class="bi bi-x-lg"></i>
           </button>
         </div>
@@ -96,27 +99,26 @@
       <!-- Status -->
       <div class="col-md-2 col-sm-6" *ngIf="showStatus">
         <select class="form-select form-control" [formControl]="statusControl">
-          <option value="">{{ 'common.all' | translate }}</option>
-          <option value="1">{{ 'common.active' | translate }}</option>
-          <option value="0">{{ 'common.inactive' | translate }}</option>
+          <option value="">{{ "common.all" | translate }}</option>
+          <option value="1">{{ "common.active" | translate }}</option>
+          <option value="0">{{ "common.inactive" | translate }}</option>
         </select>
       </div>
 
       <!-- Checkbox -->
       <div class="col-md-2 col-sm-6" *ngIf="isSuperAdmin && ShowCheckBox">
         <label class="form-label">
-          {{ 'role.roleIsShow' | translate }}
+          {{ "role.roleIsShow" | translate }}
         </label>
         <label class="switch">
           <input
             type="checkbox"
             [checked]="!isShow"
-            (change)="isShow.emit($any($event.target).checked)">
+            (change)="isShow.emit($any($event.target).checked)"
+          />
           <span class="slider"></span>
         </label>
       </div>
-
     </div>
   </ng-template>
-
 </div>
