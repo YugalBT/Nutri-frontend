@@ -116,13 +116,11 @@ export class PlaceholderMappingListComponent {
     this.columns = [
      this.translate.instant('placeholderMapping.columns.category') as string,
     this.translate.instant('placeholderMapping.columns.placeholders') as string,
-    this.translate.instant('placeholderMapping.columns.status') as string
     ];
 
     this.columnFields = [
       'categoryName',
       'placeholdersDisplay',
-      'isActive'
     ];
   }
 

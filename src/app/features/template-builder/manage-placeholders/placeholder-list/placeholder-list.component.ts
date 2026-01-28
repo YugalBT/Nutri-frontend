@@ -68,7 +68,9 @@ export class TemplatePlaceholderListComponent {
 
     this.placeholderService.getPlaceholderDetails(payload).subscribe({
       next: (res: ApiResponse<TemplatePlaceholderList[]>) => {
-        this.placeholders = res?.data ?? [];
+        this.placeholders =Array.isArray(res?.data)
+    ? res.data
+    : []; 
         this.totalRecords = res?.totalRecords ?? 0;
       },
       error: () => {

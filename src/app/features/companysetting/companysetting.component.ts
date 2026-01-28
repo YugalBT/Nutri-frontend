@@ -48,7 +48,7 @@ export class CompanysettingComponent implements OnInit {
 
         if (logo && typeof logo === 'string') {
           this.imagePreview = logo;
-          this.companyForm.get('logo')?.setValue(logo);
+          //this.companyForm.get('logo')?.setValue(logo);
         }
       } else {
         this.toast.error(res?.message);
