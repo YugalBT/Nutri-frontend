@@ -62,7 +62,7 @@
           <div class="input-group">
            
 
-          <input  [type]="showPassword ? 'text' : 'password'" placeholder="{{'configuration.passwordPlaceholder' | translate}}" class="form-control"  />
+          <input formControlName="password" [type]="showPassword ? 'text' : 'password'" placeholder="{{'configuration.passwordPlaceholder' | translate}}" class="form-control" />
             <span class="input-group-text" role="button"
                   (click)="showPassword = !showPassword">
               <i class="fa"

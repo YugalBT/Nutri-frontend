@@ -249,7 +249,7 @@
 @if (user$ | async; as user) {
 
   @if (user.isSuperAdmin) {
-            <div   class="col-md-4 position-relative">
+            <div   class="col-md-4 position-relative" #companyBox>
               <label id="company" class="form-label">
                 Companies <span class="text-danger">*</span>
               </label>

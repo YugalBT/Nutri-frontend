@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, ViewChild, OnDestroy } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild, OnDestroy, HostListener } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -56,6 +56,7 @@ export class AddeditComponent implements OnInit, OnDestroy {
 
   searchCompany = '';
   showCompanyDropdown = false;
+  @ViewChild('companyBox') companyBox!: ElementRef;
 
   private subs: Subscription[] = [];
   private currentUserId: string | null = null;
@@ -88,6 +89,18 @@ export class AddeditComponent implements OnInit, OnDestroy {
     // if not superadmin then disable companies selection
 
   }
+
+  @HostListener('document:click', ['$event'])
+closeOnOutsideClick(event: MouseEvent) {
+  if (
+    this.showCompanyDropdown &&
+    this.companyBox &&
+    !this.companyBox.nativeElement.contains(event.target)
+  ) {
+    this.showCompanyDropdown = false;
+  }
+}
+
 
   ngOnDestroy(): void {
     this.subs.forEach(s => s.unsubscribe());
