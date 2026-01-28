@@ -30,8 +30,7 @@ export class ProfileComponent implements OnInit {
 
   user$: Observable<User | null>;
   profileForm!: FormGroup;
-  @ViewChild('fileInput')
-  fileInput!: ElementRef<HTMLInputElement>;
+  @ViewChild('fileInput') fileInput!: ElementRef<HTMLInputElement>;
   imagePreview: string | null = null;
   logoFile!: File;
 
@@ -67,7 +66,7 @@ export class ProfileComponent implements OnInit {
         });
        if (user?.logo) {
           this.imagePreview = user?.logo;
-          this.profileForm.get('logo')?.setValue(user?.logo);
+          //this.profileForm.get('logo')?.setValue(user?.logo);
         }
       } else {
         this.toast.error(res?.message);
