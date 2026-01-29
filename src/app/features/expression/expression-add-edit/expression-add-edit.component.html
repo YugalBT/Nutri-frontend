@@ -21,6 +21,10 @@
 
                         
                 </div>
+                 <div class="mb-3 col-md-8" *ngIf="isvalidated" class="alert alert-success mt-2">
+                 Expression Result: <strong>{{ validatedResult }}</strong>
+                </div>
+               
 
                 <div class="expression-box mb-4">
                     <label class="form-label">
@@ -103,10 +107,12 @@
                 <button class="btn" (click)="closeModal()">
                     {{ 'formula.cancel' | translate }}
                 </button>
-                <button class="btn add-btn" (click)="validateExpression()">
+                <button class="btn add-btn" (click)="onValidate()">
                     {{ 'formula.validate' | translate }}
                 </button>
-                <button class="btn add-btn" (click)="validateExpression()">
+                <!-- disable save button until validation is successful -->
+                 
+                <button class="btn add-btn" [disabled]="!isvalidated" (click)="validateExpression()">
                     {{ 'formula.save' | translate }}
                 </button>
             </div>

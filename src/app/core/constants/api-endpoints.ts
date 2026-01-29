@@ -178,6 +178,7 @@ export const API_ENDPOINTS = {
     DELETE: '/Formula/Delete',
     ACTIVE_INACTIVE: '/Formula/ActiveInActive',
     GET_ALL: '/Formula/GetAll',
+    VALIDATE_FORMULA: '/Ration/ValidateFormula',
   },
   TECHNICAL_REPORT: {
     CREATE: '/Ration/SaveTechnicalRecord',

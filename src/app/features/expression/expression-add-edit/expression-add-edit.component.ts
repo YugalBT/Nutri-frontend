@@ -32,7 +32,8 @@ export class ExpressionAddEditComponent implements OnInit {
   operators: OperatorList[] = [];
   rations: RationList[] = [];
   expressionItems: OperatorsAndRationsList[] = [];
-
+  isvalidated: boolean = false;
+  validatedResult: string | null = null;
   constructor(
     private commonService: CommonService,
     private formulaService: FormulaService,
@@ -51,6 +52,8 @@ export class ExpressionAddEditComponent implements OnInit {
  openModal(edit = false, data?: any): void {
   this.isEdit = edit;
   this.insertIndex = null;
+  this.isvalidated = false;
+  this.validatedResult = null;
 
   if (edit && data) {
     this.formulaId = data.formulaId;
@@ -74,6 +77,8 @@ export class ExpressionAddEditComponent implements OnInit {
 
   closeModal(): void {
     this.modal.hide();
+      this.isvalidated = false;
+  this.validatedResult = null;
   }
 
 
@@ -188,6 +193,16 @@ export class ExpressionAddEditComponent implements OnInit {
       return;
     }
 
+    const validatePayload = {
+      formula: this.expressionTokens.join(' ')
+    };
+    this.formulaService.validateformula(validatePayload).subscribe(res => {
+      if (!res.isSuccess) {
+        this.toast.error(res.message);
+        return;
+      }
+    });
+
     const payload = this.buildPayload();
 
     const api$ = this.isEdit
@@ -254,4 +269,78 @@ private loadExpressionItems(): void {
   //     this.rations = (res.data ?? []).filter(r => r.isActive);
   //   });
   // }
+onValidate(): void {
+  if (!this.expressionName.trim()) {
+    this.toast.warning('Expression name is required');
+    return;
+  }
+
+  if (!this.expressionTokens.length) {
+    this.toast.warning('Expression cannot be empty');
+    return;
+  }
+
+  const validatePayload = {
+    formula: this.expressionTokens.join(' ')
+  };
+
+  this.formulaService.validateformula(validatePayload).subscribe(res => {
+    if(res.isSuccess){
+      this.toast.success(res.message);
+      this.validatedResult = res.data ?? null;
+      this.isvalidated = true;
+    } else {
+      this.toast.error(res.message);
+      this.validatedResult = res.data ?? null;
+    }
+  });
+}
+
+
+// onSave(): void {
+//   if (!this.expressionName.trim()) {
+//     this.toast.warning('Expression name is required');
+//     return;
+//   }
+
+//   if (!this.expressionTokens.length) {
+//     this.toast.warning('Expression cannot be empty');
+//     return;
+//   }
+
+//   const validatePayload = {
+//     formula: this.expressionTokens.join(' ')
+//   };
+
+//   // STEP 1: Validate first
+//   this.formulaService.validateformula(validatePayload).subscribe(res => {
+//     if (!res.isSuccess) {
+//       this.toast.error(res.message);
+//       return;
+//     }
+
+//     // STEP 2: Build payload
+//     const payload = this.buildPayload();
+
+//     const api$ = this.isEdit
+//       ? this.formulaService.updateformula({
+//           ...payload,
+//           formulaId: this.formulaId
+//         })
+//       : this.formulaService.createformula(payload);
+
+//     // STEP 3: Save
+//     api$.subscribe(saveRes => {
+//       saveRes.isSuccess
+//         ? this.toast.success(saveRes.message)
+//         : this.toast.error(saveRes.message);
+
+//       if (saveRes.isSuccess) {
+//         this.closeModal();
+//       }
+//     });
+//   });
+// }
+
+  
 }
