@@ -78,7 +78,6 @@ implements AfterViewInit, OnDestroy {
   ngOnInit(): void {
     this.loadCategories();
     this.categoryChangeSub = this.form.get('categoryId')?.valueChanges.subscribe(categoryId => {
-      debugger;
       if (categoryId) {
         this.loadPlaceholdersByCategory(categoryId);
       } else {
@@ -178,9 +177,9 @@ implements AfterViewInit, OnDestroy {
 
       if (edit && data) {
         this.form.patchValue({
-          categoryId: data.categoryId,
-          type: data.type,
-          subject: data.subject,
+          categoryId: data?.categoryId,
+          type: data?.type,
+          subject: data?.subject,
           isMasterData: data.isMasterData=== true,
           body: data.body
         });
@@ -225,7 +224,6 @@ implements AfterViewInit, OnDestroy {
   }
 
   private loadPlaceholdersByCategory(categoryId: string): void {
-    debugger;
     const sub = this.commonService.GetAllPlaceholderByCategoryId(categoryId).subscribe({
       next: res => {
         this.placeholders = res?.data ?? [];

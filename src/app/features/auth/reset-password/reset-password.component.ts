@@ -60,7 +60,6 @@ export class ResetPasswordComponent implements OnInit {
   }
 
   passwordMatchValidator(form: FormGroup) {
-    debugger;
     const password = form.get('passWord')?.value;
     const confirm = form.get('confirmPassWord')?.value;
     return password === confirm ? null : { passwordMismatch: true };
@@ -78,7 +77,6 @@ export class ResetPasswordComponent implements OnInit {
   }
 
   onSubmit() {
-    debugger;
     this.isSubmitted = true;
     this.resetForm.markAllAsTouched();
     if (this.resetForm.invalid) {

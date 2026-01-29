@@ -22,6 +22,8 @@
       [showStatus]="true"
       (search)="onSearch($event)"
       (statusChange)="onStatusChange($event)"
+      [showMasterCheckbox]="true"  
+      (masterChange)="onMasterChange($event)"
       (clear)="clearFilters()">
     </app-global-search>
   </div>

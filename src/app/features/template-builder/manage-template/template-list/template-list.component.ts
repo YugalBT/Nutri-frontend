@@ -1,4 +1,4 @@
-import { Subscription } from "rxjs";
+import { Observable, Subscription } from "rxjs";
 import { TemplateList } from "../../../../core/models/template-builder/template-list";
 import { ManageTemplateService } from "../../../../core/services/template-builder/manage-template/manage-template.service";
 import { ToastService } from "../../../../shared/services/toast.service";
@@ -10,6 +10,9 @@ import { TranslatePipe } from "../../../../i18n/translate.pipe";
 import { TemplateAddEditComponent } from "../template-add-edit/template-add-edit.component";
 import { ConfirmDialogService } from "../../../../shared/services/confirm-dialog.service";
 import { TranslateService } from "../../../../i18n/translate.service";
+import { User } from "../../../../state/auth/auth.models";
+import { Store } from "@ngrx/store";
+import { selectAuthUser } from "../../../../state/auth/auth.selectors";
 
 @Component({
   selector: 'app-template-list',
@@ -37,15 +40,18 @@ export class TemplateListComponent {
   filterStatus: number | null = 2;
   subs: Subscription[] = [];
   private langSub: Subscription | undefined;
-
+  user$: Observable<User | null>;
+  isMasterData: boolean | null = null;
   constructor(
     private templateService: ManageTemplateService,
     private toast: ToastService,
     private confirm: ConfirmDialogService,
-    private translate :TranslateService
+    private translate :TranslateService, 
+    private store: Store,
   ) {
     this.setColumns();
     this.langSub = this.translate.lang$.subscribe(() => this.setColumns());
+    this.user$ = this.store.select(selectAuthUser);
   }
 
   ngOnInit() {
@@ -59,7 +65,7 @@ export class TemplateListComponent {
   }
 
   loadTemplates(pageNo: number, recordPerPage: number) {
-    const payload = { pageNo, recordPerPage };
+    const payload = { pageNo, recordPerPage ,isMasterData: this.isMasterData??false};
 
     const sub = this.templateService.gettemplateDetails(payload).subscribe({
       next: res => {
@@ -89,9 +95,17 @@ export class TemplateListComponent {
   clearFilters(): void {
     this.searchValue = '';
     this.filterStatus = 2;
+    this.isMasterData = false;
     this.pageIndex = 0;
     this.loadTemplates(1, this.pageSize);
   }
+  onMasterChange(value: boolean) {
+  this.isMasterData = value;
+  this.pageIndex = 0;
+  this.loadTemplates(1, this.pageSize);
+}
+
+
 
 
 

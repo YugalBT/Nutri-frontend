@@ -86,7 +86,6 @@ export class PlaceholderMappingListComponent {
   }
 
   onToggleActive(event: any) {
-    debugger;
     const row = event.row;
     const prev = row.isActive;
     row.isToggling = true;

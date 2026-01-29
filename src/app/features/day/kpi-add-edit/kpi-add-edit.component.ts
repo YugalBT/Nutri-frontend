@@ -108,7 +108,6 @@ export class KpiAddEditComponent implements OnInit, OnDestroy {
       !this.commonService.checkPermission(PERMISSIONS.KpiEdit))
       return;
     if (!this.form.valid) {
-      debugger;
       this.toast.warning('Please fill all required fields');
       return;
     }
