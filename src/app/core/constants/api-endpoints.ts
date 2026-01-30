@@ -50,6 +50,8 @@ export const API_ENDPOINTS = {
     GET_PLACEHOLDER_BY_CATEGORY_ID: '/Common/GetAllPlaceholderByCategoryId',
     GET_ALL_FORMULA_LIST: '/Common/GetAllFormula',
     GET_Language_LIST: '/Common/GetAllLanguage',
+    MARK_ALL_READ_NOTIFICATION: '/Common/ReadAllNotification',
+    UPDATE_NOTIFICATION:'/Common/UpdateNotification'
   },
   
   

@@ -107,4 +107,16 @@ export class CommonService {
    getFormulaList(): Observable<ApiResponse<FormulaList>> {
     return this.http.get<FormulaList>(API_ENDPOINTS.COMMON_API.GET_ALL_FORMULA_LIST);
   }
+
+markAllReadNotifications(): Observable<ApiResponse<any>> {
+  return this.http.post<ApiResponse<any>>(
+    API_ENDPOINTS.COMMON_API.MARK_ALL_READ_NOTIFICATION,
+    {} 
+  );}
+
+    updateNotification(Id: string): Observable<ApiResponse<any>> {
+      const url = `${API_ENDPOINTS.COMMON_API.UPDATE_NOTIFICATION}?Id=${Id}`;
+      return this.http.post<any>(url, {});
+    }
+
 }

@@ -154,6 +154,7 @@ import { CompanyService } from '../../core/services/company/company.service';
 import { ApiResponse } from '../../core/models/api-response';
 import { MatSelectModule } from '@angular/material/select';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { CommonService } from '../../shared/services/common.service';
 
 @Component({
   selector: 'app-header',
@@ -200,6 +201,7 @@ export class HeaderComponent implements OnInit {
     private localizationService: LocalizationService,
     private router: Router,
     private companyService: CompanyService,
+    private commonService: CommonService
   ) {
     this.user$ = this.store.select(selectAuthUser);
     this.companyService.notifyCompaniesChanged();
@@ -286,11 +288,13 @@ export class HeaderComponent implements OnInit {
         if (res.isSuccess && Array.isArray(res.data)) {
           this.notificationsData = res.data.map((n: NotificationList) => ({
             title: n.subject,
+            id:n.id,
             description: n.body,
             createdDate: n.createdDate
               ? new Date(n.createdDate).toLocaleDateString()
               : '',
             type: n.type,
+            isRead: n.isReaded ?? false
           }));
         } else {
           this.notificationsData = [];
@@ -299,6 +303,25 @@ export class HeaderComponent implements OnInit {
       error: (err) => console.error(err),
     });
   }
+
+  get unreadCount(): number {
+  return this.notificationsData.filter(n => !n.isRead).length;
+}
+
+updateNotification(id: string): void {
+  debugger;
+  this.commonService.updateNotification(id).subscribe({
+    next: (res) => {
+      if (res.isSuccess) {
+        this.notificationsData = this.notificationsData.map(n =>
+          n.id === id ? { ...n, isRead: true } : n
+        );
+      }
+    },
+    error: (err) => console.error(err),
+  });
+}
+
 
   /** 🔹 Theme */
   toggleDarkMode(): void {
@@ -405,6 +428,22 @@ export class HeaderComponent implements OnInit {
 
   private forceAppReload(): void {
   window.location.href = window.location.origin;
+}
+
+  markAllRead(): void {
+  if (this.notificationsData.length === 0) return;
+
+  this.commonService.markAllReadNotifications().subscribe({
+    next: (res) => {
+      if (res.isSuccess) {
+        this.notificationsData = this.notificationsData.map(n => ({
+          ...n,
+          isRead: true
+        }));
+      }
+    },
+    error: (err) => console.error(err),
+  });
 }
 
 }

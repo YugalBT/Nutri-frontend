@@ -115,7 +115,7 @@
             </svg>
           </div>
           <div class="notification-number">
-            {{ notificationsData.length }}
+            {{ unreadCount }}
             <!-- dynamic count -->
           </div>
         </div>
@@ -134,7 +134,7 @@
         >
           <div class="popup-header d-flex justify-content-between">
             <h4>{{ "notifications.notifications" | translate }}</h4>
-            <button class="mark-read-btn">
+            <button  [disabled]="notificationsData.length === 0" (click)="markAllRead()" class="mark-read-btn" >
               {{ "notifications.markAllRead" | translate }}
             </button>
           </div>
@@ -144,8 +144,10 @@
               *ngIf="notificationsData.length > 0; else noNotifications"
             >
               <div
-                class="notification-item"
+                class="notification-item" style="cursor: pointer;"
                 *ngFor="let item of notificationsData"
+                 [class.read]="item.isRead"
+                 (click)="!item.isRead && updateNotification(item.id)"
               >
                 <h5>{{ item.title }}</h5>
                 <p class="description">{{ item.description }}</p>
