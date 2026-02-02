@@ -126,7 +126,7 @@
                 class="form-control"
                 placeholder="{{ 'users.phonePlaceholder' | translate }}"
                 (input)="
-                  phoneService.enforcePhoneInput($event, form, 'phone', 10)
+                  phoneService.enforcePhoneInput($event, form, 'phone', 15)
                 "
               />
               <div *ngIf="form.get('phone')?.touched" class="text-danger">

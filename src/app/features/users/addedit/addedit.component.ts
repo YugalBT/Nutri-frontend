@@ -114,12 +114,15 @@ closeOnOutsideClick(event: MouseEvent) {
       middleName: ['', [Validators.pattern(/^[A-Za-z]+$/)]],
       lastName: ['', [Validators.required, Validators.pattern(/^[A-Za-z]+$/)]],
       email: ['', [Validators.required, Validators.email]],
-      phone: ['', [
-        Validators.required,
-        Validators.pattern(/^[0-9]+$/),
-        Validators.minLength(10),
-        Validators.maxLength(10)
-      ]],
+      phone: [
+        '',
+        [
+          Validators.required,
+          Validators.minLength(7),
+          Validators.maxLength(15),
+          Validators.pattern(/^[0-9]+$/),
+        ],
+      ],
       roleId: [null, Validators.required],
       tenantIds: this.fb.array([]),
       password: ['', [

@@ -50,7 +50,7 @@ export class CompanyAddEditComponent implements OnInit {
     private roleService: AddEditRoleService,
     private toast: ToastService,
     private commonService: CommonService,
-    public phoneService: PhoneService
+    public phoneService: PhoneService,
   ) {}
 
   ngOnInit(): void {
@@ -84,7 +84,12 @@ export class CompanyAddEditComponent implements OnInit {
       email: ['', [Validators.required, Validators.email]],
       phoneNumber: [
         '',
-        [Validators.required, Validators.pattern(/^[0-9]{10}$/)],
+        [
+          Validators.required,
+          Validators.minLength(7),
+          Validators.maxLength(15),
+          Validators.pattern(/^[0-9]+$/),
+        ],
       ],
 
       // Company
@@ -106,7 +111,12 @@ export class CompanyAddEditComponent implements OnInit {
       userEmail: ['', [Validators.required, Validators.email]],
       userPhoneNumber: [
         '',
-        [Validators.required, Validators.pattern(/^[0-9]{10}$/)],
+        [
+          Validators.required,
+          Validators.minLength(7),
+          Validators.maxLength(15),
+          Validators.pattern(/^[0-9]+$/),
+        ],
       ],
 
       sameAsPrimaryUser: [false],
@@ -193,15 +203,15 @@ export class CompanyAddEditComponent implements OnInit {
           this.roleList = Array.isArray(res?.data)
             ? res.data
             : Array.isArray(res?.items)
-            ? res.items
-            : [];
+              ? res.items
+              : [];
           this.spinner.hide();
         },
         error: () => {
           this.spinner.hide();
           this.toast.error(
             this.translate.instant('common.failedToLoadRoles') ||
-              'Error loading roles'
+              'Error loading roles',
           );
         },
       });
@@ -306,7 +316,7 @@ export class CompanyAddEditComponent implements OnInit {
     if (this.form.invalid) {
       this.toast.warning(
         this.translate.instant('common.formInvalid') ||
-          'Please fill all required fields correctly'
+          'Please fill all required fields correctly',
       );
       return;
     }

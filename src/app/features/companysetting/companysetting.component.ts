@@ -61,7 +61,7 @@ export class CompanysettingComponent implements OnInit {
       logo: [null],
       companyName: ['', [CustomValidators.required(), CustomValidators.maxLength(50)]],
       email: ['', [CustomValidators.required(), CustomValidators.email()]],
-      phoneNumber: ['', [CustomValidators.required(), CustomValidators.onlyNumbers(), CustomValidators.minLength(10), CustomValidators.maxLength(10)]],
+      phoneNumber: ['', [CustomValidators.required(), CustomValidators.onlyNumbers(), CustomValidators.minLength(10), CustomValidators.maxLength(15)]],
       streetAddress: ['', [CustomValidators.required(), CustomValidators.maxLength(100)]],
       city: ['', [CustomValidators.required(), CustomValidators.onlyChars(), CustomValidators.minLength(3), CustomValidators.maxLength(50)]],
       country: ['', [CustomValidators.required(), CustomValidators.onlyChars(), CustomValidators.minLength(3), CustomValidators.maxLength(50)]],

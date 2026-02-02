@@ -19,7 +19,7 @@ export class PhoneService {
     event: Event,
     form: FormGroup,
     controlName: string,
-    maxLength: number = 10
+    maxLength: number = 15
   ): void {
     const input = event.target as HTMLInputElement;
 
@@ -39,7 +39,7 @@ export class PhoneService {
   /**
    * Optional: validate phone length
    */
-  isValidPhone(value: string, length: number = 10): boolean {
-    return !!value && value.length === length;
+  isValidPhone(value: string, min: number = 7, max: number = 15): boolean {
+    return !!value && value.length >= min && value.length <= max;
   }
 }
