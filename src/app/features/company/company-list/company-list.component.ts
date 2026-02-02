@@ -75,7 +75,7 @@ export class CompanyListComponent implements OnInit, OnDestroy {
     this.translate.instant('company.columns.logo') || 'Logo',
    // this.translate.instant('company.columns.siteColor') || 'Site Color',
     this.translate.instant('company.columns.companyName') || 'Company Name',
-    this.translate.instant('company.columns.firstName') || 'Name',
+    this.translate.instant('company.firstName') || 'Name',
     this.translate.instant('company.columns.email') || 'Email',
     this.translate.instant('company.columns.phone') || 'Phone Number',
     this.translate.instant('company.columns.code') || 'Code',

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 import { User } from '../../state/auth/auth.models';
 import { Store } from '@ngrx/store';
@@ -7,6 +7,9 @@ import { CommonModule } from '@angular/common';
 import { NgxEchartsModule } from 'ngx-echarts';
 import type { EChartsOption } from 'echarts';
 import { TranslatePipe } from '../../i18n/translate.pipe';
+import { DashboardData } from '../../core/models/dashboarddata';
+import { CommonService } from '../../shared/services/common.service';
+import { ApiResponse } from '../../core/models/api-response';
 
 
 @Component({
@@ -16,15 +19,51 @@ import { TranslatePipe } from '../../i18n/translate.pipe';
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.css']
 })
-export class DashboardComponent {
+export class DashboardComponent implements OnInit {
 
   user$: Observable<User | null>;
+  dashboardData: DashboardData = {
+    totalCompanies: 0,
+    totalUsers: 0,
+    totalActiveUsers: 0,
+    totalInActiveUsers: 0,
+    totalFarms:0,
+    totalRations:0,
+    totalActiveFarms:0
 
-  constructor(private store: Store) {
+  };
+
+  isLoading = false;
+  constructor(
+    private store: Store,
+    private commonService : CommonService
+  ) 
+  {
     this.user$ = this.store.select(selectAuthUser);
   }
 
+  ngOnInit(): void {
+    this.loadDashboard();
+  }
 
+  loadDashboard(): void {
+    this.isLoading = true;
+
+    this.commonService.getDashboardData().subscribe({
+      next: (res: ApiResponse<DashboardData>) => {
+        if (res.isSuccess && res?.data) {
+          this.dashboardData = res?.data;
+        }
+        this.isLoading = false;
+      },
+      error: (err) => {
+        console.error('Dashboard API error', err);
+        this.isLoading = false;
+      }
+    });
+  }
+
+  
   feedCostChart: EChartsOption = {
     tooltip: { trigger: 'item', formatter: '{b}: {d}%' },
     legend: { orient: 'vertical', right: '5%', top: 'center' },

@@ -200,4 +200,9 @@ export const API_ENDPOINTS = {
     Import: '/Language/ImportLanguageExcel',
     LanguageByCulture: '/Language/LanguageByCulture',
   },
+  DASHBOARD :{
+    GET_DASHBOARD_DATA :'/Dashboard/DashboardData'
+  }
+
+  
 };

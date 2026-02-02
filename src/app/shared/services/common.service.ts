@@ -16,40 +16,49 @@ import { AnimalGroupList } from '../../core/models/animal-group-list';
 import { TemplateCategoryList } from '../../core/models/template-builder/template-category-list';
 import { TemplatePlaceholderList } from '../../core/models/template-builder/template-placeholder-list';
 import { RationList } from '../../core/models/ration-list';
-import { OperatorList, OperatorsAndRationsList } from '../../core/models/operator-list';
+import {
+  OperatorList,
+  OperatorsAndRationsList,
+} from '../../core/models/operator-list';
 import { FormulaList } from '../../core/models/formula-list';
 import { KpiList } from '../../core/models/day-list';
+import { DashboardData } from '../../core/models/dashboarddata';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class CommonService {
-  constructor(private http: HttpService,
+  constructor(
+    private http: HttpService,
     private toast: ToastService,
-    private translate: TranslateService
-  ) { }
+    private translate: TranslateService,
+  ) {}
 
-  checkPermission(roleName: string,showAlert: boolean = true) {
+  checkPermission(roleName: string, showAlert: boolean = true) {
     // if (!StorageHelper.CheckRole(roleName)) {
     //   this.toast.error(this.translate.instant('common.noPermission') || 'No permission');
     //   return false;
     // }
     // return true;
     const hasPermission = StorageHelper.CheckRole(roleName);
-  if (!hasPermission && showAlert) {
-    this.toast.error(
-      this.translate.instant('common.noPermission') || 'No permission'
-    );
-  }
+    if (!hasPermission && showAlert) {
+      this.toast.error(
+        this.translate.instant('common.noPermission') || 'No permission',
+      );
+    }
 
-  return hasPermission;
+    return hasPermission;
   }
   getRoles(): Observable<ApiResponse<RoleList[]>> {
     return this.http.get<RoleList[]>(API_ENDPOINTS.COMMON_API.GET_ALL_ROLES);
   }
 
-  getModules(masterRoles: boolean): Observable<ApiResponse<GetAllModulesResponse>> {
-    return this.http.get<GetAllModulesResponse>(`${API_ENDPOINTS.Module.GET_ALL}?masterRoles=${masterRoles}`,);
+  getModules(
+    masterRoles: boolean,
+  ): Observable<ApiResponse<GetAllModulesResponse>> {
+    return this.http.get<GetAllModulesResponse>(
+      `${API_ENDPOINTS.Module.GET_ALL}?masterRoles=${masterRoles}`,
+    );
   }
 
   getFarmsList(): Observable<ApiResponse<FarmList>> {
@@ -66,57 +75,91 @@ export class CommonService {
     return this.http.get<FarmList>(API_ENDPOINTS.COMMON_API.GET_ALL_ANIMALTYPE);
   }
   getAnimalLactationStageList(): Observable<ApiResponse<AnimallactationList>> {
-    return this.http.get<AnimallactationList>(API_ENDPOINTS.COMMON_API.GET_ALL_ANIMAL_LACTATION);
+    return this.http.get<AnimallactationList>(
+      API_ENDPOINTS.COMMON_API.GET_ALL_ANIMAL_LACTATION,
+    );
   }
 
   getAnimalGroupsList(): Observable<ApiResponse<AnimalGroupList>> {
-    return this.http.get<AnimalGroupList>(API_ENDPOINTS.COMMON_API.GET_ALL_ANIMAL_GROUP);
+    return this.http.get<AnimalGroupList>(
+      API_ENDPOINTS.COMMON_API.GET_ALL_ANIMAL_GROUP,
+    );
   }
 
-  getAlltemplateCategoryList(): Observable<ApiResponse<TemplateCategoryList[]>> {
-    return this.http.get<TemplateCategoryList[]>(API_ENDPOINTS.COMMON_API.GET_TEMPLATE_CATEGORY);
+  getAlltemplateCategoryList(): Observable<
+    ApiResponse<TemplateCategoryList[]>
+  > {
+    return this.http.get<TemplateCategoryList[]>(
+      API_ENDPOINTS.COMMON_API.GET_TEMPLATE_CATEGORY,
+    );
   }
 
-  getAlltemplatePlaceholderList(): Observable<ApiResponse<TemplatePlaceholderList[]>> {
-    return this.http.get<TemplatePlaceholderList[]>(API_ENDPOINTS.COMMON_API.GET_TEMPLATE_PLACEHOLDER);
+  getAlltemplatePlaceholderList(): Observable<
+    ApiResponse<TemplatePlaceholderList[]>
+  > {
+    return this.http.get<TemplatePlaceholderList[]>(
+      API_ENDPOINTS.COMMON_API.GET_TEMPLATE_PLACEHOLDER,
+    );
   }
 
-   getGetAllRationList(): Observable<ApiResponse<RationList[]>> {
+  getGetAllRationList(): Observable<ApiResponse<RationList[]>> {
     return this.http.get<RationList[]>(API_ENDPOINTS.COMMON_API.GET_RATION);
   }
 
-   getGetAllOperatorList(): Observable<ApiResponse<OperatorList[]>> {
+  getGetAllOperatorList(): Observable<ApiResponse<OperatorList[]>> {
     return this.http.get<OperatorList[]>(API_ENDPOINTS.COMMON_API.GET_OPERATOR);
   }
 
-  getGetAllOperatorsAndRationsList(): Observable<ApiResponse<OperatorsAndRationsList[]>> {
-    return this.http.get<OperatorsAndRationsList[]>(API_ENDPOINTS.COMMON_API.GET_OPERATORS_AND_RATIONS);
+  getGetAllOperatorsAndRationsList(): Observable<
+    ApiResponse<OperatorsAndRationsList[]>
+  > {
+    return this.http.get<OperatorsAndRationsList[]>(
+      API_ENDPOINTS.COMMON_API.GET_OPERATORS_AND_RATIONS,
+    );
   }
 
-  getAnimalGroupByFarmID(FarmId: string): Observable<ApiResponse<AnimalGroupList[]>> {
-    return this.http.get<AnimalGroupList[]>(`${API_ENDPOINTS.COMMON_API.GET_ANIMALGROUPS_BY_FARM_ID}?FarmId=${FarmId}`,);
+  getAnimalGroupByFarmID(
+    FarmId: string,
+  ): Observable<ApiResponse<AnimalGroupList[]>> {
+    return this.http.get<AnimalGroupList[]>(
+      `${API_ENDPOINTS.COMMON_API.GET_ANIMALGROUPS_BY_FARM_ID}?FarmId=${FarmId}`,
+    );
   }
   getFeedByFarmID(FarmId: string): Observable<ApiResponse<FeedList[]>> {
-    return this.http.get<FeedList[]>(`${API_ENDPOINTS.COMMON_API.GET_FEEDS_BY_FARM_ID}?FarmId=${FarmId}`,);
+    return this.http.get<FeedList[]>(
+      `${API_ENDPOINTS.COMMON_API.GET_FEEDS_BY_FARM_ID}?FarmId=${FarmId}`,
+    );
   }
 
-  GetAllPlaceholderByCategoryId(categoryId: string): Observable<ApiResponse<TemplatePlaceholderList[]>> {
-    return this.http.get<TemplatePlaceholderList[]>(`${API_ENDPOINTS.COMMON_API.GET_PLACEHOLDER_BY_CATEGORY_ID}?CategoryId=${categoryId}`,);
+  GetAllPlaceholderByCategoryId(
+    categoryId: string,
+  ): Observable<ApiResponse<TemplatePlaceholderList[]>> {
+    return this.http.get<TemplatePlaceholderList[]>(
+      `${API_ENDPOINTS.COMMON_API.GET_PLACEHOLDER_BY_CATEGORY_ID}?CategoryId=${categoryId}`,
+    );
   }
 
-   getFormulaList(): Observable<ApiResponse<FormulaList>> {
-    return this.http.get<FormulaList>(API_ENDPOINTS.COMMON_API.GET_ALL_FORMULA_LIST);
+  getFormulaList(): Observable<ApiResponse<FormulaList>> {
+    return this.http.get<FormulaList>(
+      API_ENDPOINTS.COMMON_API.GET_ALL_FORMULA_LIST,
+    );
   }
 
-markAllReadNotifications(): Observable<ApiResponse<any>> {
-  return this.http.post<ApiResponse<any>>(
-    API_ENDPOINTS.COMMON_API.MARK_ALL_READ_NOTIFICATION,
-    {} 
-  );}
+  markAllReadNotifications(): Observable<ApiResponse<any>> {
+    return this.http.post<ApiResponse<any>>(
+      API_ENDPOINTS.COMMON_API.MARK_ALL_READ_NOTIFICATION,
+      {},
+    );
+  }
 
-    updateNotification(Id: string): Observable<ApiResponse<any>> {
-      const url = `${API_ENDPOINTS.COMMON_API.UPDATE_NOTIFICATION}?Id=${Id}`;
-      return this.http.post<any>(url, {});
-    }
+  updateNotification(Id: string): Observable<ApiResponse<any>> {
+    const url = `${API_ENDPOINTS.COMMON_API.UPDATE_NOTIFICATION}?Id=${Id}`;
+    return this.http.post<any>(url, {});
+  }
 
+   getDashboardData(): Observable<ApiResponse<DashboardData>> {
+    return this.http.get<DashboardData>(
+      API_ENDPOINTS.DASHBOARD.GET_DASHBOARD_DATA,
+    );
+  }
 }
