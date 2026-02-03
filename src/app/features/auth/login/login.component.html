@@ -68,6 +68,24 @@
                 </div>
             </div>
              <div class="col-lg-5 gradient_bg">
+                 <div class="language-switcher-right">
+                    <div class="dropdown">
+                        <button class="btn btn-light dropdown-toggle" data-bs-toggle="dropdown">
+                            {{ currentLanguageName }}
+                        </button>
+
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li *ngFor="let lang of languages">
+                                <button class="dropdown-item" (click)="changeLanguage(lang.languageCode)">
+                                    {{ lang.languageName }}
+                                </button>
+                            </li>
+                        </ul>
+                    </div>
+
+
+                </div>
+
         <div class="inner_content_two">
           <a>
             <img class="img-fluid" alt="logo" src="assets/image/logo.png" />
