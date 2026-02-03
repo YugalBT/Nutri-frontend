@@ -49,7 +49,7 @@
                                                 'auth.passwordRequired' | translate }}</small>
                                         </div>
                                     </div>
-                                    <div class="d-flex align-items-center justify-content-end remember_div  mt-3"><a
+                                    <div class="d-flex align-items-center justify-content-end remember_div mt-3"><a
                                             class="link_forget" [routerLink]="'/forgot-password'" data-discover="true">{{
                                             'auth.forgotPassword' | translate }}</a></div>
                                 </div>
@@ -67,52 +67,41 @@
                     </div>
                 </div>
             </div>
-            <div class="col-lg-5 gradient_bg">
-                <!-- LANGUAGE DROPDOWN -->
+             <div class="col-lg-5 gradient_bg">
+        <div class="inner_content_two">
+          <a>
+            <img class="img-fluid" alt="logo" src="assets/image/logo.png" />
+          </a>
 
-                <div class="language-switcher-right">
-                    <div class="dropdown">
-                        <button class="btn btn-light dropdown-toggle" data-bs-toggle="dropdown">
-                            {{ currentLanguageName }}
-                        </button>
+          <div class="login-right-content">
+            <h2 class="login-right-heading">
+              {{ 'right.heading' | translate }}
+            </h2>
 
-                        <ul class="dropdown-menu dropdown-menu-end">
-                            <li *ngFor="let lang of languages">
-                                <button class="dropdown-item" (click)="changeLanguage(lang.languageCode)">
-                                    {{ lang.languageName }}
-                                </button>
-                            </li>
-                        </ul>
-                    </div>
+            <p class="para_18 my-3">
+              {{ 'right.description' | translate }}
+            </p>
 
+            <div class="mt-5">
+              <div class="d-flex gap-3 mb-3">
+                <span><img alt="" src="assets/image/check.png" /></span>
+                <p class="para_18">{{ 'right.point1' | translate }}</p>
+              </div>
 
-                </div>
+              <div class="d-flex gap-3 mb-3">
+                <span><img alt="" src="assets/image/check.png" /></span>
+                <p class="para_18">{{ 'right.point2' | translate }}</p>
+              </div>
 
-
-                <div class="inner_content_two">
-
-                    <!-- <a class="" href="#" data-discover="true"><img class="img-fluid" alt=""
-                            [src]="logoUrl || 'assets/image/logo.png'"></a> -->
-                    <a class="" data-discover="true"><img class="img-fluid" alt="" [src]="'assets/image/logo.png'"></a>
-                    <div class="login-right-content">
-                        <h2 class="login-right-heading">Smarter feed. Healthier herds. Stronger economics.
-                        </h2>
-                        <p class="para_18 my-3">Nutri Economics helps you manage nutrition, livestock, and farm
-                            performance with precision.</p>
-                        <div class="mt-5">
-                            <div class="d-flex gap-3 mb-3"><span><img alt="" src="assets/image/check.png"></span>
-                                <p class="para_18">Nutrition, herd & economics in one system</p>
-                            </div>
-                            <div class="d-flex gap-3 mb-3"><span><img alt="" src="assets/image/check.png"></span>
-                                <p class="para_18">Optimized rations for better productivity</p>
-                            </div>
-                            <div class="d-flex gap-3 mb-3"><span><img alt="" src="assets/image/check.png"></span>
-                                <p class="para_18">Smart alerts for health & fertility</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+              <div class="d-flex gap-3 mb-3">
+                <span><img alt="" src="assets/image/check.png" /></span>
+                <p class="para_18">{{ 'right.point3' | translate }}</p>
+              </div>
             </div>
+
+          </div>
+        </div>
+      </div>
         </div>
     </div>
 </section>

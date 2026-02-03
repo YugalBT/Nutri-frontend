@@ -65,8 +65,8 @@ export class ListComponent implements OnInit, OnDestroy {
   }
 
   private loadUsers(pageNo: number, recordPerPage: number): void {
-    this.users = [];
-    // this.spinner.show();
+    //this.users = [];
+    this.spinner.show();
 
     const payload: any = {
       pageNo,
@@ -76,7 +76,6 @@ export class ListComponent implements OnInit, OnDestroy {
     };
 
     const sub = this.usersService.getUsers(payload)
-      .pipe(finalize(() => this.spinner.hide()))
       .subscribe({
         next: (res) => {
           this.users = res?.data ?? [];

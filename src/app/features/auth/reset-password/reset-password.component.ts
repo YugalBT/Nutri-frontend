@@ -95,23 +95,34 @@ export class ResetPasswordComponent implements OnInit {
     this.passwordService.changePassword(payload).subscribe({
       next: (res: ApiResponse<any>) => {
         this.isLoading = false;
-        if (res.isSuccess) {
-          this.toast.success(res?.message);
+       if (res.isSuccess) {
+  this.toast.success(res?.message);
 
-          const storedUser = JSON.parse(localStorage.getItem('user') || '{}');
-          const updatedUser = {
-            ...storedUser,
-            isFirstLogin: true,
-          };
-          localStorage.setItem('user', JSON.stringify(updatedUser));
+  const storedUser = JSON.parse(localStorage.getItem('user') || '{}');
+  const updatedUser = {
+    ...storedUser,
+    isFirstLogin: true,
+  };
+  localStorage.setItem('user', JSON.stringify(updatedUser));
 
-          this.store.dispatch(updateFirstLogin({ isFirstLogin: true }));
+  this.store.dispatch(updateFirstLogin({ isFirstLogin: true }));
 
-          this.resetForm.reset();
-          this.router.navigate([ROUTE_CONST.DASHBOARD], {
-            replaceUrl: true,
-          });
-        } else {
+  this.resetForm.reset();
+  this.resetForm.setErrors(null);
+  Object.keys(this.resetForm.controls).forEach(key => {
+    const control = this.resetForm.get(key);
+    control?.setErrors(null);
+    control?.markAsPristine();
+    control?.markAsUntouched();
+  });
+
+  this.isSubmitted = false;
+  this.isLoading = false;
+
+  // ✅ navigate AFTER reset
+  this.router.navigate([ROUTE_CONST.DASHBOARD], { replaceUrl: true });
+}
+ else {
           this.toast.error(res.message);
         }
       },

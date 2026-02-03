@@ -201,7 +201,7 @@ export class HeaderComponent implements OnInit {
     private localizationService: LocalizationService,
     private router: Router,
     private companyService: CompanyService,
-    private commonService: CommonService
+    private commonService: CommonService,
   ) {
     this.user$ = this.store.select(selectAuthUser);
     this.companyService.notifyCompaniesChanged();
@@ -227,8 +227,6 @@ export class HeaderComponent implements OnInit {
     this.applyTheme();
 
     this.loadNotifications();
-
-     
   }
 
   /** Language dropdown */
@@ -244,7 +242,7 @@ export class HeaderComponent implements OnInit {
     }
 
     const lang = this.languages.find(
-      (l) => l.languageCode === this.currentLang
+      (l) => l.languageCode === this.currentLang,
     );
 
     return lang?.languageName || 'Italian';
@@ -288,13 +286,13 @@ export class HeaderComponent implements OnInit {
         if (res.isSuccess && Array.isArray(res.data)) {
           this.notificationsData = res.data.map((n: NotificationList) => ({
             title: n.subject,
-            id:n.id,
+            id: n.id,
             description: n.body,
             createdDate: n.createdDate
               ? new Date(n.createdDate).toLocaleDateString()
               : '',
             type: n.type,
-            isRead: n.isReaded ?? false
+            isRead: n.isReaded ?? false,
           }));
         } else {
           this.notificationsData = [];
@@ -305,23 +303,21 @@ export class HeaderComponent implements OnInit {
   }
 
   get unreadCount(): number {
-  return this.notificationsData.filter(n => !n.isRead).length;
-}
+    return this.notificationsData.filter((n) => !n.isRead).length;
+  }
 
-updateNotification(id: string): void {
-  debugger;
-  this.commonService.updateNotification(id).subscribe({
-    next: (res) => {
-      if (res.isSuccess) {
-        this.notificationsData = this.notificationsData.map(n =>
-          n.id === id ? { ...n, isRead: true } : n
-        );
-      }
-    },
-    error: (err) => console.error(err),
-  });
-}
-
+  updateNotification(id: string): void {
+    this.commonService.updateNotification(id).subscribe({
+      next: (res) => {
+        if (res.isSuccess) {
+          this.notificationsData = this.notificationsData.map((n) =>
+            n.id === id ? { ...n, isRead: true } : n,
+          );
+        }
+      },
+      error: (err) => console.error(err),
+    });
+  }
 
   /** 🔹 Theme */
   toggleDarkMode(): void {
@@ -338,7 +334,7 @@ updateNotification(id: string): void {
   }
 
   private loadCompanies(pageNo: number, recordPerPage: number) {
- this.companiesLoading = true;
+    this.companiesLoading = true;
     const payload = {
       searchValue: this.searchValue ?? '',
       pageNo,
@@ -348,14 +344,20 @@ updateNotification(id: string): void {
 
     const sub = this.companyService.getAllMappedCompanies(payload).subscribe({
       next: (res: ApiResponse<any>) => {
-        this.companies = (res.data ?? []).map((item: any) => ({
+        const list = Array.isArray(res.data)
+          ? res.data
+          : (res.data?.items ?? []);
+
+        this.companies = list.map((item: any) => ({
           ...item,
           fullName: `${item.firstName ?? ''} ${item.lastName ?? ''}`.trim(),
         }));
 
         this.totalRecords =
-          res.totalRecords ?? res.data?.totalRecords ?? this.companies.length;
-          this.companiesLoading = false;
+  res.totalRecords ??
+  (Array.isArray(res.data) ? res.data.length : res.data?.totalRecords ?? 0);
+
+        this.companiesLoading = false;
       },
       error: () => {
         this.companies = [];
@@ -378,7 +380,7 @@ updateNotification(id: string): void {
         JSON.stringify({
           token: localStorage.getItem('authToken'),
           user: localStorage.getItem('userdata'),
-        })
+        }),
       );
     }
 
@@ -396,7 +398,7 @@ updateNotification(id: string): void {
     localStorage.setItem('ImpersonateTenant', 'Yes');
 
     this.store.dispatch(
-      AuthActions.loginSuccess({ user: data, token: data.token })
+      AuthActions.loginSuccess({ user: data, token: data.token }),
     );
 
     this.forceAppReload();
@@ -417,33 +419,32 @@ updateNotification(id: string): void {
       AuthActions.loginSuccess({
         user: JSON.parse(admin.user),
         token: admin.token,
-      })
+      }),
     );
 
     this.impersonated = false;
     this.selectedTenantId = null;
 
-      this.forceAppReload();
+    this.forceAppReload();
   }
 
   private forceAppReload(): void {
-  window.location.href = window.location.origin;
-}
+    window.location.href = window.location.origin;
+  }
 
   markAllRead(): void {
-  if (this.notificationsData.length === 0) return;
+    if (this.notificationsData.length === 0) return;
 
-  this.commonService.markAllReadNotifications().subscribe({
-    next: (res) => {
-      if (res.isSuccess) {
-        this.notificationsData = this.notificationsData.map(n => ({
-          ...n,
-          isRead: true
-        }));
-      }
-    },
-    error: (err) => console.error(err),
-  });
-}
-
+    this.commonService.markAllReadNotifications().subscribe({
+      next: (res) => {
+        if (res.isSuccess) {
+          this.notificationsData = this.notificationsData.map((n) => ({
+            ...n,
+            isRead: true,
+          }));
+        }
+      },
+      error: (err) => console.error(err),
+    });
+  }
 }
