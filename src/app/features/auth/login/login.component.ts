@@ -191,7 +191,7 @@ get currentLanguageName(): string {
   return lang?.languageName || 'Select Language';
 }
 
-  // 🔥 Change language
+  //  Change language
   changeLanguage(lang: string): void {
     if (!lang) return;
     this.localizationService.changeLanguage(lang).subscribe(() => {
@@ -199,7 +199,7 @@ get currentLanguageName(): string {
     });
   }
 
-  // 🔐 Login submit
+  //  Login submit
   onSubmit(): void {
     if (this.form.invalid) {
       this.form.markAllAsTouched();
@@ -209,7 +209,7 @@ get currentLanguageName(): string {
     this.store.dispatch(AuthActions.login(this.form.value));
   }
 
-  // 👁 Toggle password visibility
+  //  Toggle password visibility
   togglePassword(): void {
     this.showPassword = !this.showPassword;
   }

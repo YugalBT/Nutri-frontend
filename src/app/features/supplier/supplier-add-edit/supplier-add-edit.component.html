@@ -1,0 +1,131 @@
+<div #supplierModal class="modal fade" tabindex="-1">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h5 class="modal-title">
+          {{ isEdit ? ('supplier.editSupplier' | translate)
+                    : ('supplier.addSupplier' | translate) }}
+        </h5>
+        <button type="button" class="btn-close" (click)="closeModal()"></button>
+      </div>
+
+      <div class="modal-body">
+        <form [formGroup]="form">
+
+  <div class="row g-3">
+
+    <!-- First Name -->
+    <div class="col-md-6">
+      <label>{{ 'supplier.firstName' | translate }}
+        <sup class="text-danger">*</sup>
+      </label>
+      <input formControlName="firstName"
+             class="form-control"
+             [placeholder]="'supplier.placeholder.firstName' | translate"/>
+
+      <!-- validation stays same -->
+    </div>
+
+    <!-- Last Name -->
+    <div class="col-md-6">
+      <label>{{ 'supplier.lastName' | translate }}
+        <sup class="text-danger">*</sup>
+      </label>
+      <input formControlName="lastName"
+             class="form-control"
+             [placeholder]="'supplier.placeholder.lastName' | translate"/>
+    </div>
+
+    <!-- Supplier Code -->
+    <div class="col-md-6">
+      <label>{{ 'supplier.supplierCode' | translate }}</label>
+      <input formControlName="supplierCode"
+             class="form-control"
+             readonly
+             [placeholder]="'supplier.placeholder.supplierCode' | translate"/>
+    </div>
+
+    <!-- Email -->
+    <div class="col-md-6">
+      <label>{{ 'supplier.email' | translate }}
+        <sup class="text-danger">*</sup>
+      </label>
+      <input type="email"
+             formControlName="emailAddress"
+             class="form-control"
+             [placeholder]="'supplier.placeholder.email' | translate"/>
+    </div>
+
+    <!-- Phone -->
+    <div class="col-md-6">
+      <label>{{ 'supplier.phone' | translate }}
+        <sup class="text-danger">*</sup>
+      </label>
+      <input formControlName="phoneNumber"
+             class="form-control"
+             [placeholder]="'supplier.placeholder.phone' | translate"/>
+    </div>
+
+    <!-- Street -->
+    <div class="col-md-6">
+      <label>{{ 'supplier.streetAddress' | translate }}
+        <sup class="text-danger">*</sup>
+      </label>
+      <input formControlName="streetAddress"
+             class="form-control"
+             [placeholder]="'supplier.placeholder.streetAddress' | translate"/>
+    </div>
+
+    <!-- State -->
+    <div class="col-md-6">
+      <label>{{ 'supplier.state' | translate }}
+        <sup class="text-danger">*</sup>
+      </label>
+      <input formControlName="state"
+             class="form-control"
+             [placeholder]="'supplier.placeholder.state' | translate"/>
+    </div>
+
+    <!-- City -->
+    <div class="col-md-6">
+      <label>{{ 'supplier.city' | translate }}
+        <sup class="text-danger">*</sup>
+      </label>
+      <input formControlName="city"
+             class="form-control"
+             [placeholder]="'supplier.placeholder.city' | translate"/>
+    </div>
+
+    <!-- Zip -->
+    <div class="col-md-6">
+      <label>{{ 'supplier.zipCode' | translate }}
+        <sup class="text-danger">*</sup>
+      </label>
+      <input formControlName="zipCode"
+             class="form-control"
+             [placeholder]="'supplier.placeholder.zipCode' | translate"/>
+    </div>
+
+  </div>
+
+</form>
+
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn btn-outline-secondary"
+                (click)="closeModal()">
+          {{ 'supplier.cancel' | translate }}
+        </button>
+
+        <button class="btn add-btn"
+                (click)="saveSupplier()">
+          {{ isEdit ? ('supplier.update' | translate)
+                    : ('supplier.save' | translate) }}
+        </button>
+      </div>
+
+    </div>
+  </div>
+</div>

@@ -389,6 +389,15 @@ export const routes: Routes = [
             (m) => m.NutritionComponent,
           ),
       },
+       {
+        path: 'supplier',
+        // canActivate: [permissionGuard],
+        // data: { requiredPermissions: [PERMISSIONS.FormulaAdd, PERMISSIONS.formulasEdit, PERMISSIONS.formulasView, PERMISSIONS.formulasDelete] },
+        loadComponent: () =>
+          import('./features/supplier/supplier-list/supplier-list.component').then(
+            (m) => m.SupplierListComponent,
+          ),
+      },
 
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
     ],

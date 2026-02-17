@@ -202,7 +202,16 @@ export const API_ENDPOINTS = {
   },
   DASHBOARD :{
     GET_DASHBOARD_DATA :'/Dashboard/DashboardData'
-  }
+  },
+
+  SUPPLIER: {
+    CREATE: '/Supplier/Create',
+    UPDATE: '/Supplier/Update',
+    DELETE: '/Supplier/Delete',
+    ACTIVE_INACTIVE: '/Supplier/ActiveInActive',
+    GET_ALL: '/Supplier/GetAll',
+    GENERATE_SUPPLIER_CODE: '/Supplier/GenerateSupplierCode'
+  },
 
   
 };

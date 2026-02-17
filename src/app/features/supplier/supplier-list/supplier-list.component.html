@@ -1,0 +1,50 @@
+<div class="pagecls">
+
+  <!-- Page Header -->
+  <div class="page-header">
+    <div>
+      <h3 class="page-title">
+        {{ 'supplier.heading' | translate }}
+      </h3>
+    </div>
+
+    <button class="btn add-btn"
+            (click)="supplierModal.openModal()">
+      <i class="bi bi-plus-lg me-2"></i>
+      {{ 'supplier.addSupplier' | translate }}
+    </button>
+  </div>
+
+  <!-- Search Filters -->
+  <div class="filters-card">
+    <app-global-search
+      [label]="'common.searchFilters' | translate"
+      [placeholder]="'supplier.searchPlaceholder' | translate"
+      [showStatus]="true"
+      (search)="onSearch($event)"
+      (statusChange)="onStatusChange($event)"
+      (clear)="clearFilters()">
+    </app-global-search>
+  </div>
+
+  <!-- Supplier Table -->
+  <div class="table-card">
+    <app-reusable-table
+      [columns]="columns"
+      [columnFields]="columnFields"
+      [data]="suppliers"
+      [showActions]="true"
+      [pageable]="true"
+      [totalRecords]="totalRecords"
+      [pageSize]="pageSize"
+      [pageIndex]="pageIndex"
+      (pageChange)="onPageChange($event)"
+      (toggleActive)="onToggleActive($event)"
+      (deleteRow)="onDelete($event)"
+      (editRow)="supplierModal.openModal(true, $event)">
+    </app-reusable-table>
+  </div>
+
+  <app-supplier-add-edit #supplierModal></app-supplier-add-edit>
+
+</div>
