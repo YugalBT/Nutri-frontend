@@ -23,6 +23,8 @@ import {
 import { FormulaList } from '../../core/models/formula-list';
 import { KpiList } from '../../core/models/day-list';
 import { DashboardData } from '../../core/models/dashboarddata';
+import { MaterialList } from '../../core/models/material-list';
+import { SupplierList } from '../../core/models/supplier-list';
 
 @Injectable({
   providedIn: 'root',
@@ -160,6 +162,12 @@ export class CommonService {
    getDashboardData(): Observable<ApiResponse<DashboardData>> {
     return this.http.get<DashboardData>(
       API_ENDPOINTS.DASHBOARD.GET_DASHBOARD_DATA,
+    );
+  }
+
+  getSupplierList(): Observable<ApiResponse<SupplierList[]>> {
+    return this.http.get<SupplierList[]>(
+      API_ENDPOINTS.COMMON_API.GET_ALL_SUPPLIER_LIST,
     );
   }
   

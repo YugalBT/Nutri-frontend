@@ -141,12 +141,12 @@ private setColumns(): void {
 
   onToggleActive(event: { row: any; isActive: boolean }): void {
 
-    if (!event?.row?.id) {
+    if (!event?.row?.supplierId) {
       this.toast.error("Invalid Supplier Id");
       return;
     }
 
-    const sub = this.supplierService.activeInActive(event.row.id)
+    const sub = this.supplierService.activeInActive(event.row.supplierId)
       .subscribe({
         next: (res) => {
           if (res.isSuccess) {
@@ -167,7 +167,7 @@ private setColumns(): void {
     // if (!this.commonService.checkPermission(PERMISSIONS.SupplierDelete))
     //   return;
 
-    if (!row?.id) {
+    if (!row?.supplierId) {
       this.toast.error("Invalid Supplier Id");
       return;
     }
@@ -177,7 +177,7 @@ private setColumns(): void {
 
         if (!confirmed) return;
 
-        const sub = this.supplierService.deleteSupplier(row.id)
+        const sub = this.supplierService.deleteSupplier(row.supplierId)
           .subscribe({
             next: (res) => {
               if (res.isSuccess) {

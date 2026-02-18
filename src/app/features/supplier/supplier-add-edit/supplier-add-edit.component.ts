@@ -144,7 +144,7 @@ export class SupplierAddEditComponent implements OnInit, OnDestroy {
 
     if (edit && data) {
       this.form.patchValue(data);
-      this.currentId = data.id;
+      this.currentId = data.supplierId;
     } else {
       this.currentId = null;
     }
@@ -166,7 +166,7 @@ export class SupplierAddEditComponent implements OnInit, OnDestroy {
     };
 
     if (this.isEdit && this.currentId) {
-      payload.id = this.currentId;
+      payload.supplierId = this.currentId;
 
       const sub = this.supplierService.updateSupplier(payload)
         .subscribe(res => {

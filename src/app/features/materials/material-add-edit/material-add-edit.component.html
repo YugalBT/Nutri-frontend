@@ -1,0 +1,141 @@
+<div #materialModal class="modal fade">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">
+          {{
+            isEdit
+              ? ("material.editMaterial" | translate)
+              : ("material.addMaterial" | translate)
+          }}
+        </h5>
+        <button type="button" class="btn-close" (click)="closeModal()"></button>
+      </div>
+
+      <div class="modal-body">
+       <form [formGroup]="form">
+  <div class="row g-3">
+
+    <!-- Material Name -->
+    <div class="col-12 col-md-4">
+      <label class="form-label">
+        {{ "material.name" | translate }}
+        <sup class="text-danger">*</sup>
+      </label>
+
+      <input
+        formControlName="materialName"
+        class="form-control"
+        [placeholder]="'material.placeholder.name' | translate"
+        [class.is-invalid]="form.get('materialName')?.touched && form.get('materialName')?.invalid"
+      />
+
+      <div class="invalid-feedback"
+           *ngIf="form.get('materialName')?.touched && form.get('materialName')?.errors">
+        <span *ngIf="form.get('materialName')?.errors?.['required']">
+          {{ "validation.required" | translate }}
+        </span>
+        <span *ngIf="form.get('materialName')?.errors?.['maxlength']">
+          {{ "validation.maxLength200" | translate }}
+        </span>
+      </div>
+    </div>
+
+    <!-- Material Code -->
+    <div class="col-12 col-md-4">
+      <label class="form-label">
+        {{ "material.code" | translate }}
+        <sup class="text-danger">*</sup>
+      </label>
+
+      <input
+        formControlName="materialCode"
+        class="form-control"
+        [placeholder]="'material.placeholder.code' | translate"
+        [class.is-invalid]="form.get('materialCode')?.touched && form.get('materialCode')?.invalid"
+      />
+
+      <div class="invalid-feedback"
+           *ngIf="form.get('materialCode')?.touched && form.get('materialCode')?.errors">
+        <span *ngIf="form.get('materialCode')?.errors?.['required']">
+          {{ "validation.required" | translate }}
+        </span>
+        <span *ngIf="form.get('materialCode')?.errors?.['maxlength']">
+          {{ "validation.maxLength200" | translate }}
+        </span>
+      </div>
+    </div>
+
+     <!-- Category Name -->
+  <div class="col-12 col-md-4">
+    <label class="form-label">
+      {{ "material.category" | translate }}
+      <sup class="text-danger">*</sup>
+    </label>
+
+    <input
+      formControlName="category"
+      class="form-control"
+      [placeholder]="'material.placeholder.category' | translate"
+      [class.is-invalid]="form.get('category')?.touched && form.get('category')?.invalid"
+    />
+
+    <div class="invalid-feedback"
+         *ngIf="form.get('category')?.touched && form.get('category')?.errors">
+      <span *ngIf="form.get('category')?.errors?.['required']">
+        {{ "validation.required" | translate }}
+      </span>
+      <span *ngIf="form.get('category')?.errors?.['maxlength']">
+        {{ "validation.maxLength100" | translate }}
+      </span>
+    </div>
+  </div>
+
+    <!-- Supplier -->
+    <div class="col-sm-12 col-md-5">
+      <label class="form-label">
+        {{ "material.supplier" | translate }}
+        <sup class="text-danger">*</sup>
+      </label>
+
+      <select
+        formControlName="supplierId"
+        class="form-select"
+        [class.is-invalid]="form.get('supplierId')?.touched && form.get('supplierId')?.invalid"
+      >
+        <option value="" disabled selected>
+          {{ "material.selectSupplier" | translate }}
+        </option>
+
+        <option *ngFor="let s of suppliers" [value]="s.supplierId">
+          {{ s.supplierName }} ( {{ s.supplierCode }} )
+        </option>
+      </select>
+
+      <div class="invalid-feedback"
+           *ngIf="form.get('supplierId')?.touched && form.get('supplierId')?.errors">
+        {{ "validation.required" | translate }}
+      </div>
+    </div>
+
+  </div>
+</form>
+
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn btn-outline-secondary" (click)="closeModal()">
+          {{ "common.cancel" | translate }}
+        </button>
+
+        <button class="btn add-btn" (click)="saveMaterial()">
+          {{
+            isEdit
+              ? ("material.update" | translate)
+              : ("material.save" | translate)
+          }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

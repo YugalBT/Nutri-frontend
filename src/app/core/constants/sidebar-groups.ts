@@ -57,6 +57,19 @@ export const SIDEBAR_GROUPS = [
     ]
   },
   {
+  key: 'supplier',
+  title: 'sidebarmenu.supplier',
+  icon: SIDEBAR_ICONS.SUPPLIER,
+  items: [
+    'Suppliers',
+    'Materials',
+    //'Supplier Payments'
+    // 'Supplier Ledger',
+    // 'Supplier Contracts'
+  ]
+},
+
+  {
     key: 'settings',
     title: 'sidebarmenu.settings',
     icon: SIDEBAR_ICONS.SETTINGS,

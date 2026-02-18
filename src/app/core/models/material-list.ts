@@ -1,6 +1,5 @@
-export interface SupplierList {
-  supplierCode: string
-  supplierName: string
+export interface MaterialList {
+    supplierCode: string
   firstName: string
   lastName: string
   emailAddress: string
@@ -12,4 +11,3 @@ export interface SupplierList {
   supplierId: string
   [key: string]: any;
 }
-

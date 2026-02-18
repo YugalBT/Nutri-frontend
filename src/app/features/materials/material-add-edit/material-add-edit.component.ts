@@ -1,0 +1,190 @@
+import {
+  Component,
+  ElementRef,
+  ViewChild,
+  OnDestroy,
+  OnInit,
+  Output,
+  EventEmitter
+} from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Subscription } from 'rxjs';
+import { MaterialService } from '../../../core/services/material/material.service';
+import { SupplierService } from '../../../core/services/supplier/supplier.service';
+import { ToastService } from '../../../shared/services/toast.service';
+import { SharedModule } from '../../../shared/shared.module';
+import { TranslatePipe } from '../../../i18n/translate.pipe';
+import { SupplierAddEdit } from '../../../core/models/supplier-add-edit';
+import { CommonService } from '../../../shared/services/common.service';
+import { SupplierList } from '../../../core/models/supplier-list';
+import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
+
+
+declare var bootstrap: any;
+
+@Component({
+  selector: 'app-material-add-edit',
+  standalone: true,
+  imports: [SharedModule, TranslatePipe],
+  templateUrl: './material-add-edit.component.html',
+})
+export class MaterialAddEditComponent implements OnInit, OnDestroy {
+
+  @ViewChild('materialModal') materialModal!: ElementRef;
+
+  form!: FormGroup;
+  modalInstance: any;
+  isEdit = false;
+  currentId: string | null = null;
+  suppliers: SupplierList[] = [];
+
+  subs: Subscription[] = [];
+
+  @Output() onMaterialSaved = new EventEmitter<void>();
+
+  constructor(
+    private fb: FormBuilder,
+    private materialService: MaterialService,
+    private supplierService: SupplierService,
+    private toast: ToastService,
+    private commonService: CommonService
+  ) {}
+
+  ngOnInit() {
+    this.initializeForm();
+    this.loadSuppliers();
+    this.listenToMaterialNameChange();
+  }
+
+  private initializeForm() {
+    this.form = this.fb.group({
+      materialName: ['', [Validators.required, Validators.maxLength(200)]],
+      materialCode: [{ value: '', disabled: true }, [Validators.required, Validators.maxLength(200)]],
+      category: ['', [Validators.required, Validators.maxLength(100)]],
+      supplierId: ['', Validators.required]
+    });
+  }
+
+  private listenToMaterialNameChange(): void {
+
+  this.form.get('materialName')?.valueChanges
+    .pipe(
+      debounceTime(400),
+      distinctUntilChanged()
+    )
+    .subscribe(value => {
+
+      if (this.isEdit) 
+        return; 
+
+      if (!value || value.length < 2) {
+        this.form.patchValue({ materialCode: '' }, { emitEvent: false });
+        return;
+      }
+
+      this.generateMaterialCode(value);
+    });
+}
+
+private generateMaterialCode(materialName: string): void {
+
+  const sub = this.materialService
+    .generateMaterialCode(materialName)
+    .subscribe(res => {
+
+      if (res?.isSuccess) {
+        this.form.patchValue(
+          { materialCode: res.data },
+          { emitEvent: false }
+        );
+      } else {
+        this.toast.error(res?.message);
+      }
+    });
+
+  this.subs.push(sub);
+}
+
+
+
+private loadSuppliers(): void {
+
+  this.commonService.getSupplierList()
+    .subscribe({
+      next: (res) => {
+        if (res?.isSuccess) {
+          this.suppliers = res.data ?? [];
+        } else {
+          this.suppliers = [];
+        }
+      },
+      error: () => {
+        this.suppliers = [];
+      }
+    });
+}
+
+
+  openModal(edit = false, data?: any) {
+    this.isEdit = edit;
+    this.form.reset();
+
+    if (edit && data) {
+      this.form.patchValue(data);
+      this.currentId = data.materialId;
+    } else {
+      this.currentId = null;
+    }
+
+    this.modalInstance = new bootstrap.Modal(this.materialModal.nativeElement);
+    this.modalInstance.show();
+  }
+
+  saveMaterial() {
+
+  if (!this.form.valid) {
+    this.form.markAllAsTouched();
+    return;
+  }
+
+  const payload = { ...this.form.getRawValue() };
+
+  if (this.isEdit && this.currentId) {
+
+    payload.materialId = this.currentId;
+
+    this.materialService.updateMaterial(payload)
+      .subscribe(res => {
+        if (res.isSuccess) {
+          this.toast.success(res.message);
+          this.materialService.notifyMaterialsChanged();
+          this.closeModal();
+        }else{
+          this.toast.error(res.message);
+        }
+      });
+
+  } else {
+
+    this.materialService.createMaterial(payload)
+      .subscribe(res => {
+        if (res.isSuccess) {
+          this.toast.success(res.message);
+          this.materialService.notifyMaterialsChanged();
+          this.closeModal();
+        }else{
+          this.toast.error(res.message);
+        }
+      });
+  }
+}
+
+
+  closeModal() {
+    this.modalInstance?.hide();
+  }
+
+  ngOnDestroy() {
+    this.subs.forEach(s => s.unsubscribe());
+  }
+}

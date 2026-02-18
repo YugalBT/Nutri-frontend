@@ -108,6 +108,16 @@ export const PERMISSIONS = {
     TemplateAdd: 'templateAdd',
     TemplateDelete: 'templateDelete',
 
+    SuppliersView: 'SuppliersView',
+    SuppliersEdit: 'SuppliersEdit',
+    SuppliersAdd: 'SuppliersAdd',
+    SuppliersDelete: 'SuppliersDelete',
+
+    MaterialsView: 'MaterialsView',
+    MaterialsEdit: 'MaterialsEdit',
+    MaterialsAdd: 'MaterialsAdd',
+    MaterialsDelete: 'MaterialsDelete',
+
 } as const;
 
 export type PermissionKey = keyof typeof PERMISSIONS;

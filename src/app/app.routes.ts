@@ -390,12 +390,21 @@ export const routes: Routes = [
           ),
       },
        {
-        path: 'supplier',
-        // canActivate: [permissionGuard],
-        // data: { requiredPermissions: [PERMISSIONS.FormulaAdd, PERMISSIONS.formulasEdit, PERMISSIONS.formulasView, PERMISSIONS.formulasDelete] },
+        path: 'suppliers',
+        canActivate: [permissionGuard],
+        data: { requiredPermissions: [PERMISSIONS.SuppliersAdd, PERMISSIONS.SuppliersEdit, PERMISSIONS.SuppliersView, PERMISSIONS.SuppliersDelete] },
         loadComponent: () =>
           import('./features/supplier/supplier-list/supplier-list.component').then(
             (m) => m.SupplierListComponent,
+          ),
+      },
+      {
+        path: 'materials',
+        canActivate: [permissionGuard],
+        data: { requiredPermissions: [PERMISSIONS.MaterialsAdd, PERMISSIONS.MaterialsEdit, PERMISSIONS.MaterialsView, PERMISSIONS.MaterialsDelete] },
+        loadComponent: () =>
+          import('./features/materials/material-list/material-list.component').then(
+            (m) => m.MaterialListComponent,
           ),
       },
 

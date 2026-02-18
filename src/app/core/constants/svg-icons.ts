@@ -86,5 +86,19 @@ export const SIDEBAR_ICONS = {
   <circle cx="16" cy="19" r="0.6"></circle>
 </svg>
 `,
+SUPPLIER: `
+<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22"
+  viewBox="0 0 24 24" fill="none" stroke="white"
+  stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+  <path d="M3 21h18"/>
+  <path d="M5 21V7l8-4 8 4v14"/>
+  <path d="M9 9h.01"/>
+  <path d="M9 12h.01"/>
+  <path d="M9 15h.01"/>
+  <path d="M13 9h.01"/>
+  <path d="M13 12h.01"/>
+  <path d="M13 15h.01"/>
+</svg>`,
+
 
 };

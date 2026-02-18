@@ -1,0 +1,50 @@
+<div class="pagecls">
+
+  <!-- Page Header -->
+  <div class="page-header">
+    <div>
+      <h3 class="page-title">
+        {{ 'material.heading' | translate }}
+      </h3>
+    </div>
+
+    <button class="btn add-btn"
+            (click)="materialModal.openModal()">
+      <i class="bi bi-plus-lg me-2"></i>
+      {{ 'material.addMaterial' | translate }}
+    </button>
+  </div>
+
+  <!-- Search Filters -->
+  <div class="filters-card">
+    <app-global-search
+      [label]="'common.searchFilters' | translate"
+      [placeholder]="'material.searchPlaceholder' | translate"
+      [showStatus]="true"
+      (search)="onSearch($event)"
+      (statusChange)="onStatusChange($event)"
+      (clear)="clearFilters()">
+    </app-global-search>
+  </div>
+
+  <!-- Material Table -->
+  <div class="table-card">
+    <app-reusable-table
+      [columns]="columns"
+      [columnFields]="columnFields"
+      [data]="materials"
+      [showActions]="true"
+      [pageable]="true"
+      [totalRecords]="totalRecords"
+      [pageSize]="pageSize"
+      [pageIndex]="pageIndex"
+      (pageChange)="onPageChange($event)"
+      (toggleActive)="onToggleActive($event)"
+      (deleteRow)="onDelete($event)"
+      (editRow)="materialModal.openModal(true, $event)">
+    </app-reusable-table>
+  </div>
+
+  <app-material-add-edit #materialModal></app-material-add-edit>
+
+</div>

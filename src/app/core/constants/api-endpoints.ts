@@ -51,7 +51,8 @@ export const API_ENDPOINTS = {
     GET_ALL_FORMULA_LIST: '/Common/GetAllFormula',
     GET_Language_LIST: '/Common/GetAllLanguage',
     MARK_ALL_READ_NOTIFICATION: '/Common/ReadAllNotification',
-    UPDATE_NOTIFICATION:'/Common/UpdateNotification'
+    UPDATE_NOTIFICATION:'/Common/UpdateNotification',
+     GET_ALL_SUPPLIER_LIST: '/Common/GetAllSupplier'
   },
   
   
@@ -211,6 +212,15 @@ export const API_ENDPOINTS = {
     ACTIVE_INACTIVE: '/Supplier/ActiveInActive',
     GET_ALL: '/Supplier/GetAll',
     GENERATE_SUPPLIER_CODE: '/Supplier/GenerateSupplierCode'
+  },
+
+   MATERIAL: {
+    CREATE: '/Material/Create',
+    UPDATE: '/Material/Update',
+    DELETE: '/Material/Delete',
+    ACTIVE_INACTIVE: '/Material/ActiveInActive',
+    GET_ALL: '/Material/GetAll',
+    GENERATE_SUPPLIER_CODE: '/Material/GenerateMaterialCode'
   },
 
   
