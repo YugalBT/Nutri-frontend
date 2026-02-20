@@ -63,7 +63,7 @@ export const SIDEBAR_GROUPS = [
   items: [
     'Suppliers',
     'Materials',
-    //'Supplier Payments'
+    'SupplierPrice'
     // 'Supplier Ledger',
     // 'Supplier Contracts'
   ]

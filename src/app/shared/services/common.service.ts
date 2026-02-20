@@ -25,6 +25,7 @@ import { KpiList } from '../../core/models/day-list';
 import { DashboardData } from '../../core/models/dashboarddata';
 import { MaterialList } from '../../core/models/material-list';
 import { SupplierList } from '../../core/models/supplier-list';
+import { PaginationPayload } from '../../core/models/base-pagination.model';
 
 @Injectable({
   providedIn: 'root',
@@ -159,7 +160,7 @@ export class CommonService {
     return this.http.post<any>(url, {});
   }
 
-   getDashboardData(): Observable<ApiResponse<DashboardData>> {
+  getDashboardData(): Observable<ApiResponse<DashboardData>> {
     return this.http.get<DashboardData>(
       API_ENDPOINTS.DASHBOARD.GET_DASHBOARD_DATA,
     );
@@ -170,5 +171,18 @@ export class CommonService {
       API_ENDPOINTS.COMMON_API.GET_ALL_SUPPLIER_LIST,
     );
   }
-  
+
+  //  GetAllMaterialBySupplierId(
+  //   SupplierId: string,
+  // ): Observable<ApiResponse<MaterialList[]>> {
+  //   return this.http.post<MaterialList[]>(
+  //     `${API_ENDPOINTS.COMMON_API.GET_ALL_MATERIAL_BY_SUPPLIER_ID}?SupplierId=${SupplierId}`,
+  //     {SupplierId == null ? '' : SupplierId},
+  //   );
+  // }
+
+GetAllMaterialBySupplierId(supplierId: string,payload: any): Observable<ApiResponse<any>> {
+  const url = `${API_ENDPOINTS.COMMON_API.GET_ALL_MATERIAL_BY_SUPPLIER_ID}?supplierId=${supplierId}`;
+  return this.http.post<ApiResponse<any>>(url, payload);
+}
 }

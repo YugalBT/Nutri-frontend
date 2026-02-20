@@ -52,7 +52,8 @@ export const API_ENDPOINTS = {
     GET_Language_LIST: '/Common/GetAllLanguage',
     MARK_ALL_READ_NOTIFICATION: '/Common/ReadAllNotification',
     UPDATE_NOTIFICATION:'/Common/UpdateNotification',
-     GET_ALL_SUPPLIER_LIST: '/Common/GetAllSupplier'
+    GET_ALL_SUPPLIER_LIST: '/Common/GetAllSupplier',
+    GET_ALL_MATERIAL_BY_SUPPLIER_ID: '/Supplier/GetAllSupplierPrice'
   },
   
   
@@ -223,5 +224,13 @@ export const API_ENDPOINTS = {
     GENERATE_SUPPLIER_CODE: '/Material/GenerateMaterialCode'
   },
 
-  
+   SUPPLIERPRICE: {
+    CREATE_OR_UPDATE: '/Supplier/UpdateSupplierPrice',
+    UPDATE: '/SupplierPrice/Update',
+    DELETE: '/SupplierPrice/Delete',
+    ACTIVE_INACTIVE: '/SupplierPrice/ActiveInActive',
+    GET_ALL: '/SupplierPrice/GetAll',
+    GENERATE_SUPPLIER_CODE: '/SupplierPrice/GenerateSupplierCode',
+    BULK_SAVE: '/SupplierPrice/BulkSave'
+  },
 };

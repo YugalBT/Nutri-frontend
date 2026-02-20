@@ -103,7 +103,7 @@
         class="form-select"
         [class.is-invalid]="form.get('supplierId')?.touched && form.get('supplierId')?.invalid"
       >
-        <option value="" disabled selected>
+        <option [ngValue]="null" disabled selected>
           {{ "material.selectSupplier" | translate }}
         </option>
 

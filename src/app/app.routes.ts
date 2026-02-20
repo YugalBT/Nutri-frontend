@@ -407,6 +407,15 @@ export const routes: Routes = [
             (m) => m.MaterialListComponent,
           ),
       },
+       {
+        path: 'supplier-price',
+        canActivate: [permissionGuard],
+        data: { requiredPermissions: [PERMISSIONS.SupplierPriceAdd, PERMISSIONS.SupplierPriceEdit, PERMISSIONS.SupplierPriceView, PERMISSIONS.SupplierPriceDelete] },
+        loadComponent: () =>
+          import('./features/supplier-price/supplier-price-list/supplier-price-list.component').then(
+            (m) => m.SupplierPriceListComponent,
+          ),
+      },
 
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
     ],

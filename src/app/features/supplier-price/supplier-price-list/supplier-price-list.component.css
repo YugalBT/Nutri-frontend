@@ -1,0 +1,21 @@
+.border-start {
+    border-left: 3px var(--bs-border-style) var(--primary-color) !important;
+}
+/* HEADER */
+.modern-table thead th {
+  background: #f9fafb !important;
+  padding: 14px 12px;
+  font-weight: 600;
+  font-size: .9rem;
+  color: #374151;
+  border-bottom: 1px solid #e5e7eb;
+}
+.modern-table tbody td {
+  padding: 14px 12px !important;
+  font-size: .9rem;
+  border-bottom: 1px solid #f3f4f6;
+}
+
+.modern-table tbody tr:hover {
+  background: #f9fafc;
+}
