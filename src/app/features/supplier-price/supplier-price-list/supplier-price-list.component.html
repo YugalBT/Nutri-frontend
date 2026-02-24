@@ -154,16 +154,17 @@
               <td class="status-cell">
                 <select
                   class="form-select  w-100"
-                  [(ngModel)]="m.status"
+                  [(ngModel)]="m.supplierStatus"
                   (change)="markChanged(m)"
                   [ngClass]="{
-                    'text-success': m.status == 0,
-                    'text-secondary': m.status == 1,
+                    'text-success': m.supplierStatus == 0,
+                    'text-secondary': m.supplierStatus == 1,
                   }"
                 >
-                  <option [ngValue]="null" disabled>
+                  <!-- <option [ngValue]="null" >
                     - Select Price Status -
-                  </option>
+                  </option> -->
+                  <option [ngValue]="2" disabled >Select Price Status</option>
                   <option [ngValue]="0">Approved</option>
                   <option [ngValue]="1">Draft</option>
                 </select>

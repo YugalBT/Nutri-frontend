@@ -18,10 +18,10 @@ import { ApiResponse } from '../../../core/models/api-response';
   styleUrl: './supplier-price-list.component.css',
 })
 export class SupplierPriceListComponent implements OnInit, OnDestroy {
-
   materials: any[] = [];
   suppliers: any[] = [];
   selectedSupplierId: string | null = null;
+  selectedMonth: string | null = null;
   private subs: Subscription[] = [];
 
   constructor(
@@ -29,7 +29,7 @@ export class SupplierPriceListComponent implements OnInit, OnDestroy {
     private confirm: ConfirmDialogService,
     private commonService: CommonService,
     private translate: TranslateService,
-    private supplierPriceService: SupplierPriceService
+    private supplierPriceService: SupplierPriceService,
   ) {}
 
   ngOnInit(): void {
@@ -37,115 +37,112 @@ export class SupplierPriceListComponent implements OnInit, OnDestroy {
   }
 
   loadSuppliers(): void {
-    const sub = this.commonService.getSupplierList()
-      .subscribe({
-        next: (res) => {
-          this.suppliers = res?.data ?? [];
-        },
-        error: () => this.toast.error('Failed to load suppliers')
-      });
+    const sub = this.commonService.getSupplierList().subscribe({
+      next: (res) => {
+        this.suppliers = res?.data ?? [];
+      },
+      error: () => this.toast.error('Failed to load suppliers'),
+    });
 
     this.subs.push(sub);
   }
 
-onSupplierChange(): void {
+  onSupplierChange(): void {
+    if (!this.selectedSupplierId) {
+      this.materials = [];
+      return;
+    }
 
-  if (!this.selectedSupplierId) {
-    this.materials = [];
-    return;
-  }
+    const payload = {
+      pageNo: 1,
+      recordPerPage: 1000,
+      searchValue: '',
+      status: 2,
+    };
 
-  const payload = {
-    pageNo: 1,
-    recordPerPage: 1000,
-    searchValue: '',
-    status: 2
-  };
+    const sub = this.commonService
+      .GetAllMaterialBySupplierId(this.selectedSupplierId, payload)
+      .subscribe({
+        next: (res: any) => {
+          if (!res || !res.data) {
+            this.materials = [];
+            return;
+          }
 
-  const sub = this.commonService
-    .GetAllMaterialBySupplierId(this.selectedSupplierId, payload)
-    .subscribe({
-      next: (res: any) => {
-
-        if (!res || !res.data) {
+          this.materials = res.data.map((m: any) => ({
+            materialId: m.materialId,
+            materialName: m.materialName,
+            materialCode: m.materialCode,
+            price: m.price ?? null,
+            supplierStatus: this.mapStatusToNumber(m.supplierStatus),
+             priceMonth: m.priceMonth 
+    ? this.convertToMonthFormat(m.priceMonth)
+    : '',
+            isChanged: false,
+          }));
+        },
+        error: (err) => {
+          console.error(err);
+          this.toast.error('Failed to load materials');
           this.materials = [];
-          return;
-        }
+        },
+      });
 
-        this.materials = res.data.map((m: any) => ({
-          materialId: m.materialId,
-          materialName: m.materialName,
-          materialCode: m.materialCode,
-          price: m.price ?? null,
-          status: m.status ?? 0,   // 0 = Draft default
-          isChanged: false
-        }));
-
-      },
-      error: (err) => {
-        console.error(err);
-        this.toast.error('Failed to load materials');
-        this.materials = [];
-      }
-    });
-
-  this.subs.push(sub);
-}
+    this.subs.push(sub);
+  }
 
   markChanged(row: any): void {
     row.isChanged = true;
   }
 
   saveSingle(row: any): void {
-
-    const payload = [{
-      supplierId: this.selectedSupplierId,
-      materialId: row.materialId,
-      price: row.price,
-      status: row.status
-    }];
-
-    this.saveToApi(payload, row);
+    this.saveToApi([row], row);
   }
 
   saveAll(): void {
-
-    const changedRows = this.materials.filter(m => m.isChanged);
+    const changedRows = this.materials.filter((m) => m.isChanged);
 
     if (changedRows.length === 0) {
       this.toast.warning('No changes to save');
       return;
     }
 
-    const payload = changedRows.map(row => ({
-      supplierId: this.selectedSupplierId,
-      materialId: row.materialId,
-      price: row.price,
-      status: row.status
-    }));
-    
-
-    this.saveToApi(payload);
+    this.saveToApi(changedRows);
   }
 
-  saveToApi(payload: any[], singleRow?: any): void {
-    debugger;
+  saveToApi(rows: any[], singleRow?: any): void {
+    if (!this.selectedSupplierId) {
+      this.toast.error('Supplier is required');
+      return;
+    }
+
+    const formattedPayload = {
+      supplierId: this.selectedSupplierId,
+      prices: rows.map((row) => ({
+        materialId: row.materialId,
+         priceMonth: new Date(row.priceMonth + '-01').toISOString(),
+          price: Number(row.price),
+        supplierStatus: row.supplierStatus,
+      })),
+    };
+
     const sub = this.supplierPriceService
-      .bulkSaveSupplierPrices(payload)
+      .bulkSaveSupplierPrices(formattedPayload)
       .subscribe({
-        next: (res : ApiResponse<any>) => {
-            if (res.isSuccess) {
-              this.toast.success(res.message);
-            }else{
-              this.toast.error(res.message);
-            }
+        next: (res: ApiResponse<any>) => {
+          if (res.isSuccess) {
+            this.toast.success(res.message);
+          } else {
+            this.toast.error(res.message);
+          }
+
           if (singleRow) {
             singleRow.isChanged = false;
           } else {
-            this.materials.forEach(m => m.isChanged = false);
+            this.materials.forEach((m) => (m.isChanged = false));
           }
         },
-        error: (err) => this.toast.error(err?.message || 'Failed to save supplier prices')
+        error: (err) => this.toast.error(err?.message),
       });
 
     this.subs.push(sub);
@@ -155,8 +152,29 @@ onSupplierChange(): void {
     this.selectedSupplierId = null;
     this.materials = [];
   }
+  private convertToMonthFormat(dateString: string): string {
+  const date = new Date(dateString);
+  const year = date.getFullYear();
+  const month = (date.getMonth() + 1).toString().padStart(2, '0');
+  return `${year}-${month}`;
+}
+private mapStatusToNumber(status: string | number): number {
+
+  if (typeof status === 'number') {
+    return status;
+  }
+
+  switch (status?.toLowerCase()) {
+    case 'approved':
+      return 0;
+    case 'draft':
+      return 1;
+    default:
+      return 2; 
+  }
+}
 
   ngOnDestroy(): void {
-    this.subs.forEach(s => s.unsubscribe());
+    this.subs.forEach((s) => s.unsubscribe());
   }
 }

@@ -5,14 +5,14 @@ import {
   OnDestroy,
   OnInit,
   Output,
-  ViewChild
+  ViewChild,
 } from '@angular/core';
 import {
   AbstractControl,
   FormArray,
   FormBuilder,
   FormGroup,
-  Validators
+  Validators,
 } from '@angular/forms';
 import { forkJoin, Observable, of, Subscription } from 'rxjs';
 import { catchError, finalize, map, tap } from 'rxjs/operators';
@@ -35,7 +35,7 @@ declare var bootstrap: any;
   standalone: true,
   imports: [SharedModule, TranslatePipe],
   templateUrl: './ration-add-edit.component.html',
-  styleUrls: ['./ration-add-edit.component.css']
+  styleUrls: ['./ration-add-edit.component.css'],
 })
 export class RationAddEditComponent implements OnInit, OnDestroy {
   @ViewChild('rationModal', { static: true }) rationModal!: ElementRef;
@@ -63,19 +63,19 @@ export class RationAddEditComponent implements OnInit, OnDestroy {
     private rationService: RationService,
     private toast: ToastService,
     private commonService: CommonService,
-    private translate: TranslateService
+    private translate: TranslateService,
   ) {}
 
   ngOnInit() {
     this.initializeForm();
     this.modalInstance = new bootstrap.Modal(this.rationModal.nativeElement, {
-      backdrop: 'static'
+      backdrop: 'static',
     });
     this.handleFarmChange();
   }
 
   ngOnDestroy() {
-    this.subs.forEach(s => s.unsubscribe());
+    this.subs.forEach((s) => s.unsubscribe());
   }
 
   private initializeForm() {
@@ -88,10 +88,10 @@ export class RationAddEditComponent implements OnInit, OnDestroy {
           Validators.required,
           Validators.minLength(3),
           Validators.maxLength(20),
-          Validators.pattern(/^[A-Za-z ]+$/)
-        ]
+          Validators.pattern(/^[A-Za-z ]+$/),
+        ],
       ],
-      rationItems: this.fb.array([this.createRationItem()])
+      rationItems: this.fb.array([this.createRationItem()]),
     });
   }
 
@@ -103,12 +103,12 @@ export class RationAddEditComponent implements OnInit, OnDestroy {
         [
           Validators.required,
           CustomValidators.maxDigits(20),
-          CustomValidators.positiveNumber()
-        ]
+          CustomValidators.positiveNumber(),
+        ],
       ],
       dryMatter: [item?.dryMatter ?? null],
       protein: [item?.protein ?? null],
-      pricePerKg: [item?.pricePerKg ?? null]
+      pricePerKg: [item?.pricePerKg ?? null],
     });
   }
 
@@ -142,7 +142,7 @@ export class RationAddEditComponent implements OnInit, OnDestroy {
 
       forkJoin({
         animalGroups: this.loadAnimalGroupsByFarm(farmId),
-        feeds: this.loadFeedsByFarm(farmId)
+        feeds: this.loadFeedsByFarm(farmId),
       }).subscribe();
     });
 
@@ -150,59 +150,54 @@ export class RationAddEditComponent implements OnInit, OnDestroy {
   }
 
   private loadAnimalGroupsByFarm(
-  farmId: string
-): Observable<AnimalGroupList[]> {
+    farmId: string,
+  ): Observable<AnimalGroupList[]> {
+    this.animalGroupsLoading = true;
 
-  this.animalGroupsLoading = true;
+    return this.commonService.getAnimalGroupByFarmID(farmId).pipe(
+      map((res: ApiResponse<AnimalGroupList[]>) => res.data ?? []),
 
-  return this.commonService.getAnimalGroupByFarmID(farmId).pipe(
-    map((res: ApiResponse<AnimalGroupList[]>) => res.data ?? []),
+      tap((data: AnimalGroupList[]) => {
+        this.animalGroups = data.map((d) => ({
+          ...d,
+          animalGroupId: String(d.animalGroupId),
+        }));
+      }),
 
-    tap((data: AnimalGroupList[]) => {
-      this.animalGroups = data.map(d => ({
-        ...d,
-        animalGroupId: String(d.animalGroupId)
-      }));
-    }),
+      finalize(() => {
+        this.animalGroupsLoading = false;
+      }),
 
-    finalize(() => {
-      this.animalGroupsLoading = false;
-    }),
+      catchError(() => {
+        this.toast.error(
+          this.translate.instant('common.FailedloadingData') ||
+            'Failed to load animal groups',
+        );
+        return of([]);
+      }),
+    );
+  }
 
-    catchError(() => {
-      this.toast.error(
-        this.translate.instant('common.FailedloadingData') ||
-        'Failed to load animal groups'
-      );
-      return of([]);
-    })
-  );
-}
+  private loadFeedsByFarm(farmId: string): Observable<FeedList[]> {
+    this.feedsLoading = true;
 
-  private loadFeedsByFarm(
-  farmId: string
-): Observable<FeedList[]> {
+    return this.commonService.getFeedByFarmID(farmId).pipe(
+      map((res: ApiResponse<FeedList[]>) => res.data ?? []),
 
-  this.feedsLoading = true;
+      tap((data: FeedList[]) => {
+        this.feeds = data;
+      }),
 
-  return this.commonService.getFeedByFarmID(farmId).pipe(
-    map((res: ApiResponse<FeedList[]>) => res.data ?? []),
+      finalize(() => {
+        this.feedsLoading = false;
+      }),
 
-    tap((data: FeedList[]) => {
-      this.feeds = data;
-    }),
-
-    finalize(() => {
-      this.feedsLoading = false;
-    }),
-
-    catchError(() => {
-      this.toast.error('Failed to load feeds');
-      return of([]);
-    })
-  );
-}
-
+      catchError(() => {
+        this.toast.error('Failed to load feeds');
+        return of([]);
+      }),
+    );
+  }
 
   private resetRationItems() {
     this.rationItems.clear();
@@ -213,13 +208,13 @@ export class RationAddEditComponent implements OnInit, OnDestroy {
     const group = item as FormGroup;
     const feedId = group.get('feedId')?.value;
 
-    const selectedFeed = this.feeds.find(f => f.feedId === feedId);
+    const selectedFeed = this.feeds.find((f) => f.feedId === feedId);
 
     if (!selectedFeed) {
       group.patchValue({
         dryMatter: null,
         protein: null,
-        pricePerKg: null
+        pricePerKg: null,
       });
       return;
     }
@@ -227,7 +222,7 @@ export class RationAddEditComponent implements OnInit, OnDestroy {
     group.patchValue({
       dryMatter: selectedFeed.dryMatter,
       protein: selectedFeed.protein,
-      pricePerKg: selectedFeed.pricePerKg
+      pricePerKg: selectedFeed.pricePerKg,
     });
   }
 
@@ -236,11 +231,11 @@ export class RationAddEditComponent implements OnInit, OnDestroy {
 
     return this.commonService.getFarmsList().pipe(
       map((res: ApiResponse<any>) => res?.data ?? []),
-      tap(data => {
+      tap((data) => {
         this.farms = Array.isArray(data)
-          ? data.map(f => ({
+          ? data.map((f) => ({
               ...f,
-              farmId: String(f.farmId)
+              farmId: String(f.farmId),
             }))
           : [];
       }),
@@ -248,10 +243,10 @@ export class RationAddEditComponent implements OnInit, OnDestroy {
       catchError(() => {
         this.toast.error(
           this.translate.instant('common.FailedloadingData') ||
-            'Failed to load farms'
+            'Failed to load farms',
         );
         return of([]);
-      })
+      }),
     );
   }
 
@@ -263,33 +258,41 @@ export class RationAddEditComponent implements OnInit, OnDestroy {
     const farmIdFromQuery = data?.farmId ? String(data.farmId) : null;
 
     const sub = this.loadFarmList().subscribe(() => {
-
-    if (!edit && farmIdFromQuery) {
-      this.form.patchValue({ farmId: farmIdFromQuery });
-      this.form.get('farmId')?.disable(); 
-    }
+      if (!edit && farmIdFromQuery) {
+        this.form.patchValue({ farmId: farmIdFromQuery });
+        this.form.get('farmId')?.disable();
+      }
 
       if (edit && data) {
         this.currentRationId = data.rationId;
 
-        this.form.patchValue({
-          farmId: String(data.farmId),
-          animalGroupId: String(data.animalGroupId),
-          name: data.rationName
-        });
-      this.form.get('farmId')?.disable();
+        const farmId = String(data.farmId);
+        const animalGroupId = String(data.animalGroupId);
 
-        this.rationItems.clear();
-        data.items?.forEach((it: any) => {
-          this.rationItems.push(
-            this.createRationItem({
-              feedId: String(it.feedId),
-              perKg: it.perKg,
-              dryMatter: it.dryMatter,
-              protein: it.protein,
-              pricePerKg: it.pricePerKg
-            })
-          );
+        this.form.patchValue({ farmId });
+
+        this.form.get('farmId')?.disable();
+
+        this.loadAnimalGroupsByFarm(farmId).subscribe(() => {
+          this.form.patchValue({
+            animalGroupId: animalGroupId,
+            name: data.rationName,
+          });
+
+          this.loadFeedsByFarm(farmId).subscribe(() => {
+            this.rationItems.clear();
+            data.items?.forEach((it: any) => {
+              this.rationItems.push(
+                this.createRationItem({
+                  feedId: String(it.feedId),
+                  perKg: it.perKg,
+                  dryMatter: it.dryMatter,
+                  protein: it.protein,
+                  pricePerKg: it.pricePerKg,
+                }),
+              );
+            });
+          });
         });
       }
 
@@ -308,21 +311,21 @@ export class RationAddEditComponent implements OnInit, OnDestroy {
       this.form.markAllAsTouched();
       this.toast.warning(
         this.translate.instant('common.formInvalid') ||
-          'Please fill all required fields'
+          'Please fill all required fields',
       );
       return;
     }
 
     const payload = {
       ...this.form.getRawValue(),
-      rationId: this.currentRationId ?? undefined
+      rationId: this.currentRationId ?? undefined,
     };
 
     const api$ = this.isEdit
       ? this.rationService.updateration(payload)
       : this.rationService.createration(payload);
 
-    const sub = api$.subscribe(res => {
+    const sub = api$.subscribe((res) => {
       if (res.isSuccess) {
         this.toast.success(res.message);
         this.rationService.notifyrationChanged();

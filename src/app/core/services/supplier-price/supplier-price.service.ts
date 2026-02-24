@@ -41,7 +41,7 @@ export class SupplierPriceService {
       return this.http.post<any>(url, {});
     }
 
-    bulkSaveSupplierPrices(payload: any[]) {
+    bulkSaveSupplierPrices(payload: any): Observable<ApiResponse<any>> {
     return this.http.post(API_ENDPOINTS.SUPPLIERPRICE.CREATE_OR_UPDATE,payload);
     }
 
