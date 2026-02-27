@@ -31,7 +31,7 @@ declare var bootstrap: any;
 export class MaterialAddEditComponent implements OnInit, OnDestroy {
 
   @ViewChild('materialModal') materialModal!: ElementRef;
-
+   private CodeDebounce: any;
   form!: FormGroup;
   modalInstance: any;
   isEdit = false;
@@ -87,8 +87,11 @@ export class MaterialAddEditComponent implements OnInit, OnDestroy {
 }
 
 private generateMaterialCode(materialName: string): void {
+debugger;
+  if (this.CodeDebounce) clearTimeout(this.CodeDebounce);
 
-  const sub = this.materialService
+    this.CodeDebounce = setTimeout(() => {
+      const sub = this.materialService
     .generateMaterialCode(materialName)
     .subscribe(res => {
 
@@ -103,6 +106,8 @@ private generateMaterialCode(materialName: string): void {
     });
 
   this.subs.push(sub);
+    }, 400);
+  
 }
 
 

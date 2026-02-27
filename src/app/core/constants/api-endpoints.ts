@@ -1,4 +1,3 @@
-
 export const API_ENDPOINTS = {
   AUTH: {
     LOGIN: '/Auth/login',
@@ -10,8 +9,6 @@ export const API_ENDPOINTS = {
     CHANGE_PASSWORD: '/Auth/ResetPassword',
     HOMEPAGE_CONTENT: '/Auth/HomePageContent',
     IMPERSONATE: '/Auth/ImpersonateCompany',
-
-
   },
 
   USERS: {
@@ -22,7 +19,7 @@ export const API_ENDPOINTS = {
     GET_ALL: '/User/GetAll',
   },
 
- ROLE: {
+  ROLE: {
     CREATE: '/Role/Create',
     UPDATE: '/Role/Update',
     DELETE: '/Role/Delete',
@@ -51,21 +48,21 @@ export const API_ENDPOINTS = {
     GET_ALL_FORMULA_LIST: '/Common/GetAllFormula',
     GET_Language_LIST: '/Common/GetAllLanguage',
     MARK_ALL_READ_NOTIFICATION: '/Common/ReadAllNotification',
-    UPDATE_NOTIFICATION:'/Common/UpdateNotification',
+    UPDATE_NOTIFICATION: '/Common/UpdateNotification',
     GET_ALL_SUPPLIER_LIST: '/Common/GetAllSupplier',
-    GET_ALL_MATERIAL_BY_SUPPLIER_ID: '/Supplier/GetAllSupplierPrice'
+    GET_ALL_MATERIAL_BY_SUPPLIER_ID: '/Supplier/GetAllSupplierPrice',
+    GET_OPERATORS_AND_MATERIAL: '/Common/GetAllOperatorAndMaterial',
+    GET_ALL_MATERIAL_BY_SUPPLIER_ID_IN_FORMULA: '/Common/GetAllMaterialBySupplierId',
   },
-  
-  
+
   Module: {
     GET_ALL: '/Module/modules',
     GET_ALL_ROLES: '/Common/GetAllRoles',
     CREATE: '/Module/Add',
     DELETE: '/Module/Delete',
     UPDATE: '/Module/Edit',
-
   },
-  
+
   Tenant: {
     GET_ALL: '/Tenant/GetAll',
     CREATE: '/Tenant/Create',
@@ -81,7 +78,7 @@ export const API_ENDPOINTS = {
     ACTIVE_INACTIVE: '/Farm/ActiveInActive',
     GET_ALL: '/Farm/GetAll',
   },
-   RATION: {
+  RATION: {
     CREATE: '/Ration/Create',
     UPDATE: '/Ration/Update',
     DELETE: '/Ration/Delete',
@@ -95,14 +92,14 @@ export const API_ENDPOINTS = {
     ACTIVE_INACTIVE: '/Feed/ActiveInActive',
     GET_ALL: '/Feed/GetAll',
   },
-   KPI: {
+  KPI: {
     CREATE: '/Kpi/Create',
     UPDATE: '/Kpi/Update',
     DELETE: '/Kpi/Delete',
     ACTIVE_INACTIVE: '/Kpi/ActiveInActive',
     GET_ALL: '/Kpi/GetAll',
   },
-   CALVES: {
+  CALVES: {
     CREATE: '/Calves/Create',
     UPDATE: '/Calves/Update',
     DELETE: '/Calves/Delete',
@@ -110,7 +107,7 @@ export const API_ENDPOINTS = {
     GET_ALL: '/Calves/GetAll',
   },
 
-   AnimalType: {
+  AnimalType: {
     CREATE: '/Animal/CreateAnimalType',
     UPDATE: '/Animal/UpdateAnimalType',
     DELETE: '/Animal/DeleteAnimalType',
@@ -132,7 +129,7 @@ export const API_ENDPOINTS = {
     ACTIVE_INACTIVE: '/Animal/ActiveInactiveAnimalGroup',
     GET_ALL: '/Animal/GetAllAnimalGroup',
   },
-   COMPANY: {
+  COMPANY: {
     UPDATE: '/Common/UpdateSettingById',
     GET_BY_ID: '/Common/SettingById',
   },
@@ -140,7 +137,7 @@ export const API_ENDPOINTS = {
     UPDATE: '/Configuration/AddOrUpdateEmailConfiguration',
     GET_CONFIGURATION: '/Configuration/GetEmailConfiguration',
   },
-   TemplateCategory: {
+  TemplateCategory: {
     CREATE: '/TemplateCategory/Create',
     UPDATE: '/TemplateCategory/Update',
     DELETE: '/TemplateCategory/Delete',
@@ -155,28 +152,28 @@ export const API_ENDPOINTS = {
     ACTIVE_INACTIVE: '/Template/ActiveInActive',
     GET_ALL: '/Template/GetAll',
   },
-   OPERATOR: {
+  OPERATOR: {
     CREATE: '/Operator/Create',
     UPDATE: '/Operator/Update',
     DELETE: '/Operator/Delete',
     ACTIVE_INACTIVE: '/Operator/ActiveInActive',
     GET_ALL: '/Operator/GetAll',
   },
-   PLACEHOLDER: {
+  PLACEHOLDER: {
     CREATE: '/PlaceHolder/Create',
     UPDATE: '/PlaceHolder/Update',
     DELETE: '/PlaceHolder/Delete',
     ACTIVE_INACTIVE: '/PlaceHolder/ActiveInActive',
     GET_ALL: '/PlaceHolder/GetAll',
   },
-   PLACEHOLDERS_MAPPING: {
+  PLACEHOLDERS_MAPPING: {
     CREATE: '/PlaceholderMapping/Create',
     UPDATE: '/PlaceholderMapping/Update',
     DELETE: '/PlaceholderMapping/Delete',
     ACTIVE_INACTIVE: '/PlaceholderMapping/ActiveInActive',
     GET_ALL: '/PlaceholderMapping/GetAll',
   },
-   FORMULA: {
+  FORMULA: {
     CREATE: '/Formula/Create',
     UPDATE: '/Formula/Update',
     DELETE: '/Formula/Delete',
@@ -190,7 +187,7 @@ export const API_ENDPOINTS = {
     DELETE: '/TechnicalReport/Delete',
     ACTIVE_INACTIVE: '/TechnicalReport/ActiveInActive',
     GET_ALL: '/TechnicalReport/GetAll',
-    GET_TECHNICAL_REPORT :'/Ration/GetByEconomicReport'
+    GET_TECHNICAL_REPORT: '/Ration/GetByEconomicReport',
   },
   LANGUAGE: {
     CREATE: '/Language/Create',
@@ -202,8 +199,8 @@ export const API_ENDPOINTS = {
     Import: '/Language/ImportLanguageExcel',
     LanguageByCulture: '/Language/LanguageByCulture',
   },
-  DASHBOARD :{
-    GET_DASHBOARD_DATA :'/Dashboard/DashboardData'
+  DASHBOARD: {
+    GET_DASHBOARD_DATA: '/Dashboard/DashboardData',
   },
 
   SUPPLIER: {
@@ -212,25 +209,34 @@ export const API_ENDPOINTS = {
     DELETE: '/Supplier/Delete',
     ACTIVE_INACTIVE: '/Supplier/ActiveInActive',
     GET_ALL: '/Supplier/GetAll',
-    GENERATE_SUPPLIER_CODE: '/Supplier/GenerateSupplierCode'
+    GENERATE_SUPPLIER_CODE: '/Supplier/GenerateSupplierCode',
   },
 
-   MATERIAL: {
+  MATERIAL: {
     CREATE: '/Material/Create',
     UPDATE: '/Material/Update',
     DELETE: '/Material/Delete',
     ACTIVE_INACTIVE: '/Material/ActiveInActive',
     GET_ALL: '/Material/GetAll',
-    GENERATE_SUPPLIER_CODE: '/Material/GenerateMaterialCode'
+    GENERATE_SUPPLIER_CODE: '/Material/GenerateMaterialCode',
   },
 
-   SUPPLIERPRICE: {
+  SUPPLIERPRICE: {
     CREATE_OR_UPDATE: '/Supplier/UpdateSupplierPrice',
     UPDATE: '/SupplierPrice/Update',
     DELETE: '/SupplierPrice/Delete',
     ACTIVE_INACTIVE: '/SupplierPrice/ActiveInActive',
     GET_ALL: '/SupplierPrice/GetAll',
     GENERATE_SUPPLIER_CODE: '/SupplierPrice/GenerateSupplierCode',
-    BULK_SAVE: '/SupplierPrice/BulkSave'
+    BULK_SAVE: '/SupplierPrice/BulkSave',
+  },
+
+  SUPPLIER_PRICE_FORMULA: {
+    CREATE: '/MstFormula/Create',
+    UPDATE: '/MstFormula/Update',
+    DELETE: '/MstFormula/Delete',
+    ACTIVE_INACTIVE: '/MstFormula/ActiveInActive',
+    GET_ALL: '/MstFormula/GetAll',
+    VALIDATE_FORMULA: '/MstFormula/ValidateFormula',
   },
 };

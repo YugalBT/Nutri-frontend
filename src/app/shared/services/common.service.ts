@@ -185,4 +185,16 @@ GetAllMaterialBySupplierId(supplierId: string,payload: any): Observable<ApiRespo
   const url = `${API_ENDPOINTS.COMMON_API.GET_ALL_MATERIAL_BY_SUPPLIER_ID}?supplierId=${supplierId}`;
   return this.http.post<ApiResponse<any>>(url, payload);
 }
+
+  getGetAllOperatorsAndMaterialList(): Observable<ApiResponse<OperatorsAndRationsList[]>> {
+    return this.http.get<OperatorsAndRationsList[]>(
+      API_ENDPOINTS.COMMON_API.GET_OPERATORS_AND_MATERIAL,
+    );
+  }
+
+  GetAllMaterialBySupplierIdInFormula(supplierId: string): Observable<ApiResponse<any>> {
+  const url = `${API_ENDPOINTS.COMMON_API.GET_ALL_MATERIAL_BY_SUPPLIER_ID_IN_FORMULA}?supplierId=${supplierId}`;
+  return this.http.get<ApiResponse<any>>(url);
+}
+
 }

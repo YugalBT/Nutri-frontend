@@ -22,12 +22,13 @@ export const routes: Routes = [
       ),
   },
   {
-  path: 'reset-password',
-  canActivate: [authGuard, firstLoginGuard],
-  loadComponent: () =>
-    import('./features/auth/reset-password/reset-password.component')
-      .then(m => m.ResetPasswordComponent),
-},
+    path: 'reset-password',
+    canActivate: [authGuard, firstLoginGuard],
+    loadComponent: () =>
+      import('./features/auth/reset-password/reset-password.component').then(
+        (m) => m.ResetPasswordComponent,
+      ),
+  },
 
   {
     path: '',
@@ -37,7 +38,7 @@ export const routes: Routes = [
     children: [
       {
         path: 'dashboard',
-         canActivate: [firstLoginGuard],
+        canActivate: [firstLoginGuard],
         loadComponent: () =>
           import('./features/dashboard/dashboard.component').then(
             (m) => m.DashboardComponent,
@@ -389,10 +390,17 @@ export const routes: Routes = [
             (m) => m.NutritionComponent,
           ),
       },
-       {
+      {
         path: 'suppliers',
         canActivate: [permissionGuard],
-        data: { requiredPermissions: [PERMISSIONS.SuppliersAdd, PERMISSIONS.SuppliersEdit, PERMISSIONS.SuppliersView, PERMISSIONS.SuppliersDelete] },
+        data: {
+          requiredPermissions: [
+            PERMISSIONS.SuppliersAdd,
+            PERMISSIONS.SuppliersEdit,
+            PERMISSIONS.SuppliersView,
+            PERMISSIONS.SuppliersDelete,
+          ],
+        },
         loadComponent: () =>
           import('./features/supplier/supplier-list/supplier-list.component').then(
             (m) => m.SupplierListComponent,
@@ -401,19 +409,43 @@ export const routes: Routes = [
       {
         path: 'materials',
         canActivate: [permissionGuard],
-        data: { requiredPermissions: [PERMISSIONS.MaterialsAdd, PERMISSIONS.MaterialsEdit, PERMISSIONS.MaterialsView, PERMISSIONS.MaterialsDelete] },
+        data: {
+          requiredPermissions: [
+            PERMISSIONS.MaterialsAdd,
+            PERMISSIONS.MaterialsEdit,
+            PERMISSIONS.MaterialsView,
+            PERMISSIONS.MaterialsDelete,
+          ],
+        },
         loadComponent: () =>
           import('./features/materials/material-list/material-list.component').then(
             (m) => m.MaterialListComponent,
           ),
       },
-       {
+      {
         path: 'supplier-price',
         canActivate: [permissionGuard],
-        data: { requiredPermissions: [PERMISSIONS.SupplierPriceAdd, PERMISSIONS.SupplierPriceEdit, PERMISSIONS.SupplierPriceView, PERMISSIONS.SupplierPriceDelete] },
+        data: {
+          requiredPermissions: [
+            PERMISSIONS.SupplierPriceAdd,
+            PERMISSIONS.SupplierPriceEdit,
+            PERMISSIONS.SupplierPriceView,
+            PERMISSIONS.SupplierPriceDelete,
+          ],
+        },
         loadComponent: () =>
           import('./features/supplier-price/supplier-price-list/supplier-price-list.component').then(
             (m) => m.SupplierPriceListComponent,
+          ),
+      },
+
+      {
+        path: 'supplier-pricing-formula',
+        // canActivate: [permissionGuard],
+        // data: { requiredPermissions: [PERMISSIONS.SupplierPriceAdd, PERMISSIONS.SupplierPriceEdit, PERMISSIONS.SupplierPriceView, PERMISSIONS.SupplierPriceDelete] },
+        loadComponent: () =>
+          import('./features/supplier-pricing-formula/supplier-pricing-formula-list/supplier-pricing-formula-list.component').then(
+            (m) => m.SupplierPricingFormulaListComponent,
           ),
       },
 

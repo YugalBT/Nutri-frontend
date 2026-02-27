@@ -29,17 +29,17 @@ import { PERMISSIONS } from '../../../core/constants/permissions.constants';
 })
 export class AnimalTypeListComponent implements OnInit, OnDestroy {
 
-  // 🔹 Table Columns (translated)
+  //  Table Columns (translated)
   columns: string[] = [];
   columnFields: string[] = ['typeNameEn', 'isActive'];
 
-  // 🔹 Data
+  //  Data
   animalTypes: any[] = [];
   totalRecords = 0;
   pageSize = 10;
   pageIndex = 0;
 
-  // 🔹 Filters
+  //  Filters
   searchValue = '';
   filterStatus: number | null = null;
 
@@ -75,7 +75,7 @@ export class AnimalTypeListComponent implements OnInit, OnDestroy {
     );
   }
 
-  // ✅ TRANSLATED COLUMNS
+  // TRANSLATED COLUMNS
   private setColumns(): void {
     this.columns = [
       this.translateService.instant('animalType.columns.animalTypeName') ?? "",
@@ -84,7 +84,7 @@ export class AnimalTypeListComponent implements OnInit, OnDestroy {
     this.columnFields = ['typeNameEn', 'isActive'];
   }
 
-  // 🔹 Load Data
+  //  Load Data
   private loadAnimalTypes(pageNo: number, recordPerPage: number): void {
     const payload = {
       searchValue: this.searchValue ?? '',
@@ -111,7 +111,7 @@ export class AnimalTypeListComponent implements OnInit, OnDestroy {
     this.subs.push(sub);
   }
 
-  // 🔹 Search
+  //  Search
   onSearch(value: string): void {
     this.searchValue = value;
 
@@ -123,7 +123,7 @@ export class AnimalTypeListComponent implements OnInit, OnDestroy {
     }, 400);
   }
 
-  // 🔹 Status Filter
+  //  Status Filter
   onStatusChange(value: any): void {
     this.filterStatus = value === '' || value === null ? null : Number(value);
     this.pageIndex = 0;
@@ -137,14 +137,14 @@ export class AnimalTypeListComponent implements OnInit, OnDestroy {
     this.loadAnimalTypes(1, this.pageSize);
   }
 
-  // 🔹 Pagination
+  //  Pagination
   onPageChange(event: { pageIndex: number; pageSize: number }): void {
     this.pageIndex = event.pageIndex;
     this.pageSize = event.pageSize;
     this.loadAnimalTypes(this.pageIndex + 1, this.pageSize);
   }
 
-  // 🔹 Delete
+  //  Delete
   deleteAnimalType(row: any): void {
     if (!this.commonService.checkPermission(PERMISSIONS.AnimalTypeDelete))
       return;
@@ -177,7 +177,7 @@ export class AnimalTypeListComponent implements OnInit, OnDestroy {
     });
   }
 
-  // 🔹 Toggle Status
+  //  Toggle Status
   toggleStatus(event: any): void {
     const row = event.row;
     const newStatus = event.isActive;
