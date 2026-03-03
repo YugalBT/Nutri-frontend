@@ -3,6 +3,23 @@
   height: 320px;
 }
 
+.overview-card {
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 14px;
+  background: #fff;
+}
+
+.overview-card span {
+  color: #6b7280;
+  font-size: 13px;
+}
+
+.overview-card h4,
+.overview-card h5 {
+  margin: 6px 0 0;
+}
+
 @media (max-width: 992px) {
   .chart-box {
     height: 280px;
@@ -14,4 +31,3 @@
     height: 240px;
   }
 }
-

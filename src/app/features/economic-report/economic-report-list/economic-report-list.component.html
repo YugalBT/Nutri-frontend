@@ -1,87 +1,96 @@
 <div class="pagecls">
-
-  <!-- HEADER -->
-  <div class="mb-3">
-    <h3 class="page-title">Economic Report</h3>
-    <p class="text-muted">Financial analysis and profitability metrics</p>
-   
-  </div>
-
- 
-
-  <!-- KPI CARDS -->
-  <div class="row mb-4">
-    <div class="col-md-4">
-      <div class="kpi-card">
-        <p class="kpi-title">Cost Per Animal</p>
-        <h4 class="kpi-value text-success">₹{{ costPerAnimal }}</h4>
-        <small>Per Animal</small>
-      </div>
+  <div class="mb-3 d-flex justify-content-between align-items-center flex-wrap gap-2">
+    <div>
+      <h3 class="page-title">Economic Report</h3>
+      <p class="text-muted">Financial analysis and profitability metrics</p>
     </div>
 
-    <div class="col-md-4">
-      <div class="kpi-card">
-        <p class="kpi-title">Income Per Animal</p>
-        <h4 class="kpi-value">₹{{ incomePerAnimal }}</h4>
-        <small>Per Animal</small>
-      </div>
-    </div>
+    <div class="d-flex gap-2 align-items-center">
+      <select class="form-select" style="width: 120px" [ngModel]="selectedYear" (ngModelChange)="selectedYear = $event; onFiltersChange()">
+        <option *ngFor="let year of yearOptions" [value]="year">{{ year }}</option>
+      </select>
 
-    <div class="col-md-4">
-      <div class="kpi-card">
-        <p class="kpi-title">Margin Per Animal</p>
-        <h4 class="kpi-value text-success">₹{{ marginPerAnimal }}</h4>
-        <small>Per Animal</small>
-      </div>
+      <select class="form-select" style="width: 140px" [ngModel]="selectedPeriod" (ngModelChange)="selectedPeriod = $event; onFiltersChange()">
+        <option value="Monthly">Monthly</option>
+        <option value="Quarterly">Quarterly</option>
+        <option value="Annual">Annual</option>
+      </select>
     </div>
   </div>
 
-  <!-- CHARTS -->
-  <div class="row mb-4">
-    <div class="col-md-12">
-      <div class="card">
-        <div class="card-header">Cost vs Income</div>
-        <div class="card-body">
-          <div echarts [options]="costIncomeChart" style="height:300px;"></div>
+  <div *ngIf="isLoading" class="text-center py-3">Loading economic metrics...</div>
+
+  <ng-container *ngIf="!isLoading">
+    <div class="row mb-4">
+      <div class="col-md-4">
+        <div class="kpi-card">
+          <p class="kpi-title">Cost Per Animal</p>
+          <h4 class="kpi-value text-success">{{ costPerAnimal | number: '1.2-2' }}</h4>
+          <small>Per Animal</small>
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <div class="kpi-card">
+          <p class="kpi-title">Income Per Animal</p>
+          <h4 class="kpi-value">{{ incomePerAnimal | number: '1.2-2' }}</h4>
+          <small>Per Animal</small>
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <div class="kpi-card">
+          <p class="kpi-title">Margin Per Animal</p>
+          <h4 class="kpi-value text-success">{{ marginPerAnimal | number: '1.2-2' }}</h4>
+          <small>Per Animal</small>
         </div>
       </div>
     </div>
 
-    <!-- <div class="col-md-6">
-      <div class="card">
-        <div class="card-header">Margin Trend</div>
-        <div class="card-body">
-          <div echarts [options]="marginTrendChart" style="height:300px;"></div>
+    <div class="row mb-4">
+      <div class="col-md-6 mb-3">
+        <div class="card">
+          <div class="card-header">Cost vs Income</div>
+          <div class="card-body">
+            <div echarts [options]="costIncomeChart" style="height:300px;"></div>
+          </div>
         </div>
       </div>
-    </div> -->
-  </div>
 
-  <!-- BOTTOM KPI -->
-  <div class="row">
-    <div class="col-md-4">
-      <div class="kpi-card">
-        <p class="kpi-title">Feed Efficiency</p>
-        <h4>{{ feedEfficiency }}%</h4>
-        <small>Return on Feed Cost</small>
+      <div class="col-md-6 mb-3">
+        <div class="card">
+          <div class="card-header">Margin Trend</div>
+          <div class="card-body">
+            <div echarts [options]="marginTrendChart" style="height:300px;"></div>
+          </div>
+        </div>
       </div>
     </div>
 
-    <div class="col-md-4">
-      <div class="kpi-card">
-        <p class="kpi-title">Margin Percentage</p>
-        <h4 class="text-success">{{ marginPercentage }}%</h4>
-        <small>Profit Margin</small>
+    <div class="row">
+      <div class="col-md-4">
+        <div class="kpi-card">
+          <p class="kpi-title">Feed Efficiency</p>
+          <h4>{{ feedEfficiency | number: '1.2-2' }}%</h4>
+          <small>Return on Feed Cost</small>
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <div class="kpi-card">
+          <p class="kpi-title">Margin Percentage</p>
+          <h4 class="text-success">{{ marginPercentage | number: '1.2-2' }}%</h4>
+          <small>Profit Margin</small>
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <div class="kpi-card">
+          <p class="kpi-title">Cost Per Liter</p>
+          <h4>{{ costPerLiter | number: '1.2-2' }}</h4>
+          <small>Feed Cost / Milk Yield</small>
+        </div>
       </div>
     </div>
-
-    <div class="col-md-4">
-      <div class="kpi-card">
-        <p class="kpi-title">Cost Per Liter</p>
-        <h4>₹{{ costPerLiter }}</h4>
-        <small>Feed Cost / Milk Yield</small>
-      </div>
-    </div>
-  </div>
-
+  </ng-container>
 </div>

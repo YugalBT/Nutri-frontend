@@ -22,12 +22,15 @@ export interface User {
   isFirstLogin?: boolean | null;
   roles?: string[];
   menu?: any[];
-  permissions: Permission[]
+  roleType?: 'ADMIN' | 'COLLABORATOR' | 'CLIENT' | string;
+  allowedCompanyIds?: string[];
+  companyMenu?: string[];
+  permissions: Permission[];
 }
 export interface Permission {
-  permissionId: string
-  modulePermission: any
-  modulePermissionDisplay: string
+  permissionId: string;
+  modulePermission: any;
+  modulePermissionDisplay: string;
 }
 
 export interface AuthResponse {

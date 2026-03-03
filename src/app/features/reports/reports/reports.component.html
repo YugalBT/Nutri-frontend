@@ -1,72 +1,79 @@
 <div class="pagecls">
+  <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+    <h3 class="page-title mb-0">Reports</h3>
 
-<div class="report-filters mb-4">
+    <div class="d-flex align-items-center gap-2 flex-wrap">
+      <select class="form-select" style="width: 120px" [ngModel]="selectedYear" (ngModelChange)="selectedYear = $event; onFiltersChange()">
+        <option *ngFor="let year of yearOptions" [value]="year">{{ year }}</option>
+      </select>
 
-  <div class="btn-group mb-3" role="group">
-    <button class="btn add-btn ">Daily</button>
-    <button class="btn">Monthly</button>
-    <button class="btn">Period</button>
-    <button class="btn">Quarter</button>
-    <button class="btn">Comparison</button>
-  </div>
+      <select class="form-select" style="width: 140px" [ngModel]="selectedPeriod" (ngModelChange)="selectedPeriod = $event; onFiltersChange()">
+        <option value="Monthly">Monthly</option>
+        <option value="Quarterly">Quarterly</option>
+        <option value="Annual">Annual</option>
+      </select>
 
-  <div class="card">
-    <div class="card-body py-2">
-      <div class="row align-items-center g-3">
-
-        <div class="col-auto ">
-          Date:
-        </div>
-
-        <div class="col-md-3 col-sm-6">
-          <input
-            type="date"
-            class="form-control"
-            value="2024-12-10">
-        </div>
-
-      </div>
+      <button class="btn add-btn" (click)="exportCurrentView()">Export Report</button>
     </div>
   </div>
 
-</div>
+  <div *ngIf="isLoading" class="text-center py-3">Loading reports...</div>
 
-  <div class="table-card mb-4">
-    <app-reusable-table
-      [columns]="columns"
-      [columnFields]="columnFields"
-      [data]="reports"
-      [pageable]="false"
-      [showActions]="false">
-    </app-reusable-table>
-  </div>
+  <ng-container *ngIf="!isLoading">
+    <div class="table-card mb-4">
+      <app-reusable-table
+        [columns]="columns"
+        [columnFields]="columnFields"
+        [data]="reports"
+        [pageable]="false"
+        [showActions]="false">
+      </app-reusable-table>
+    </div>
 
-  <div class="row">
-    <div class="col-md-6 mb-3">
-      <div class="card">
-        <div class="card-header ">Cost vs Income</div>
-        <div class="card-body">
-          <div
-            echarts
-            [options]="costIncomeChart"
-            style="height:300px;">
+    <div class="row">
+      <div class="col-md-6 mb-3">
+        <div class="card">
+          <div class="card-header">Primary Comparison</div>
+          <div class="card-body">
+            <div echarts [options]="costIncomeChart" style="height:300px;"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-6 mb-3">
+        <div class="card">
+          <div class="card-header">Trend</div>
+          <div class="card-body">
+            <div echarts [options]="marginTrendChart" style="height:300px;"></div>
           </div>
         </div>
       </div>
     </div>
 
-    <div class="col-md-6 mb-3">
-      <div class="card">
-        <div class="card-header ">Margin Trend</div>
-        <div class="card-body">
-          <div
-            echarts
-            [options]="marginTrendChart"
-            style="height:300px;">
-          </div>
-        </div>
+    <div class="card mt-3" *ngIf="isAdmin && archive.length">
+      <div class="card-header">Aggregated Archive</div>
+      <div class="card-body p-0">
+        <table class="table mb-0">
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Company</th>
+              <th>Ration</th>
+              <th>Animals</th>
+              <th>Avg Milk/Day</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let row of archive">
+              <td>{{ row.createdAt | date: 'shortDate' }}</td>
+              <td>{{ row.companyName }}</td>
+              <td>{{ row.rationName }}</td>
+              <td>{{ row.animalCount }}</td>
+              <td>{{ row.avgMilkPerDay | number: '1.2-2' }}</td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </div>
-  </div>
-
+  </ng-container>
 </div>

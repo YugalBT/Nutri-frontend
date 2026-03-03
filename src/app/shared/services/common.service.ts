@@ -3,7 +3,6 @@ import { Observable } from 'rxjs';
 import { HttpService } from './http.service';
 import { ApiResponse } from '../../core/models/api-response';
 import { RoleList } from '../../core/models/rolelist';
-import { Constants } from '../utils/constants/constants';
 import { API_ENDPOINTS } from '../../core/constants/api-endpoints';
 import { GetAllModulesResponse } from '../../core/models/add-edit-role';
 import { FarmList } from '../../core/models/farm-list';
@@ -22,10 +21,15 @@ import {
 } from '../../core/models/operator-list';
 import { FormulaList } from '../../core/models/formula-list';
 import { KpiList } from '../../core/models/day-list';
-import { DashboardData } from '../../core/models/dashboarddata';
+import {
+  AggregatedAnalyticsData,
+  AggregatedArchiveItem,
+  AggregatedReportItem,
+  CompanyDashboardData,
+  DashboardData,
+} from '../../core/models/dashboarddata';
 import { MaterialList } from '../../core/models/material-list';
 import { SupplierList } from '../../core/models/supplier-list';
-import { PaginationPayload } from '../../core/models/base-pagination.model';
 
 @Injectable({
   providedIn: 'root',
@@ -38,11 +42,6 @@ export class CommonService {
   ) {}
 
   checkPermission(roleName: string, showAlert: boolean = true) {
-    // if (!StorageHelper.CheckRole(roleName)) {
-    //   this.toast.error(this.translate.instant('common.noPermission') || 'No permission');
-    //   return false;
-    // }
-    // return true;
     const hasPermission = StorageHelper.CheckRole(roleName);
     if (!hasPermission && showAlert) {
       this.toast.error(
@@ -166,35 +165,72 @@ export class CommonService {
     );
   }
 
+  getCompanyDashboardData(
+    year: number,
+    companyId?: string,
+  ): Observable<ApiResponse<CompanyDashboardData>> {
+    const companyQuery = companyId ? `&companyId=${companyId}` : '';
+    return this.http.get<CompanyDashboardData>(
+      `${API_ENDPOINTS.DASHBOARD.GET_COMPANY_DASHBOARD}?year=${year}${companyQuery}`,
+    );
+  }
+
+  getAggregatedAnalytics(
+    year: number,
+  ): Observable<ApiResponse<AggregatedAnalyticsData>> {
+    return this.http.get<AggregatedAnalyticsData>(
+      `${API_ENDPOINTS.DASHBOARD.GET_AGGREGATED_ANALYTICS}?year=${year}`,
+    );
+  }
+
+  getAggregatedArchive(payload: {
+    year: number;
+    period: string;
+    companyId?: string | null;
+  }): Observable<ApiResponse<AggregatedArchiveItem[]>> {
+    return this.http.post<AggregatedArchiveItem[]>(
+      API_ENDPOINTS.DASHBOARD.GET_AGGREGATED_ARCHIVE,
+      payload,
+    );
+  }
+
+  getAggregatedReport(payload: {
+    year: number;
+    period: string;
+    companyId?: string | null;
+  }): Observable<ApiResponse<AggregatedReportItem[]>> {
+    return this.http.post<AggregatedReportItem[]>(
+      API_ENDPOINTS.DASHBOARD.GET_AGGREGATED_REPORT,
+      payload,
+    );
+  }
+
   getSupplierList(): Observable<ApiResponse<SupplierList[]>> {
     return this.http.get<SupplierList[]>(
       API_ENDPOINTS.COMMON_API.GET_ALL_SUPPLIER_LIST,
     );
   }
 
-  //  GetAllMaterialBySupplierId(
-  //   SupplierId: string,
-  // ): Observable<ApiResponse<MaterialList[]>> {
-  //   return this.http.post<MaterialList[]>(
-  //     `${API_ENDPOINTS.COMMON_API.GET_ALL_MATERIAL_BY_SUPPLIER_ID}?SupplierId=${SupplierId}`,
-  //     {SupplierId == null ? '' : SupplierId},
-  //   );
-  // }
+  GetAllMaterialBySupplierId(
+    supplierId: string,
+    payload: any,
+  ): Observable<ApiResponse<any>> {
+    const url = `${API_ENDPOINTS.COMMON_API.GET_ALL_MATERIAL_BY_SUPPLIER_ID}?supplierId=${supplierId}`;
+    return this.http.post<ApiResponse<any>>(url, payload);
+  }
 
-GetAllMaterialBySupplierId(supplierId: string,payload: any): Observable<ApiResponse<any>> {
-  const url = `${API_ENDPOINTS.COMMON_API.GET_ALL_MATERIAL_BY_SUPPLIER_ID}?supplierId=${supplierId}`;
-  return this.http.post<ApiResponse<any>>(url, payload);
-}
-
-  getGetAllOperatorsAndMaterialList(): Observable<ApiResponse<OperatorsAndRationsList[]>> {
+  getGetAllOperatorsAndMaterialList(): Observable<
+    ApiResponse<OperatorsAndRationsList[]>
+  > {
     return this.http.get<OperatorsAndRationsList[]>(
       API_ENDPOINTS.COMMON_API.GET_OPERATORS_AND_MATERIAL,
     );
   }
 
-  GetAllMaterialBySupplierIdInFormula(supplierId: string): Observable<ApiResponse<any>> {
-  const url = `${API_ENDPOINTS.COMMON_API.GET_ALL_MATERIAL_BY_SUPPLIER_ID_IN_FORMULA}?supplierId=${supplierId}`;
-  return this.http.get<ApiResponse<any>>(url);
-}
-
+  GetAllMaterialBySupplierIdInFormula(
+    supplierId: string,
+  ): Observable<ApiResponse<any>> {
+    const url = `${API_ENDPOINTS.COMMON_API.GET_ALL_MATERIAL_BY_SUPPLIER_ID_IN_FORMULA}?supplierId=${supplierId}`;
+    return this.http.get<ApiResponse<any>>(url);
+  }
 }

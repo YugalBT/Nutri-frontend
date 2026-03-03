@@ -201,6 +201,10 @@ export const API_ENDPOINTS = {
   },
   DASHBOARD: {
     GET_DASHBOARD_DATA: '/Dashboard/DashboardData',
+    GET_COMPANY_DASHBOARD: '/Dashboard/CompanyDashboard',
+    GET_AGGREGATED_ANALYTICS: '/Dashboard/AggregatedAnalytics',
+    GET_AGGREGATED_ARCHIVE: '/Dashboard/AggregatedArchive',
+    GET_AGGREGATED_REPORT: '/Dashboard/AggregatedReport',
   },
 
   SUPPLIER: {
