@@ -98,7 +98,7 @@ export class DashboardComponent implements OnInit {
         this.companyDashboard = res?.isSuccess ? res.data : null;
         this.companyTrendChart = {
           tooltip: { trigger: 'axis' },
-          legend: { data: ['IOFC', 'D€A Milk', 'Cost'] },
+          legend: { data: ['IOFC', 'D&A Milk', 'Cost'] },
           xAxis: {
             type: 'category',
             data: this.companyDashboard?.kpiTrend?.map((x) => x.label) || [],
@@ -112,7 +112,7 @@ export class DashboardComponent implements OnInit {
               data: this.companyDashboard?.kpiTrend?.map((x) => x.iofc) || [],
             },
             {
-              name: 'D€A Milk',
+              name: 'D&A Milk',
               type: 'line',
               smooth: true,
               data: this.companyDashboard?.kpiTrend?.map((x) => x.deaMilk) || [],
@@ -141,12 +141,12 @@ export class DashboardComponent implements OnInit {
         const trend = this.aggregatedAnalytics?.monthlyTrend || [];
         this.adminTrendChart = {
           tooltip: { trigger: 'axis' },
-          legend: { data: ['IOFC', 'D€A Milk', 'Cost'] },
+          legend: { data: ['IOFC', 'D&A Milk', 'Cost'] },
           xAxis: { type: 'category', data: trend.map((t) => t.label) },
           yAxis: { type: 'value' },
           series: [
             { name: 'IOFC', type: 'line', smooth: true, data: trend.map((t) => t.iofc) },
-            { name: 'D€A Milk', type: 'line', smooth: true, data: trend.map((t) => t.deaMilk) },
+            { name: 'D&A Milk', type: 'line', smooth: true, data: trend.map((t) => t.deaMilk) },
             { name: 'Cost', type: 'line', smooth: true, data: trend.map((t) => t.cost) },
           ],
         };
@@ -154,7 +154,7 @@ export class DashboardComponent implements OnInit {
         const comparison = this.aggregatedAnalytics?.companyComparison || [];
         this.comparisonChart = {
           tooltip: { trigger: 'axis' },
-          legend: { data: ['IOFC', 'D€A Milk', 'Cost'] },
+          legend: { data: ['IOFC', 'D&A Milk', 'Cost'] },
           xAxis: {
             type: 'category',
             data: comparison.map((c) => c.companyName),
@@ -163,7 +163,7 @@ export class DashboardComponent implements OnInit {
           yAxis: { type: 'value' },
           series: [
             { name: 'IOFC', type: 'bar', data: comparison.map((c) => c.iofc) },
-            { name: 'D€A Milk', type: 'bar', data: comparison.map((c) => c.deaMilk) },
+            { name: 'D&A Milk', type: 'bar', data: comparison.map((c) => c.deaMilk) },
             { name: 'Cost', type: 'bar', data: comparison.map((c) => c.cost) },
           ],
         };

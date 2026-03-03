@@ -89,7 +89,7 @@ export class ReportsComponent implements OnInit {
       next: (res) => {
         const data = res?.isSuccess && Array.isArray(res.data) ? res.data : [];
         this.reports = data;
-        this.columns = ['Period', 'Reports', 'Animals', 'Avg Milk/Day', 'IOFC', 'D€A Milk', 'Cost'];
+        this.columns = ['Period', 'Reports', 'Animals', 'Avg Milk/Day', 'IOFC', 'D&A Milk', 'Cost'];
         this.columnFields = ['periodLabel', 'reports', 'animalCount', 'avgMilkPerDay', 'iofc', 'deaMilk', 'cost'];
 
         this.marginTrendChart = {
@@ -98,7 +98,7 @@ export class ReportsComponent implements OnInit {
           yAxis: { type: 'value' },
           series: [
             { name: 'IOFC', type: 'line', smooth: true, data: data.map((d) => d.iofc) },
-            { name: 'D€A Milk', type: 'line', smooth: true, data: data.map((d) => d.deaMilk) },
+            { name: 'D&A Milk', type: 'line', smooth: true, data: data.map((d) => d.deaMilk) },
             { name: 'Cost', type: 'line', smooth: true, data: data.map((d) => d.cost) },
           ],
         };
