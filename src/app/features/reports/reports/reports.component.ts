@@ -10,8 +10,9 @@ import { ReusableTableComponent } from '../../../shared/components/reusable-tabl
 import { User } from '../../../state/auth/auth.models';
 import { selectAuthUser } from '../../../state/auth/auth.selectors';
 import { CommonService } from '../../../shared/services/common.service';
-import { TechnicalReportService } from '../../../core/services/technical-report/technical-report.service';
 import { AggregatedArchiveItem, AggregatedReportItem } from '../../../core/models/dashboarddata';
+import { forkJoin } from 'rxjs';
+import { ToastService } from '../../../shared/services/toast.service';
 
 @Component({
   selector: 'app-reports',
@@ -39,6 +40,7 @@ export class ReportsComponent implements OnInit {
   columnFields: string[] = [];
   reports: any[] = [];
   archive: AggregatedArchiveItem[] = [];
+  editableArchive: Record<string, { rationName: string; animalCount: number; avgMilkPerDay: number }> = {};
 
   costIncomeChart: EChartsOption = {};
   marginTrendChart: EChartsOption = {};
@@ -46,7 +48,7 @@ export class ReportsComponent implements OnInit {
   constructor(
     private store: Store,
     private commonService: CommonService,
-    private technicalReportService: TechnicalReportService,
+    private toast: ToastService,
   ) {}
 
   ngOnInit(): void {
@@ -117,6 +119,7 @@ export class ReportsComponent implements OnInit {
         this.commonService.getAggregatedArchive(payload).subscribe({
           next: (archiveRes) => {
             this.archive = archiveRes?.isSuccess && Array.isArray(archiveRes.data) ? archiveRes.data : [];
+            this.editableArchive = {};
             this.isLoading = false;
           },
           error: () => {
@@ -132,45 +135,54 @@ export class ReportsComponent implements OnInit {
   }
 
   private loadCompanyReports(): void {
-    this.technicalReportService.getTechnicalReport().subscribe({
-      next: (res) => {
-        const details = res?.isSuccess && Array.isArray(res.data) ? res.data : [];
+    const payload = {
+      year: this.selectedYear,
+      period: this.selectedPeriod,
+      companyId: null,
+    };
 
-        this.columns = ['Ration', 'Group', 'Animals', 'Avg Milk/Day', 'Milk Price', 'IOFC'];
-        this.columnFields = ['rationName', 'animalGroup', 'animals', 'avgMilkPerDay', 'milkPrice', 'iofc'];
-
-        this.reports = details.map((x: any) => {
-          const iofc = (x.global || []).find((g: any) => (g.name || '').toUpperCase().includes('IOFC'))?.value || 0;
-          return {
-            rationName: x.rationName,
-            animalGroup: x.animalGroup?.name,
-            animals: x.animalGroup?.numberOfAnimals || 0,
-            avgMilkPerDay: x.animalGroup?.avgMilkPerDay || 0,
-            milkPrice: x.farm?.milkPrice || 0,
-            iofc,
-          };
-        });
-
-        this.costIncomeChart = {
-          tooltip: { trigger: 'axis' },
-          xAxis: { type: 'category', data: this.reports.map((r) => r.rationName) },
-          yAxis: { type: 'value' },
-          series: [
-            { name: 'Milk Price', type: 'bar', data: this.reports.map((r) => r.milkPrice) },
-            { name: 'IOFC', type: 'bar', data: this.reports.map((r) => r.iofc) },
-          ],
-        };
+    forkJoin([
+      this.commonService.getCompanyReport(payload),
+      this.commonService.getCompanyArchive(payload),
+    ]).subscribe({
+      next: ([reportRes, archiveRes]) => {
+        const data = reportRes?.isSuccess && Array.isArray(reportRes.data) ? reportRes.data : [];
+        this.reports = data;
+        this.columns = ['Period', 'Reports', 'Animals', 'Avg Milk/Day', 'IOFC', 'D&A Milk', 'Cost'];
+        this.columnFields = ['periodLabel', 'reports', 'animalCount', 'avgMilkPerDay', 'iofc', 'deaMilk', 'cost'];
 
         this.marginTrendChart = {
           tooltip: { trigger: 'axis' },
-          xAxis: { type: 'category', data: this.reports.map((r) => r.rationName) },
+          xAxis: { type: 'category', data: data.map((d) => d.periodLabel) },
           yAxis: { type: 'value' },
           series: [
-            { name: 'Avg Milk/Day', type: 'line', smooth: true, data: this.reports.map((r) => r.avgMilkPerDay) },
+            { name: 'IOFC', type: 'line', smooth: true, data: data.map((d) => d.iofc) },
+            { name: 'D&A Milk', type: 'line', smooth: true, data: data.map((d) => d.deaMilk) },
+            { name: 'Cost', type: 'line', smooth: true, data: data.map((d) => d.cost) },
           ],
         };
 
-        this.archive = [];
+        this.costIncomeChart = {
+          tooltip: { trigger: 'axis' },
+          legend: { data: ['Animals', 'Reports'] },
+          xAxis: { type: 'category', data: data.map((d) => d.periodLabel) },
+          yAxis: { type: 'value' },
+          series: [
+            { name: 'Animals', type: 'bar', data: data.map((d) => d.animalCount) },
+            { name: 'Reports', type: 'bar', data: data.map((d) => d.reports) },
+          ],
+        };
+
+        this.archive = archiveRes?.isSuccess && Array.isArray(archiveRes.data) ? archiveRes.data : [];
+        this.editableArchive = {};
+        this.archive.forEach((row) => {
+          this.editableArchive[row.reportDetailId] = {
+            rationName: row.rationName,
+            animalCount: row.animalCount,
+            avgMilkPerDay: row.avgMilkPerDay,
+          };
+        });
+
         this.isLoading = false;
       },
       error: () => {
@@ -180,13 +192,85 @@ export class ReportsComponent implements OnInit {
   }
 
   exportCurrentView(): void {
-    const blob = new Blob([JSON.stringify({ reports: this.reports, archive: this.archive }, null, 2)], {
-      type: 'application/json',
+    const payload = {
+      year: this.selectedYear,
+      period: this.selectedPeriod,
+      companyId: null,
+    };
+
+    if (this.isAdmin) {
+      this.commonService.exportAggregatedReportCsv(payload).subscribe({
+        next: (blob) => {
+          this.downloadBlob(blob, `aggregated-report-${this.selectedYear}-${this.selectedPeriod.toLowerCase()}.csv`);
+          this.toast.success('Aggregated CSV exported successfully.');
+        },
+        error: () => this.toast.error('Failed to export aggregated CSV.'),
+      });
+      return;
+    }
+
+    this.commonService.exportCompanyReportPdf(payload).subscribe({
+      next: (blob) => {
+        this.downloadBlob(blob, `company-report-${this.selectedYear}-${this.selectedPeriod.toLowerCase()}.pdf`);
+        this.toast.success('Company PDF exported successfully.');
+      },
+      error: () => this.toast.error('Failed to export company PDF.'),
     });
+  }
+
+  exportAdminPdf(): void {
+    if (!this.isAdmin) {
+      return;
+    }
+
+    const payload = {
+      year: this.selectedYear,
+      period: this.selectedPeriod,
+      companyId: null,
+    };
+
+    this.commonService.exportAggregatedReportPdf(payload).subscribe({
+      next: (blob) => {
+        this.downloadBlob(blob, `aggregated-report-${this.selectedYear}-${this.selectedPeriod.toLowerCase()}.pdf`);
+        this.toast.success('Aggregated PDF exported successfully.');
+      },
+      error: () => this.toast.error('Failed to export aggregated PDF.'),
+    });
+  }
+
+  saveArchiveRow(row: AggregatedArchiveItem): void {
+    const edit = this.editableArchive[row.reportDetailId];
+    if (!edit) {
+      return;
+    }
+
+    this.commonService
+      .updateCompanyArchive({
+        reportDetailId: row.reportDetailId,
+        rationName: edit.rationName,
+        animalCount: Number(edit.animalCount),
+        avgMilkPerDay: Number(edit.avgMilkPerDay),
+      })
+      .subscribe({
+        next: (res) => {
+          if (res?.isSuccess) {
+            row.rationName = edit.rationName;
+            row.animalCount = Number(edit.animalCount);
+            row.avgMilkPerDay = Number(edit.avgMilkPerDay);
+            this.toast.success('Archive record updated successfully.');
+          } else {
+            this.toast.error(res?.message || 'Failed to update archive record.');
+          }
+        },
+        error: () => this.toast.error('Failed to update archive record.'),
+      });
+  }
+
+  private downloadBlob(blob: Blob, fileName: string): void {
     const url = URL.createObjectURL(blob);
     const anchor = document.createElement('a');
     anchor.href = url;
-    anchor.download = `report-${this.selectedYear}-${this.selectedPeriod.toLowerCase()}.json`;
+    anchor.download = fileName;
     anchor.click();
     URL.revokeObjectURL(url);
   }

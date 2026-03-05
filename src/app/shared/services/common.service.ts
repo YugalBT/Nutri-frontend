@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { HttpService } from './http.service';
 import { ApiResponse } from '../../core/models/api-response';
@@ -30,13 +31,17 @@ import {
 } from '../../core/models/dashboarddata';
 import { MaterialList } from '../../core/models/material-list';
 import { SupplierList } from '../../core/models/supplier-list';
+import { environment } from '../../../environments/environment.development';
 
 @Injectable({
   providedIn: 'root',
 })
 export class CommonService {
+  private readonly baseUrl = environment.apiUrl;
+
   constructor(
     private http: HttpService,
+    private httpClient: HttpClient,
     private toast: ToastService,
     private translate: TranslateService,
   ) {}
@@ -120,6 +125,11 @@ export class CommonService {
     );
   }
 
+  getAllCompany():Observable<ApiResponse<any>>{
+    return this.http.get<ApiResponse<any>>(
+      API_ENDPOINTS.COMMON_API.GET_ALL_TENANT
+    )
+  }
   getAnimalGroupByFarmID(
     FarmId: string,
   ): Observable<ApiResponse<AnimalGroupList[]>> {
@@ -202,6 +212,76 @@ export class CommonService {
     return this.http.post<AggregatedReportItem[]>(
       API_ENDPOINTS.DASHBOARD.GET_AGGREGATED_REPORT,
       payload,
+    );
+  }
+
+  getCompanyArchive(payload: {
+    year: number;
+    period: string;
+    companyId?: string | null;
+  }): Observable<ApiResponse<AggregatedArchiveItem[]>> {
+    return this.http.post<AggregatedArchiveItem[]>(
+      API_ENDPOINTS.DASHBOARD.GET_COMPANY_ARCHIVE,
+      payload,
+    );
+  }
+
+  getCompanyReport(payload: {
+    year: number;
+    period: string;
+    companyId?: string | null;
+  }): Observable<ApiResponse<AggregatedReportItem[]>> {
+    return this.http.post<AggregatedReportItem[]>(
+      API_ENDPOINTS.DASHBOARD.GET_COMPANY_REPORT,
+      payload,
+    );
+  }
+
+  updateCompanyArchive(payload: {
+    reportDetailId: string;
+    rationName?: string;
+    animalCount?: number;
+    avgMilkPerDay?: number;
+  }): Observable<ApiResponse<string>> {
+    return this.http.post<string>(
+      API_ENDPOINTS.DASHBOARD.UPDATE_COMPANY_ARCHIVE,
+      payload,
+    );
+  }
+
+  exportCompanyReportPdf(payload: {
+    year: number;
+    period: string;
+    companyId?: string | null;
+  }): Observable<Blob> {
+    return this.httpClient.post(
+      `${this.baseUrl}${API_ENDPOINTS.DASHBOARD.EXPORT_COMPANY_REPORT_PDF}`,
+      payload,
+      { responseType: 'blob' },
+    );
+  }
+
+  exportAggregatedReportPdf(payload: {
+    year: number;
+    period: string;
+    companyId?: string | null;
+  }): Observable<Blob> {
+    return this.httpClient.post(
+      `${this.baseUrl}${API_ENDPOINTS.DASHBOARD.EXPORT_AGGREGATED_REPORT_PDF}`,
+      payload,
+      { responseType: 'blob' },
+    );
+  }
+
+  exportAggregatedReportCsv(payload: {
+    year: number;
+    period: string;
+    companyId?: string | null;
+  }): Observable<Blob> {
+    return this.httpClient.post(
+      `${this.baseUrl}${API_ENDPOINTS.DASHBOARD.EXPORT_AGGREGATED_REPORT_CSV}`,
+      payload,
+      { responseType: 'blob' },
     );
   }
 

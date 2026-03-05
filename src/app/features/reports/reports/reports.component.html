@@ -14,6 +14,7 @@
       </select>
 
       <button class="btn add-btn" (click)="exportCurrentView()">Export Report</button>
+      <button *ngIf="isAdmin" class="btn add-btn" (click)="exportAdminPdf()">Export PDF</button>
     </div>
   </div>
 
@@ -50,8 +51,8 @@
       </div>
     </div>
 
-    <div class="card mt-3" *ngIf="isAdmin && archive.length">
-      <div class="card-header">Aggregated Archive</div>
+    <div class="card mt-3" *ngIf="archive.length">
+      <div class="card-header">{{ isAdmin ? 'Aggregated Archive' : 'Company Archive' }}</div>
       <div class="card-body p-0">
         <table class="table mb-0">
           <thead>
@@ -61,15 +62,28 @@
               <th>Ration</th>
               <th>Animals</th>
               <th>Avg Milk/Day</th>
+              <th *ngIf="!isAdmin">Actions</th>
             </tr>
           </thead>
           <tbody>
             <tr *ngFor="let row of archive">
               <td>{{ row.createdAt | date: 'shortDate' }}</td>
               <td>{{ row.companyName }}</td>
-              <td>{{ row.rationName }}</td>
-              <td>{{ row.animalCount }}</td>
-              <td>{{ row.avgMilkPerDay | number: '1.2-2' }}</td>
+              <td>
+                <span *ngIf="isAdmin">{{ row.rationName }}</span>
+                <input *ngIf="!isAdmin" class="form-control form-control-sm" [(ngModel)]="editableArchive[row.reportDetailId].rationName" />
+              </td>
+              <td>
+                <span *ngIf="isAdmin">{{ row.animalCount }}</span>
+                <input *ngIf="!isAdmin" class="form-control form-control-sm" type="number" [(ngModel)]="editableArchive[row.reportDetailId].animalCount" />
+              </td>
+              <td>
+                <span *ngIf="isAdmin">{{ row.avgMilkPerDay | number: '1.2-2' }}</span>
+                <input *ngIf="!isAdmin" class="form-control form-control-sm" type="number" step="0.01" [(ngModel)]="editableArchive[row.reportDetailId].avgMilkPerDay" />
+              </td>
+              <td *ngIf="!isAdmin">
+                <button class="btn btn-sm add-btn" (click)="saveArchiveRow(row)">Save</button>
+              </td>
             </tr>
           </tbody>
         </table>

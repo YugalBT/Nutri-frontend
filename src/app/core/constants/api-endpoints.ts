@@ -28,6 +28,7 @@ export const API_ENDPOINTS = {
   },
 
   COMMON_API: {
+    GET_ALL_TENANT : '/Common/GetAllTenant',
     GET_ALL_ROLES: '/Common/GetAllRoles',
     GET_ALL_NOTIFICATION: '/Common/GetAllNotification',
     GET_ALL_FARMS: '/Common/GetAllFarm',
@@ -205,6 +206,12 @@ export const API_ENDPOINTS = {
     GET_AGGREGATED_ANALYTICS: '/Dashboard/AggregatedAnalytics',
     GET_AGGREGATED_ARCHIVE: '/Dashboard/AggregatedArchive',
     GET_AGGREGATED_REPORT: '/Dashboard/AggregatedReport',
+    GET_COMPANY_ARCHIVE: '/Dashboard/CompanyArchive',
+    GET_COMPANY_REPORT: '/Dashboard/CompanyReport',
+    EXPORT_COMPANY_REPORT_PDF: '/Dashboard/CompanyReportExportPdf',
+    EXPORT_AGGREGATED_REPORT_PDF: '/Dashboard/AggregatedReportExportPdf',
+    EXPORT_AGGREGATED_REPORT_CSV: '/Dashboard/AggregatedReportExportCsv',
+    UPDATE_COMPANY_ARCHIVE: '/Dashboard/CompanyArchiveUpdate',
   },
 
   SUPPLIER: {

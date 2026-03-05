@@ -9,7 +9,6 @@ import { SharedModule } from '../../../shared/shared.module';
 import { User } from '../../../state/auth/auth.models';
 import { selectAuthUser } from '../../../state/auth/auth.selectors';
 import { CommonService } from '../../../shared/services/common.service';
-import { TechnicalReportService } from '../../../core/services/technical-report/technical-report.service';
 import { AggregatedReportItem } from '../../../core/models/dashboarddata';
 
 @Component({
@@ -41,7 +40,6 @@ export class EconomicReportListComponent implements OnInit {
   constructor(
     private store: Store,
     private commonService: CommonService,
-    private technicalReportService: TechnicalReportService,
   ) {}
 
   ngOnInit(): void {
@@ -65,44 +63,22 @@ export class EconomicReportListComponent implements OnInit {
     }
 
     this.isLoading = true;
-    if (this.isAdmin) {
-      this.commonService
-        .getAggregatedReport({
+    const request$ = this.isAdmin
+      ? this.commonService.getAggregatedReport({
           year: this.selectedYear,
           period: this.selectedPeriod,
           companyId: null,
         })
-        .subscribe({
-          next: (res) => {
-            const rows = res?.isSuccess && Array.isArray(res.data) ? res.data : [];
-            this.applyFromAggregated(rows);
-            this.isLoading = false;
-          },
-          error: () => {
-            this.isLoading = false;
-          },
+      : this.commonService.getCompanyReport({
+          year: this.selectedYear,
+          period: this.selectedPeriod,
+          companyId: null,
         });
-      return;
-    }
 
-    this.technicalReportService.getTechnicalReport().subscribe({
+    request$.subscribe({
       next: (res) => {
-        const rows = res?.isSuccess && Array.isArray(res.data) ? res.data : [];
-        const mockAggregated: AggregatedReportItem[] = rows.map((x: any, idx: number) => {
-          const iofc = (x.global || []).find((g: any) => (g.name || '').toUpperCase().includes('IOFC'))?.value || 0;
-          const cost = (x.global || []).find((g: any) => (g.name || '').toUpperCase().includes('COST'))?.value || 0;
-          const dea = (x.global || []).find((g: any) => (g.name || '').toUpperCase().includes('DEA'))?.value || 0;
-          return {
-            periodLabel: `R${idx + 1}`,
-            reports: 1,
-            animalCount: x.animalGroup?.numberOfAnimals || 0,
-            avgMilkPerDay: x.animalGroup?.avgMilkPerDay || 0,
-            iofc,
-            deaMilk: dea,
-            cost,
-          };
-        });
-        this.applyFromAggregated(mockAggregated);
+        const rows = res?.isSuccess && Array.isArray(res.data) ? (res.data as AggregatedReportItem[]) : [];
+        this.applyFromAggregated(rows);
         this.isLoading = false;
       },
       error: () => {

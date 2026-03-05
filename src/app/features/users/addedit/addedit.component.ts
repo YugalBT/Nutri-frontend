@@ -164,9 +164,9 @@ closeOnOutsideClick(event: MouseEvent) {
   /* ---------------- COMPANIES ---------------- */
 
   loadCompanies(): void {
-    const payload = { pageNumber: 1, pageSize: 100, searchText: '' };
+    //const payload = { pageNumber: 1, pageSize: 100, searchText: '' };
 
-    const sub = this.companiesService.getAllCompaniesPaginated(payload)
+    const sub = this.commonService.getAllCompany()
       .subscribe(res => {
         this.companies = res?.data || [];
         this.filteredCompanies = [...this.companies];
