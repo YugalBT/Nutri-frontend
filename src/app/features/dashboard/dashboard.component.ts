@@ -19,7 +19,14 @@ import { ApiResponse } from '../../core/models/api-response';
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule, FormsModule, NgxEchartsModule, TranslatePipe, DatePipe, DecimalPipe],
+  imports: [
+    CommonModule,
+    FormsModule,
+    NgxEchartsModule,
+    TranslatePipe,
+    DatePipe,
+    DecimalPipe,
+  ],
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.css'],
 })
@@ -42,11 +49,19 @@ export class DashboardComponent implements OnInit {
   aggregatedAnalytics: AggregatedAnalyticsData | null = null;
 
   selectedYear = new Date().getFullYear();
-  yearOptions = Array.from({ length: 7 }, (_, i) => new Date().getFullYear() - i);
+  yearOptions = Array.from(
+    { length: 7 },
+    (_, i) => new Date().getFullYear() - i,
+  );
 
   companyTrendChart: EChartsOption = {};
   adminTrendChart: EChartsOption = {};
   comparisonChart: EChartsOption = {};
+
+  deaGauge!: EChartsOption;
+  milkGauge!: EChartsOption;
+  feedGauge!: EChartsOption;
+  crepGauge!: EChartsOption;
 
   constructor(
     private store: Store,
@@ -62,8 +77,13 @@ export class DashboardComponent implements OnInit {
     });
   }
 
+  // get isAdmin(): boolean {
+  //   return (this.user?.roleType || '').toUpperCase() === 'ADMIN';
+  // }
+
   get isAdmin(): boolean {
-    return (this.user?.roleType || '').toUpperCase() === 'ADMIN';
+    const role = (this.user?.roleType || '').toUpperCase();
+    return role === 'ADMIN' && this.user?.isSuperAdmin === true;
   }
 
   onYearChange(year: number): void {
@@ -96,6 +116,42 @@ export class DashboardComponent implements OnInit {
     this.commonService.getCompanyDashboardData(this.selectedYear).subscribe({
       next: (res) => {
         this.companyDashboard = res?.isSuccess ? res.data : null;
+        if (this.companyDashboard) {
+
+  const d = this.companyDashboard;
+
+  this.deaGauge = this.createGauge(
+    'DEA',
+    d.deaMilk ?? 0,
+    0.9,
+    1.5
+  );
+
+  this.milkGauge = this.createGauge(
+    'Average milk/day',
+    d.avgMilkPerDay ?? 0,
+    30,
+    55
+  );
+
+  this.feedGauge = this.createGauge(
+    'Feed Efficiency',
+    d.feedEfficiency ?? 0,
+    1,
+    2.4
+  );
+
+  this.crepGauge = this.createGauge(
+    'CREP',
+    d.crep ?? 0,
+    2,
+    5
+  );
+
+}
+
+
+
         this.companyTrendChart = {
           tooltip: { trigger: 'axis' },
           legend: { data: ['IOFC', 'D&A Milk', 'Cost'] },
@@ -115,7 +171,8 @@ export class DashboardComponent implements OnInit {
               name: 'D&A Milk',
               type: 'line',
               smooth: true,
-              data: this.companyDashboard?.kpiTrend?.map((x) => x.deaMilk) || [],
+              data:
+                this.companyDashboard?.kpiTrend?.map((x) => x.deaMilk) || [],
             },
             {
               name: 'Cost',
@@ -133,6 +190,65 @@ export class DashboardComponent implements OnInit {
     });
   }
 
+  createGauge(title: string, value: number, min: number, max: number): EChartsOption {
+  return {
+    title: {
+      text: title,
+      left: 'center',
+      top: 0,
+      textStyle: {
+        fontSize: 14,
+        fontWeight: 'bold'
+      }
+    },
+    series: [
+      {
+        type: 'gauge',
+         radius: '90%',
+        center: ['50%', '60%'],
+        min: min,
+        max: max,
+        axisLine: {
+          lineStyle: {
+            width: 20,
+            color: [
+              [0.3, '#ff4d4f'],
+              [0.6, '#fadb14'],
+              [1, '#52c41a']
+            ]
+          }
+        },
+        pointer: {
+          width: 4,
+          length: '70%'
+        },
+        progress: {
+          show: true,
+          width: 20
+        },
+        detail: {
+          fontSize: 20,
+          formatter: '{value}',
+          offsetCenter: [0, '70%']
+        },
+        data: [{ value }]
+      }
+    ]
+  };
+}
+
+getCowPosition(value: number): number {
+
+  const min = 0.9;
+  const max = 1.5;
+
+  if (!value) return 0;
+
+  const percentage = ((value - min) / (max - min)) * 100;
+
+  return Math.max(0, Math.min(100, percentage));
+}
+
   private loadAdminAnalytics(): void {
     this.commonService.getAggregatedAnalytics(this.selectedYear).subscribe({
       next: (res) => {
@@ -145,9 +261,24 @@ export class DashboardComponent implements OnInit {
           xAxis: { type: 'category', data: trend.map((t) => t.label) },
           yAxis: { type: 'value' },
           series: [
-            { name: 'IOFC', type: 'line', smooth: true, data: trend.map((t) => t.iofc) },
-            { name: 'D&A Milk', type: 'line', smooth: true, data: trend.map((t) => t.deaMilk) },
-            { name: 'Cost', type: 'line', smooth: true, data: trend.map((t) => t.cost) },
+            {
+              name: 'IOFC',
+              type: 'line',
+              smooth: true,
+              data: trend.map((t) => t.iofc),
+            },
+            {
+              name: 'D&A Milk',
+              type: 'line',
+              smooth: true,
+              data: trend.map((t) => t.deaMilk),
+            },
+            {
+              name: 'Cost',
+              type: 'line',
+              smooth: true,
+              data: trend.map((t) => t.cost),
+            },
           ],
         };
 
@@ -163,7 +294,11 @@ export class DashboardComponent implements OnInit {
           yAxis: { type: 'value' },
           series: [
             { name: 'IOFC', type: 'bar', data: comparison.map((c) => c.iofc) },
-            { name: 'D&A Milk', type: 'bar', data: comparison.map((c) => c.deaMilk) },
+            {
+              name: 'D&A Milk',
+              type: 'bar',
+              data: comparison.map((c) => c.deaMilk),
+            },
             { name: 'Cost', type: 'bar', data: comparison.map((c) => c.cost) },
           ],
         };

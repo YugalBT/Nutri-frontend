@@ -19,6 +19,65 @@
 .overview-card h5 {
   margin: 6px 0 0;
 }
+/* ===== Gauge Dashboard Section ===== */
+
+.dashboard-gauges {
+  margin-top: 20px;
+}
+
+.gauge-card {
+  background: #ffffff;
+  border-radius: 10px;
+  padding: 15px;
+  text-align: center;
+  height: 240px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+}
+
+.gauge-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: #374151;
+  margin-bottom: 8px;
+}
+
+.gauge-box {
+  width: 100%;
+  height: 200px;
+}
+
+/* spacing between gauges */
+.dashboard-gauges .col-md-3 {
+  margin-bottom: 15px;
+}
+
+/* responsive for tablets */
+@media (max-width: 992px) {
+
+  .gauge-card {
+    height: 220px;
+  }
+
+  .gauge-box {
+    height: 180px;
+  }
+
+}
+
+/* responsive for mobile */
+
+@media (max-width: 576px) {
+
+  .gauge-card {
+    height: auto;
+    padding: 10px;
+  }
+
+  .gauge-box {
+    height: 160px;
+  }
+
+}
 
 @media (max-width: 992px) {
   .chart-box {
@@ -30,4 +89,42 @@
   .chart-box {
     height: 240px;
   }
+}
+
+
+
+.performance-bar{
+height:18px;
+border-radius:10px;
+background:linear-gradient(
+to right,
+red,
+orange,
+yellow,
+green,
+yellow,
+orange,
+red
+);
+position:relative;
+}
+
+.performance-scale{
+display:flex;
+justify-content:space-between;
+font-size:12px;
+margin-bottom:5px;
+}
+
+.cow-indicator{
+position:absolute;
+top:-20px;
+left:55%;
+font-size:22px;
+}
+
+.dea-value{
+text-align:center;
+margin-top:10px;
+font-weight:600;
 }

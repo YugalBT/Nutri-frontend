@@ -27,6 +27,8 @@ export interface CompanyDashboardData {
   herdSize: number;
   avgMilkPerDay: number;
   kpiTrend: KpiTrendPoint[];
+  feedEfficiency?: number;
+  crep?: number;
 }
 
 export interface CompanyComparisonData {

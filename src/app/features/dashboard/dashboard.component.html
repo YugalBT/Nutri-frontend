@@ -44,6 +44,64 @@
         </div>
       </div>
     </div>
+    <div class="row dashboard-gauges">
+
+  <div class="col-md-3">
+    <div class="gauge-card">
+      <div echarts [options]="deaGauge" class="gauge-box"></div>
+    </div>
+  </div>
+
+  <div class="col-md-3">
+    <div class="gauge-card">
+      <div echarts [options]="milkGauge" class="gauge-box"></div>
+    </div>
+  </div>
+
+  <div class="col-md-3">
+    <div class="gauge-card">
+      <div echarts [options]="feedGauge" class="gauge-box"></div>
+    </div>
+  </div>
+
+  <div class="col-md-3">
+    <div class="gauge-card">
+      
+      <div echarts [options]="crepGauge" class="gauge-box"></div>
+    </div>
+  </div>
+
+</div>
+<div class="row mt-3">
+
+  <div class="col-12">
+      <div class="dea-performance-bar">
+
+          <div class="performance-scale">
+              <span>0.90</span>
+              <span>1.00</span>
+              <span>1.10</span>
+              <span>1.20</span>
+              <span>1.30</span>
+              <span>1.40</span>
+              <span>1.50</span>
+          </div>
+
+          <div class="performance-bar">
+<div class="cow-indicator"
+     [style.left.%]="getCowPosition(companyDashboard?.deaMilk ??0)">
+🐄
+</div>
+          </div>
+
+          <div class="dea-value">
+              {{ companyDashboard?.deaMilk }}
+          </div>
+
+      </div>
+  </div>
+
+</div>
 
     <div class="row g-3 mt-1">
       <div class="col-md-4">
