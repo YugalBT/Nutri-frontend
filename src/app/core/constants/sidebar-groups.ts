@@ -63,8 +63,8 @@ export const SIDEBAR_GROUPS = [
   items: [
     'Suppliers',
     'Materials',
-    'Supplier Price',
-    'Pricing Formula',
+    'SupplierPrice',
+    'PricingFormula',
     // 'Supplier Contracts'
   ]
 },
