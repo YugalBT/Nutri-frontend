@@ -1,0 +1,55 @@
+<div class="pagecls">
+
+  <div class="page-header">
+    <div>
+      <h3 class="page-title">
+        {{ 'calfBarn.heading' | translate }}
+      </h3>
+    </div>
+
+    <button class="btn add-btn" (click)="calfBarnModal.openModal()">
+      <i class="bi bi-plus-lg me-2"></i>
+      {{ 'calfBarn.addCalfBarn' | translate }}
+    </button>
+  </div>
+
+
+  <!-- Filters -->
+
+  <div class="filters-card">
+
+    <app-global-search
+      [placeholder]="'calfBarn.searchPlaceholder' | translate"
+      [showStatus]="true"
+      (search)="onSearch($event)"
+      (statusChange)="onStatusChange($event)"
+      (clear)="clearFilters()">
+    </app-global-search>
+
+  </div>
+
+
+  <!-- Table -->
+
+  <div class="table-card">
+
+    <app-reusable-table
+      [columns]="columns"
+      [columnFields]="columnFields"
+      [data]="calfBarn"
+      [showActions]="true"
+      [pageable]="true"
+      [totalRecords]="totalRecords"
+      [pageSize]="pageSize"
+      [pageIndex]="pageIndex"
+      (pageChange)="onPageChange($event)"
+      (toggleActive)="onToggleActive($event)"
+      (deleteRow)="onDelete($event)"
+      (editRow)="calfBarnModal.openModal(true, $event)">
+    </app-reusable-table>
+
+  </div>
+
+  <app-calf-barn-add-edit #calfBarnModal></app-calf-barn-add-edit>
+
+</div>

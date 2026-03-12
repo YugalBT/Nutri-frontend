@@ -449,6 +449,16 @@ export const routes: Routes = [
           ),
       },
 
+       {
+        path: 'calfbarn',
+        // canActivate: [permissionGuard],
+        // data: { requiredPermissions: [PERMISSIONS.SupplierPriceAdd, PERMISSIONS.SupplierPriceEdit, PERMISSIONS.SupplierPriceView, PERMISSIONS.SupplierPriceDelete] },
+        loadComponent: () =>
+          import('./features/calfbarn/calfbarn-list/calfbarn-list.component').then(
+            (m) => m.CalfbarnListComponent,
+          ),
+      },
+
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
     ],
   },

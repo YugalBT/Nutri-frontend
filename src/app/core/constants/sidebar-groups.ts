@@ -6,13 +6,13 @@ export const SIDEBAR_GROUPS = [
     key: 'access',
     title: 'sidebarmenu.access',
     icon: SIDEBAR_ICONS.ACCESS,
-    items: ['Users', 'Roles', 'Companies']
+    items: ['Users', 'Roles',]
   },
   {
     key: 'farm',
-    title: 'sidebarmenu.farm',
+    title: 'sidebarmenu.feeding',
     icon: SIDEBAR_ICONS.FARM,
-    items: ['Farm', 'Feed', 'Animal Type', 'Animal Lactation Stage']
+    items: ['Farm', 'Feed', 'Ration','CalfBarn',,'Animal Group','Animal Type', 'Animal Lactation Stage']
   },
   // {
   //   key: 'nutrition',
@@ -63,8 +63,8 @@ export const SIDEBAR_GROUPS = [
   items: [
     'Suppliers',
     'Materials',
-    'SupplierPrice',
-    'PricingFormula',
+    'Supplier Price',
+    'Pricing Formula',
     // 'Supplier Contracts'
   ]
 },

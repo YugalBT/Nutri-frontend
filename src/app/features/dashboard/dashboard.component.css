@@ -119,12 +119,137 @@ margin-bottom:5px;
 .cow-indicator{
 position:absolute;
 top:-20px;
-left:55%;
+transform: translateX(-50%);
 font-size:22px;
+transition:left .3s ease;
 }
 
 .dea-value{
 text-align:center;
 margin-top:10px;
 font-weight:600;
+}
+
+/* card css */
+
+.dashboard-card{
+  background:#fff;
+  padding:18px;
+  border-radius:10px;
+  box-shadow:0 2px 6px rgba(0,0,0,0.06);
+  height:100%;
+}
+
+.card-top{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:10px;
+}
+
+.dashboard-card span{
+  font-size:14px;
+  color:#6b7280;
+}
+
+.dashboard-card h3{
+  font-size:26px;
+  font-weight:600;
+  margin:0;
+}
+
+.icon-box{
+  width:40px;
+  height:40px;
+  border-radius:10px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+/* colors */
+
+.icon-box.blue{
+  background:#dbeafe;
+  color:#2563eb;
+}
+
+.icon-box.green{
+  background:#dcfce7;
+  color:#16a34a;
+}
+
+.icon-box.orange{
+  background:#fef3c7;
+  color:#d97706;
+}
+
+.icon-box.purple{
+  background:#ede9fe;
+  color:#7c3aed;
+}
+
+/* Company Level Dashboard Data */
+
+.dashboard-title{
+  font-weight:600;
+}
+
+.year-select{
+  width:120px;
+}
+
+.dashboard-card{
+  background:#fff;
+  padding:18px;
+  border-radius:10px;
+  box-shadow:0 2px 6px rgba(0,0,0,0.06);
+  height:100%;
+}
+
+.card-top{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:10px;
+}
+
+.dashboard-card span{
+  font-size:14px;
+  color:#6b7280;
+}
+
+.dashboard-card h3{
+  font-size:26px;
+  font-weight:600;
+  margin:0;
+}
+
+.icon-box{
+  width:40px;
+  height:40px;
+  border-radius:10px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+.icon-box.blue{
+  background:#dbeafe;
+  color:#2563eb;
+}
+
+.icon-box.orange{
+  background:#fef3c7;
+  color:#d97706;
+}
+
+.icon-box.green{
+  background:#dcfce7;
+  color:#16a34a;
+}
+
+.icon-box.purple{
+  background:#ede9fe;
+  color:#7c3aed;
 }

@@ -204,10 +204,12 @@ export class DashboardComponent implements OnInit {
     series: [
       {
         type: 'gauge',
-         radius: '90%',
+        radius: '90%',
         center: ['50%', '60%'],
+
         min: min,
         max: max,
+
         axisLine: {
           lineStyle: {
             width: 20,
@@ -218,35 +220,46 @@ export class DashboardComponent implements OnInit {
             ]
           }
         },
+
+        /* REMOVE INNER SCALE */
+        // axisTick: { show: false },
+        // splitLine: { show: false },
+        //axisLabel: { show: false },
+
         pointer: {
           width: 4,
           length: '70%'
         },
+
         progress: {
           show: true,
           width: 20
         },
+
         detail: {
           fontSize: 20,
           formatter: '{value}',
           offsetCenter: [0, '70%']
         },
+
         data: [{ value }]
       }
     ]
   };
 }
 
-getCowPosition(value: number): number {
+getCowPosition(value: number | null | undefined): number {
 
   const min = 0.9;
   const max = 1.5;
 
-  if (!value) return 0;
+  if (value === null || value === undefined) return 0;
 
-  const percentage = ((value - min) / (max - min)) * 100;
+  const clamped = Math.max(min, Math.min(max, value));
 
-  return Math.max(0, Math.min(100, percentage));
+  const percentage = ((clamped - min) / (max - min)) * 100;
+
+  return percentage;
 }
 
   private loadAdminAnalytics(): void {

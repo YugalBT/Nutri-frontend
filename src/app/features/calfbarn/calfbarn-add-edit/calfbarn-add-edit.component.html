@@ -1,0 +1,236 @@
+<div #calfBarnModal class="modal fade">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content">
+      <!-- Header -->
+
+      <div class="modal-header">
+        <h5 class="modal-title">
+          {{
+            isEdit
+              ? ("calfBarn.editCalfBarn" | translate)
+              : ("calfBarn.addCalfBarn" | translate)
+          }}
+        </h5>
+
+        <button type="button" class="btn-close" (click)="closeModal()"></button>
+      </div>
+
+      <!-- Body -->
+
+      <div class="modal-body">
+        <form [formGroup]="form">
+          <div class="row g-3">
+            <!-- Farm -->
+
+            <div class="col-md-6">
+              <label class="form-label">
+                {{ "calfBarn.farm" | translate }}
+                <sup class="text-danger">*</sup>
+              </label>
+
+              <select
+                class="form-select"
+                formControlName="farmId"
+                [class.is-invalid]="
+                  form.get('farmId')?.touched && form.get('farmId')?.invalid
+                "
+              >
+                <option [ngValue]="null" disabled selected>
+                  {{ "farm.selectFarm" | translate }}
+                </option>
+
+                <option *ngFor="let f of farms" [value]="f.farmId">
+                  {{ f.farmName }}
+                </option>
+              </select>
+
+              <div
+                class="invalid-feedback"
+                *ngIf="
+                  form.get('farmId')?.touched && form.get('farmId')?.errors
+                "
+              >
+                {{ "validation.required" | translate }}
+              </div>
+            </div>
+
+            <!-- Animal Group -->
+
+            <div class="col-md-6">
+              <label class="form-label">
+                {{ "calfBarn.animalGroup" | translate }}
+                <sup class="text-danger">*</sup>
+              </label>
+
+              <select
+                class="form-select"
+                formControlName="animalGroupId"
+                [class.is-invalid]="
+                  form.get('animalGroupId')?.touched &&
+                  form.get('animalGroupId')?.invalid
+                "
+              >
+                <option [ngValue]="null" disabled selected>
+                  {{ "ration.selectAnimalGroup" | translate }}
+                </option>
+
+                <option
+                  *ngFor="let a of animalGroups"
+                  [value]="a.animalGroupId"
+                >
+                  {{ a.animalGroupNameEn }}
+                </option>
+              </select>
+
+              <div
+                class="invalid-feedback"
+                *ngIf="
+                  form.get('animalGroupId')?.touched &&
+                  form.get('animalGroupId')?.errors
+                "
+              >
+                {{ "validation.required" | translate }}
+              </div>
+            </div>
+
+            <!-- Calf Age -->
+
+            <div class="col-md-4">
+              <label class="form-label">
+                {{ "calfBarn.calfAgeDays" | translate }}
+              </label>
+
+              <input
+                type="number"
+                class="form-control"
+                formControlName="calfAgeDays"
+                [placeholder]="'calfBarn.placeholder.calfAgeDays' | translate"
+                [class.is-invalid]="
+                  form.get('calfAgeDays')?.touched &&
+                  form.get('calfAgeDays')?.invalid
+                "
+              />
+
+              <div
+                class="invalid-feedback"
+                *ngIf="
+                  form.get('calfAgeDays')?.touched &&
+                  form.get('calfAgeDays')?.errors
+                "
+              >
+                <span *ngIf="form.get('calfAgeDays')?.errors?.['required']">
+                  {{ "validation.required" | translate }}
+                </span>
+              </div>
+            </div>
+
+            <!-- Milk Feed -->
+
+            <div class="col-md-4">
+              <label class="form-label">
+                {{ "calfBarn.milkFeed" | translate }}
+              </label>
+
+              <input
+                type="number"
+                class="form-control"
+                formControlName="milkFeed"
+                [placeholder]="'calfBarn.placeholder.milkFeed' | translate"
+                [class.is-invalid]="
+                  form.get('milkFeed')?.touched && form.get('milkFeed')?.invalid
+                "
+              />
+
+              <div
+                class="invalid-feedback"
+                *ngIf="
+                  form.get('milkFeed')?.touched && form.get('milkFeed')?.errors
+                "
+              >
+                <span *ngIf="form.get('milkFeed')?.errors?.['required']">
+                  {{ "validation.required" | translate }}
+                </span>
+              </div>
+            </div>
+
+            <!-- Fiber -->
+
+            <div class="col-md-4">
+              <label class="form-label">
+                {{ "calfBarn.fiber" | translate }}
+              </label>
+
+              <input
+                type="number"
+                class="form-control"
+                formControlName="fiber"
+                [placeholder]="'calfBarn.placeholder.fiber' | translate"
+                [class.is-invalid]="
+                  form.get('fiber')?.touched && form.get('fiber')?.invalid
+                "
+              />
+
+              <div
+                class="invalid-feedback"
+                *ngIf="form.get('fiber')?.touched && form.get('fiber')?.errors"
+              >
+                <span *ngIf="form.get('fiber')?.errors?.['required']">
+                  {{ "validation.required" | translate }}
+                </span>
+              </div>
+            </div>
+
+            <!-- Starter Feed -->
+
+            <div class="col-md-6">
+              <label class="form-label">
+                {{ "calfBarn.starterFeed" | translate }}
+              </label>
+
+              <select
+                class="form-select"
+                formControlName="feedId"
+                [class.is-invalid]="
+                  form.get('feedId')?.touched &&
+                  form.get('feedId')?.invalid
+                "
+              >
+                <option [ngValue]="null" disabled selected>
+                  {{ "ration.selectFeed" | translate }}
+                </option>
+
+                <option *ngFor="let s of starterFeeds" [value]="s.feedId">
+                  {{ s.feedName }}
+                </option>
+              </select>
+
+              <div
+                class="invalid-feedback"
+                *ngIf="
+                  form.get('feedId')?.touched &&
+                  form.get('feedId')?.errors
+                "
+              >
+                {{ "validation.required" | translate }}
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+
+      <!-- Footer -->
+
+      <div class="modal-footer">
+        <button class="btn btn-outline-secondary" (click)="closeModal()">
+          {{ "common.cancel" | translate }}
+        </button>
+
+        <button class="btn add-btn" (click)="saveCalfBarn()">
+          {{
+            isEdit ? ("common.update" | translate) : ("common.save" | translate)
+          }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

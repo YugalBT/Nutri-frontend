@@ -1,16 +1,26 @@
 <div class="body-content">
   <div class="welcome-dashboard" *ngIf="user as u">
     <h3 class="mb-2">
-      <b>{{ 'dashboard.welcome' | translate }} <span class="link-text">{{ u.companyName }}</span></b>
+      <b
+        >{{ "dashboard.welcome" | translate }}
+        <span class="link-text">{{ u.companyName }}</span></b
+      >
     </h3>
   </div>
 
   <div class="d-flex align-items-center justify-content-between py-3">
-    <h2 class="mb-0">Dashboard</h2>
+    <h4 class="border-start border-4 ps-3">Dashboard</h4>
     <div class="d-flex align-items-center gap-2">
       <label class="mb-0">Year</label>
-      <select class="form-select" style="width: 120px" [ngModel]="selectedYear" (ngModelChange)="onYearChange($event)">
-        <option *ngFor="let year of yearOptions" [value]="year">{{ year }}</option>
+      <select
+        class="form-select"
+        style="width: 120px"
+        [ngModel]="selectedYear"
+        (ngModelChange)="onYearChange($event)"
+      >
+        <option *ngFor="let year of yearOptions" [value]="year">
+          {{ year }}
+        </option>
       </select>
     </div>
   </div>
@@ -19,109 +29,260 @@
 
   <ng-container *ngIf="!isLoading && !isAdmin">
     <div class="row g-3">
+      <!-- Last Entry -->
       <div class="col-md-3">
-        <div class="overview-card active">
-          <span>Last Entry</span>
-          <h4>{{ companyDashboard?.lastEntryDate ? (companyDashboard?.lastEntryDate | date: 'mediumDate') : '-' }}</h4>
+        <div class="dashboard-card">
+          <div class="card-top">
+            <span>Last Entry</span>
+
+            <div class="icon-box blue">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="22"
+                height="22"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <rect x="3" y="4" width="18" height="18" rx="2"></rect>
+                <line x1="16" y1="2" x2="16" y2="6"></line>
+                <line x1="8" y1="2" x2="8" y2="6"></line>
+                <line x1="3" y1="10" x2="21" y2="10"></line>
+              </svg>
+            </div>
+          </div>
+
+          <h3>
+            {{
+              companyDashboard?.lastEntryDate
+                ? (companyDashboard?.lastEntryDate | date: "mediumDate")
+                : "-"
+            }}
+          </h3>
         </div>
       </div>
+
+      <!-- Milk Price -->
       <div class="col-md-3">
-        <div class="overview-card active">
-          <span>Milk Price</span>
-          <h4>{{ companyDashboard?.milkPrice || 0 | number: '1.2-2' }}</h4>
+        <div class="dashboard-card">
+          <div class="card-top">
+            <span>Milk Price</span>
+
+            <div class="icon-box green">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="22"
+                height="22"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="M8 2h8"></path>
+                <path
+                  d="M9 2v3l-2 3v11a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V8l-2-3V2"
+                ></path>
+              </svg>
+            </div>
+          </div>
+
+          <h3>{{ companyDashboard?.milkPrice || 0 | number: "1.2-2" }}</h3>
         </div>
       </div>
+
+      <!-- IOFC -->
       <div class="col-md-3">
-        <div class="overview-card active">
-          <span>IOFC</span>
-          <h4>{{ companyDashboard?.iofc || 0 | number: '1.2-2' }}</h4>
+        <div class="dashboard-card">
+          <div class="card-top">
+            <span>IOFC</span>
+
+            <div class="icon-box orange">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="22"
+                height="22"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <polyline points="3 17 9 11 13 15 21 7"></polyline>
+                <polyline points="21 7 21 13 15 13"></polyline>
+              </svg>
+            </div>
+          </div>
+
+          <h3>{{ companyDashboard?.iofc || 0 | number: "1.2-2" }}</h3>
         </div>
       </div>
+
+      <!-- D&A Milk -->
       <div class="col-md-3">
-        <div class="overview-card active">
-          <span>D&A Milk</span>
-          <h4>{{ companyDashboard?.deaMilk || 0 | number: '1.2-2' }}</h4>
+        <div class="dashboard-card">
+          <div class="card-top">
+            <span>D&A Milk</span>
+
+            <div class="icon-box purple">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="22"
+                height="22"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path
+                  d="M12 2C12 2 6 9 6 13a6 6 0 0012 0c0-4-6-11-6-11z"
+                ></path>
+              </svg>
+            </div>
+          </div>
+
+          <h3>{{ companyDashboard?.deaMilk || 0 | number: "1.2-2" }}</h3>
         </div>
       </div>
     </div>
+
+<!-- <h5 class="border-start border-4 ps-3 mt-4">Calf Barn</h5>
+
+<div class="row g-3">
+
+  <div class="col-md-3">
+    <div class="dashboard-card">
+      <div class="card-top">
+        <span>Last Entry</span>
+      </div>
+
+      <h3>
+        {{ companyDashboard?.lastEntryDate
+        ? (companyDashboard?.lastEntryDate | date:'mediumDate')
+        : '-' }}
+      </h3>
+    </div>
+  </div>
+
+  <div class="col-md-3">
+    <div class="dashboard-card">
+      <div class="card-top">
+        <span>Milk Feed</span>
+      </div>
+
+      <h3>{{ companyDashboard?.milkFeed || 0 }}</h3>
+    </div>
+  </div>
+
+  <div class="col-md-3">
+    <div class="dashboard-card">
+      <div class="card-top">
+        <span>Fiber</span>
+      </div>
+
+      <h3>{{ companyDashboard?.fiber || 0 }}</h3>
+    </div>
+  </div>
+
+  <div class="col-md-3">
+    <div class="dashboard-card">
+      <div class="card-top">
+        <span>Total Calves</span>
+      </div>
+
+      <h3>{{ companyDashboard?.totalCalves || 0 }}</h3>
+    </div>
+  </div>
+
+</div> -->
+<h5 class="border-start border-4 ps-3 mt-4">Performance Indicators</h5>
     <div class="row dashboard-gauges">
+      <div class="col-md-3">
+        <div class="gauge-card">
+          <div echarts [options]="deaGauge" class="gauge-box"></div>
+        </div>
+      </div>
 
-  <div class="col-md-3">
-    <div class="gauge-card">
-      <div echarts [options]="deaGauge" class="gauge-box"></div>
+      <div class="col-md-3">
+        <div class="gauge-card">
+          <div echarts [options]="milkGauge" class="gauge-box"></div>
+        </div>
+      </div>
+
+      <div class="col-md-3">
+        <div class="gauge-card">
+          <div echarts [options]="feedGauge" class="gauge-box"></div>
+        </div>
+      </div>
+
+      <div class="col-md-3">
+        <div class="gauge-card">
+          <div echarts [options]="crepGauge" class="gauge-box"></div>
+        </div>
+      </div>
     </div>
-  </div>
-
-  <div class="col-md-3">
-    <div class="gauge-card">
-      <div echarts [options]="milkGauge" class="gauge-box"></div>
-    </div>
-  </div>
-
-  <div class="col-md-3">
-    <div class="gauge-card">
-      <div echarts [options]="feedGauge" class="gauge-box"></div>
-    </div>
-  </div>
-
-  <div class="col-md-3">
-    <div class="gauge-card">
-      
-      <div echarts [options]="crepGauge" class="gauge-box"></div>
-    </div>
-  </div>
-
-</div>
-<div class="row mt-3">
-
-  <div class="col-12">
-      <div class="dea-performance-bar">
-
+    <div class="row mt-3">
+      <div class="col-12">
+        <div class="dea-performance-bar">
           <div class="performance-scale">
-              <span>0.90</span>
-              <span>1.00</span>
-              <span>1.10</span>
-              <span>1.20</span>
-              <span>1.30</span>
-              <span>1.40</span>
-              <span>1.50</span>
+            <span>0.90</span>
+            <span>1.00</span>
+            <span>1.10</span>
+            <span>1.20</span>
+            <span>1.30</span>
+            <span>1.40</span>
+            <span>1.50</span>
           </div>
 
           <div class="performance-bar">
-<div class="cow-indicator"
-     [style.left.%]="getCowPosition(companyDashboard?.deaMilk ??0)">
-🐄
-</div>
+            <div
+              class="cow-indicator"
+              [style.left.%]="getCowPosition(companyDashboard?.deaMilk ?? 0)"
+            >
+              🐄
+            </div>
           </div>
 
           <div class="dea-value">
-              {{ companyDashboard?.deaMilk }}
+            {{ companyDashboard?.deaMilk }}
           </div>
-
+        </div>
       </div>
-  </div>
-
-</div>
+    </div>
 
     <div class="row g-3 mt-1">
       <div class="col-md-4">
         <div class="overview-card">
           <h5>Feeding</h5>
-          <p class="mb-1">Cost: <b>{{ companyDashboard?.cost || 0 | number: '1.2-2' }}</b></p>
+          <p class="mb-1">
+            Cost: <b>{{ companyDashboard?.cost || 0 | number: "1.2-2" }}</b>
+          </p>
           <p class="mb-0">Trend aligned to selected year</p>
         </div>
       </div>
       <div class="col-md-4">
         <div class="overview-card">
           <h5>Herd</h5>
-          <p class="mb-1">Herd Size: <b>{{ companyDashboard?.herdSize || 0 }}</b></p>
+          <p class="mb-1">
+            Herd Size: <b>{{ companyDashboard?.herdSize || 0 }}</b>
+          </p>
           <p class="mb-0">Company-level current herd</p>
         </div>
       </div>
       <div class="col-md-4">
         <div class="overview-card">
           <h5>Production</h5>
-          <p class="mb-1">Avg Milk/Day: <b>{{ companyDashboard?.avgMilkPerDay || 0 | number: '1.2-2' }}</b></p>
+          <p class="mb-1">
+            Avg Milk/Day:
+            <b>{{ companyDashboard?.avgMilkPerDay || 0 | number: "1.2-2" }}</b>
+          </p>
           <p class="mb-0">Selected year average output</p>
         </div>
       </div>
@@ -137,28 +298,129 @@
 
   <ng-container *ngIf="!isLoading && isAdmin">
     <div class="row g-3">
+      <!-- Total Companies -->
       <div class="col-md-3">
-        <div class="overview-card active">
-          <span>Total Companies</span>
-          <h4>{{ aggregatedAnalytics?.totalCompanies || dashboardData.totalCompanies }}</h4>
+        <div class="dashboard-card">
+          <div class="card-top">
+            <span>Total Companies</span>
+
+            <div class="icon-box blue">
+              <!-- building icon -->
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="22"
+                height="22"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                viewBox="0 0 24 24"
+              >
+                <rect x="4" y="3" width="16" height="18" rx="2"></rect>
+                <line x1="8" y1="7" x2="8" y2="7"></line>
+                <line x1="12" y1="7" x2="12" y2="7"></line>
+                <line x1="16" y1="7" x2="16" y2="7"></line>
+              </svg>
+            </div>
+          </div>
+
+          <h3>
+            {{
+              aggregatedAnalytics?.totalCompanies ||
+                dashboardData.totalCompanies
+            }}
+          </h3>
         </div>
       </div>
+
+      <!-- Archive Records -->
       <div class="col-md-3">
-        <div class="overview-card active">
-          <span>Archive Records</span>
-          <h4>{{ aggregatedAnalytics?.archiveRecords || 0 }}</h4>
+        <div class="dashboard-card">
+          <div class="card-top">
+            <span>Archive Records</span>
+
+            <div class="icon-box orange">
+              <!-- archive icon -->
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="22"
+                height="22"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                viewBox="0 0 24 24"
+              >
+                <rect x="3" y="4" width="18" height="4"></rect>
+                <path d="M4 8h16v12H4z"></path>
+                <line x1="10" y1="12" x2="14" y2="12"></line>
+              </svg>
+            </div>
+          </div>
+
+          <h3>{{ aggregatedAnalytics?.archiveRecords || 0 }}</h3>
         </div>
       </div>
+
+      <!-- Total Users -->
       <div class="col-md-3">
-        <div class="overview-card active">
-          <span>Total Users</span>
-          <h4>{{ dashboardData.totalUsers }}</h4>
+        <div class="dashboard-card">
+          <div class="card-top">
+            <span>Total Users</span>
+
+            <div class="icon-box green">
+              <!-- users icon -->
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="22"
+                height="22"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                viewBox="0 0 24 24"
+              >
+                <circle cx="9" cy="7" r="4"></circle>
+                <path d="M17 11c1.7 0 3 1.3 3 3"></path>
+                <path d="M3 20v-1c0-3 3-5 6-5"></path>
+              </svg>
+            </div>
+          </div>
+
+          <h3>{{ dashboardData.totalUsers }}</h3>
         </div>
       </div>
+
+      <!-- Active Farms -->
       <div class="col-md-3">
-        <div class="overview-card active">
-          <span>Active Farms</span>
-          <h4>{{ dashboardData.totalActiveFarms }}</h4>
+        <div class="dashboard-card">
+          <div class="card-top">
+            <span>Active Farms</span>
+
+            <div class="icon-box purple">
+              <!-- farm icon -->
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="22"
+                height="22"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                viewBox="0 0 24 24"
+              >
+                <path d="M3 21h18"></path>
+                <path d="M4 21V10l8-6 8 6v11"></path>
+                <path d="M9 21V14h6v7"></path>
+              </svg>
+            </div>
+          </div>
+
+          <h3>{{ dashboardData.totalActiveFarms }}</h3>
         </div>
       </div>
     </div>
@@ -192,7 +454,7 @@
             <tr *ngFor="let row of aggregatedAnalytics?.rankingByIofc">
               <td>{{ row.rank }}</td>
               <td>{{ row.companyName }}</td>
-              <td>{{ row.iofc | number: '1.2-2' }}</td>
+              <td>{{ row.iofc | number: "1.2-2" }}</td>
             </tr>
           </tbody>
         </table>
@@ -200,4 +462,3 @@
     </div>
   </ng-container>
 </div>
-

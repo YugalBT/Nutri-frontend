@@ -30,27 +30,27 @@ const HIDDEN_MENU_NAMES = [
   'Placeholder',
   'Category Mapping',
   'Template Category',
-  'Animal Group',
-  'Ration',
-  'Feed',
+  // 'Animal Group',
+  // 'Ration',
+  // 'Feed',
 ];
 
-const COMPANY_MENU_ROUTE_MAP: Record<string, string> = {
-  'Company Data': '/farm',
-  Feeding: '/nutrition',
-  Rations: '/ration',
-  'Calf Barn': '/ration',
-  Feed: '/feed',
-  Archive: '/reports',
-  Technical: '/technicalReport',
-  Economic: '/economic-report',
-  Market: '/supplier-price',
-  Monthly: '/reports',
-  'Export Report': '/reports',
-  'Monthly / Annual / Quarterly': '/reports',
-  Settings: '/setting',
-  'User Profile': '/profile',
-};
+// const COMPANY_MENU_ROUTE_MAP: Record<string, string> = {
+//   'Company Data': '/farm',
+//   Feeding: '/nutrition',
+//   Rations: '/ration',
+//   'Calf Barn': '/ration',
+//   Feed: '/feed',
+//   Archive: '/reports',
+//   Technical: '/technicalReport',
+//   Economic: '/economic-report',
+//   Market: '/supplier-price',
+//   Monthly: '/reports',
+//   'Export Report': '/reports',
+//   'Monthly / Annual / Quarterly': '/reports',
+//   Settings: '/setting',
+//   'User Profile': '/profile',
+// };
 
 @Component({
   selector: 'app-sidebar',
@@ -83,10 +83,10 @@ export class SidebarComponent implements OnInit {
           ? this.user.companyMenu
           : [];
 
-        if (roleType && roleType !== 'ADMIN' && companyMenu.length > 0) {
-          this.buildCompanyMenu(companyMenu);
-          return;
-        }
+        // if (roleType && roleType !== 'ADMIN' && companyMenu.length > 0) {
+        //   this.buildCompanyMenu(companyMenu);
+        //   return;
+        // }
 
         const menuSource = authUser?.menu || authUser?.data?.menu;
         if (Array.isArray(menuSource)) {
@@ -108,24 +108,24 @@ export class SidebarComponent implements OnInit {
     return this.lang;
   }
 
-  private buildCompanyMenu(companyMenu: string[]): void {
-    const items: MenuItem[] = companyMenu
-      .map((label) => ({
-        roleDisplayName: label,
-        url: COMPANY_MENU_ROUTE_MAP[label] || '/dashboard',
-        safeIcon: '',
-      }))
-      .filter((item) => !!item.url);
+  // private buildCompanyMenu(companyMenu: string[]): void {
+  //   const items: MenuItem[] = companyMenu
+  //     .map((label) => ({
+  //       roleDisplayName: label,
+  //       url: COMPANY_MENU_ROUTE_MAP[label] || '/dashboard',
+  //       safeIcon: '',
+  //     }))
+  //     .filter((item) => !!item.url);
 
-    this.groupedMenus = [
-      {
-        key: 'company',
-        title: 'Company',
-        items,
-      },
-    ];
-    this.standaloneMenus = [];
-  }
+  //   this.groupedMenus = [
+  //     {
+  //       key: 'company',
+  //       title: 'Company',
+  //       items,
+  //     },
+  //   ];
+  //   this.standaloneMenus = [];
+  // }
 
   private buildAccordionMenu(flatMenu: MenuItem[]): void {
     const groupedItemNames = SIDEBAR_GROUPS.flatMap((group) => group.items);

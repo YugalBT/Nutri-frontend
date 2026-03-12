@@ -250,4 +250,12 @@ export const API_ENDPOINTS = {
     GET_ALL: '/MstFormula/GetAll',
     VALIDATE_FORMULA: '/MstFormula/ValidateFormula',
   },
+
+   CALFBARN: {
+    CREATE: '/CalfBarn/Create',
+    UPDATE: '/CalfBarn/Update',
+    DELETE: '/CalfBarn/Delete',
+    ACTIVE_INACTIVE: '/CalfBarn/ActiveInActive',
+    GET_ALL: '/CalfBarn/GetAll',
+  },
 };

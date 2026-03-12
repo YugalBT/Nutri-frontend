@@ -29,6 +29,10 @@ export interface CompanyDashboardData {
   kpiTrend: KpiTrendPoint[];
   feedEfficiency?: number;
   crep?: number;
+  totalCalves?:number;
+  fiber?:number;
+  milkFeed?:number;
+
 }
 
 export interface CompanyComparisonData {
