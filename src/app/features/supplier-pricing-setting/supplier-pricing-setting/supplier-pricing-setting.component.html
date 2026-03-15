@@ -1,0 +1,202 @@
+<div class="container mt-4 mb-4" *ngIf="pricingForm">
+
+  <div class="card shadow-sm border-0 rounded-4 p-4">
+
+    <div class="d-flex align-items-center mb-4">
+      <i class="bi bi-currency fs-2 me-3"></i>
+      <h4 class="mb-0 fw-bold">
+        Supplier Pricing Settings
+      </h4>
+    </div>
+
+    <form [formGroup]="pricingForm" (ngSubmit)="onSubmit()">
+
+      <div class="row">
+
+        <!-- Bulk Processing -->
+        <div class="col-md-4 mb-3">
+
+          <label class="form-label">
+            Bulk Processing Cost
+            <sup class="text-danger">*</sup>
+          </label>
+
+          <input
+            type="number"
+            class="form-control"
+            placeholder="Enter bulk processing cost"
+            formControlName="bulkProcessingCost"
+            [class.is-invalid]="pricingForm.get('bulkProcessingCost')?.touched && pricingForm.get('bulkProcessingCost')?.invalid"
+          />
+
+          <div class="invalid-feedback">
+
+            <small *ngIf="pricingForm.get('bulkProcessingCost')?.errors?.['required']">
+              Bulk processing cost is required
+            </small>
+
+            <small *ngIf="pricingForm.get('bulkProcessingCost')?.errors?.['min']">
+              Value must be greater than or equal to 0
+            </small>
+
+          </div>
+
+        </div>
+
+
+        <!-- Bag Processing -->
+        <div class="col-md-4 mb-3">
+
+          <label class="form-label">
+            Bag Processing Cost
+            <sup class="text-danger">*</sup>
+          </label>
+
+          <input
+            type="number"
+            class="form-control"
+            placeholder="Enter bag processing cost"
+            formControlName="bagProcessingCost"
+            [class.is-invalid]="pricingForm.get('bagProcessingCost')?.touched && pricingForm.get('bagProcessingCost')?.invalid"
+          />
+
+          <div class="invalid-feedback">
+
+            <small *ngIf="pricingForm.get('bagProcessingCost')?.errors?.['required']">
+              Bag processing cost is required
+            </small>
+
+          </div>
+
+        </div>
+
+
+        <!-- Bulk Transport -->
+        <div class="col-md-4 mb-3">
+
+          <label class="form-label">
+            Bulk Transport Cost
+            <sup class="text-danger">*</sup>
+          </label>
+
+          <input
+            type="number"
+            class="form-control"
+            placeholder="Enter bulk transport cost"
+            formControlName="bulkTransportCost"
+            [class.is-invalid]="pricingForm.get('bulkTransportCost')?.touched && pricingForm.get('bulkTransportCost')?.invalid"
+          />
+
+          <div class="invalid-feedback">
+
+            <small *ngIf="pricingForm.get('bulkTransportCost')?.errors?.['required']">
+              Bulk transport cost is required
+            </small>
+
+          </div>
+
+        </div>
+
+
+        <!-- Sack Transport -->
+        <div class="col-md-4 mb-3">
+
+          <label class="form-label">
+            Sack Transport Cost
+            <sup class="text-danger">*</sup>
+          </label>
+
+          <input
+            type="number"
+            class="form-control"
+            placeholder="Enter sack transport cost"
+            formControlName="sackTransportCost"
+            [class.is-invalid]="pricingForm.get('sackTransportCost')?.touched && pricingForm.get('sackTransportCost')?.invalid"
+          />
+
+          <div class="invalid-feedback">
+
+            <small *ngIf="pricingForm.get('sackTransportCost')?.errors?.['required']">
+              Sack transport cost is required
+            </small>
+
+          </div>
+
+        </div>
+
+
+        <!-- Commission -->
+        <div class="col-md-4 mb-3">
+
+          <label class="form-label">
+            Commission Percent
+            <sup class="text-danger">*</sup>
+          </label>
+
+          <input
+            type="number"
+            class="form-control"
+            placeholder="Enter commission percent"
+            formControlName="commissionPercent"
+            [class.is-invalid]="pricingForm.get('commissionPercent')?.touched && pricingForm.get('commissionPercent')?.invalid"
+          />
+
+          <div class="invalid-feedback">
+
+            <small *ngIf="pricingForm.get('commissionPercent')?.errors?.['required']">
+              Commission percent is required
+            </small>
+
+            <small *ngIf="pricingForm.get('commissionPercent')?.errors?.['max']">
+              Maximum allowed is 100
+            </small>
+
+          </div>
+
+        </div>
+
+
+        <!-- Margin -->
+        <div class="col-md-4 mb-3">
+
+          <label class="form-label">
+            Default Margin Percent
+            <sup class="text-danger">*</sup>
+          </label>
+
+          <input
+            type="number"
+            class="form-control"
+            placeholder="Enter margin percent"
+            formControlName="defaultMarginPercent"
+            [class.is-invalid]="pricingForm.get('defaultMarginPercent')?.touched && pricingForm.get('defaultMarginPercent')?.invalid"
+          />
+
+          <div class="invalid-feedback">
+
+            <small *ngIf="pricingForm.get('defaultMarginPercent')?.errors?.['required']">
+              Default margin percent is required
+            </small>
+
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <div class="d-flex justify-content-end mt-4">
+
+        <button class="btn  add-btn px-4">
+
+          Save Pricing Settings
+
+        </button>
+
+      </div>
+
+    </form>
+
+  </div>
+
+</div>

@@ -8,6 +8,7 @@ import { ToastService } from '../../../shared/services/toast.service';
 import { ConfirmDialogService } from '../../../shared/services/confirm-dialog.service';
 import { TranslateService } from '../../../i18n/translate.service';
 import { TranslatePipe } from '../../../i18n/translate.pipe';
+import { ApiResponse } from '../../../core/models/api-response';
 
 @Component({
   selector: 'app-material-list',
@@ -30,6 +31,8 @@ export class MaterialListComponent implements OnInit, OnDestroy {
     'materialName',
     'materialCode',
     'supplierName',
+    'unit',
+    'basePrice',
     'isActive'
   ];
 
@@ -60,6 +63,8 @@ export class MaterialListComponent implements OnInit, OnDestroy {
       this.translate.instant('material.name'),
       this.translate.instant('material.code'),
       this.translate.instant('material.supplier'),
+      this.translate.instant('material.unit'),
+      this.translate.instant('material.basePrice'),
       this.translate.instant('common.status')
     ];
   }
@@ -97,11 +102,56 @@ export class MaterialListComponent implements OnInit, OnDestroy {
     this.subs.push(sub);
   }
 
+exportMaterials(): void {
+
+  const sub = this.materialService
+    .exportMaterials()
+    .subscribe((blob: Blob) => {
+
+      const url = window.URL.createObjectURL(blob);
+
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = 'materials.csv';
+      link.click();
+
+      window.URL.revokeObjectURL(url);
+
+      this.toast.success('Materials exported successfully');
+
+    });
+
+  this.subs.push(sub);
+
+}
+
   onSearch(value: string): void {
     this.searchValue = value;
     this.pageIndex = 0;
     this.loadMaterials(1, this.pageSize);
   }
+
+importMaterials(event: any): void {
+
+  const file = event.target.files[0];
+  if (!file) return;
+
+  const sub = this.materialService
+    .importMaterials(file)
+    .subscribe((res: ApiResponse<any>) => {
+
+      if (res.isSuccess) {
+        this.toast.success(res.message);
+        this.loadMaterials(1, this.pageSize);
+      } else {
+        this.toast.error(res.message);
+      }
+
+    });
+
+  this.subs.push(sub);
+
+}
 
   onStatusChange(status: number | null): void {
     this.filterStatus = status === null ? 2 : status;

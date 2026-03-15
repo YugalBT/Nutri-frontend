@@ -61,6 +61,11 @@ export class HttpService {
     );
   }
 
+  getFile(url: string): Observable<Blob> {
+  return this.http.get(url, {
+    responseType: 'blob'
+  });
+}
   // Uncomment and fix these if needed
   /*
   put<T>(url: string, body: any, options: { headers?: HttpHeaders } = {}): Observable<ApiResponse<T>> {

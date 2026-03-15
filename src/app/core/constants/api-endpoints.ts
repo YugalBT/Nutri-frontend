@@ -53,6 +53,7 @@ export const API_ENDPOINTS = {
     GET_ALL_SUPPLIER_LIST: '/Common/GetAllSupplier',
     GET_ALL_MATERIAL_BY_SUPPLIER_ID: '/Supplier/GetAllSupplierPrice',
     GET_OPERATORS_AND_MATERIAL: '/Common/GetAllOperatorAndMaterial',
+    GET_PRODUCT: '/Common/GetAllProduct',
     GET_ALL_MATERIAL_BY_SUPPLIER_ID_IN_FORMULA: '/Common/GetAllMaterialBySupplierId',
   },
 
@@ -230,6 +231,17 @@ export const API_ENDPOINTS = {
     ACTIVE_INACTIVE: '/Material/ActiveInActive',
     GET_ALL: '/Material/GetAll',
     GENERATE_SUPPLIER_CODE: '/Material/GenerateMaterialCode',
+     IMPORTMATERIAL: '/Material/ImportMaterials',
+  EXPORTMATERIAL: '/Material/ExportMaterials',
+  },
+
+  PRODUCT: {
+    CREATE: '/Product/Create',
+    UPDATE: '/Product/Update',
+    DELETE: '/Product/Delete',
+    ACTIVE_INACTIVE: '/Product/ActiveInActive',
+    GET_ALL: '/Product/GetAll',
+    GENERATE_PRODUCT_CODE: '/Product/GenerateProductCode',
   },
 
   SUPPLIERPRICE: {
@@ -257,5 +269,13 @@ export const API_ENDPOINTS = {
     DELETE: '/CalfBarn/Delete',
     ACTIVE_INACTIVE: '/CalfBarn/ActiveInActive',
     GET_ALL: '/CalfBarn/GetAll',
+  },
+   PRICINGSETTING: {
+    UPDATE: '/PricingSetting/Add',
+    GET_ALL: '/PricingSetting/GetAll',
+  },
+   PRODUCTPRICING: {
+    CREATE: '/ProductPricing/Create',
+    GET_ALL: '/ProductPricing/GetAll',
   },
 };

@@ -127,27 +127,69 @@ export class SidebarComponent implements OnInit {
   //   this.standaloneMenus = [];
   // }
 
+  // private buildAccordionMenu(flatMenu: MenuItem[]): void {
+  //   const groupedItemNames = SIDEBAR_GROUPS.flatMap((group) => group.items);
+
+  //   this.groupedMenus = SIDEBAR_GROUPS
+  //     .map((group) => ({
+  //       key: group.key,
+  //       title: group.title,
+  //       icon: group.icon
+  //         ? this.sanitizer.bypassSecurityTrustHtml(group.icon)
+  //         : undefined,
+  //       items: flatMenu.filter((m) => group.items.includes(m.roleDisplayName || '')),
+  //     }))
+  //     .filter((group) => group.items.length > 0);
+
+  //   this.standaloneMenus = flatMenu.filter(
+  //     (m) =>
+  //       !groupedItemNames.includes(m.roleDisplayName || '') &&
+  //       m.roleDisplayName !==
+  //         (this.currentLang === 'it' ? 'Pannello di controllo' : 'Dashboard'),
+  //   );
+  // }
   private buildAccordionMenu(flatMenu: MenuItem[]): void {
-    const groupedItemNames = SIDEBAR_GROUPS.flatMap((group) => group.items);
 
-    this.groupedMenus = SIDEBAR_GROUPS
-      .map((group) => ({
-        key: group.key,
-        title: group.title,
-        icon: group.icon
-          ? this.sanitizer.bypassSecurityTrustHtml(group.icon)
-          : undefined,
-        items: flatMenu.filter((m) => group.items.includes(m.roleDisplayName || '')),
-      }))
-      .filter((group) => group.items.length > 0);
+  const groupedItemNames = SIDEBAR_GROUPS.flatMap(group => group.items);
 
-    this.standaloneMenus = flatMenu.filter(
-      (m) =>
-        !groupedItemNames.includes(m.roleDisplayName || '') &&
-        m.roleDisplayName !==
-          (this.currentLang === 'it' ? 'Pannello di controllo' : 'Dashboard'),
-    );
-  }
+  this.groupedMenus = SIDEBAR_GROUPS.map(group => {
+
+    const orderedItems: MenuItem[] = [];
+
+    group.items.forEach(itemName => {
+
+      const found = flatMenu.find(
+        m => (m.roleDisplayName || '') === itemName
+      );
+
+      if (found) {
+        orderedItems.push(found);
+      }
+
+    });
+
+    return {
+      key: group.key,
+      title: group.title,
+      icon: group.icon
+        ? this.sanitizer.bypassSecurityTrustHtml(group.icon)
+        : undefined,
+      items: orderedItems
+    };
+
+  }).filter(group => group.items.length > 0);
+
+
+  this.standaloneMenus = flatMenu.filter(
+    m =>
+      !groupedItemNames.includes(m.roleDisplayName || '') &&
+      m.roleDisplayName !==
+      (this.currentLang === 'it'
+        ? 'Pannello di controllo'
+        : 'Dashboard')
+  );
+
+}
 
   logout(): void {
     this.authService.logout();

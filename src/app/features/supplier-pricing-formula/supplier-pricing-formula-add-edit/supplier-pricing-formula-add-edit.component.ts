@@ -23,11 +23,11 @@ declare var bootstrap: any;
 })
 export class SupplierPricingFormulaAddEditComponent {
   @ViewChild('expressionModal', { static: true }) expressionModal!: ElementRef;
-
+selectedProductId: string | null = null;
   modal: any;
   isEdit = false;
   formulaId: string | null = null;
-
+products: any[] = [];
   expressionName = '';
   expressionTokens: string[] = [];
   insertIndex: number | null = null;
@@ -57,6 +57,7 @@ export class SupplierPricingFormulaAddEditComponent {
     });
     this.loadExpressionItems();
     this.loadSuppliers();
+     this.loadProducts(); 
   }
 
   /* ================= MODAL ================= */
@@ -66,6 +67,7 @@ export class SupplierPricingFormulaAddEditComponent {
     this.insertIndex = null;
     this.isvalidated = false;
     this.validatedResult = null;
+    this.selectedProductId = null;
 
     if (edit && data) {
       this.formulaId = data.formulaId;
@@ -126,6 +128,21 @@ export class SupplierPricingFormulaAddEditComponent {
 
   this.subs.push(sub);
 }
+ loadProducts() {
+
+    this.commonService
+      .getGetAllProductList()
+      .subscribe(res => {
+
+        if (res?.isSuccess) {
+
+          this.products = res.data ?? [];
+
+        }
+
+      });
+
+  }
 
   closeModal(): void {
     this.modal.hide();
@@ -314,6 +331,7 @@ calculateFromMargin(material: any) {
     return {
       supplierId: this.selectedSupplierId,
       formulaName: this.expressionName,
+      productId: this.selectedProductId,
       formula: displayArray.join(' '),
       formulaeArray,
       displayArray,

@@ -449,13 +449,41 @@ export const routes: Routes = [
           ),
       },
 
-       {
+      {
         path: 'calfbarn',
         // canActivate: [permissionGuard],
         // data: { requiredPermissions: [PERMISSIONS.SupplierPriceAdd, PERMISSIONS.SupplierPriceEdit, PERMISSIONS.SupplierPriceView, PERMISSIONS.SupplierPriceDelete] },
         loadComponent: () =>
           import('./features/calfbarn/calfbarn-list/calfbarn-list.component').then(
             (m) => m.CalfbarnListComponent,
+          ),
+      },
+
+      {
+        path: 'pricingSetting',
+        // canActivate: [permissionGuard],
+        // data: { requiredPermissions: [PERMISSIONS.SupplierPriceAdd, PERMISSIONS.SupplierPriceEdit, PERMISSIONS.SupplierPriceView, PERMISSIONS.SupplierPriceDelete] },
+        loadComponent: () =>
+          import('./features/supplier-pricing-setting/supplier-pricing-setting/supplier-pricing-setting.component').then(
+            (m) => m.SupplierPricingSettingComponent,
+          ),
+      },
+      {
+        path: 'product',
+        // canActivate: [permissionGuard],
+        // data: { requiredPermissions: [PERMISSIONS.SupplierPriceAdd, PERMISSIONS.SupplierPriceEdit, PERMISSIONS.SupplierPriceView, PERMISSIONS.SupplierPriceDelete] },
+        loadComponent: () =>
+          import('./features/product/product-list/product-list.component').then(
+            (m) => m.ProductListComponent,
+          ),
+      },
+      {
+        path: 'productpricing',
+        // canActivate: [permissionGuard],
+        // data: { requiredPermissions: [PERMISSIONS.SupplierPriceAdd, PERMISSIONS.SupplierPriceEdit, PERMISSIONS.SupplierPriceView, PERMISSIONS.SupplierPriceDelete] },
+        loadComponent: () =>
+          import('./features/product-price/product-price-list/product-price-list.component').then(
+            (m) => m.ProductPriceListComponent,
           ),
       },
 

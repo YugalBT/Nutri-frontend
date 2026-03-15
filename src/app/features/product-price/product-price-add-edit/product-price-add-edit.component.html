@@ -1,0 +1,207 @@
+<div #priceModal class="modal fade">
+
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+
+    <div class="modal-content">
+
+      <div class="modal-header">
+
+        <h5 class="modal-title">
+          Add Product Price
+        </h5>
+
+        <button
+          class="btn-close"
+          (click)="modalInstance.hide()">
+        </button>
+
+      </div>
+
+
+      <div class="modal-body">
+
+        <form [formGroup]="form">
+
+          <div class="row g-3">
+
+            <!-- Product -->
+
+            <div class="col-md-4">
+
+              <label class="form-label">
+                Product
+                <sup class="text-danger">*</sup>
+              </label>
+
+              <select
+                class="form-select"
+                formControlName="productId"
+                [class.is-invalid]="form.get('productId')?.touched && form.get('productId')?.invalid">
+
+                <option value="" disabled>
+                  Select Product
+                </option>
+
+                <option
+                  *ngFor="let p of products"
+                  [value]="p.productId">
+
+                  {{p.productName}}
+
+                </option>
+
+              </select>
+
+              <div class="invalid-feedback">
+                Product is required
+              </div>
+
+            </div>
+
+
+            <!-- Month -->
+
+            <div class="col-md-4">
+
+              <label class="form-label">
+                Price Month
+                <sup class="text-danger">*</sup>
+              </label>
+
+              <input
+                type="month"
+                class="form-control"
+                formControlName="priceMonth"
+                [class.is-invalid]="form.get('priceMonth')?.invalid && form.get('priceMonth')?.touched"
+              />
+
+              <div class="invalid-feedback">
+                Month is required
+              </div>
+
+            </div>
+
+
+            <!-- Previous Price -->
+
+            <div class="col-md-4">
+
+              <label class="form-label">
+                Previous Price
+              </label>
+
+              <input
+                type="number"
+                class="form-control"
+                placeholder="Enter previous price"
+                formControlName="previousMonthPrice"
+              />
+
+            </div>
+
+
+            <!-- Suggested Price -->
+
+            <div class="col-md-4">
+
+              <label class="form-label">
+                Suggested Price
+                <sup class="text-danger">*</sup>
+              </label>
+
+              <input
+                type="number"
+                class="form-control"
+                placeholder="Enter suggested price"
+                formControlName="suggestedPrice"
+              />
+
+            </div>
+
+
+            <!-- Customer Price -->
+
+            <div class="col-md-4">
+
+              <label class="form-label">
+                Customer Price
+                <sup class="text-danger">*</sup>
+              </label>
+
+              <input
+                type="number"
+                class="form-control"
+                placeholder="Enter customer price"
+                formControlName="customerPrice"
+              />
+
+            </div>
+
+
+            <!-- Commission -->
+
+            <div class="col-md-4">
+
+              <label class="form-label">
+                Commission %
+              </label>
+
+              <input
+                type="number"
+                class="form-control"
+                placeholder="Commission percentage"
+                formControlName="commissionPercent"
+              />
+
+            </div>
+
+
+            <!-- Margin -->
+
+            <div class="col-md-4">
+
+              <label class="form-label">
+                Margin %
+              </label>
+
+              <input
+                type="number"
+                class="form-control"
+                placeholder="Margin percentage"
+                formControlName="marginPercent"
+              />
+
+            </div>
+
+          </div>
+
+        </form>
+
+      </div>
+
+
+      <div class="modal-footer">
+
+        <button
+          class="btn btn-outline-secondary"
+          (click)="modalInstance.hide()">
+
+          Cancel
+
+        </button>
+
+        <button
+          class="btn add-btn"
+          (click)="save()">
+
+          Save Price
+
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>

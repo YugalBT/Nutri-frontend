@@ -1,0 +1,58 @@
+<div class="pagecls">
+
+  <div class="page-header">
+
+    <div class="border-start border-4 ps-3">
+      <h3 class="page-title">
+        {{ 'product.heading' | translate }}
+      </h3>
+    </div>
+
+    <button class="btn add-btn"
+            (click)="productModal?.openModal()">
+
+      <i class="bi bi-plus-lg me-2"></i>
+
+      {{ 'product.addProduct' | translate }}
+
+    </button>
+
+  </div>
+
+
+  <div class="filters-card">
+
+    <app-global-search
+      [label]="'common.searchFilters' | translate"
+      [placeholder]="'product.searchPlaceholder' | translate"
+      [showStatus]="true"
+      (search)="onSearch($event)"
+      (statusChange)="onStatusChange($event)"
+      (clear)="clearFilters()">
+    </app-global-search>
+
+  </div>
+
+
+  <div class="table-card">
+
+    <app-reusable-table
+      [columns]="columns"
+      [columnFields]="columnFields"
+      [data]="products"
+      [showActions]="true"
+      [pageable]="true"
+      [totalRecords]="totalRecords"
+      [pageSize]="pageSize"
+      [pageIndex]="pageIndex"
+      (pageChange)="onPageChange($event)"
+      (toggleActive)="onToggleActive($event)"
+      (deleteRow)="onDelete($event)"
+      (editRow)="productModal?.openModal(true, $event)">
+    </app-reusable-table>
+
+  </div>
+
+  <app-product-add-edit #productModal></app-product-add-edit>
+
+</div>

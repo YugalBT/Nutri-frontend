@@ -1,5 +1,7 @@
 <div class="pagecls">
 
+<div class="pagecls">
+
   <!-- Page Header -->
   <div class="page-header">
     <div class="border-start border-4 ps-3">
@@ -8,11 +10,33 @@
       </h3>
     </div>
 
-    <button class="btn add-btn"
-            (click)="materialModal.openModal()">
-      <i class="bi bi-plus-lg me-2"></i>
-      {{ 'material.addMaterial' | translate }}
-    </button>
+    <div class="d-flex gap-2">
+
+      <!-- EXPORT -->
+      <button class="btn btn-outline-primary"
+              (click)="exportMaterials()">
+        <i class="bi bi-download me-2"></i>
+        Export
+      </button>
+
+      <!-- IMPORT -->
+      <label class="btn btn-outline-success mb-0">
+        <i class="bi bi-upload me-2"></i>
+        Import
+        <input type="file"
+               hidden
+               accept=".csv"
+               (change)="importMaterials($event)">
+      </label>
+
+      <!-- ADD -->
+      <button class="btn add-btn"
+              (click)="materialModal.openModal()">
+        <i class="bi bi-plus-lg me-2"></i>
+        {{ 'material.addMaterial' | translate }}
+      </button>
+
+    </div>
   </div>
 
   <!-- Search Filters -->

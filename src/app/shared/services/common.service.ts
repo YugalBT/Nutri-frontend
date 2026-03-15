@@ -313,4 +313,11 @@ export class CommonService {
     const url = `${API_ENDPOINTS.COMMON_API.GET_ALL_MATERIAL_BY_SUPPLIER_ID_IN_FORMULA}?supplierId=${supplierId}`;
     return this.http.get<ApiResponse<any>>(url);
   }
+
+
+    getGetAllProductList(): Observable<ApiResponse<any[]>> {
+    return this.http.get<any[]>(
+      API_ENDPOINTS.COMMON_API.GET_PRODUCT,
+    );
+  }
 }
