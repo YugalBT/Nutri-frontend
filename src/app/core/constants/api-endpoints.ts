@@ -1,3 +1,5 @@
+import { UPDATE } from "@ngrx/store";
+
 export const API_ENDPOINTS = {
   AUTH: {
     LOGIN: '/Auth/login',
@@ -277,5 +279,9 @@ export const API_ENDPOINTS = {
    PRODUCTPRICING: {
     CREATE: '/ProductPricing/Create',
     GET_ALL: '/ProductPricing/GetAll',
+    UPDATE: '/ProductPricing/Update',
+    ACTIVE_INACTIVE: '/ProductPricing/ActiveInActive',
+    DELETE: '/ProductPricing/Delete',
+    GET_PREVIOUS_PRICE: '/ProductPricing/GetPreviousPrice',
   },
 };

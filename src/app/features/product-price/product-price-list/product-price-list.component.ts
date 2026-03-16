@@ -1,25 +1,20 @@
 import { Component, ViewChild, OnInit, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs';
 
-import { ToastService } from '../../../shared/services/toast.service';
-import { TranslateService } from '../../../i18n/translate.service';
+import { ProductSellingPriceService } from '../../../core/services/product-selling-price/product-selling-price.service';
+import { ProductPriceAddEditComponent } from '../product-price-add-edit/product-price-add-edit.component';
 
+import { ToastService } from '../../../shared/services/toast.service';
+import { ConfirmDialogService } from '../../../shared/services/confirm-dialog.service';
+
+import { TranslateService } from '../../../i18n/translate.service';
 import { ReusableTableComponent } from '../../../shared/components/reusable-table/reusable-table.component';
 import { GlobalSearchComponent } from '../../../shared/components/global-search/global-search.component';
-import { TranslatePipe } from '../../../i18n/translate.pipe';
-
-import { ProductPriceAddEditComponent } from '../product-price-add-edit/product-price-add-edit.component';
-import { ProductSellingPriceService } from '../../../core/services/product-selling-price/product-selling-price.service';
 
 @Component({
   selector: 'app-product-price-list',
   standalone: true,
-  imports: [
-    ReusableTableComponent,
-    GlobalSearchComponent,
-    ProductPriceAddEditComponent,
-    TranslatePipe
-  ],
+  imports: [ProductPriceAddEditComponent,ReusableTableComponent ,GlobalSearchComponent],
   templateUrl: './product-price-list.component.html',
   styleUrl: './product-price-list.component.css'
 })
@@ -38,16 +33,20 @@ export class ProductPriceListComponent implements OnInit, OnDestroy {
     'suggestedPrice',
     'customerPrice',
     'commissionPercent',
-    'marginPercent'
+    'marginPercent',
+    'isActive'
   ];
 
   prices: any[] = [];
 
   totalRecords = 0;
+
   pageSize = 10;
+
   pageIndex = 0;
 
   searchValue = '';
+
   filterStatus: number | null = 2;
 
   private subs: Subscription[] = [];
@@ -55,14 +54,16 @@ export class ProductPriceListComponent implements OnInit, OnDestroy {
   constructor(
     private priceService: ProductSellingPriceService,
     private toast: ToastService,
+    private confirm: ConfirmDialogService,
     private translate: TranslateService
   ) {
 
     this.setColumns();
 
-    this.translate.lang$.subscribe(() => {
-      this.setColumns();
-    });
+    this.translate.lang$
+      .subscribe(() => {
+        this.setColumns();
+      });
 
   }
 
@@ -72,19 +73,14 @@ export class ProductPriceListComponent implements OnInit, OnDestroy {
 
       this.translate.instant('productPrice.product'),
       this.translate.instant('productPrice.code'),
-
-
       this.translate.instant('productPrice.month'),
-
       this.translate.instant('productPrice.previousPrice'),
-
       this.translate.instant('productPrice.suggestedPrice'),
-
       this.translate.instant('productPrice.customerPrice'),
-
       this.translate.instant('productPrice.commission'),
+      this.translate.instant('productPrice.margin'),
+      this.translate.instant('common.status')
 
-      this.translate.instant('productPrice.margin')
 
     ];
 
@@ -106,8 +102,7 @@ export class ProductPriceListComponent implements OnInit, OnDestroy {
 
   }
 
-  loadPrices(pageNo: number, recordPerPage: number) {
-
+  private loadPrices(pageNo: number, recordPerPage: number) {
     const payload = {
       pageNo,
       recordPerPage,
@@ -115,12 +110,22 @@ export class ProductPriceListComponent implements OnInit, OnDestroy {
       status: this.filterStatus
     };
 
-    const sub = this.priceService
-      .getAllPrice(payload)
-      .subscribe(res => {
-        this.prices = res?.data ?? [];
-        this.totalRecords = res?.totalRecords ?? 0;
-      });
+    const sub =
+      this.priceService
+        .getAllPrice(payload)
+        .subscribe({
+          next: (res) => {
+            this.prices = res?.data ?? [];
+            this.totalRecords = res?.totalRecords ?? 0;
+          },
+
+          error: () => {
+
+            this.prices = [];
+
+          }
+
+        });
 
     this.subs.push(sub);
 
@@ -167,6 +172,148 @@ export class ProductPriceListComponent implements OnInit, OnDestroy {
     this.loadPrices(1, this.pageSize);
 
   }
+
+  onToggleActive(event: { row: any; isActive: boolean }) {
+    if (!event?.row?.productPriceId) {
+      debugger;
+
+      this.toast.error("Invalid Price Id");
+
+      return;
+
+    }
+
+    const sub =
+      this.priceService
+        .activeInActive(event.row.productPriceId)
+        .subscribe({
+
+          next: (res) => {
+
+            if (res.isSuccess) {
+
+              this.toast.success(res.message);
+
+              event.row.isActive = !event.row.isActive;
+
+            } else {
+
+              this.toast.error(res.message);
+
+            }
+
+          },
+
+          error: (err) => this.toast.error(err?.error?.message)
+
+        });
+
+    this.subs.push(sub);
+
+  }
+
+  onDelete(row: any) {
+
+    if (!row?.productPriceId) {
+
+      this.toast.error("Invalid Price Id");
+
+      return;
+
+    }
+
+    this.confirm.confirm(
+      this.translate.instant('common.deleteConfirm')
+    ).subscribe((confirmed) => {
+
+      if (!confirmed) return;
+
+      const sub =
+        this.priceService
+          .deletePrice(row.productPriceId)
+          .subscribe({
+
+            next: (res) => {
+
+              if (res.isSuccess) {
+
+                this.toast.success(res.message);
+
+                this.priceService.notifyPriceChanged();
+
+              } else {
+
+                this.toast.error(res.message);
+
+              }
+
+            },
+
+            error: (err) => this.toast.error(err?.error?.message)
+
+          });
+
+      this.subs.push(sub);
+
+    });
+
+  }
+
+  // exportPrices() {
+
+  //   const sub =
+  //     this.priceService
+  //       .exportPrices()
+  //       .subscribe((blob: Blob) => {
+
+  //         const url = window.URL.createObjectURL(blob);
+
+  //         const link = document.createElement('a');
+
+  //         link.href = url;
+
+  //         link.download = 'product-prices.csv';
+
+  //         link.click();
+
+  //         window.URL.revokeObjectURL(url);
+
+  //         this.toast.success('Prices exported successfully');
+
+  //       });
+
+  //   this.subs.push(sub);
+
+  // }
+
+  // importPrices(event: any) {
+
+  //   const file = event.target.files[0];
+
+  //   if (!file) return;
+
+  //   const sub =
+  //     this.priceService
+  //       .importPrices(file)
+  //       .subscribe(res => {
+
+  //         if (res.isSuccess) {
+
+  //           this.toast.success(res.message);
+
+  //           this.loadPrices(1, this.pageSize);
+
+  //         } else {
+
+  //           this.toast.error(res.message);
+
+  //         }
+
+  //       });
+
+  //   this.subs.push(sub);
+
+  // }
 
   ngOnDestroy() {
 

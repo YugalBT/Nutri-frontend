@@ -10,7 +10,7 @@ import { API_ENDPOINTS } from '../../constants/api-endpoints';
 })
 export class ProductSellingPriceService {
 
-  constructor(private http: HttpService) {}
+  constructor(private http: HttpService) { }
 
   private priceChanged = new Subject<void>();
 
@@ -21,11 +21,30 @@ export class ProductSellingPriceService {
   }
 
   savePrice(payload: ProductSellingPriceVm): Observable<ApiResponse<any>> {
-  return this.http.post<any>(API_ENDPOINTS.PRODUCTPRICING.CREATE,payload);
+    return this.http.post<any>(API_ENDPOINTS.PRODUCTPRICING.CREATE, payload);
   }
 
   getAllPrice(payload: any): Observable<ApiResponse<ProductSellingPriceVm[]>> {
-    return this.http.post<ProductSellingPriceVm[]>(API_ENDPOINTS.PRODUCTPRICING.GET_ALL,payload);
+    return this.http.post<ProductSellingPriceVm[]>(API_ENDPOINTS.PRODUCTPRICING.GET_ALL, payload);
 
   }
+
+  deletePrice(productPriceId: string): Observable<ApiResponse<any>> {
+    const url = `${API_ENDPOINTS.PRODUCTPRICING.DELETE}?ProductPriceId=${productPriceId}`;
+    return this.http.post<any>(url, {});
+  }
+
+  activeInActive(productPriceId: string): Observable<ApiResponse<any>> {
+    const url = `${API_ENDPOINTS.PRODUCTPRICING.ACTIVE_INACTIVE}?ProductPriceId=${productPriceId}`;
+    return this.http.post<any>(url, {});
+  }
+  getPreviousPrice(productId: string, priceMonth: string) {
+
+    return this.http.get<any>(
+      API_ENDPOINTS.PRODUCTPRICING.GET_PREVIOUS_PRICE +
+      `?productId=${productId}&priceMonth=${priceMonth}`
+    );
+
+  }
+
 }

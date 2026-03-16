@@ -30,7 +30,7 @@ export class SupplierPriceListComponent implements OnInit, OnDestroy {
     private commonService: CommonService,
     private translate: TranslateService,
     private supplierPriceService: SupplierPriceService,
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.loadSuppliers();
@@ -73,13 +73,16 @@ export class SupplierPriceListComponent implements OnInit, OnDestroy {
             materialId: m.materialId,
             materialName: m.materialName,
             materialCode: m.materialCode,
-            price: m.price ?? null,
+            price: m.price ?? 0,
+            discountPercent: m.discountPercent ?? 0,
+            deliveredPrice: m.deliveredPrice ?? 0,
             supplierStatus: this.mapStatusToNumber(m.supplierStatus),
-             priceMonth: m.priceMonth 
-    ? this.convertToMonthFormat(m.priceMonth)
-    : '',
-            isChanged: false,
-          }));
+            priceMonth: m.priceMonth
+              ? this.convertToMonthFormat(m.priceMonth)
+              : '',
+            isChanged: false
+
+          }))
         },
         error: (err) => {
           console.error(err);
@@ -110,6 +113,21 @@ export class SupplierPriceListComponent implements OnInit, OnDestroy {
     this.saveToApi(changedRows);
   }
 
+  calculateDeliveredPrice(row: any) {
+
+    const price = Number(row.price) || 0;
+    const discount = Number(row.discountPercent) || 0;
+    const discountValue = (price * discount) / 100;
+    row.deliveredPrice = price - discountValue;
+
+  }
+
+
+  onPriceChange(row: any) {
+    this.calculateDeliveredPrice(row);
+    row.isChanged = true;
+  }
+
   saveToApi(rows: any[], singleRow?: any): void {
     if (!this.selectedSupplierId) {
       this.toast.error('Supplier is required');
@@ -118,13 +136,16 @@ export class SupplierPriceListComponent implements OnInit, OnDestroy {
 
     const formattedPayload = {
       supplierId: this.selectedSupplierId,
-      prices: rows.map((row) => ({
+      prices: rows.map(row => ({
         materialId: row.materialId,
-         priceMonth: new Date(row.priceMonth + '-01').toISOString(),
-          price: Number(row.price),
-        supplierStatus: row.supplierStatus,
-      })),
+        priceMonth: new Date(row.priceMonth + '-01').toISOString(),
+        price: Number(row.price),
+        discountPercent: Number(row.discountPercent),
+        deliveredPrice: Number(row.deliveredPrice),
+        supplierStatus: row.supplierStatus
+      }))
     };
+
 
     const sub = this.supplierPriceService
       .bulkSaveSupplierPrices(formattedPayload)
@@ -153,26 +174,26 @@ export class SupplierPriceListComponent implements OnInit, OnDestroy {
     this.materials = [];
   }
   private convertToMonthFormat(dateString: string): string {
-  const date = new Date(dateString);
-  const year = date.getFullYear();
-  const month = (date.getMonth() + 1).toString().padStart(2, '0');
-  return `${year}-${month}`;
-}
-private mapStatusToNumber(status: string | number): number {
-
-  if (typeof status === 'number') {
-    return status;
+    const date = new Date(dateString);
+    const year = date.getFullYear();
+    const month = (date.getMonth() + 1).toString().padStart(2, '0');
+    return `${year}-${month}`;
   }
+  private mapStatusToNumber(status: string | number): number {
 
-  switch (status?.toLowerCase()) {
-    case 'approved':
-      return 0;
-    case 'draft':
-      return 1;
-    default:
-      return 2; 
+    if (typeof status === 'number') {
+      return status;
+    }
+
+    switch (status?.toLowerCase()) {
+      case 'approved':
+        return 0;
+      case 'draft':
+        return 1;
+      default:
+        return 2;
+    }
   }
-}
 
   ngOnDestroy(): void {
     this.subs.forEach((s) => s.unsubscribe());

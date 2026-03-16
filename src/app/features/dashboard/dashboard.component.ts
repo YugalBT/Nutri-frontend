@@ -118,37 +118,37 @@ export class DashboardComponent implements OnInit {
         this.companyDashboard = res?.isSuccess ? res.data : null;
         if (this.companyDashboard) {
 
-  const d = this.companyDashboard;
+          const d = this.companyDashboard;
 
-  this.deaGauge = this.createGauge(
-    'DEA',
-    d.deaMilk ?? 0,
-    0.9,
-    1.5
-  );
+          this.deaGauge = this.createGauge(
+            'DEA',
+            d.deaMilk ?? 0,
+            0.9,
+            1.5
+          );
 
-  this.milkGauge = this.createGauge(
-    'Average milk/day',
-    d.avgMilkPerDay ?? 0,
-    30,
-    55
-  );
+          this.milkGauge = this.createGauge(
+            'Average milk/day',
+            d.avgMilkPerDay ?? 0,
+            30,
+            55
+          );
 
-  this.feedGauge = this.createGauge(
-    'Feed Efficiency',
-    d.feedEfficiency ?? 0,
-    1,
-    2.4
-  );
+          this.feedGauge = this.createGauge(
+            'Feed Efficiency',
+            d.feedEfficiency ?? 0,
+            1,
+            2.4
+          );
 
-  this.crepGauge = this.createGauge(
-    'CREP',
-    d.crep ?? 0,
-    2,
-    5
-  );
+          this.crepGauge = this.createGauge(
+            'CREP',
+            d.crep ?? 0,
+            2,
+            5
+          );
 
-}
+        }
 
 
 
@@ -191,76 +191,76 @@ export class DashboardComponent implements OnInit {
   }
 
   createGauge(title: string, value: number, min: number, max: number): EChartsOption {
-  return {
-    title: {
-      text: title,
-      left: 'center',
-      top: 0,
-      textStyle: {
-        fontSize: 14,
-        fontWeight: 'bold'
-      }
-    },
-    series: [
-      {
-        type: 'gauge',
-        radius: '90%',
-        center: ['50%', '60%'],
+    return {
+      title: {
+        text: title,
+        left: 'center',
+        top: 0,
+        textStyle: {
+          fontSize: 14,
+          fontWeight: 'bold'
+        }
+      },
+      series: [
+        {
+          type: 'gauge',
+          radius: '90%',
+          center: ['50%', '60%'],
 
-        min: min,
-        max: max,
+          min: min,
+          max: max,
 
-        axisLine: {
-          lineStyle: {
-            width: 20,
-            color: [
-              [0.3, '#ff4d4f'],
-              [0.6, '#fadb14'],
-              [1, '#52c41a']
-            ]
-          }
-        },
+          axisLine: {
+            lineStyle: {
+              width: 20,
+              color: [
+                [0.3, '#ff4d4f'],
+                [0.6, '#fadb14'],
+                [1, '#52c41a']
+              ]
+            }
+          },
 
-        /* REMOVE INNER SCALE */
-        // axisTick: { show: false },
-        // splitLine: { show: false },
-        //axisLabel: { show: false },
+          /* REMOVE INNER SCALE */
+          // axisTick: { show: false },
+          // splitLine: { show: false },
+          //axisLabel: { show: false },
 
-        pointer: {
-          width: 4,
-          length: '70%'
-        },
+          pointer: {
+            width: 4,
+            length: '70%'
+          },
 
-        progress: {
-          show: true,
-          width: 20
-        },
+          progress: {
+            show: true,
+            width: 20
+          },
 
-        detail: {
-          fontSize: 20,
-          formatter: '{value}',
-          offsetCenter: [0, '70%']
-        },
+          detail: {
+            fontSize: 20,
+            formatter: '{value}',
+            offsetCenter: [0, '70%']
+          },
 
-        data: [{ value }]
-      }
-    ]
-  };
-}
+          data: [{ value }]
+        }
+      ]
+    };
+  }
 
-getCowPosition(value: number | null | undefined): number {
+  getCowPosition(value: number | null | undefined): number {
 
-  const min = 0.9;
-  const max = 1.5;
+    const min = 0.9;
+    const max = 1.5;
 
-  if (value === null || value === undefined) return 0;
+    if (value === null || value === undefined) return 0;
 
-  const clamped = Math.max(min, Math.min(max, value));
+    const clamped = Math.max(min, Math.min(max, value));
 
-  const percentage = ((clamped - min) / (max - min)) * 100;
+    const percentage = ((clamped - min) / (max - min)) * 100;
 
-  return percentage;
-}
+    return percentage;
+  }
 
   private loadAdminAnalytics(): void {
     this.commonService.getAggregatedAnalytics(this.selectedYear).subscribe({

@@ -91,7 +91,6 @@ export class MaterialAddEditComponent implements OnInit, OnDestroy {
 }
 
 private generateMaterialCode(materialName: string): void {
-debugger;
   if (this.CodeDebounce) clearTimeout(this.CodeDebounce);
 
     this.CodeDebounce = setTimeout(() => {

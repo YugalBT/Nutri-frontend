@@ -45,16 +45,10 @@ export class MaterialService {
     return this.http.get<string>(`${API_ENDPOINTS.MATERIAL.GENERATE_SUPPLIER_CODE}?MaterialName=${firstName}`);
   }
 
-
   importMaterials(file: File): Observable<ApiResponse<any>> {
-
     const formData = new FormData();
     formData.append('file', file);
-
-    return this.http.post<any>(
-      API_ENDPOINTS.MATERIAL.IMPORTMATERIAL,
-      formData
-    );
+    return this.http.post<any>(API_ENDPOINTS.MATERIAL.IMPORTMATERIAL,formData);
   }
 
   exportMaterials(): Observable<Blob> {
