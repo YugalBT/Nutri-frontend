@@ -68,17 +68,17 @@ export class CompanyAddEditComponent implements OnInit {
         '',
         [
           Validators.required,
-          Validators.minLength(3),
-          Validators.pattern(/^[A-Za-z]+$/),
+          Validators.minLength(3)
+          
         ],
       ],
-      middleName: ['', [Validators.pattern(/^[A-Za-z]*$/)]],
+      middleName: ['', [Validators.required]],
       lastName: [
         '',
         [
           Validators.required,
-          Validators.minLength(3),
-          Validators.pattern(/^[A-Za-z]+$/),
+          Validators.minLength(3)
+          
         ],
       ],
       email: ['', [Validators.required, Validators.email]],

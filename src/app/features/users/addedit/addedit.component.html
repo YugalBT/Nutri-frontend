@@ -33,12 +33,12 @@
                 {{ "validation.required" | translate }}
               </div>
 
-              <div
+              <!-- <div
                 *ngIf="form.get('name')?.errors?.['pattern']"
                 class="text-danger"
               >
                 {{ "validation.onlyChars" | translate }}
-              </div>
+              </div> -->
             </div>
 
             <div class="col-md-4">
@@ -51,7 +51,7 @@
                 class="form-control"
                 placeholder="{{ 'users.middleNamePlaceholder' | translate }}"
               />
-              <div
+              <!-- <div
                 *ngIf="
                   form.get('middleName')?.touched &&
                   form.get('middleName')?.invalid
@@ -59,7 +59,7 @@
                 class="text-danger"
               >
                 {{ "validation.onlyChars" | translate }}
-              </div>
+              </div> -->
             </div>
 
             <div class="col-md-4">
@@ -82,12 +82,12 @@
                 {{ "validation.required" | translate }}
               </div>
 
-              <div
+              <!-- <div
                 *ngIf="form.get('lastName')?.errors?.['pattern']"
                 class="text-danger"
               >
                 {{ "validation.onlyChars" | translate }}
-              </div>
+              </div> -->
             </div>
           </div>
           <div class="row g-3 mt-2">

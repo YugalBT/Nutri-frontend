@@ -110,9 +110,9 @@ closeOnOutsideClick(event: MouseEvent) {
 
   private initializeForm(): void {
     this.form = this.fb.group({
-      name: ['', [Validators.required, Validators.pattern(/^[A-Za-z]+$/)]],
-      middleName: ['', [Validators.pattern(/^[A-Za-z]+$/)]],
-      lastName: ['', [Validators.required, Validators.pattern(/^[A-Za-z]+$/)]],
+      name: ['', [Validators.required]],
+      middleName: ['', [Validators.required]],
+      lastName: ['', [Validators.required]],
       email: ['', [Validators.required, Validators.email]],
       phone: [
         '',
@@ -120,7 +120,7 @@ closeOnOutsideClick(event: MouseEvent) {
           Validators.required,
           Validators.minLength(7),
           Validators.maxLength(15),
-          Validators.pattern(/^[0-9]+$/),
+          ,
         ],
       ],
       roleId: [null, Validators.required],
