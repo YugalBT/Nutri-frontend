@@ -58,7 +58,7 @@ export class SupplierPricingFormulaService {
   }
 
   validateformula(payload: any): Observable<ApiResponse<any>> {
-    return this.http.post<any>(API_ENDPOINTS.FORMULA.VALIDATE_FORMULA, payload).pipe(
+    return this.http.post<any>(API_ENDPOINTS.SUPPLIER_PRICE_FORMULA.VALIDATE_FORMULA, payload).pipe(
         tap((res) => {
           if (res.isSuccess) this.notifyformulasChanged();
         }),

@@ -7,12 +7,10 @@
       <div class="modal-header">
 
         <h5 class="modal-title">
-          Add Product Price
+          {{ isEdit ? ('productPrice.editPrice' | translate) : ('productPrice.addPrice' | translate) }}
         </h5>
 
-        <button
-          class="btn-close"
-          (click)="modalInstance.hide()">
+        <button class="btn-close" (click)="modalInstance.hide()">
         </button>
 
       </div>
@@ -29,22 +27,19 @@
             <div class="col-md-4">
 
               <label class="form-label">
-                Product
+                {{ 'productPrice.product' | translate }}
                 <sup class="text-danger">*</sup>
               </label>
 
-              <select
-                class="form-select"
-                formControlName="productId"
+              <select class="form-select" formControlName="productId"
                 [class.is-invalid]="form.get('productId')?.touched && form.get('productId')?.invalid">
 
                 <option value="" disabled>
-                  Select Product
+                  {{ 'productPrice.selectProduct' | translate }}
                 </option>
 
-                <option
-                  *ngFor="let p of products"
-                  [value]="p.productId">
+
+                <option *ngFor="let p of products" [value]="p.productId">
 
                   {{p.productName}}
 
@@ -53,7 +48,7 @@
               </select>
 
               <div class="invalid-feedback">
-                Product is required
+                {{ 'productPrice.productRequired' | translate }}
               </div>
 
             </div>
@@ -64,20 +59,16 @@
             <div class="col-md-4">
 
               <label class="form-label">
-                Price Month
-                <sup class="text-danger">*</sup>
-              </label>
+  {{ 'productPrice.month' | translate }}
+  <sup class="text-danger">*</sup>
+</label>
 
-              <input
-                type="month"
-                class="form-control"
-                formControlName="priceMonth"
-                [class.is-invalid]="form.get('priceMonth')?.invalid && form.get('priceMonth')?.touched"
-              />
+              <input type="month" class="form-control" formControlName="priceMonth"
+                [class.is-invalid]="form.get('priceMonth')?.invalid && form.get('priceMonth')?.touched" />
 
               <div class="invalid-feedback">
-                Month is required
-              </div>
+  {{ 'productPrice.monthRequired' | translate }}
+</div>
 
             </div>
 
@@ -86,16 +77,12 @@
 
             <div class="col-md-4">
 
-              <label class="form-label">
-                Previous Price
-              </label>
+<label class="form-label">
+  {{ 'productPrice.previousPrice' | translate }}
+</label>
 
-              <input
-                type="number"
-                class="form-control"
-                placeholder="Enter previous price"
-                formControlName="previousMonthPrice"
-              />
+              <input type="number" class="form-control" placeholder="{{ 'productPrice.previousPricePlaceholder' | translate }}"
+                formControlName="previousMonthPrice" />
 
             </div>
 
@@ -104,17 +91,12 @@
 
             <div class="col-md-4">
 
-              <label class="form-label">
-                Suggested Price
-                <sup class="text-danger">*</sup>
-              </label>
+<label class="form-label">
+  {{ 'productPrice.suggestedPrice' | translate }}
+</label>
 
-              <input
-                type="number"
-                class="form-control"
-                placeholder="Enter suggested price"
-                formControlName="suggestedPrice"
-              />
+              <input type="number" class="form-control" placeholder="{{ 'productPrice.suggestedPricePlaceholder' | translate }}"
+                formControlName="suggestedPrice" />
 
             </div>
 
@@ -124,16 +106,11 @@
             <div class="col-md-4">
 
               <label class="form-label">
-                Customer Price
-                <sup class="text-danger">*</sup>
-              </label>
+  {{ 'productPrice.customerPrice' | translate }}
+</label>
 
-              <input
-                type="number"
-                class="form-control"
-                placeholder="Enter customer price"
-                formControlName="customerPrice"
-              />
+              <input type="number" class="form-control" placeholder="{{ 'productPrice.customerPricePlaceholder' | translate }}"
+                formControlName="customerPrice" />
 
             </div>
 
@@ -142,16 +119,12 @@
 
             <div class="col-md-4">
 
-              <label class="form-label">
-                Commission %
-              </label>
+<label class="form-label">
+  {{ 'productPrice.commission' | translate }}
+</label>
 
-              <input
-                type="number"
-                class="form-control"
-                placeholder="Commission percentage"
-                formControlName="commissionPercent"
-              />
+              <input type="number" class="form-control" placeholder="{{ 'productPrice.commissionPlaceholder' | translate }}"
+                formControlName="commissionPercent" />
 
             </div>
 
@@ -160,16 +133,12 @@
 
             <div class="col-md-4">
 
-              <label class="form-label">
-                Margin %
-              </label>
+<label class="form-label">
+  {{ 'productPrice.margin' | translate }}
+</label>
 
-              <input
-                type="number"
-                class="form-control"
-                placeholder="Margin percentage"
-                formControlName="marginPercent"
-              />
+              <input type="number" class="form-control" placeholder="{{ 'productPrice.marginPlaceholder' | translate }}"
+                formControlName="marginPercent" />
 
             </div>
 
@@ -182,20 +151,15 @@
 
       <div class="modal-footer">
 
-        <button
-          class="btn btn-outline-secondary"
-          (click)="modalInstance.hide()">
+        <button class="btn btn-outline-secondary" (click)="modalInstance.hide()">
 
-          Cancel
+           {{ 'common.cancel' | translate }}
 
         </button>
 
-        <button
-          class="btn add-btn"
-          (click)="save()">
+        <button class="btn add-btn" (click)="save()">
 
-          Save Price
-
+         {{ 'productPrice.savePrice' | translate }}
         </button>
 
       </div>

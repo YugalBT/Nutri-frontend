@@ -262,7 +262,8 @@ export const API_ENDPOINTS = {
     DELETE: '/MstFormula/Delete',
     ACTIVE_INACTIVE: '/MstFormula/ActiveInActive',
     GET_ALL: '/MstFormula/GetAll',
-    VALIDATE_FORMULA: '/MstFormula/ValidateFormula',
+    VALIDATE_FORMULA: '/MstFormula/Validate',
+    
   },
 
    CALFBARN: {

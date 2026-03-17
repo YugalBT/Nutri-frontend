@@ -5,7 +5,7 @@
     <div class="d-flex align-items-center mb-4">
       <i class="bi bi-currency fs-2 me-3"></i>
       <h4 class="mb-0 fw-bold">
-        Supplier Pricing Settings
+        {{ "pricingSettings.heading" | translate }}
       </h4>
     </div>
 
@@ -15,184 +15,148 @@
 
         <!-- Bulk Processing -->
         <div class="col-md-4 mb-3">
-
           <label class="form-label">
-            Bulk Processing Cost
+            {{ "pricingSettings.bulkProcessingCost" | translate }}
             <sup class="text-danger">*</sup>
           </label>
 
           <input
             type="number"
             class="form-control"
-            placeholder="Enter bulk processing cost"
+            [placeholder]="'pricingSettings.placeholder.bulkProcessingCost' | translate"
             formControlName="bulkProcessingCost"
             [class.is-invalid]="pricingForm.get('bulkProcessingCost')?.touched && pricingForm.get('bulkProcessingCost')?.invalid"
           />
 
           <div class="invalid-feedback">
-
             <small *ngIf="pricingForm.get('bulkProcessingCost')?.errors?.['required']">
-              Bulk processing cost is required
+              {{ "pricingSettings.validation.bulkProcessingRequired" | translate }}
             </small>
-
             <small *ngIf="pricingForm.get('bulkProcessingCost')?.errors?.['min']">
-              Value must be greater than or equal to 0
+              {{ "pricingSettings.validation.minZero" | translate }}
             </small>
-
           </div>
-
         </div>
-
 
         <!-- Bag Processing -->
         <div class="col-md-4 mb-3">
-
           <label class="form-label">
-            Bag Processing Cost
+            {{ "pricingSettings.bagProcessingCost" | translate }}
             <sup class="text-danger">*</sup>
           </label>
 
           <input
             type="number"
             class="form-control"
-            placeholder="Enter bag processing cost"
+            [placeholder]="'pricingSettings.placeholder.bagProcessingCost' | translate"
             formControlName="bagProcessingCost"
             [class.is-invalid]="pricingForm.get('bagProcessingCost')?.touched && pricingForm.get('bagProcessingCost')?.invalid"
           />
 
           <div class="invalid-feedback">
-
             <small *ngIf="pricingForm.get('bagProcessingCost')?.errors?.['required']">
-              Bag processing cost is required
+              {{ "pricingSettings.validation.bagProcessingRequired" | translate }}
             </small>
-
           </div>
-
         </div>
-
 
         <!-- Bulk Transport -->
         <div class="col-md-4 mb-3">
-
           <label class="form-label">
-            Bulk Transport Cost
+            {{ "pricingSettings.bulkTransportCost" | translate }}
             <sup class="text-danger">*</sup>
           </label>
 
           <input
             type="number"
             class="form-control"
-            placeholder="Enter bulk transport cost"
+            [placeholder]="'pricingSettings.placeholder.bulkTransportCost' | translate"
             formControlName="bulkTransportCost"
             [class.is-invalid]="pricingForm.get('bulkTransportCost')?.touched && pricingForm.get('bulkTransportCost')?.invalid"
           />
 
           <div class="invalid-feedback">
-
             <small *ngIf="pricingForm.get('bulkTransportCost')?.errors?.['required']">
-              Bulk transport cost is required
+              {{ "pricingSettings.validation.bulkTransportRequired" | translate }}
             </small>
-
           </div>
-
         </div>
-
 
         <!-- Sack Transport -->
         <div class="col-md-4 mb-3">
-
           <label class="form-label">
-            Sack Transport Cost
+            {{ "pricingSettings.sackTransportCost" | translate }}
             <sup class="text-danger">*</sup>
           </label>
 
           <input
             type="number"
             class="form-control"
-            placeholder="Enter sack transport cost"
+            [placeholder]="'pricingSettings.placeholder.sackTransportCost' | translate"
             formControlName="sackTransportCost"
             [class.is-invalid]="pricingForm.get('sackTransportCost')?.touched && pricingForm.get('sackTransportCost')?.invalid"
           />
 
           <div class="invalid-feedback">
-
             <small *ngIf="pricingForm.get('sackTransportCost')?.errors?.['required']">
-              Sack transport cost is required
+              {{ "pricingSettings.validation.sackTransportRequired" | translate }}
             </small>
-
           </div>
-
         </div>
-
 
         <!-- Commission -->
         <div class="col-md-4 mb-3">
-
           <label class="form-label">
-            Commission Percent
+            {{ "pricingSettings.commissionPercent" | translate }}
             <sup class="text-danger">*</sup>
           </label>
 
           <input
             type="number"
             class="form-control"
-            placeholder="Enter commission percent"
+            [placeholder]="'pricingSettings.placeholder.commissionPercent' | translate"
             formControlName="commissionPercent"
             [class.is-invalid]="pricingForm.get('commissionPercent')?.touched && pricingForm.get('commissionPercent')?.invalid"
           />
 
           <div class="invalid-feedback">
-
             <small *ngIf="pricingForm.get('commissionPercent')?.errors?.['required']">
-              Commission percent is required
+              {{ "pricingSettings.validation.commissionRequired" | translate }}
             </small>
-
             <small *ngIf="pricingForm.get('commissionPercent')?.errors?.['max']">
-              Maximum allowed is 100
+              {{ "pricingSettings.validation.max100" | translate }}
             </small>
-
           </div>
-
         </div>
-
 
         <!-- Margin -->
         <div class="col-md-4 mb-3">
-
           <label class="form-label">
-            Default Margin Percent
+            {{ "pricingSettings.defaultMarginPercent" | translate }}
             <sup class="text-danger">*</sup>
           </label>
 
           <input
             type="number"
             class="form-control"
-            placeholder="Enter margin percent"
+            [placeholder]="'pricingSettings.placeholder.marginPercent' | translate"
             formControlName="defaultMarginPercent"
             [class.is-invalid]="pricingForm.get('defaultMarginPercent')?.touched && pricingForm.get('defaultMarginPercent')?.invalid"
           />
 
           <div class="invalid-feedback">
-
             <small *ngIf="pricingForm.get('defaultMarginPercent')?.errors?.['required']">
-              Default margin percent is required
+              {{ "pricingSettings.validation.marginRequired" | translate }}
             </small>
-
           </div>
-
         </div>
 
       </div>
 
-
       <div class="d-flex justify-content-end mt-4">
-
-        <button class="btn  add-btn px-4">
-
-          Save Pricing Settings
-
+        <button class="btn add-btn px-4">
+          {{ "pricingSettings.save" | translate }}
         </button>
-
       </div>
 
     </form>

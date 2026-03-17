@@ -1,7 +1,6 @@
 .border-start {
     border-left: 3px var(--bs-border-style) var(--primary-color) !important;
 }
-/* HEADER */
 .modern-table thead th {
   background: #f9fafb !important;
   padding: 14px 12px;

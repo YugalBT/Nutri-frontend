@@ -10,11 +10,12 @@ import { ConfirmDialogService } from '../../../shared/services/confirm-dialog.se
 import { TranslateService } from '../../../i18n/translate.service';
 import { ReusableTableComponent } from '../../../shared/components/reusable-table/reusable-table.component';
 import { GlobalSearchComponent } from '../../../shared/components/global-search/global-search.component';
+import { TranslatePipe } from '../../../i18n/translate.pipe';
 
 @Component({
   selector: 'app-product-price-list',
   standalone: true,
-  imports: [ProductPriceAddEditComponent,ReusableTableComponent ,GlobalSearchComponent],
+  imports: [ProductPriceAddEditComponent,ReusableTableComponent ,GlobalSearchComponent,TranslatePipe],
   templateUrl: './product-price-list.component.html',
   styleUrl: './product-price-list.component.css'
 })

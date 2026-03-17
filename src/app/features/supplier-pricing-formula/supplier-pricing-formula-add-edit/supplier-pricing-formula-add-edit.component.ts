@@ -29,9 +29,8 @@ selectedProductId: string | null = null;
   formulaId: string | null = null;
 products: any[] = [];
   expressionName = '';
-  expressionTokens: string[] = [];
+  expressionTokens: any[] = [];
   insertIndex: number | null = null;
-
   operators: OperatorList[] = [];
   rations: RationList[] = [];
   expressionItems: OperatorsAndRationsList[] = [];
@@ -68,6 +67,7 @@ products: any[] = [];
     this.isvalidated = false;
     this.validatedResult = null;
     this.selectedProductId = null;
+    this.resetForm(); 
 
     if (edit && data) {
       this.formulaId = data.formulaId;
@@ -214,14 +214,12 @@ calculateFromMargin(material: any) {
       material.totalCost * (1 + material.marginPct / 100);
   }
 }
-  /* ================= TOKEN HELPERS ================= */
 
   private mapFormulaeArrayToTokens(
     formulaeArray: string[],
     displayArray: string[],
   ): string[] {
     return formulaeArray.map((item, index) => {
-      // NUMBER
       if (!item.includes('__')) {
         return item;
       }
@@ -242,16 +240,40 @@ calculateFromMargin(material: any) {
     this.insertIndex = index;
   }
 
-  addToken(value: string): void {
-    this.insertIndex === null
-      ? this.expressionTokens.push(value)
-      : this.expressionTokens.splice(this.insertIndex++, 0, value);
-  }
+addToken(item: any): void {
+  const token = {
+    name: item.name,             
+    displayName: item.displayName,
+    id: item.id
+  };
 
-  addNumber(value: string): void {
-    if (!value) return;
-    this.addToken(value);
+  if (this.insertIndex === null) {
+    this.expressionTokens.push(token);
+  } else {
+    this.expressionTokens.splice(this.insertIndex++, 0, token);
   }
+}
+
+
+getDisplayName(token: any): string {
+  if (typeof token === 'string') return token;
+  return token?.displayName || '';
+}
+addNumber(value: string): void {
+  if (!value) return;
+
+  const token = {
+    name: value,
+    displayName: value,
+    id: null
+  };
+
+  if (this.insertIndex === null) {
+    this.expressionTokens.push(token);
+  } else {
+    this.expressionTokens.splice(this.insertIndex++, 0, token);
+  }
+}
 
   removeToken(index: number): void {
     this.expressionTokens.splice(index, 1);
@@ -265,119 +287,110 @@ calculateFromMargin(material: any) {
     this.insertIndex = null;
   }
 
-  /* ================= SAVE ================= */
 
-  validateExpression(): void {
-    if (!this.expressionName.trim()) {
-      this.toast.warning('Expression name is required');
-      return;
-    }
-
-    if (!this.expressionTokens.length) {
-      this.toast.warning('Expression cannot be empty');
-      return;
-    }
-
-    const validatePayload = {
-      formula: this.expressionTokens.join(' '),
-    };
-    this.supplierformulaService
-      .validateformula(validatePayload)
-      .subscribe((res) => {
-        if (!res.isSuccess) {
-          this.toast.error(res.message);
-          return;
-        }
-      });
-
-    const payload = this.buildPayload();
-
-    const api$ = this.isEdit
-      ? this.supplierformulaService.updateformula({
-          ...payload,
-          formulaId: this.formulaId,
-        })
-      : this.supplierformulaService.createformula(payload);
-
-    api$.subscribe((res) => {
-      res.isSuccess
-        ? this.toast.success(res.message)
-        : this.toast.error(res.message);
-
-      if (res.isSuccess) this.closeModal();
-    });
+validateExpression(): void {
+  if (!this.isvalidated) {
+    this.toast.warning("Please validate formula first");
+    return;
   }
+
+  const payload = this.buildPayload();
+
+  const api$ = this.isEdit
+    ? this.supplierformulaService.updateformula({
+        ...payload,
+        formulaId: this.formulaId
+      })
+    : this.supplierformulaService.createformula(payload);
+
+  api$.subscribe(res => {
+    if (res.isSuccess) {
+      this.toast.success(res.message);
+      this.closeModal();
+    } else {
+      this.toast.error(res.message);
+    }
+  });
+}
 
   /* ================= PAYLOAD BUILDER ================= */
 
-  private buildPayload() {
-    const formulaeArray: string[] = [];
-    const displayArray: string[] = [];
+private buildPayload() {
+  const formulaeArray: string[] = [];
+  const displayArray: string[] = [];
 
-    this.expressionTokens.forEach((token) => {
-      const found = this.expressionItems.find((x) => x.displayName === token);
+  this.expressionTokens.forEach((token) => {
+    formulaeArray.push(`${token.name}__${token.id}`);
+    displayArray.push(token.displayName);
+  });
 
-      if (found) {
-        formulaeArray.push(`${token}__${found.id}`);
-        displayArray.push(token);
-        return;
-      }
+  return {
+    supplierId: this.selectedSupplierId,
+    formulaName: this.expressionName,
+    productId: this.selectedProductId,
 
-      // number
-      formulaeArray.push(token);
-      displayArray.push(token);
-    });
+    formula: this.expressionTokens
+  .map(t => this.isOperatorToken(t) ? t.displayName : t.name)
+  .join(' '),
 
-    return {
-      supplierId: this.selectedSupplierId,
-      formulaName: this.expressionName,
-      productId: this.selectedProductId,
-      formula: displayArray.join(' '),
-      formulaeArray,
-      displayArray,
-      formulaStatus: this.selectedStatus,
-      materialItems: this.materials.map(m => ({
+    formulaeArray,
+    displayArray,
+    formulaStatus: this.selectedStatus,
+
+    materialItems: this.materials
+      .filter(m => m.marginPct > 0)
+      .map(m => ({
         materialId: m.materialId,
         totalCost: m.totalCost,
         marginPct: m.marginPct,
         sellingPrice: m.sellingPrice
       }))
-    };
-  }
-
-  /* ================= API ================= */
+  };
+}
+isOperatorToken(token: any): boolean {
+  return token.name?.startsWith('operator__');
+}
   private loadExpressionItems(): void {
     this.commonService.getGetAllOperatorsAndMaterialList().subscribe((res) => {
       this.expressionItems = res.data ?? [];
     });
   }
 
-  onValidate(): void {
-    if (!this.expressionName.trim()) {
-      this.toast.warning('Expression name is required');
-      return;
-    }
-
-    if (!this.expressionTokens.length) {
-      this.toast.warning('Expression cannot be empty');
-      return;
-    }
-
-    const validatePayload = {
-      formula: this.expressionTokens.join(' '),
-    };
-
-    this.supplierformulaService
-      .validateformula(validatePayload)
-      .subscribe((res) => {
-        if (res.isSuccess) {
-          this.toast.success(res.message);
-          this.validatedResult = res.data ?? null;
-          this.isvalidated = true;
-        } else {
-          this.toast.error(res.message);
-          this.validatedResult = res.data ?? null;
-        }
-      });
+onValidate(): void {
+  if (!this.expressionTokens.length) {
+    this.toast.warning('Expression cannot be empty');
+    return;
   }
+
+  const formula = this.expressionTokens
+    .map(t => t.name)
+    .join(' ');
+
+  this.supplierformulaService.validateformula({ formula })
+    .subscribe(res => {
+      if (res.isSuccess) {
+        this.isvalidated = true;
+        this.validatedResult = res.data;
+        this.toast.success("Formula is valid");
+      } else {
+        this.isvalidated = false;
+        this.toast.error(res.message);
+      }
+    });
+}
+
+private resetForm(): void {
+  this.expressionName = '';
+  this.expressionTokens = [];
+  this.insertIndex = null;
+
+  this.selectedSupplierId = null;
+  this.selectedProductId = null;
+  this.selectedStatus = 1;
+
+  this.materials = [];
+
+  this.isvalidated = false;
+  this.validatedResult = null;
+}
 }

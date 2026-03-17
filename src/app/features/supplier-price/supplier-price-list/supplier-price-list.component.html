@@ -70,18 +70,13 @@
             <span class="text-danger">*</span>
           </label>
 
-          <select
-            class="form-select"
-            [(ngModel)]="selectedSupplierId"
-            (change)="onSupplierChange()">
+          <select class="form-select" [(ngModel)]="selectedSupplierId" (change)="onSupplierChange()">
 
             <option [ngValue]="null">
               {{ "supplierPrice.selectSupplier" | translate }}
             </option>
 
-            <option
-              *ngFor="let s of suppliers"
-              [value]="s.supplierId">
+            <option *ngFor="let s of suppliers" [value]="s.supplierId">
 
               {{ s.supplierName }}
 
@@ -110,19 +105,13 @@
 
             <tr>
 
-              <th style="width:60px">SN</th>
-
-              <th>Material</th>
-
-              <th>Code</th>
-
-              <th style="min-width:140px">Price</th>
-
-              <th style="min-width:160px">Discount %</th>
-
-              <th style="min-width:160px">Delivered Price</th>
-
-              <th style="min-width:160px">Price Month</th>
+              <th>{{ "common.sn" | translate }}</th>
+              <th>{{ "supplierPrice.material" | translate }}</th>
+              <th>{{ "supplierPrice.code" | translate }}</th>
+              <th>{{ "supplierPrice.price" | translate }}</th>
+              <th>{{ "supplierPrice.discount" | translate }}</th>
+              <th>{{ "supplierPrice.deliveredPrice" | translate }}</th>
+              <th>{{ "supplierPrice.priceMonth" | translate }}</th>
 
               <th style="min-width:160px">
                 {{ "supplierPrice.columns.SupplierPriceStatus" | translate }}
@@ -160,13 +149,8 @@
 
                   <span class="input-group-text">€</span>
 
-                  <input
-                    type="number"
-                    step="0.01"
-                    class="form-control"
-                    [(ngModel)]="m.price"
-                    (ngModelChange)="onPriceChange(m)"
-                    placeholder="0.00">
+                  <input type="number" step="0.01" class="form-control" [(ngModel)]="m.price"
+                    (ngModelChange)="onPriceChange(m)" placeholder="{{ 'supplierPrice.zero' | translate }}">
 
                 </div>
 
@@ -180,13 +164,8 @@
 
                   <span class="input-group-text">%</span>
 
-                  <input
-                    type="number"
-                    step="0.01"
-                    class="form-control"
-                    [(ngModel)]="m.discountPercent"
-                    (ngModelChange)="markChanged(m)"
-                    placeholder="0.00">
+                  <input type="number" step="0.01" class="form-control" [(ngModel)]="m.discountPercent"
+                    (ngModelChange)="markChanged(m)" placeholder="0.00">
 
                 </div>
 
@@ -200,14 +179,8 @@
 
                   <span class="input-group-text">€</span>
 
-                  <input
-                    type="number"
-                    step="0.01"
-                    class="form-control"
-                    readonly
-                    [(ngModel)]="m.deliveredPrice"
-                    (ngModelChange)="onPriceChange(m)"
-                    placeholder="0.00">
+                  <input type="number" step="0.01" class="form-control" readonly [(ngModel)]="m.deliveredPrice"
+                    (ngModelChange)="onPriceChange(m)" placeholder="0.00">
 
                 </div>
 
@@ -217,32 +190,27 @@
               <!-- PRICE MONTH -->
               <td>
 
-                <input
-                  type="month"
-                  class="form-control form-control-sm"
-                  [(ngModel)]="m.priceMonth"
+                <input type="month" class="form-control form-control-sm" [(ngModel)]="m.priceMonth"
                   (ngModelChange)="onPriceChange(m)">
 
               </td>
 
               <td>
 
-                <select
-                  class="form-select form-select-sm"
-                  [(ngModel)]="m.supplierStatus"
+                <select class="form-select form-select-sm" [(ngModel)]="m.supplierStatus"
                   (ngModelChange)="onPriceChange(m)">
 
                   <option [ngValue]="2" disabled>
-                    Select Status
-                  </option>
+  {{ "supplierPrice.selectStatus" | translate }}
+</option>
 
-                  <option [ngValue]="0">
-                    Approved
-                  </option>
+                <option [ngValue]="0">
+  {{ "supplierPrice.approved" | translate }}
+</option>
 
-                  <option [ngValue]="1">
-                    Draft
-                  </option>
+<option [ngValue]="1">
+  {{ "supplierPrice.draft" | translate }}
+</option>
 
                 </select>
 
@@ -257,13 +225,9 @@
 
         <!-- NO DATA -->
 
-        <div *ngIf="materials.length === 0"
-             class="text-center py-5">
+        <div *ngIf="materials.length === 0" class="text-center py-5">
 
-          <img
-            src="assets/image/no-data.png"
-            width="140"
-            class="mb-3">
+          <img src="assets/image/no-data.png" width="140" class="mb-3">
 
           <h5 class="text-muted">
             {{ "common.noData" | translate }}
@@ -280,19 +244,15 @@
 
     <div class="card-footer bg-white text-end py-3">
 
-      <button
-        class="btn btn-outline-secondary me-2 px-4"
-        (click)="clearAll()">
+      <button class="btn btn-outline-secondary me-2 px-4" (click)="clearAll()">
 
-        Clear
+        {{ "supplierPrice.clear" | translate }}
 
       </button>
 
-      <button
-        class="btn add-btn px-5 shadow-sm"
-        (click)="saveAll()">
+      <button class="btn add-btn px-5 shadow-sm" (click)="saveAll()">
 
-        Save All
+       {{ "supplierPrice.saveAll" | translate }}
 
       </button>
 
