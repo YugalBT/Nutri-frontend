@@ -1,0 +1,75 @@
+<div #moduleModal class="modal fade" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h5 class="modal-title">{{ isEdit ? 'Edit Module' : 'Add Module' }}</h5>
+        <button type="button" class="btn-close" (click)="closeModal()"></button>
+      </div>
+
+      <div class="modal-body">
+        <form [formGroup]="form">
+          <div class="row g-3">
+
+            <!-- Module Name EN -->
+            <div class="col-md-6">
+              <label class="form-label">Module Name (EN) <sup class="text-danger">*</sup></label>
+              <input type="text" class="form-control" formControlName="moduleNameEn" placeholder="Enter module name EN">
+              <div class="text-danger" *ngIf="form.get('moduleNameEn')?.touched && form.get('moduleNameEn')?.invalid">
+                Module Name (EN) is required.
+              </div>
+            </div>
+
+            <!-- Module Name IT -->
+            <div class="col-md-6">
+              <label class="form-label">Module Name (IT)</label>
+              <input type="text" class="form-control" formControlName="moduleNameIt" placeholder="Enter module name IT">
+            </div>
+
+          </div>
+
+
+          <div class="row g-3 mt-2">
+
+            <!-- Module Icon -->
+            <div class="col-md-6">
+              <label class="form-label">Module Icon</label>
+              <input type="text" class="form-control" formControlName="moduleIcon" placeholder="e.g. bi bi-house">
+            </div>
+
+            <!-- Module URL -->
+            <div class="col-md-6">
+              <label class="form-label">Module URL <sup class="text-danger">*</sup></label>
+              <input type="text" class="form-control" formControlName="moduleUrl" placeholder="/dashboard">
+              <div class="text-danger" *ngIf="form.get('moduleUrl')?.touched && form.get('moduleUrl')?.invalid">
+                Module URL is required.
+              </div>
+            </div>
+
+          </div>
+
+
+          <!-- Permissions -->
+          <div class="row g-3 mt-3">
+            <label class="form-label fw-bold">Permissions</label>
+            <div class="d-flex gap-4 col-md-12">
+              <label><input type="checkbox" class="form-check-input" formControlName="isAdd"> Add</label>
+              <label><input type="checkbox" formControlName="isEdit"> Edit</label>
+              <label><input type="checkbox" formControlName="isView"> View</label>
+              <label><input type="checkbox" formControlName="isDelete"> Delete</label>
+            </div>
+          </div>
+
+        </form>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn btn-outline-secondary" (click)="closeModal()">Cancel</button>
+        <button class="btn add-btn" (click)="saveModule()">
+          {{ isEdit ? 'Update' : 'Save' }}
+        </button>
+      </div>
+
+    </div>
+  </div>
+</div>

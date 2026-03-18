@@ -1,0 +1,47 @@
+<div class="pagecls">
+
+  <!-- Page Header -->
+  <div class="page-header">
+    <div>
+      <h3 class="page-title">{{ 'ration.Heading' | translate }}</h3>
+    </div>
+
+    <button class="btn add-btn" (click)="openAddRationModal()" [disabled]="!canAddRation">
+      <i class="bi bi-plus-lg me-2"></i>
+      {{ 'ration.addRation' | translate }}
+    </button>
+  </div>
+
+  <div class="filters-card">
+    <app-global-search
+      [placeholder]="'ration.searchByRationNameOrType' | translate"
+      [showStatus]="true"
+      (search)="onSearch($event)"
+      (statusChange)="onStatusChange($event)"
+      (clear)="clearFilters()">
+    </app-global-search>
+  </div>
+
+  <div class="table-card">
+    <app-reusable-table
+      [columns]="columns"
+      [showActions]="true"
+      [data]="ration"
+      [columnFields]="columnFields"
+      [pageable]="true"
+      [totalRecords]="totalRecords",
+      [clickableField]="'rationName'"
+      (cellClick)="onCellClick($event)"
+      [pageSize]="pageSize"
+      [pageIndex]="pageIndex"
+      (pageChange)="onPageChange($event)"
+      (toggleActive)="onToggleActive($event)"
+      (deleteRow)="onDelete($event)"
+      (editRow)="rationModal.openModal(true, $event)">
+    </app-reusable-table>
+  </div>
+
+  <!-- Add/Edit Modal -->
+<app-ration-add-edit #rationModal></app-ration-add-edit>
+
+</div>

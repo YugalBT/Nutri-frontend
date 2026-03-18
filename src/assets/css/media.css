@@ -5,6 +5,8 @@
     position: relative;
 	top: auto;
 }
+table tr th{white-space: nowrap;}
+table tr td{white-space: nowrap;}
 }
 
 @media (max-width: 1199px) {

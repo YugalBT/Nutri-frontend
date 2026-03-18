@@ -1,0 +1,56 @@
+<div class="pagecls">
+
+     <div class="page-header">
+      <h3 class="page-title">{{ 'language.heading' | translate }}</h3>
+   
+    <button class="btn add-btn"
+            (click)="languageAddEdit.openModal()">
+      <i class="bi bi-plus-lg me-2"></i>
+      {{ 'language.addLanguage' | translate }}
+    </button>
+  </div>
+
+  <!-- Filters Section -->
+  <div class="filters-card">
+    <app-global-search
+     [label]="'role.searchFilters' | translate"
+      [label]="'language.searchFilters' | translate"
+      [placeholder]="'language.searchPlaceholder' | translate"
+      [showStatus]="true"
+      (search)="onSearch($event)"
+      (statusChange)="onStatusChange($event)"
+      (clear)="clearFilters()">
+    </app-global-search>
+  </div>
+
+  <!-- Table Section -->
+  <div class="table-card">
+    <app-reusable-table
+      [columns]="columns"
+      [columnFields]="columnFields"
+      [data]="languages"
+      [showActions]="true"
+      [pageable]="true"
+      [totalRecords]="totalRecords"
+      [pageSize]="pageSize"
+      [pageIndex]="pageIndex"
+      (pageChange)="onPageChange($event)"
+      (toggleActive)="toggleLanguageStatus($event)"
+      (editRow)="languageAddEdit.openModal(true, $event)"
+      (deleteRow)="deleteLanguage($event)"
+       [showImportExport]="true"
+      (importRow)="importLanguage($event)"
+      (exportRow)="exportLanguage($event)">
+    </app-reusable-table>
+  </div>
+<input
+  type="file"
+  #importFileInput
+  hidden
+  accept=".xlsx,.xls"
+  (change)="onImportFileSelected($event)" />
+
+
+<app-language-add-edit #languageAddEdit></app-language-add-edit>
+
+</div>

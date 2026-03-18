@@ -1,0 +1,25 @@
+<div class="pagecls">
+
+  <!-- Header -->
+  <div class="page-header d-flex justify-content-between align-items-center">
+    <h3 class="page-title">
+      Ration Items of {{ rationName }}
+    </h3>
+
+   <button class="btn add-btn " (click)="goBack()">
+  ← Back
+</button>
+
+  </div>
+
+  <!-- Reusable Table -->
+  <app-reusable-table
+    [columns]="columns"
+    [columnFields]="columnFields"
+    [data]="items"
+    [showActions]="false"
+    [pageable]="false"
+    [totalRecords]="totalRecords">
+  </app-reusable-table>
+
+</div>

@@ -1,0 +1,166 @@
+<div class="container mt-4 mb-4" *ngIf="pricingForm">
+
+  <div class="card shadow-sm border-0 rounded-4 p-4">
+
+    <div class="d-flex align-items-center mb-4">
+      <i class="bi bi-currency fs-2 me-3"></i>
+      <h4 class="mb-0 fw-bold">
+        {{ "pricingSettings.heading" | translate }}
+      </h4>
+    </div>
+
+    <form [formGroup]="pricingForm" (ngSubmit)="onSubmit()">
+
+      <div class="row">
+
+        <!-- Bulk Processing -->
+        <div class="col-md-4 mb-3">
+          <label class="form-label">
+            {{ "pricingSettings.bulkProcessingCost" | translate }}
+            <sup class="text-danger">*</sup>
+          </label>
+
+          <input
+            type="number"
+            class="form-control"
+            [placeholder]="'pricingSettings.placeholder.bulkProcessingCost' | translate"
+            formControlName="bulkProcessingCost"
+            [class.is-invalid]="pricingForm.get('bulkProcessingCost')?.touched && pricingForm.get('bulkProcessingCost')?.invalid"
+          />
+
+          <div class="invalid-feedback">
+            <small *ngIf="pricingForm.get('bulkProcessingCost')?.errors?.['required']">
+              {{ "pricingSettings.validation.bulkProcessingRequired" | translate }}
+            </small>
+            <small *ngIf="pricingForm.get('bulkProcessingCost')?.errors?.['min']">
+              {{ "pricingSettings.validation.minZero" | translate }}
+            </small>
+          </div>
+        </div>
+
+        <!-- Bag Processing -->
+        <div class="col-md-4 mb-3">
+          <label class="form-label">
+            {{ "pricingSettings.bagProcessingCost" | translate }}
+            <sup class="text-danger">*</sup>
+          </label>
+
+          <input
+            type="number"
+            class="form-control"
+            [placeholder]="'pricingSettings.placeholder.bagProcessingCost' | translate"
+            formControlName="bagProcessingCost"
+            [class.is-invalid]="pricingForm.get('bagProcessingCost')?.touched && pricingForm.get('bagProcessingCost')?.invalid"
+          />
+
+          <div class="invalid-feedback">
+            <small *ngIf="pricingForm.get('bagProcessingCost')?.errors?.['required']">
+              {{ "pricingSettings.validation.bagProcessingRequired" | translate }}
+            </small>
+          </div>
+        </div>
+
+        <!-- Bulk Transport -->
+        <div class="col-md-4 mb-3">
+          <label class="form-label">
+            {{ "pricingSettings.bulkTransportCost" | translate }}
+            <sup class="text-danger">*</sup>
+          </label>
+
+          <input
+            type="number"
+            class="form-control"
+            [placeholder]="'pricingSettings.placeholder.bulkTransportCost' | translate"
+            formControlName="bulkTransportCost"
+            [class.is-invalid]="pricingForm.get('bulkTransportCost')?.touched && pricingForm.get('bulkTransportCost')?.invalid"
+          />
+
+          <div class="invalid-feedback">
+            <small *ngIf="pricingForm.get('bulkTransportCost')?.errors?.['required']">
+              {{ "pricingSettings.validation.bulkTransportRequired" | translate }}
+            </small>
+          </div>
+        </div>
+
+        <!-- Sack Transport -->
+        <div class="col-md-4 mb-3">
+          <label class="form-label">
+            {{ "pricingSettings.sackTransportCost" | translate }}
+            <sup class="text-danger">*</sup>
+          </label>
+
+          <input
+            type="number"
+            class="form-control"
+            [placeholder]="'pricingSettings.placeholder.sackTransportCost' | translate"
+            formControlName="sackTransportCost"
+            [class.is-invalid]="pricingForm.get('sackTransportCost')?.touched && pricingForm.get('sackTransportCost')?.invalid"
+          />
+
+          <div class="invalid-feedback">
+            <small *ngIf="pricingForm.get('sackTransportCost')?.errors?.['required']">
+              {{ "pricingSettings.validation.sackTransportRequired" | translate }}
+            </small>
+          </div>
+        </div>
+
+        <!-- Commission -->
+        <div class="col-md-4 mb-3">
+          <label class="form-label">
+            {{ "pricingSettings.commissionPercent" | translate }}
+            <sup class="text-danger">*</sup>
+          </label>
+
+          <input
+            type="number"
+            class="form-control"
+            [placeholder]="'pricingSettings.placeholder.commissionPercent' | translate"
+            formControlName="commissionPercent"
+            [class.is-invalid]="pricingForm.get('commissionPercent')?.touched && pricingForm.get('commissionPercent')?.invalid"
+          />
+
+          <div class="invalid-feedback">
+            <small *ngIf="pricingForm.get('commissionPercent')?.errors?.['required']">
+              {{ "pricingSettings.validation.commissionRequired" | translate }}
+            </small>
+            <small *ngIf="pricingForm.get('commissionPercent')?.errors?.['max']">
+              {{ "pricingSettings.validation.max100" | translate }}
+            </small>
+          </div>
+        </div>
+
+        <!-- Margin -->
+        <div class="col-md-4 mb-3">
+          <label class="form-label">
+            {{ "pricingSettings.defaultMarginPercent" | translate }}
+            <sup class="text-danger">*</sup>
+          </label>
+
+          <input
+            type="number"
+            class="form-control"
+            [placeholder]="'pricingSettings.placeholder.marginPercent' | translate"
+            formControlName="defaultMarginPercent"
+            [class.is-invalid]="pricingForm.get('defaultMarginPercent')?.touched && pricingForm.get('defaultMarginPercent')?.invalid"
+          />
+
+          <div class="invalid-feedback">
+            <small *ngIf="pricingForm.get('defaultMarginPercent')?.errors?.['required']">
+              {{ "pricingSettings.validation.marginRequired" | translate }}
+            </small>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="d-flex justify-content-end mt-4">
+        <button class="btn add-btn px-4">
+          {{ "pricingSettings.save" | translate }}
+        </button>
+      </div>
+
+    </form>
+
+  </div>
+
+</div>

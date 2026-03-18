@@ -1,7 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Archivo:ital,wght@0,100..900;1,100..900&display=swap');
 :root {
-    --primary-color: #16365C;
-    --secondary-color: #00A499;
+    --primary-color: #2CA28F;
+    --secondary-color: #F4F5F9;
     --white:#fff;
     --font-dark: #000229;
     --font-gray: #555;
@@ -23,11 +23,392 @@
   a{text-decoration: none;}
 body{   font-family: "Archivo", sans-serif;font-size: var(--font-14);background-color: #F5FFFE;}
 p{color: var(--font-gray);}
+
+/* Dark mode variables and overrides */
+/* When `dark-mode` is applied to the document element, these values apply */
+:root.dark-mode {
+  --background-color: #071021;
+  --surface-color: #0b1a25;
+  --text-color: #E6EEF6;
+  --muted-text: #9FB0C0;
+}
+/* LIGHT MODE (default) */
+:root {
+  --bg-surface: #ffffff;
+  --bg-hover: #f9fafc;
+  --bg-header: #f9fafb;
+  --bg-secondary: #f3f4f6;
+  --border-color: #e5e7eb;
+  --border-light: #f3f4f6;
+
+  --text-primary: #111827;
+  --text-secondary: #374151;
+  --text-muted: #6b7280;
+
+  --action-icon: #374151;
+  --action-icon-hover: #111827;
+
+  --badge-active-bg: #d1fae5;
+  --badge-active-text: #065f46;
+
+  --badge-inactive-bg: #fee2e2;
+  --badge-inactive-text: #b91c1c;
+
+  --switch-off: #d1d5db;
+  --switch-on: #3b82f6;
+
+  --dropdown-bg: #ffffff;
+  --dropdown-hover: #f3f4f6;
+}
+
+/* DARK MODE */
+.dark-mode {
+  --bg-surface: #1e1f22;
+  --bg-hover: #2a2c31;
+  --bg-header: #27292d;
+  --bg-secondary: #303236;
+  --border-color: #3b3d42;
+  --border-light: #2f3135;
+
+  --text-primary: #f1f5f9;
+  --text-secondary: #d1d5db;
+  --text-muted: #9ca3af;
+
+  --action-icon: #d1d5db;
+  --action-icon-hover: #ffffff;
+
+  --badge-active-bg: #064e3b;
+  --badge-active-text: #6ee7b7;
+
+  --badge-inactive-bg: #7f1d1d;
+  --badge-inactive-text: #fecaca;
+
+  --switch-off: #4b5563;
+  --switch-on: #3b82f6;
+
+  --dropdown-bg: #26272b;
+  --dropdown-hover: #323338;
+}
+
+/* Apply page-level overrides when dark-mode class is present */
+html.dark-mode, body.dark-mode, :root.dark-mode body {
+  background-color: var(--background-color) !important;
+  color: var(--text-color) !important;
+}
+
+/* Theme toggle button */
+.theme-toggle{background: transparent;border: none;padding:6px 8px;border-radius:6px;cursor:pointer}
+.theme-toggle:hover{background: rgba(0,0,0,0.06)}
+.dark-mode .theme-toggle:hover{background: rgba(255,255,255,0.04)}
+
+/* Dark mode surface adjustments */
+.dark-mode .card, .dark-mode .white-with-shadow, .dark-mode .welcome-dashboard {
+  background-color: var(--surface-color) !important;
+  box-shadow: none !important;
+}
+
+.dark-mode header{
+  background-color: var(--surface-color) !important;
+  border-bottom-color: rgba(255,255,255,0.04) !important;
+}
+
+.dark-mode .profile-right-content h3, .dark-mode p, .dark-mode .text-muted {
+  color: var(--text-color) !important;
+}
+
+/* Broad dark-mode text and control overrides to ensure readability */
+.dark-mode, html.dark-mode, body.dark-mode {
+  color: var(--text-color) !important;
+}
+
+/* Sidebar text and links */
+.dark-mode .side-menu-item a,
+.dark-mode .side-menu-heading p,
+.dark-mode .side-logo h3,
+.dark-mode .sidebar-footer p,
+.dark-mode .sidebar-footer a {
+  color: var(--text-color) !important;
+}
+
+/* Header / profile */
+.dark-mode header,
+.dark-mode .header-inner,
+.dark-mode .profile-right-content h3,
+.dark-mode .profile-right-content p {
+  color: var(--text-color) !important;
+}
+
+/* Cards, white surfaces */
+.dark-mode .card,
+.dark-mode .card-body,
+.dark-mode .card-header,
+.dark-mode .white-with-shadow,
+.dark-mode .welcome-dashboard {
+  background-color: var(--surface-color) !important;
+  color: var(--text-color) !important;
+}
+
+/* Ensure utility background classes flip correctly in dark mode */
+.dark-mode .bg-white, .dark-mode .bg-light {
+  background-color: var(--surface-color) !important;
+  color: var(--text-color) !important;
+}
+
+/* Make heading elements readable in dark mode */
+.dark-mode h1, .dark-mode h2, .dark-mode h3, .dark-mode h4, .dark-mode h5, .dark-mode h6 {
+  color: var(--text-color) !important;
+}
+
+/* Comprehensive dark-mode overrides for form controls and general elements */
+.dark-mode input,
+.dark-mode input[type="text"],
+.dark-mode input[type="password"],
+.dark-mode input[type="email"],
+.dark-mode input[type="number"],
+.dark-mode textarea,
+.dark-mode .form-control,
+.dark-mode .form-control-sm,
+.dark-mode .form-select,
+.dark-mode .form-select-sm,
+.dark-mode .input-group .form-control,
+.dark-mode .search-wrapper .form-control {
+  background-color: var(--surface-color) !important;
+  color: var(--text-color) !important;
+  border: 1px solid rgba(255,255,255,0.06) !important;
+}
+
+.dark-mode ::placeholder {
+  color: rgba(230,238,246,0.6) !important;
+}
+
+/* Select arrow and custom selects in dark mode: use an inline SVG arrow that inherits color */
+.dark-mode .form-select, .dark-mode .form-select-sm {
+  /* show a down-caret SVG that uses currentColor so it adapts to theme */
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' width='14' height='14'><polyline points='6 9 12 15 18 9' stroke='currentColor' stroke-width='2' fill='none' stroke-linecap='round' stroke-linejoin='round'/></svg>") !important;
+  background-repeat: no-repeat !important;
+  background-position: right 0.75rem center !important;
+  background-size: 14px 14px !important;
+  padding-right: 2.6rem !important;
+  -webkit-appearance: none !important;
+  -moz-appearance: none !important;
+  appearance: none !important;
+  color: var(--text-color) !important;
+}
+
+/* Tables */
+.dark-mode table thead th {
+  background-color: rgba(255,255,255,0.03) !important;
+  color: var(--text-color) !important;
+  border-bottom: 1px solid rgba(255,255,255,0.04) !important;
+}
+.dark-mode table tbody tr td {
+  border-bottom: 1px solid rgba(255,255,255,0.02) !important;
+}
+
+/* Dropdown menus, context menus */
+.dark-mode .dropdown-menu,
+.dark-mode .dropdown-item {
+  background-color: var(--surface-color) !important;
+  color: var(--text-color) !important;
+}
+.dark-mode .dropdown-item:hover {
+  background-color: rgba(255,255,255,0.03) !important;
+}
+
+/* Modals */
+.dark-mode .modal-content,
+.dark-mode .modal-header,
+.dark-mode .modal-body,
+.dark-mode .modal-footer {
+  background-color: var(--surface-color) !important;
+  color: var(--text-color) !important;
+}
+
+/* Buttons - ensure contrast */
+.dark-mode .btn {
+  color: var(--text-color) !important;
+}
+.dark-mode .btn.btn-light,
+.dark-mode .btn.btn-white {
+  background-color: rgba(255,255,255,0.03) !important;
+  color: var(--text-color) !important;
+}
+
+/* Outline buttons */
+.dark-mode .btn-outline-secondary {
+  border-color: rgba(255,255,255,0.08) !important;
+  color: var(--text-color) !important;
+}
+
+/* Breadcrumbs and small utility text */
+.dark-mode .breadcrumb,
+.dark-mode .breadcrumb-item a,
+.dark-mode .small,
+.dark-mode .form-text {
+  color: var(--muted-text) !important;
+}
+
+/* Cards headings and headers */
+.dark-mode .card-header,
+.dark-mode .card-title,
+.dark-mode .card-subtitle {
+  color: var(--text-color) !important;
+}
+
+/* Icons & svg strokes (best-effort) */
+.dark-mode svg {
+  color: var(--text-color) !important;
+}
+
+/* Ensure both stroke and fill of SVG shapes inherit the current color in dark mode */
+.dark-mode svg *,
+.dark-mode svg {
+  stroke: currentColor !important;
+  fill: currentColor !important;
+}
+
+/* Utility backgrounds override: any utility forcing white should adapt */
+.dark-mode .bg-white, .dark-mode .bg-light, .dark-mode .bg-primary {
+  background-color: var(--surface-color) !important;
+  color: var(--text-color) !important;
+}
+
+/* Ensure links remain visible */
+.dark-mode a, .dark-mode a:hover, .dark-mode a:focus {
+  color: var(--secondary-color) !important;
+}
+
+/* Notifications/badges */
+.dark-mode .badge,
+.dark-mode .notification-number {
+  background-color: var(--secondary-color) !important;
+  color: #000 !important;
+}
+
+/* Ensure form labels are readable */
+.dark-mode label,
+.dark-mode .form-label-custom {
+  color: var(--text-color) !important;
+}
+
+/* Tooltips & popovers */
+.dark-mode .tooltip-inner,
+.dark-mode .popover-body {
+  background-color: var(--surface-color) !important;
+  color: var(--text-color) !important;
+}
+
+/* Borders and overlays: make borders light on dark backgrounds */
+.dark-mode .card,
+.dark-mode .card-header,
+.dark-mode .card-body,
+.dark-mode .white-with-shadow,
+.dark-mode .welcome-dashboard,
+.dark-mode .modal-content,
+.dark-mode .modal-header,
+.dark-mode .modal-body,
+.dark-mode .modal-footer,
+.dark-mode .dropdown-menu,
+.dark-mode .table,
+.dark-mode .table th,
+.dark-mode .table td,
+.dark-mode .form-control,
+.dark-mode .form-select,
+.dark-mode .input-group .form-control,
+.dark-mode .sidebar,
+.dark-mode header {
+  border: 1px solid rgba(255,255,255,0.06) !important;
+}
+
+/* Inputs/selects adjusted to show subtle light border */
+.dark-mode .form-control,
+.dark-mode .form-select,
+.dark-mode textarea,
+.dark-mode input {
+  border: 1px solid rgba(255,255,255,0.06) !important;
+  background-color: var(--surface-color) !important;
+  color: var(--text-color) !important;
+  box-shadow: none !important;
+}
+
+/* Tables: clear row dividers with light borders */
+.dark-mode table thead th {
+  border-bottom: 1px solid rgba(255,255,255,0.06) !important;
+}
+.dark-mode table tbody tr td {
+  border-bottom: 1px solid rgba(255,255,255,0.02) !important;
+}
+
+/* Dropdowns and menus */
+.dark-mode .dropdown-menu {
+  border: 1px solid rgba(255,255,255,0.06) !important;
+  background-color: var(--surface-color) !important;
+}
+
+/* Modal backdrop darker and overlay consistent */
+.dark-mode .modal-backdrop.show {
+  background-color: rgba(0,0,0,0.6) !important;
+}
+
+/* Outline / ghost buttons */
+.dark-mode .btn-outline-secondary {
+  border-color: rgba(255,255,255,0.12) !important;
+  color: var(--text-color) !important;
+}
+
+/* Remove bright box-shadows which look odd on dark */
+.dark-mode .box-shadow,
+.dark-mode .white-with-shadow,
+.dark-mode .card {
+  box-shadow: none !important;
+}
+
+/* Ensure dialog-like components (dialogs / popovers) use dark surface and light border */
+.dark-mode .dialog,
+.dark-mode .modal-dialog,
+.dark-mode .popover {
+  background-color: var(--surface-color) !important;
+  color: var(--text-color) !important;
+  border: 1px solid rgba(255,255,255,0.06) !important;
+}
+
+/* Tables and reusable table content */
+.dark-mode table,
+.dark-mode th,
+.dark-mode td,
+.dark-mode .table-responsive,
+.dark-mode .reusable-table {
+  color: var(--text-color) !important;
+}
+
+/* Form controls */
+.dark-mode .form-control,
+.dark-mode .form-control-sm,
+.dark-mode .form-select,
+.dark-mode .form-select-sm,
+.dark-mode .input-group .form-control {
+  background-color: #0b1a25 !important;
+  color: var(--text-color) !important;
+  border-color: rgba(255,255,255,0.06) !important;
+}
+
+/* Buttons contrast */
+.dark-mode .blue-btn {
+  background-color: var(--primary-color) !important;
+  color: var(--secondary-color) !important;
+}
+
+/* Small text adjustments */
+.dark-mode .text-muted { color: var(--muted-text) !important; }
+.dark-mode a { color: var(--secondary-color) !important; }
+
+/* Notification badge */
+.dark-mode .notification-number { background-color: var(--secondary-color) !important; color: #000 !important; }
 .mt-30{margin-top: 30px;}
 .mb-30{margin-bottom: 30px;}
 .para_18{font-size: var(--font-18);}
-.blue-btn {background-color: var(--primary-color);color:#F4F5F9!important;font-size: var(--font-16);    border-radius: 6px;padding: 16px 20px;font-weight: var(--font-600);}
-.blue-btn:hover{background-color: var(--secondary-color);}
+.blue-btn {background-color: var(--primary-color);color: var(--secondary-color) !important; font-size: var(--font-16); border-radius: 6px; padding: 16px 20px; font-weight: var(--font-600);}
+.blue-btn:hover{filter: brightness(0.95);}
 /* login page */
 .login-left-card{    background-color: #fff;
     border-radius: 20px;
@@ -42,7 +423,7 @@ p{color: var(--font-gray);}
 .form-control-custom {border-radius: 10px;border: 1px solid #DDDDDD;background: var(--white);height: 55px;font-size: var(--font-16);color: #7E7E7E;padding: 0px 20px;}
 .password_svg svg {position: absolute;bottom: 12px;right: 12px;}
 .remember_div .form-check-label {font-size: 16px;font-weight: 400;line-height: normal;}
-.link_forget {color: var(--secondary-color) !important;font-size: var(--font-16);line-height: normal;}
+.link_forget {color: var(--primary-color) !important;font-size: var(--font-16);line-height: normal;}
 .gradient_bg {background-image: url('../image/login-graph.png');background-repeat: no-repeat;background-position: top center;
 background-size: cover;position: relative;}
 .gradient_bg::before {content: "";position: absolute;width: 100%;height: 100%;top: 0;left: 0;
@@ -64,7 +445,7 @@ background-size: cover;position: relative;}
 .forget-pass-content p{font-size: var(--font-16);color: #949292;}
 
 /* dashboard page */
-.sidebar {background-color: #0D2848;max-width: 264px;height: 100vh;position: fixed;width: 100%;left: 0;top: 0;z-index: 99;}
+.sidebar {background-color: var(--primary-color);max-width: 250px;height: 100vh;position: fixed;width: 100%;left: 0;top: 0;z-index: 99;}
 .sidebar-footer{padding:10px;position: absolute;width: 100%;bottom: 0; }
 .sidebar-footer a{font-weight:var(--font-600);color: #ffffff;}
 .sidebar-footer p{color: #ffffff;}
@@ -107,8 +488,13 @@ padding-left: 40px;min-width: 300px;}
 .notification-number{width: 19px;height: 19px;border-radius: 50%;background-color: #1F7E9F;font-size: 12px;font-weight: var(--font-600);color: #fff;display: flex;align-items: center;justify-content: center;position: absolute;top: -2px;right: -3px;}
 .profile-right-content h3{font-size: var(--font-14);font-weight: var(--font-500);color: #000000;}
 .profile-right-content p{font-size: var(--font-13);}
-.profile-dropdown .dropdown-toggle::after {background-image: url('../image/down.svg');background-repeat: no-repeat;    border: none;width: 16px;
-height: 16px;}
+.profile-dropdown .dropdown-toggle::after {
+    background-image: url("../image/down.svg");
+    background-repeat: no-repeat;
+    border: none;
+    width: 16px;
+    height: 16px;
+}
 .profile img{width: 100%;height: 100%;object-fit: cover;object-position: center;}
 .body_heading{position: relative;padding-left: 12px;}
 .body_heading h2{font-size: var(--font-18);font-weight: var(--font-500);color: #070619;}
@@ -141,4 +527,180 @@ border-radius: 20px;padding: 30px;background-image: url('../image/welcome-img\ 1
 .act-content p{font-size: var(--font-13);}
 .act-time{font-size: var(--font-14);font-weight: var(--font-500);color: var(--font-gray);}
 
- 
+/* Ensure notification SVG and icon backgrounds adapt in dark mode */
+.dark-mode .header-icon.Notification{background: rgba(255,255,255,0.03) !important;}
+.dark-mode .header-icon.Notification svg { color: var(--text-color) !important; }
+.dark-mode .notification-number { background-color: var(--secondary-color) !important; color: #000 !important; }
+
+/* Toggles, icons and filter controls styling in dark mode */
+.dark-mode .form-check-input {
+  background-color: rgba(255,255,255,0.02) !important;
+  border: 1px solid rgba(255,255,255,0.06) !important;
+}
+.dark-mode .form-check-input:checked {
+  background-color: var(--secondary-color) !important;
+  border-color: var(--secondary-color) !important;
+}
+.dark-mode .form-check-label {
+  color: var(--text-color) !important;
+}
+
+/* Icons and small control glyphs */
+.dark-mode .gs-icon,
+.dark-mode .header-icon,
+.dark-mode .side-item-icon,
+.dark-mode .fa,
+.dark-mode .icon {
+  color: var(--text-color) !important;
+}
+
+/* Global-search specific tweaks (filters) */
+.global-search { --gs-height: 40px; }
+.global-search .gs-input-group { align-items: center; gap: 0; }
+.global-search .gs-icon { color: var(--muted-text); padding: 8px; display: inline-flex; align-items: center; justify-content: center; background: transparent; border-radius: 6px; }
+.global-search .gs-input { height: var(--gs-height); border-radius: 8px 0 0 8px; padding: 8px 12px; }
+.global-search .gs-clear { background: transparent; border: none; color: var(--muted-text); padding: 6px 10px; display: inline-flex; align-items: center; justify-content: center; border-radius: 0 8px 8px 0; cursor: pointer; }
+.global-search .gs-clear svg { display: block; color: currentColor; }
+.global-search .gs-clear:hover { color: var(--text-color); background: rgba(0,0,0,0.03); }
+
+.global-search .gs-select-wrapper { position: relative; }
+.global-search .gs-select { -webkit-appearance: none; -moz-appearance: none; appearance: none; height: var(--gs-height); padding: 8px 12px; padding-right: 2.6rem; border-radius: 8px; background-color: #fff; border: 1px solid #E8EDF2; color: #333; }
+.global-search .select-arrow { position: absolute; right: 0.8rem; top: 50%; transform: translateY(-50%); pointer-events: none; color: var(--muted-text); font-size: 16px; }
+
+/* Dark mode adjustments for global-search */
+.dark-mode .global-search .gs-input { background-color: var(--surface-color) !important; color: var(--text-color) !important; border: 1px solid rgba(255,255,255,0.06); }
+.dark-mode .global-search .gs-clear { color: rgba(230,238,246,0.6); }
+.dark-mode .global-search .gs-clear:hover { color: var(--text-color); background: rgba(255,255,255,0.02); }
+.dark-mode .global-search .gs-select { background-color: var(--surface-color) !important; color: var(--text-color) !important; border: 1px solid rgba(255,255,255,0.06) !important; }
+.dark-mode .global-search .select-arrow { color: rgba(230,238,246,0.56); }
+
+/* Responsive: make controls full-width on small screens */
+@media (max-width: 576px) {
+  .global-search .gs-input { min-width: 100%; }
+  .global-search .gs-select { width: 100%; }
+  .global-search .select-arrow { right: 0.6rem; }
+}
+
+/* Ensure filter pills/active states look correct */
+.dark-mode .btn-filter-active,
+.dark-mode .filter-pill {
+  background-color: rgba(255,255,255,0.04) !important;
+  color: var(--text-color) !important;
+}
+
+
+/* --------------------------------------
+   ADD USER BUTTON
+--------------------------------------- */
+.add-btn {
+  background: #2CA28F;
+  color: #fff;
+  font-weight: 600;
+  border-radius: 8px;
+  padding: 10px 18px;
+  transition: 0.2s ease;
+  box-shadow: 0px 2px 8px rgba(37, 222, 235, 0.25);
+}
+
+.add-btn:hover {
+  background: #2CA28F;
+  box-shadow: 0px 4px 12px rgba(37, 222, 235, 0.25);
+}
+
+.add-btn i {
+  font-size: 1rem;
+}
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 22px;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.page-title {
+  font-size: 1.55rem;
+  font-weight: 700;
+  color: #111827;
+  margin: 0;
+}
+
+.page-subtitle {
+  font-size: 0.9rem;
+  color: #6b7280;
+  margin: 2px 0 0 0;
+}
+.pagecls{
+  padding: 25px;
+  background: #ffffff;
+  min-height: 100vh;
+  color: #1f2937;
+  font-family: Inter, sans-serif;
+}
+
+::ng-deep .mat-paginator {
+  background: white;
+  border-radius: 6px;
+  padding: 6px 12px;
+}
+
+::ng-deep .mat-paginator-range-label {
+  font-size: 13px;
+}
+
+::ng-deep .mat-paginator-navigation-button {
+  border: 1px solid #dee2e6;
+  border-radius: 4px;
+  margin: 0px 4px;
+}
+.profile-image{    border-radius: 7px;object-fit: cover;
+}
+.btn:hover{background-color: var(--primary-color);}
+.search-wrapper-modern{max-width: 300px !important;border-radius: 8px !important;}
+.form-check-input{border: 1px solid var(--primary-color);} 
+.link-text{color: var(--primary-color) !important;}
+
+.border-start {
+    border-left: 3px var(--bs-border-style) var(--primary-color) !important;
+}
+
+/* NO DATA FOUND */
+.no-data-container {
+  background: #ffffff;
+  border-radius: 14px;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+  padding: 80px 20px;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 400px;
+}
+
+.no-data-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+.no-data-icon {
+  width: 100px;
+  height: 100px;
+  object-fit: contain;
+}
+
+.no-data-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #374151;
+  margin: 0;
+}
+
+.no-data-message {
+  font-size: 0.95rem;
+  color: #6b7280;
+  margin: 0;
+}

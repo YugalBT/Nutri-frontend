@@ -1,7 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Archivo:ital,wght@0,100..900;1,100..900&display=swap');
 :root {
-    --primary-color: #16365C;
-    --secondary-color: #00A499;
+    --primary-color: #2CA28F;
+    --secondary-color: #F4F5F9;
     --white:#fff;
     --font-dark: #000229;
     --font-gray: #555;
@@ -16,6 +16,7 @@
     --border-color: #F2EADE;
     --gradient-bg:linear-gradient(180deg, #C0EEFF 0%, #E2CA8F 100%);
     --gradient-bg-blue:linear-gradient(180deg, #41D7CD 0%, #077972 100%);
+;
     --font-500: 500;
     --font-600: 600;
     --font-700: 700;
@@ -64,7 +65,7 @@ background-size: cover;position: relative;}
 .forget-pass-content p{font-size: var(--font-16);color: #949292;}
 
 /* dashboard page */
-.sidebar {background-color: #0D2848;max-width: 264px;height: 100vh;position: fixed;width: 100%;left: 0;top: 0;z-index: 99;}
+.sidebar {background-color: #0D2848;max-width: 250px;height: 100vh;position: fixed;width: 100%;left: 0;top: 0;z-index: 99;}
 .sidebar-footer{padding:10px;position: absolute;width: 100%;bottom: 0; }
 .sidebar-footer a{font-weight:var(--font-600);color: #ffffff;}
 .sidebar-footer p{color: #ffffff;}
@@ -141,4 +142,9 @@ border-radius: 20px;padding: 30px;background-image: url('../image/welcome-img\ 1
 .act-content p{font-size: var(--font-13);}
 .act-time{font-size: var(--font-14);font-weight: var(--font-500);color: var(--font-gray);}
 
- 
+ /* Added Angular */
+ .form-design label sup {
+  color: #f00;
+  font-size: 18px;
+  top: 0;
+}

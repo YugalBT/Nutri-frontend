@@ -1,1 +1,57 @@
-/* You can add global styles to this file, and also import other style files */
+.toast-top-center {
+	margin-top: 2px;
+}
+.ball-clip-rotate > div {
+  animation-duration: 2.2s !important;
+  animation-timing-function: ease-in-out;
+}
+
+.ngx-spinner-overlay {
+  transition: opacity 0.25s ease-in-out;
+}
+
+.spinner-text {
+  color: #fff;
+  font-size: 14px;
+  margin-top: 12px;
+  opacity: 0.9;
+}
+
+
+
+.switch {
+  position: relative;
+  width: 42px;
+  height: 22px;
+  display: inline-block;
+}
+.switch input {
+  display: none;
+}
+.slider {
+  position: absolute;
+  inset: 0;
+  background: #d1d5db;
+  border-radius: 22px;
+  transition: .3s;
+}
+.slider:before {
+  content: "";
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #fff;
+  position: absolute;
+  left: 2px;
+  top: 2px;
+  transition: .3s;
+}
+input:checked + .slider {
+  background: #3b82f6;
+}
+input:checked + .slider:before {
+  transform: translateX(20px);
+}
+.cke_notification_warning {
+  display: none !important;
+}

@@ -1,0 +1,83 @@
+/* --- Modern Container --- */
+.global-search-modern {
+  background: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(10px);
+  border-radius: 14px;
+}
+
+/* --- Label --- */
+.gs-label-modern {
+  font-size: 0.85rem;
+  color: #6c757d;
+  letter-spacing: .3px;
+}
+
+/* --- Search Wrapper --- */
+.search-wrapper-modern {
+  position: relative;
+  background: #fff;
+  border: 1px solid #e8e8e8;
+  border-radius: 12px;
+  padding: 8px 12px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  transition: box-shadow .25s ease;
+}
+
+.search-wrapper-modern:hover,
+.search-wrapper-modern:focus-within {
+  box-shadow: 0 4px 15px rgba(0, 0, 0, .08);
+  border-color: #d0d0d0;
+}
+
+/* --- Search Input --- */
+.search-input-modern {
+  border: none;
+  outline: none;
+  flex: 1;
+  font-size: .92rem;
+  background: transparent;
+}
+
+/* --- Icons --- */
+.search-icon-modern {
+  font-size: 1rem;
+  color: #9aa0a6;
+}
+
+.clear-btn-modern {
+  background: transparent;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+}
+
+.clear-btn-modern i {
+  color: #c5c5c5;
+  font-size: .85rem;
+}
+
+.clear-btn-modern:hover i {
+  color: #ff4d4d;
+}
+
+/* --- Modern Select --- */
+.select-wrapper-modern {
+  position: relative;
+}
+
+.select-modern {
+  background: #fff;
+  border: 1px solid #e8e8e8;
+  border-radius: 12px;
+  padding: 7px 14px;
+  font-size: .9rem;
+  transition: box-shadow .2s ease;
+}
+
+.select-modern:hover,
+.select-modern:focus {
+  box-shadow: 0 4px 15px rgba(0, 0, 0, .08);
+  border-color: #cfcfcf;
+}

@@ -1,0 +1,93 @@
+<!-- <div #supplierPriceModal class="modal fade" tabindex="-1">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h5 class="modal-title">
+          {{
+            isEdit
+              ? ("supplierPrice.update" | translate)
+              : ("supplierPrice.add" | translate)
+          }}
+        </h5>
+        <button type="button" class="btn-close" (click)="closeModal()"></button>
+      </div>
+
+      <div class="modal-body">
+        <form [formGroup]="form">
+          <div class="row g-3">
+
+            <div class="col-md-6">
+              <label>{{ "supplierPrice.supplier" | translate }} *</label>
+              <select class="form-select"
+                      formControlName="supplierId"
+                      (change)="onSupplierChange()"
+                      [class.is-invalid]="form.get('supplierId')?.touched && form.get('supplierId')?.invalid">
+                <option [ngValue]="null" disabled selected>{{ "supplierPrice.selectSupplier" | translate }}</option>
+                <option *ngFor="let s of suppliers"
+                        [value]="s.supplierId">
+                  {{ s.supplierName }} ()
+                </option>
+              </select>
+            </div>
+
+            <div class="col-md-6">
+              <label>{{ "supplierPrice.material" | translate }} *</label>
+              <select class="form-select"
+                      formControlName="materialId"
+                      [class.is-invalid]="form.get('materialId')?.touched && form.get('materialId')?.invalid">
+                <option [ngValue]="null" disabled selected>{{ "supplierPrice.selectMaterial" | translate }}</option>
+                <option *ngFor="let m of materials"
+                        [value]="m.materialId">
+                  {{ m.materialName }}
+                </option>
+              </select>
+            </div>
+
+            <div class="col-md-6">
+              <label>{{ "supplierPrice.price" | translate }} *</label>
+              <input type="number"
+                     step="0.01"
+                     formControlName="price"
+                     [class.is-invalid]="form.get('price')?.touched && form.get('price')?.invalid"
+                     class="form-control" />
+            </div>
+
+            <div class="col-md-6">
+              <label>{{ "supplierPrice.columns.status" | translate }} *</label>
+              <select class="form-select"
+                      formControlName="status"
+                      [class.is-invalid]="form.get('status')?.touched && form.get('status')?.invalid">
+                <option [ngValue]="null" disabled selected>
+                  {{ "supplierPrice.selectPriceStatus" | translate }}
+                </option>
+                <option *ngFor="let status of statusOptions"
+                        [value]="status">
+                  {{ ('supplierPrice.status.' + status) | translate }}
+                </option>
+              </select>
+            </div>
+
+          </div>
+        </form>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn btn-outline-secondary"
+                (click)="closeModal()">
+          {{ "common.cancel" | translate }}
+        </button>
+
+        <button class="btn add-btn"
+                (click)="save()">
+          {{
+            isEdit
+              ? ("common.update" | translate)
+              : ("common.save" | translate)
+          }}
+        </button>
+      </div>
+
+    </div>
+  </div>
+</div> -->

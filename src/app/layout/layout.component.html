@@ -1,8 +1,15 @@
-<div class="main-layout">
-  <app-sidebar></app-sidebar>
+<div class="main-layout" [class.sidebar-collapsed]="isSidebarCollapsed">
+
+  <aside class="sidebar" role="complementary" aria-label="Sidebar">
+    <app-sidebar></app-sidebar>
+  </aside>
+
   <div class="content-area">
-    <main class="page-content">
+    <app-header (toggleSidebar)="toggleSidebar()"></app-header>
+
+    <main class="page-content" role="main">
       <router-outlet></router-outlet>
     </main>
   </div>
+
 </div>

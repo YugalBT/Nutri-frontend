@@ -1,11 +1,12 @@
 import { Component } from '@angular/core';
+import { SharedModule } from '../shared.module';
 
 @Component({
   selector: 'app-not-found',
   standalone: true,
-  imports: [],
+  imports: [SharedModule],
   templateUrl: './not-found.component.html',
-  styleUrl: './not-found.component.css'
+  styleUrls: ['./not-found.component.css']
 })
 export class NotFoundComponent {
 

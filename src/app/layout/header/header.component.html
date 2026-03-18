@@ -1,9 +1,67 @@
-<header class="sticky-top bg-light">
-    <div class="container-fluid">
-        <div class="header-inner justify-content-end">
+<header class="sticky-top">
+  <div class="container-fluid">
+    <div class="header-inner justify-content-between">
+      <div class="company-select-wrapper d-flex align-items-center">
+        <button
+          class="btn sidebar-toggle-btn me-2"
+          (click)="toggleSidebar.emit()"
+          aria-label="Toggle sidebar"
+        >
+          ☰
+        </button>
 
-            <div class="header-right d-flex align-items-center gap-2">
-                <div class="search-wrapper position-relative"><span class="input-search-icon"><svg width="18"
+        @if (companies.length > 0 && !impersonated) {
+        <select
+          class="form-select"
+          [value]="selectedTenantId"
+          (change)="onCompanyChange($event)"
+        >
+          <option value="">Select Company</option>
+
+          @for (company of companies; track company.tenantId) {
+          <option [value]="company.tenantId">
+            {{ company.companyName }}
+          </option>
+          }
+        </select>
+       
+        @if (companiesLoading) {
+         <span class="select-spinner spinner-border spinner-border-sm"></span>
+        } 
+      } @if (impersonated) {
+        <button class="btn add-btn ms-2" (click)="backToAdmin()">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <polyline points="15 18 9 12 15 6" />
+          </svg>
+          Exit
+        </button>
+        }
+      </div>
+
+      <div class="header-right d-flex align-items-center gap-2">
+        <div class="language-selector">
+          <select
+            class="form-control form-select"
+            [ngModel]="currentLang"
+            (ngModelChange)="changeLanguage($event)"
+          >
+            <option *ngFor="let lang of languages" [value]="lang.languageCode">
+              {{ lang.languageName }}
+            </option>
+          </select>
+        </div>
+
+        <!-- <div class="search-wrapper position-relative"><span class="input-search-icon"><svg width="18"
                             height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <circle cx="8.82491" cy="8.82491" r="6.74142" stroke="#555555" stroke-width="1.5"
                                 stroke-linecap="round" stroke-linejoin="round">
@@ -11,46 +69,199 @@
                             <path d="M13.5137 13.8638L16.1567 16.4999" stroke="#555555" stroke-width="1.5"
                                 stroke-linecap="round" stroke-linejoin="round">
                             </path>
-                        </svg></span><input class="form-control" placeholder="Search..." type="text">
-                </div>
-                <div class="notification-wrapper position-relative">
-                    <div class="header-icon Notification">
-                        <svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path fill-rule="evenodd" clip-rule="evenodd"
-                                d="M11 16.3605C16.1693 16.3605 18.5608 15.6974 18.7917 13.0356C18.7917 10.3757 17.1244 10.5468 17.1244 7.28318C17.1244 4.73396 14.7082 1.8335 11 1.8335C7.29191 1.8335 4.87565 4.73396 4.87565 7.28318C4.87565 10.5468 3.20837 10.3757 3.20837 13.0356C3.44025 15.7074 5.83167 16.3605 11 16.3605Z"
-                                stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
-                            <path d="M13.1898 19.1191C11.9393 20.5076 9.98862 20.5241 8.7262 19.1191" stroke="black"
-                                stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
-                        </svg>
-                    </div>
-                    <div class="notification-number">2</div>
-                </div>
+                        </svg></span><input class="form-control"
+                        placeholder="{{ 'header.searchPlaceholder' | translate }}" type="text">
+                </div> -->
 
-                <!-- Dropdown -->
-                <div class="dropdown profile-dropdown">
-                    <div class="d-flex dropdown-toggle align-items-center gap-3" data-bs-toggle="dropdown"
-                        aria-expanded="false" style="cursor:pointer;">
-                        <div class="d-flex align-items-center gap-2">
-                            <img src="/assets/image/profile-image.png" alt="" width="40" height="40" class="rounded-sm">
-                            <div class="profile-right-content">
-                                <h3 class="mb-0">kate Rose</h3>
-                                <p class="mb-0">Admin</p>
-                            </div>
-                        </div>
+        <!-- Dark mode toggle -->
+        <!-- <div class="ms-2">
+                    <button class="btn btn-sm theme-toggle" (click)="toggleDarkMode()" [attr.aria-pressed]="darkMode"
+                        [attr.aria-label]="darkMode ? 'Switch to light mode' : 'Switch to dark mode'"
+                        [title]="darkMode ? 'Light mode' : 'Dark mode'">
+                        <span class="theme-icon" aria-hidden="true">{{ darkMode ? '☀️' : '🌙' }}</span>
+                        <span class="theme-label ms-2 d-none d-sm-inline">{{ darkMode ? 'Light' : 'Dark' }}</span>
+                    </button>
+                </div> -->
 
-                    </div>
-
-                    <ul class="dropdown-menu dropdown-menu-end">
-                        <li><a class="dropdown-item" href="#">My Profile</a></li>
-                        <li><a class="dropdown-item" href="#">Settings</a></li>
-                        <li>
-                            <hr class="dropdown-divider">
-                        </li>
-                        <li><a class="dropdown-item" href="login.html">Logout</a></li>
-                    </ul>
-                </div>
-
-            </div>
+        <!-- 🔔 Notification Icon -->
+        <div
+          class="notification-wrapper position-relative"
+          (click)="toggleNotificationPopup()"
+        >
+          <div class="header-icon Notification">
+            <svg
+              width="22"
+              height="22"
+              viewBox="0 0 22 22"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                fill-rule="evenodd"
+                clip-rule="evenodd"
+                d="M11 16.3605C16.1693 16.3605 18.5608 15.6974 18.7917 13.0356C18.7917 10.3757 17.1244 10.5468 17.1244 7.28318C17.1244 4.73396 14.7082 1.8335 11 1.8335C7.29191 1.8335 4.87565 4.73396 4.87565 7.28318C4.87565 10.5468 3.20837 10.3757 3.20837 13.0356C3.44025 15.7074 5.83167 16.3605 11 16.3605Z"
+                stroke="black"
+                stroke-width="1.5"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              ></path>
+              <path
+                d="M13.1898 19.1191C11.9393 20.5076 9.98862 20.5241 8.7262 19.1191"
+                stroke="black"
+                stroke-width="1.5"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              ></path>
+            </svg>
+          </div>
+          <div class="notification-number">
+            {{ unreadCount }}
+            <!-- dynamic count -->
+          </div>
         </div>
+
+        <!-- 🧾 POPUP -->
+        <div
+          class="notification-overlay"
+          *ngIf="showNotificationPopup"
+          (click)="closePopup()"
+        ></div>
+
+        <div
+          class="notification-popup"
+          *ngIf="showNotificationPopup"
+          (click)="$event.stopPropagation()"
+        >
+          <div class="popup-header d-flex justify-content-between">
+            <h4>{{ "notifications.notifications" | translate }}</h4>
+            <button  [disabled]="notificationsData.length === 0" (click)="markAllRead()" class="mark-read-btn" >
+              {{ "notifications.markAllRead" | translate }}
+            </button>
+          </div>
+
+          <div class="popup-body">
+            <ng-container
+              *ngIf="notificationsData.length > 0; else noNotifications"
+            >
+              <div
+                class="notification-item" style="cursor: pointer;"
+                *ngFor="let item of notificationsData"
+                 [class.read]="item.isRead"
+                 (click)="!item.isRead && updateNotification(item.id)"
+              >
+                <h5>{{ item.title }}</h5>
+                <p class="description">{{ item.description }}</p>
+                <p class="date">{{ item.createdDate }}</p>
+              </div>
+            </ng-container>
+
+            <ng-template #noNotifications>
+              <p class="no-data">
+                {{ "notifications.noNotifications" | translate }}
+              </p>
+            </ng-template>
+          </div>
+
+          <div class="popup-footer" (click)="goToAllNotifications()">
+            {{ "notifications.seeAll" | translate }}
+          </div>
+        </div>
+        <!-- Dropdown -->
+        <div class="dropdown profile-dropdown">
+          <div
+            class="d-flex dropdown-toggle align-items-center gap-3"
+            data-bs-toggle="dropdown"
+            aria-expanded="false"
+            style="cursor: pointer"
+          >
+            <div
+              class="d-flex align-items-center gap-2"
+              *ngIf="user$ | async as user; else guest"
+            >
+              <img
+                [src]="user?.logo || '/assets/image/profile-image.png'"
+                alt=""
+                width="40"
+                height="40"
+                class="rounded-sm profile-image"
+              />
+              <div class="profile-right-content">
+                <h3 class="mb-0">{{ user?.firstName }} {{ user?.lastName }}</h3>
+                <p class="mb-0">{{ user?.email }}</p>
+              </div>
+            </div>
+
+            <ng-template #guest>
+              <div class="d-flex align-items-center gap-2">
+                <img
+                  src="/assets/image/profile-image.png"
+                  alt=""
+                  width="40"
+                  height="40"
+                  class="rounded-sm img-fluid"
+                />
+                <div class="profile-right-content">
+                  <h3 class="mb-0">{{ "header.guest" | translate }}</h3>
+                  <p class="mb-0">{{ "header.visitor" | translate }}</p>
+                </div>
+              </div>
+            </ng-template>
+          </div>
+
+          <ul class="dropdown-menu dropdown-menu-end shadow-sm">
+            <!-- My Profile -->
+            <li>
+              <a
+                class="dropdown-item d-flex align-items-center gap-2"
+                routerLink="/profile"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="18"
+                  height="18"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                  <circle cx="12" cy="7" r="4" />
+                </svg>
+                {{ "header.myProfile" | translate }}
+              </a>
+            </li>
+
+            <!-- Logout -->
+            <li>
+              <a
+                class="dropdown-item d-flex align-items-center gap-2 text-danger"
+                style="cursor: pointer"
+                (click)="logout()"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="18"
+                  height="18"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                  <polyline points="16 17 21 12 16 7" />
+                  <line x1="21" y1="12" x2="9" y2="12" />
+                </svg>
+                {{ "header.logout" | translate }}
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
     </div>
+  </div>
 </header>
+<app-confirm-dialog (confirm)="onConfirm($event)"></app-confirm-dialog>

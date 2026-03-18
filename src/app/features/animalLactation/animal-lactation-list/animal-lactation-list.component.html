@@ -1,0 +1,46 @@
+<div class="pagecls">
+  <!-- Page Header -->
+  <div class="page-header d-flex justify-content-between align-items-center">
+    <div>
+      <h3 class="page-title">{{ 'animalLactationStage.Heading' | translate }}</h3>
+    </div>
+
+    <button class="btn add-btn" (click)="animalModal.openModal()">
+      <i class="bi bi-plus-lg me-2"></i>
+      {{ 'animalLactationStage.addLactationStage' | translate }}
+    </button>
+  </div>
+
+  <!-- Search Filters Section -->
+  <div class="filters-card">
+    <app-global-search
+      [label]="'role.searchFilters' | translate"
+      [placeholder]="'animalLactationStage.searchByLactationName' | translate"
+      [showStatus]="true"
+      (search)="onSearch($event)"
+      (statusChange)="onStatusChange($event)"
+      (clear)="clearFilters()">
+    </app-global-search>
+  </div>
+
+  <!-- Farms Table -->
+  <div class="table-card">
+    <app-reusable-table
+      [columns]="columns"
+      [showActions]="true"
+      [data]="days"
+      [columnFields]="columnFields"
+      [pageable]="true"
+      [totalRecords]="totalRecords"
+      [pageSize]="pageSize"
+      [pageIndex]="pageIndex"
+      (pageChange)="onPageChange($event)"
+      (toggleActive)="onToggleActive($event)"
+      (deleteRow)="onDelete($event)"
+      (editRow)="animalModal.openModal(true, $event)">
+    </app-reusable-table>
+  </div>
+
+  <!-- Add/Edit Modal component instance -->
+  <app-animal-lactation-add-edit #animalModal></app-animal-lactation-add-edit>
+</div>

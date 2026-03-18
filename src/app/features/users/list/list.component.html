@@ -1,0 +1,48 @@
+<div class="pagecls">
+
+  <!-- Page Header -->
+  <div class="page-header">
+    <div>
+      <h3 class="page-title">{{ 'users.Heading' | translate }}</h3>
+      <!-- <p class="page-subtitle">{{ 'users.manageDesc' | translate }}</p> -->
+    </div>
+
+    <button class="btn add-btn" (click)="userAddEdit.openModal()">
+      <i class="bi bi-plus-lg me-2"></i>
+      {{ 'users.addUser' | translate }}
+    </button>
+  </div>
+
+  <!-- Search Filters Section -->
+  <div class="filters-card">
+    <app-global-search
+      [label]="'users.searchFilters' | translate"
+      [placeholder]="'users.searchPlaceholder' | translate"
+      [showStatus]="true"
+      (search)="onSearch($event)"
+      (statusChange)="onStatusChange($event)"
+      (clear)="clearFilters()">
+    </app-global-search>
+  </div>
+
+  <!-- Users Table -->
+  <div class="table-card">
+    <app-reusable-table
+      [columns]="columns"
+      [showActions]="true"
+      [data]="users"
+      [columnFields]="columnFields"
+      [pageable]="true"
+      [totalRecords]="totalRecords"
+      [pageSize]="pageSize"
+      [pageIndex]="pageIndex"
+      (pageChange)="onPageChange($event)"
+      (toggleActive)="onToggleActive($event)"
+      (deleteRow)="onDelete($event)"
+      (editRow)="userAddEdit.openModal(true, $event)">
+    </app-reusable-table>
+  </div>
+
+  <app-addedit #userAddEdit></app-addedit>
+
+</div>

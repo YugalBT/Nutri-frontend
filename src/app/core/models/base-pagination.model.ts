@@ -1,0 +1,32 @@
+export interface PaginationPayload {
+  tenantId?: string;
+  searchValue?: string;
+  orderStatus?: string;
+  notificationType?: string;
+  pageNo?: number;
+  recordPerPage?: number;
+  startDate?: string | null;
+  expiryDate?: string | null;
+  toDate?: string | null;
+  formDate?: string | null;
+  status?: number;
+  vendor?: string;
+  isOptionExpression?: boolean;
+  isPartnerEstimateInvoice?: boolean;
+  isCustomer?: boolean;
+  customerId?: string;
+  estimationId?: string;
+  orderId?: string;
+  productType?: string;
+  jobStatus?: string;
+  jobId?: string;
+  address?: string;
+  region?: string;
+  sortColumn?: string;
+  sortDirection?: 'asc' | 'desc';
+  columnFilters?: { field: string; value: string }[];
+  live?: boolean;
+  estimateCode?: string;
+  orderUniqueCode?: string;
+  isMasterData?: boolean;
+}

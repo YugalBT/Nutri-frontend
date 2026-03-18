@@ -1,0 +1,41 @@
+<div class="pagecls">
+
+  <div class="page-header">
+    <h3 class="page-title">{{ 'animalType.Heading' | translate }}</h3>
+
+    <button class="btn add-btn" (click)="animalTypeModal.openModal()">
+      <i class="bi bi-plus-lg me-2"></i> {{ 'animalType.addAnimalType' | translate }}
+    </button>
+  </div>
+
+  <div class="filters-card">
+    <app-global-search
+      [label]="'role.searchFilters' | translate"
+      [placeholder]="'animalType.searchByAnimalTypeName' | translate"
+      [showStatus]="true"
+      (search)="onSearch($event)"
+      (statusChange)="onStatusChange($event)"
+      (clear)="clearFilters()"
+    ></app-global-search>
+  </div>
+
+  <div class="table-card">
+    <app-reusable-table
+      [columns]="columns"
+      [columnFields]="columnFields"
+      [data]="animalTypes"
+      [showActions]="true"
+      [totalRecords]="totalRecords"
+      [pageSize]="pageSize"
+      [pageIndex]="pageIndex"
+      (pageChange)="onPageChange($event)"
+      (editRow)="animalTypeModal.openModal(true, $event)"
+      (deleteRow)="deleteAnimalType($event)"
+      (toggleActive)="toggleStatus($event)"
+    >
+    </app-reusable-table>
+  </div>
+
+  <app-animal-type-add-edit #animalTypeModal></app-animal-type-add-edit>
+
+</div>

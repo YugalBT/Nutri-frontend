@@ -1,0 +1,75 @@
+<div #operatorModal class="modal fade" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h5 class="modal-title">
+          {{ isEdit ? ('operator.editOperator' | translate) : ('operator.addOperator' | translate) }}
+        </h5>
+        <button type="button" class="btn-close" (click)="closeModal()"></button>
+      </div>
+
+      <div class="modal-body">
+        <form [formGroup]="form">
+          <div class="row g-3">
+
+            <!-- Operator Name -->
+            <div class="col-md-4">
+              <label class="form-label">
+                {{ 'operator.operatorName' | translate }} <sup class="text-danger">*</sup>
+              </label>
+              <input type="text" class="form-control" formControlName="operatorName"
+                [placeholder]="'operator.operatorNamePlaceholder' | translate">
+
+              <div *ngIf="form.get('operatorName')?.touched && form.get('operatorName')?.invalid" class="text-danger">
+                <div *ngIf="form.get('operatorName')?.errors?.['required']">
+                  {{ 'operator.operatorRequired' | translate }}
+                </div>
+                <!-- <div *ngIf="form.get('operatorName')?.errors?.['minlength']">
+                  {{ 'validation.minLength' | translate }}
+                </div> -->
+              </div>
+
+               <div class="text-danger"
+                *ngIf="form.get('operatorName')?.touched && form.get('operatorName')?.errors?.['maxlength']">
+                {{ 'operator.operatorName' | translate }} must be at least 50 characters
+              </div>
+            </div>
+
+            <!-- Display Name -->
+            <div class="col-md-4">
+              <label class="form-label">
+                {{ 'operator.displayName' | translate }} <sup class="text-danger">*</sup>
+              </label>
+              <input type="text" class="form-control" formControlName="operatorDisplayName"
+                [placeholder]="'operator.displayNamePlaceholder' | translate">
+
+              <div *ngIf="form.get('operatorDisplayName')?.touched && form.get('operatorDisplayName')?.invalid"
+                class="text-danger">
+                <div *ngIf="form.get('operatorDisplayName')?.errors?.['required']">
+                  {{ 'operator.displayNameRequired' | translate }}
+                </div>
+              </div>
+              <div class="text-danger"
+                *ngIf="form.get('operatorDisplayName')?.touched && form.get('operatorDisplayName')?.errors?.['maxlength']">
+                {{ 'operator.displayName' | translate }} must be at least 50 characters
+              </div>
+            </div>
+
+          </div>
+        </form>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn btn-outline-secondary" (click)="closeModal()">
+          {{ 'common.cancel' | translate }}
+        </button>
+
+        <button class="btn add-btn" (click)="save()">
+          {{ isEdit ? ('common.update' | translate) : ('common.save' | translate) }}
+        </button>
+      </div>
+
+    </div>
+  </div>
+</div>

@@ -1,0 +1,321 @@
+<div #supplierModal class="modal fade" tabindex="-1">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content">
+      <!-- HEADER -->
+      <div class="modal-header">
+        <h5 class="modal-title">
+          {{
+            isEdit
+              ? ("supplier.update" | translate)
+              : ("supplier.save" | translate)
+          }}
+        </h5>
+        <button type="button" class="btn-close" (click)="closeModal()"></button>
+      </div>
+
+      <!-- BODY -->
+      <div class="modal-body">
+        <form [formGroup]="form">
+          <div class="row g-3">
+            <!-- First Name -->
+            <div class="col-md-6">
+              <label>
+                {{ "supplier.firstName" | translate }}
+                <sup class="text-danger">*</sup>
+              </label>
+
+              <input
+                formControlName="firstName"
+                class="form-control"
+                [placeholder]="'supplier.placeholder.firstName' | translate"
+                [class.is-invalid]="
+                  form.get('firstName')?.touched &&
+                  form.get('firstName')?.invalid
+                "
+              />
+
+              <div
+                class="invalid-feedback"
+                *ngIf="
+                  form.get('firstName')?.touched &&
+                  form.get('firstName')?.errors
+                "
+              >
+                <span *ngIf="form.get('firstName')?.errors?.['required']">
+                  {{ "validation.required" | translate }}
+                </span>
+
+                <span *ngIf="form.get('firstName')?.errors?.['maxlength']">
+                  {{ "validation.maxLength50" | translate }}
+                </span>
+
+                <span *ngIf="form.get('firstName')?.errors?.['pattern']">
+                  {{ "validation.onlyLetters" | translate }}
+                </span>
+              </div>
+            </div>
+
+            <!-- Last Name -->
+            <div class="col-md-6">
+              <label>
+                {{ "supplier.lastName" | translate }}
+                <sup class="text-danger">*</sup>
+              </label>
+
+              <input
+                formControlName="lastName"
+                class="form-control"
+                [placeholder]="'supplier.placeholder.lastName' | translate"
+                [class.is-invalid]="
+                  form.get('lastName')?.touched && form.get('lastName')?.invalid
+                "
+              />
+
+              <div
+                class="invalid-feedback"
+                *ngIf="
+                  form.get('lastName')?.touched && form.get('lastName')?.errors
+                "
+              >
+                <span *ngIf="form.get('lastName')?.errors?.['required']">
+                  {{ "validation.required" | translate }}
+                </span>
+
+                <span *ngIf="form.get('lastName')?.errors?.['maxlength']">
+                  {{ "validation.maxLength50" | translate }}
+                </span>
+
+                <span *ngIf="form.get('lastName')?.errors?.['pattern']">
+                  {{ "validation.onlyLetters" | translate }}
+                </span>
+              </div>
+            </div>
+
+            <!-- Supplier Code -->
+            <div class="col-md-6">
+              <label>{{ "supplier.columns.code" | translate }}</label>
+
+              <input
+                formControlName="supplierCode"
+                class="form-control"
+                readonly
+                [placeholder]="'supplier.placeholder.supplierCode' | translate"
+              />
+            </div>
+
+            <!-- Email -->
+            <div class="col-md-6">
+              <label>
+                {{ "supplier.columns.email" | translate }}
+                <sup class="text-danger">*</sup>
+              </label>
+
+              <input
+                type="email"
+                formControlName="emailAddress"
+                class="form-control"
+                [placeholder]="'supplier.placeholder.email' | translate"
+                [class.is-invalid]="
+                  form.get('emailAddress')?.touched &&
+                  form.get('emailAddress')?.invalid
+                "
+              />
+
+              <div
+                class="invalid-feedback"
+                *ngIf="
+                  form.get('emailAddress')?.touched &&
+                  form.get('emailAddress')?.errors
+                "
+              >
+                <span *ngIf="form.get('emailAddress')?.errors?.['required']">
+                  {{ "validation.required" | translate }}
+                </span>
+
+                <span *ngIf="form.get('emailAddress')?.errors?.['email']">
+                  {{ "validation.invalidEmail" | translate }}
+                </span>
+
+                <span *ngIf="form.get('emailAddress')?.errors?.['maxlength']">
+                  {{ "validation.maxLength100" | translate }}
+                </span>
+              </div>
+            </div>
+
+            <!-- Phone -->
+            <div class="col-md-6">
+              <label>
+                {{ "supplier.columns.phone" | translate }}
+                <sup class="text-danger">*</sup>
+              </label>
+
+              <input
+                formControlName="phoneNumber"
+                class="form-control"
+                maxlength="15"
+                inputmode="numeric"
+                pattern="[0-9]*"
+                [placeholder]="'supplier.placeholder.phone' | translate"
+                [class.is-invalid]="
+                  form.get('phoneNumber')?.touched &&
+                  form.get('phoneNumber')?.invalid
+                "
+              />
+
+              <div
+                class="invalid-feedback"
+                *ngIf="
+                  form.get('phoneNumber')?.touched &&
+                  form.get('phoneNumber')?.errors
+                "
+              >
+                <span *ngIf="form.get('phoneNumber')?.errors?.['required']">
+                  {{ "validation.required" | translate }}
+                </span>
+
+                <span *ngIf="form.get('phoneNumber')?.errors?.['pattern']">
+                  {{ "validation.onlyNumbers" | translate }}
+                </span>
+
+                <span *ngIf="form.get('phoneNumber')?.errors?.['minlength']">
+                  {{ "validation.minLength7" | translate }}
+                </span>
+
+                <span *ngIf="form.get('phoneNumber')?.errors?.['maxlength']">
+                  {{ "validation.maxLength15" | translate }}
+                </span>
+              </div>
+            </div>
+
+            <!-- Street -->
+            <div class="col-md-6">
+              <label>
+                {{ "supplier.placeholder.streetAddress" | translate }}
+                <sup class="text-danger">*</sup>
+              </label>
+
+              <input
+                formControlName="streetAddress"
+                class="form-control"
+                maxlength="255"
+                [placeholder]="'supplier.placeholder.streetAddress' | translate"
+                [class.is-invalid]="
+                  form.get('streetAddress')?.touched &&
+                  form.get('streetAddress')?.invalid
+                "
+              />
+
+              <div
+                class="invalid-feedback"
+                *ngIf="
+                  form.get('streetAddress')?.touched &&
+                  form.get('streetAddress')?.errors
+                "
+              >
+                {{ "validation.required" | translate }}
+              </div>
+            </div>
+
+            <!-- State -->
+            <div class="col-md-6">
+              <label>
+                {{ "supplier.columns.state" | translate }}
+                <sup class="text-danger">*</sup>
+              </label>
+
+              <input
+                formControlName="state"
+                class="form-control"
+                [placeholder]="'supplier.placeholder.state' | translate"
+                [class.is-invalid]="
+                  form.get('state')?.touched && form.get('state')?.invalid
+                "
+              />
+
+              <div
+                class="invalid-feedback"
+                *ngIf="form.get('state')?.touched && form.get('state')?.errors"
+              >
+                {{ "validation.required" | translate }}
+              </div>
+            </div>
+
+            <!-- City -->
+            <div class="col-md-6">
+              <label>
+                {{ "supplier.columns.city" | translate }}
+                <sup class="text-danger">*</sup>
+              </label>
+
+              <input
+                formControlName="city"
+                class="form-control"
+                [placeholder]="'supplier.placeholder.city' | translate"
+                [class.is-invalid]="
+                  form.get('city')?.touched && form.get('city')?.invalid
+                "
+              />
+
+              <div
+                class="invalid-feedback"
+                *ngIf="form.get('city')?.touched && form.get('city')?.errors"
+              >
+                {{ "validation.required" | translate }}
+              </div>
+            </div>
+
+            <!-- Zip -->
+            <div class="col-md-6">
+              <label>
+                {{ "supplier.placeholder.zipCode" | translate }}
+                <sup class="text-danger">*</sup>
+              </label>
+
+              <input
+                formControlName="zipCode"
+                class="form-control"
+                maxlength="6"
+                inputmode="numeric"
+                pattern="[0-9]*"
+                [placeholder]="'supplier.placeholder.zipCode' | translate"
+                [class.is-invalid]="
+                  form.get('zipCode')?.touched && form.get('zipCode')?.invalid
+                "
+              />
+
+              <div
+                class="invalid-feedback"
+                *ngIf="
+                  form.get('zipCode')?.touched && form.get('zipCode')?.errors
+                "
+              >
+                <span *ngIf="form.get('zipCode')?.errors?.['required']">
+                  {{ "validation.required" | translate }}
+                </span>
+
+                <span *ngIf="form.get('zipCode')?.errors?.['pattern']">
+                  {{ "validation.invalidZip" | translate }}
+                </span>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+
+      <!-- FOOTER -->
+      <div class="modal-footer">
+        <button class="btn btn-outline-secondary" (click)="closeModal()">
+          {{ "common.cancel" | translate }}
+        </button>
+
+        <button class="btn add-btn" (click)="saveSupplier()">
+          {{
+            isEdit
+              ? ("supplier.update" | translate)
+              : ("supplier.save" | translate)
+          }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

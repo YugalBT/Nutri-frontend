@@ -1,0 +1,127 @@
+<div #farmModal class="modal fade" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h5 class="modal-title">{{ isEdit ? ('farm.editFarm' | translate) : ('farm.addFarm' | translate) }}</h5>
+        <button type="button" class="btn-close" (click)="closeModal()"></button>
+      </div>
+
+      <div class="modal-body">
+        <form [formGroup]="form">
+
+          <div class="row g-3">
+            <div class="col-md-4">
+              <label class="form-label">{{'farm.farmName' | translate}} <sup class="text-danger">*</sup></label>
+              <input type="text" formControlName="farmName" class="form-control"
+                placeholder="{{'farm.farmNamePlaceholder' | translate}}">
+              <div *ngIf="form.get('farmName')?.touched && form.get('farmName')?.invalid" class="text-danger">
+                <div *ngIf="form.get('farmName')?.errors?.['required']">{{'farm.farmNameRequired' | translate}}.</div>
+                <div *ngIf="form.get('farmName')?.errors?.['pattern']">{{'farm.farmNamePattern' | translate}}.</div>
+              </div>
+            </div>
+
+            <!-- <div class="col-md-4">
+              <label class="form-label">Town <sup class="text-danger">*</sup></label>
+              <input type="text" formControlName="town" class="form-control" placeholder="Enter town">
+               <div *ngIf="form.get('town')?.touched && form.get('farmName')?.invalid" class="text-danger">
+                <div *ngIf="form.get('town')?.errors?.['required']">Town Name is required.</div>
+                <div *ngIf="form.get('town')?.errors?.['pattern']">Only alphabets and spaces allowed.</div>
+              </div>
+              <div *ngIf="form.get('town')?.touched && form.get('town')?.invalid" class="text-danger">
+                Town can only contain alphabets and spaces.
+              </div>
+               
+            </div> -->
+            <div class="col-md-4">
+              <label class="form-label">{{'farm.milkPrice' | translate}} <sup class="text-danger">*</sup></label>
+              <input type="number" step="0.01" min="0" formControlName="milkPrice" class="form-control"
+                placeholder="{{'farm.milkPricePlaceholder' | translate}}">
+              <div *ngIf="form.get('milkPrice')?.touched && form.get('milkPrice')?.invalid" class="text-danger">
+                <div *ngIf="form.get('milkPrice')?.errors?.['required']">{{'farm.milkPriceRequired' | translate}}.</div>
+                <div *ngIf="form.get('milkPrice')?.errors?.['pattern']">{{'farm.milkPricePattern' | translate}}.</div>
+                <div *ngIf="form.get('milkPrice')?.errors?.['maxDigits']" class="text-danger">
+                  {{'validation.maxDigitsAllowed' | translate}}.
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">{{'address.streetAddress' | translate}} <sup class="text-danger">*</sup></label>
+              <input type="text" formControlName="streetAddress" class="form-control"
+                placeholder="{{'addressValidation.streetAddressPlaceholder' | translate}}">
+              <div *ngIf="form.get('streetAddress')?.touched && form.get('streetAddress')?.invalid" class="text-danger">
+                <div *ngIf="form.get('streetAddress')?.errors?.['required']">{{'addressValidation.streetAddressRequired'
+                  | translate}}.</div>
+                <!-- <div *ngIf="form.get('streetAddress')?.errors?.['pattern']">Only alphabets and spaces allowed.</div> -->
+                <div *ngIf="form.get('streetAddress')?.errors?.['maxlength']">{{'validation.maxlength' | translate}}.
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="row g-3 mt-2">
+
+            <div class="col-md-4">
+              <label class="form-label">{{'address.city' | translate}}<sup class="text-danger">*</sup></label>
+              <input type="text" formControlName="city" class="form-control"
+                placeholder="{{'addressValidation.cityPlaceholder' | translate}}">
+              <div *ngIf="form.get('city')?.touched && form.get('city')?.invalid" class="text-danger">
+                <div *ngIf="form.get('city')?.errors?.['required']">{{'addressValidation.cityRequired' | translate}}.
+                </div>
+                <div *ngIf="form.get('city')?.errors?.['pattern']">{{'addressValidation.cityPattern' | translate}}.
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">{{'address.state' | translate}}<sup class="text-danger">*</sup></label>
+              <input type="text" formControlName="state" class="form-control"
+                placeholder="{{'addressValidation.statePlaceholder' | translate}}">
+              <div *ngIf="form.get('state')?.touched && form.get('state')?.invalid" class="text-danger">
+                <div *ngIf="form.get('state')?.errors?.['required']">{{'addressValidation.stateRequired' | translate}}.
+                </div>
+                <div *ngIf="form.get('state')?.errors?.['pattern']">{{'addressValidation.statePattern' | translate}}.
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">{{'address.zipCode' | translate}}<sup class="text-danger">*</sup></label>
+              <input formControlName="zipCode" class="form-control"
+                placeholder="{{'addressValidation.zipCodePlaceholder' | translate}}">
+
+              <div *ngIf="form.get('zipCode')?.touched && form.get('zipCode')?.invalid" class="text-danger">
+                <div *ngIf="form.get('zipCode')?.errors?.['required']">{{'addressValidation.zipCodeRequired' |
+                  translate}}.</div>
+                <div *ngIf="form.get('zipCode')?.errors?.['onlyNumbers']">{{'addressValidation.onlyNumbersAllowed' |
+                  translate}}.</div>
+                <div *ngIf="form.get('zipCode')?.errors?.['minlength'] || form.get('zipCode')?.errors?.['maxlength']">
+                  {{'addressValidation.zipCodeLength' | translate}}.</div>
+              </div>
+            </div>
+          </div>
+          <div class="row g-3 mt-2">
+
+            <div class="col-md-4">
+              <label class="form-label">{{'address.country' | translate}} <sup class="text-danger">*</sup></label>
+              <input type="text" formControlName="country" class="form-control"
+                placeholder="{{'addressValidation.countryPlaceholder' | translate}}">
+              <div *ngIf="form.get('country')?.touched && form.get('country')?.invalid" class="text-danger">
+                <div *ngIf="form.get('country')?.errors?.['required']">{{'addressValidation.countryRequired' |
+                  translate}}.</div>
+                <div *ngIf="form.get('country')?.errors?.['pattern']">{{'addressValidation.countryPattern' |
+                  translate}}.</div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn btn-outline-secondary" (click)="closeModal()">Cancel</button>
+        <button class="btn add-btn" (click)="saveFarm()">
+          {{ isEdit ? ('common.update' | translate) : ('common.save' | translate) }}
+        </button>
+      </div>
+
+    </div>
+  </div>
+</div>

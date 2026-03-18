@@ -1,0 +1,263 @@
+<!-- <div class="pagecls">
+
+  <div class="page-header">
+    <div>
+      <h3 class="page-title">
+        {{ 'supplierPrice.heading' | translate }}
+      </h3>
+    </div>
+
+    <button class="btn add-btn"
+            (click)="supplierPriceModal.openModal()">
+      <i class="bi bi-plus-lg me-2"></i>
+      {{ 'supplierPrice.add' | translate }}
+    </button>
+  </div>
+
+  <div class="filters-card">
+    <app-global-search
+      [label]="'common.searchFilters' | translate"
+      [placeholder]="'supplierPrice.searchPlaceholder' | translate"
+      [showStatus]="true"
+      (search)="onSearch($event)"
+      (statusChange)="onStatusChange($event)"
+      (clear)="clearFilters()">
+    </app-global-search>
+  </div>
+
+  <div class="table-card">
+    <app-reusable-table
+      [columns]="columns"
+      [columnFields]="columnFields"
+      [data]="suppliers"
+      [showActions]="true"
+      [pageable]="true"
+      [totalRecords]="totalRecords"
+      [pageSize]="pageSize"
+      [pageIndex]="pageIndex"
+      (pageChange)="onPageChange($event)"
+      (toggleActive)="onToggleActive($event)"
+      (deleteRow)="onDelete($event)"
+      (editRow)="supplierPriceModal.openModal(true, $event)">
+    </app-reusable-table>
+  </div>
+
+  <app-supplier-price-add-edit #supplierPriceModal></app-supplier-price-add-edit>
+
+</div> -->
+
+<div class="container-fluid py-4">
+
+  <!-- PAGE TITLE -->
+  <div class="d-flex align-items-center mb-4">
+    <div class="border-start border-4 ps-3">
+      <h4 class="fw-bold mb-0">
+        {{ "supplierPrice.heading" | translate }}
+      </h4>
+    </div>
+  </div>
+
+  <!-- SUPPLIER DROPDOWN -->
+  <div class="card shadow-sm border-0 mb-4">
+    <div class="card-body">
+
+      <div class="row g-3">
+
+        <div class="col-lg-4 col-md-6 col-sm-12">
+
+          <label class="form-label fw-semibold">
+            {{ "supplierPrice.supplier" | translate }}
+            <span class="text-danger">*</span>
+          </label>
+
+          <select class="form-select" [(ngModel)]="selectedSupplierId" (change)="onSupplierChange()">
+
+            <option [ngValue]="null">
+              {{ "supplierPrice.selectSupplier" | translate }}
+            </option>
+
+            <option *ngFor="let s of suppliers" [value]="s.supplierId">
+
+              {{ s.supplierName }}
+
+            </option>
+
+          </select>
+
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+
+  <!-- MATERIAL TABLE -->
+  <div class="card shadow-sm border-0">
+
+    <div class="card-body p-0">
+
+      <div class="table-responsive">
+
+        <table class="table table-hover align-middle mb-0">
+
+          <thead class="table-light">
+
+            <tr>
+
+              <th>{{ "common.sn" | translate }}</th>
+              <th>{{ "supplierPrice.material" | translate }}</th>
+              <th>{{ "supplierPrice.code" | translate }}</th>
+              <th>{{ "supplierPrice.price" | translate }}</th>
+              <th>{{ "supplierPrice.discount" | translate }}</th>
+              <th>{{ "supplierPrice.deliveredPrice" | translate }}</th>
+              <th>{{ "supplierPrice.priceMonth" | translate }}</th>
+
+              <th style="min-width:160px">
+                {{ "supplierPrice.columns.SupplierPriceStatus" | translate }}
+              </th>
+
+            </tr>
+
+          </thead>
+
+
+          <tbody>
+
+            <tr *ngFor="let m of materials; let i=index">
+
+              <!-- SN -->
+              <td class="fw-semibold">
+                {{ i+1 }}
+              </td>
+
+              <!-- MATERIAL -->
+              <td class="fw-medium">
+                {{ m.materialName }}
+              </td>
+
+              <!-- CODE -->
+              <td>
+                {{ m.materialCode }}
+              </td>
+
+
+              <!-- PRICE -->
+              <td>
+
+                <div class="input-group input-group-sm">
+
+                  <span class="input-group-text">€</span>
+
+                  <input type="number" step="0.01" class="form-control" [(ngModel)]="m.price"
+                    (ngModelChange)="onPriceChange(m)" placeholder="{{ 'supplierPrice.zero' | translate }}">
+
+                </div>
+
+              </td>
+
+
+              <!-- DISCOUNT -->
+              <td>
+
+                <div class="input-group input-group-sm">
+
+                  <span class="input-group-text">%</span>
+
+                  <input type="number" step="0.01" class="form-control" [(ngModel)]="m.discountPercent"
+                    (ngModelChange)="markChanged(m)" placeholder="0.00">
+
+                </div>
+
+              </td>
+
+
+              <!-- DELIVERED PRICE -->
+              <td>
+
+                <div class="input-group input-group-sm">
+
+                  <span class="input-group-text">€</span>
+
+                  <input type="number" step="0.01" class="form-control" readonly [(ngModel)]="m.deliveredPrice"
+                    (ngModelChange)="onPriceChange(m)" placeholder="0.00">
+
+                </div>
+
+              </td>
+
+
+              <!-- PRICE MONTH -->
+              <td>
+
+                <input type="month" class="form-control form-control-sm" [(ngModel)]="m.priceMonth"
+                  (ngModelChange)="onPriceChange(m)">
+
+              </td>
+
+              <td>
+
+                <select class="form-select form-select-sm" [(ngModel)]="m.supplierStatus"
+                  (ngModelChange)="onPriceChange(m)">
+
+                  <option [ngValue]="2" disabled>
+  {{ "supplierPrice.selectStatus" | translate }}
+</option>
+
+                <option [ngValue]="0">
+  {{ "supplierPrice.approved" | translate }}
+</option>
+
+<option [ngValue]="1">
+  {{ "supplierPrice.draft" | translate }}
+</option>
+
+                </select>
+
+              </td>
+
+            </tr>
+
+          </tbody>
+
+        </table>
+
+
+        <!-- NO DATA -->
+
+        <div *ngIf="materials.length === 0" class="text-center py-5">
+
+          <img src="assets/image/no-data.png" width="140" class="mb-3">
+
+          <h5 class="text-muted">
+            {{ "common.noData" | translate }}
+          </h5>
+
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <!-- FOOTER -->
+
+    <div class="card-footer bg-white text-end py-3">
+
+      <button class="btn btn-outline-secondary me-2 px-4" (click)="clearAll()">
+
+        {{ "supplierPrice.clear" | translate }}
+
+      </button>
+
+      <button class="btn add-btn px-5 shadow-sm" (click)="saveAll()">
+
+       {{ "supplierPrice.saveAll" | translate }}
+
+      </button>
+
+    </div>
+
+  </div>
+
+</div>

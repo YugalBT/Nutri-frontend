@@ -1,0 +1,133 @@
+<div class="pagecls">
+
+  <!-- ================= HEADER ================= -->
+
+
+
+  <div class="page-header">
+    <div class="border-start border-4 ps-3">
+      <h2 class="page-title">
+        <svg width="18" height="18" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+
+          <path d="M6 14C6 9.582 9.582 6 14 6H16C20.418 6 24 9.582 24 14" stroke="black" stroke-width="2"
+            stroke-linecap="round" />
+
+          <path d="M7 14H23L21 22H9L7 14Z" stroke="black" stroke-width="2" stroke-linejoin="round" />
+
+          <path d="M11 11H11.01M15 10H15.01M19 11H19.01" stroke="black" stroke-width="2" stroke-linecap="round" />
+        </svg>
+
+        Ration : {{ ration?.rationName }}
+      </h2>
+      <p class="page-subtitle">
+        <svg width="18" height="18" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+
+          <circle cx="15" cy="10" r="3" stroke="black" stroke-width="2" />
+          <circle cx="9" cy="14" r="2.5" stroke="black" stroke-width="2" />
+          <circle cx="21" cy="14" r="2.5" stroke="black" stroke-width="2" />
+
+          <path d="M6 22C6 18.686 8.686 16 12 16H18C21.314 16 24 18.686 24 22" stroke="black" stroke-width="2"
+            stroke-linecap="round" />
+        </svg>
+
+        Animal Group : {{ ration?.animalGroup?.name }}
+      </p>
+    </div>
+
+    <div class="d-flex align-items-center gap-3 flex-wrap">
+      <div class="text-center">
+        <div class="text-muted small">Animals</div>
+        <strong>{{ ration?.animalGroup?.numberOfAnimals }}</strong>
+      </div>
+
+      <div class="text-center">
+        <div class="text-muted small">Avg Milk / Day</div>
+        <strong>{{ ration?.animalGroup?.avgMilkPerDay }} L</strong>
+      </div>
+    </div>
+    <button *ngIf="ration?.rationId" class="btn add-btn" (click)="technicalReportAddEdit.openModal(ration!.rationId)">
+      <svg fill="white" height="20px" width="20px" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg"
+        xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 502 502" xml:space="preserve">
+        <g>
+          <g>
+            <g>
+              <path d="M492,0H10C4.477,0,0,4.477,0,10v424c0,2.652,1.054,5.196,2.929,7.071l58,58C62.804,500.946,65.348,502,68,502h424
+				c5.523,0,10-4.477,10-10V10C502,4.477,497.523,0,492,0z M86,20h330v240H86V20z M194.045,482H158.06v-67.589h35.985V482z
+				 M313.239,482h-99.194v-77.589c0-5.523-4.477-10-10-10H148.06c-5.523,0-10,4.477-10,10V482h-17.925V381h193.104V482z
+				 M381.866,482h-48.627V381h48.627V482z M482,482h-80.134V371c0-5.523-4.477-10-10-10h-68.627H110.134c-5.523,0-10,4.477-10,10
+				v111H72.142L20,429.858V20h46v250c0,5.523,4.477,10,10,10h350c5.523,0,10-4.477,10-10V20h46V482z" />
+              <path
+                d="M367.5,62H345c-5.523,0-10,4.477-10,10s4.477,10,10,10h22.5c5.523,0,10-4.477,10-10S373.023,62,367.5,62z" />
+              <path
+                d="M134.5,82H299c5.523,0,10-4.477,10-10s-4.477-10-10-10H134.5c-5.523,0-10,4.477-10,10S128.977,82,134.5,82z" />
+              <path
+                d="M367.5,129h-233c-5.523,0-10,4.477-10,10s4.477,10,10,10h233c5.523,0,10-4.477,10-10S373.023,129,367.5,129z" />
+              <path
+                d="M367.5,196h-233c-5.523,0-10,4.477-10,10s4.477,10,10,10h233c5.523,0,10-4.477,10-10S373.023,196,367.5,196z" />
+            </g>
+          </g>
+        </g>
+      </svg> Save Daily Report
+    </button>
+  </div>
+
+  <!-- ================= GLOBAL KPI CARDS ================= -->
+  <div class="row g-3 mb-4">
+
+    <div class="col-lg-3 col-md-6 col-sm-12" *ngFor="let g of globalCards; let i = index">
+
+      <div class="overview-card d-flex gap-3 align-items-center" [class.active]="true">
+
+
+        <div class="ov-icon">
+          <svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+
+            <path d="M6 20L12 14L16 18L24 10" stroke="black" stroke-width="1.8" stroke-linecap="round"
+              stroke-linejoin="round" />
+
+            <circle cx="6" cy="20" r="1.6" fill="black" />
+            <circle cx="12" cy="14" r="1.6" fill="black" />
+            <circle cx="16" cy="18" r="1.6" fill="black" />
+            <circle cx="24" cy="10" r="1.6" fill="black" />
+
+          </svg>
+
+        </div>
+
+        <!-- CONTENT -->
+        <div class="ov-content">
+          <span>{{ g.name }}</span>
+          <h3>€ {{ g.value }}</h3>
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+
+
+  <!-- ================= TABLE ================= -->
+  <app-reusable-table [columns]="columns" [columnFields]="columnFields" [data]="feeds" [pageable]="false"
+    [showActions]="false" [showFooter]="showFooter" [footerTotals]="tableTotals">
+
+    <!-- Editable quantity -->
+    <ng-template let-row="row" let-field="field">
+      <ng-container [ngSwitch]="field">
+
+        <input *ngSwitchCase="'quantity_kg'" type="number" min="0" class="form-control form-control-sm"
+          [(ngModel)]="row.quantity_kg" (ngModelChange)="calculateTableTotals()" />
+
+        <span *ngSwitchDefault>
+          {{ row[field] }}
+        </span>
+
+      </ng-container>
+    </ng-template>
+
+  </app-reusable-table>
+
+  <app-technical-report-add-edit #technicalReportAddEdit></app-technical-report-add-edit>
+</div>

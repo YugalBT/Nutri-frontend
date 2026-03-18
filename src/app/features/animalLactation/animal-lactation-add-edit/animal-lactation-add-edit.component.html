@@ -1,0 +1,44 @@
+<div #animalLactationModal class="modal fade" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h5 *ngIf="isAddEditPermission" class="modal-title">
+            {{ (isEdit 
+                ? 'animalLactationStage.editLactationStage' 
+                : 'animalLactationStage.addLactationStage') | translate }}
+        </h5>
+        <button type="button" class="btn-close" (click)="closeModal()"></button>
+      </div>
+
+      <div class="modal-body">
+        <form [formGroup]="form"  (ngSubmit)="save()">
+            <div class="container-fluid">
+          <div class="row g-3">
+            <div class="col-md-12">
+              <label class="form-label">{{ 'animalLactationStage.LactationStageName' | translate }}<sup class="text-danger">*</sup></label>
+              <input type="text" formControlName="lactationNameEn" class="form-control" placeholder="{{ 'animalLactationStage.LactationStageNamePlaceholder' | translate }}">
+              <div *ngIf="form.get('lactationNameEn')?.touched && form.get('lactationNameEn')?.invalid" class="text-danger">
+                <div *ngIf="form.get('lactationNameEn')?.errors?.['required']">{{ 'animalLactationStage.LactationStageNameRequired' | translate }}</div>
+                <div *ngIf="form.get('lactationNameEn')?.errors?.['pattern']">{{'validation.onlyAlphabetAndSpaces'| translate}}</div>
+                <div *ngIf="form.get('lactationNameEn')?.errors?.['minlength']">{{'validation.minLength'| translate}}</div>
+                <div *ngIf="form.get('lactationNameEn')?.errors?.['maxlength']">{{'validation.maxLength'| translate}}</div>
+              </div>
+            </div>
+
+     
+          </div>
+          </div>
+        </form>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn btn-outline-secondary" (click)="closeModal()">{{ 'common.cancel' | translate }}</button>
+        <button class="btn add-btn" [disabled]="!isAddEditPermission" (click)="save()">
+          {{ isEdit ? ('common.update' |  translate) : ('common.save' | translate) }}
+        </button>
+      </div>
+
+    </div>
+  </div>
+</div>

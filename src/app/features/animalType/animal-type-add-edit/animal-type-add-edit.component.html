@@ -1,0 +1,67 @@
+<div #animalTypeModal class="modal fade" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-md modal-dialog-centered">
+    <div class="modal-content">
+
+      <!-- HEADER -->
+      <div class="modal-header">
+        <h5 class="modal-title">
+                {{ (isEdit 
+                    ? 'animalType.editAnimalType' 
+                    : 'animalType.addAnimalType') | translate }}
+        </h5>
+        <button type="button" class="btn-close" (click)="closeModal()"></button>
+      </div>
+
+      <!-- BODY -->
+      <div class="modal-body">
+        <form [formGroup]="form">
+          <div class="container-fluid">
+            <div class="row g-3">
+
+              <!-- <div class="col-12">
+                <h5 class="mb-3">Animal Type Details</h5>
+              </div> -->
+
+             
+
+              <!-- English Name -->
+              <div class="col-12">
+                <label class="form-label">
+                 {{ 'animalType.animalTypeName' | translate }}
+                  <sup style="color: red; font-size: 12px;">*</sup>
+                </label>
+
+                <input
+                  type="text"
+                  class="form-control"
+                  formControlName="typeNameEn"
+                  placeholder="{{ 'animalType.animalTypeNamePlaceholder' | translate }}"
+                />
+
+                <div *ngIf="form.get('typeNameEn')?.touched && form.get('typeNameEn')?.invalid" class="text-danger">
+                  <div *ngIf="form.get('typeNameEn')?.errors?.['required']">{{ 'animalType.animalTypeNameRequired' | translate }}</div>
+                  <div *ngIf="form.get('typeNameEn')?.errors?.['minlength']">{{ 'validation.minLength' | translate }}</div>
+                  <div *ngIf="form.get('typeNameEn')?.errors?.['maxlength']">{{ 'validation.maxLength' | translate }}</div>
+                  <div *ngIf="form.get('typeNameEn')?.errors?.['pattern']">{{ 'validation.onlyAlphabetAndSpaces' | translate }}</div>
+                </div>
+              </div>
+
+            
+            </div>
+          </div>
+        </form>
+      </div>
+
+      <!-- FOOTER -->
+      <div class="modal-footer">
+        <button class="btn btn-outline-secondary" (click)="closeModal()">{{ 'common.cancel' | translate }}</button>
+        <button class="btn add-btn" (click)="save()">
+          {{ (isEdit 
+    ? 'common.update' 
+    : 'common.save') | translate }}
+        </button>
+      </div>
+
+    </div>
+  </div>
+</div>

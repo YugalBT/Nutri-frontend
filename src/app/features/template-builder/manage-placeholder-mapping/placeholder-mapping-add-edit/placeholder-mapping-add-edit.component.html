@@ -1,0 +1,102 @@
+<div #mappingModal class="modal fade">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5>{{ isEdit ? ('placeholderMapping.edit' | translate) : ('placeholderMapping.add' | translate) }}</h5>
+                <button class="btn-close" (click)="closeModal()"></button>
+            </div>
+
+            <div class="modal-body">
+                <form [formGroup]="form">
+
+                    <div class="row g-3">
+
+                        <!-- CATEGORY -->
+                        <div class="col-md-6">
+                            <label class="form-label">
+                                {{ 'placeholderMapping.category' | translate }} <span class="text-danger">*</span>
+                            </label>
+
+                            <select class="form-select" formControlName="categoryId">
+                                <option [ngValue]="null">{{ 'placeholderMapping.selectcategory' | translate }}</option>
+                                <option *ngFor="let c of categories" [value]="c.categoryId">
+                                    {{ c.category }}
+                                </option>
+                            </select>
+                        </div>
+
+                        <!-- PLACEHOLDERS -->
+                        <div class="col-md-6 position-relative">
+                            <label class="form-label">
+                                {{ 'placeholderMapping.placeholders' | translate }} <span class="text-danger">*</span>
+                            </label>
+
+                            <div class="form-control d-flex justify-content-between align-items-center"
+                                (click)="toggleDropdown()">
+                                <span class="text-muted">
+                                    {{ placeholderIds.length ? (placeholderIds.length + ' selected') :
+                                    ('placeholderMapping.selectplaceholders'
+                                    | translate) }}
+                                </span>
+                                <i class="bi bi-chevron-down"></i>
+                            </div>
+
+                            <div class="dropdown-panel" *ngIf="showDropdown" (click)="$event.stopPropagation()">
+                                <input type="text" class="form-control mb-2"  [(ngModel)]="searchPlaceholder"
+  [ngModelOptions]="{ standalone: true }" (keyup)="onSearchPlaceholder()"
+                                    placeholder="Search..." />
+                                <!-- [(ngModel)]="searchPlaceholder" -->
+                                <div class="dropdown-list">
+                                    <div *ngFor="let p of filteredPlaceholderList" class="form-check">
+                                        <input class="form-check-input" type="checkbox"
+                                             [checked]="placeholderIds.value.includes(p.id)"
+  (change)="onCheckboxChange(p.id, $event)"
+                                             />
+                                        <label class="form-check-label">
+                                            {{ p.placeholderValue }}
+                                        </label>
+                                    </div>
+                                </div>
+                             <div class="text-end mt-2" *ngIf="placeholderIds.length > 0">
+    <button
+      type="button"
+      class="btn add-btn btn-sm"
+      (click)="confirmSelection()">
+      OK
+    </button>
+  </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- CHIPS -->
+                    <div class="mt-3" *ngIf="placeholderIds.length">
+                        <label class="form-label">
+                            {{ 'placeholderMapping.selected' | translate }}
+                        </label>
+
+                        <div class="d-flex flex-wrap gap-2">
+                            <span class="badge bg-light text-dark border chip" *ngFor="let id of placeholderIds.value">
+                                {{ getPlaceholderName(id) }}
+                                <i class="bi bi-x ms-2 cursor-pointer" (click)="removeChip(id)"></i>
+                            </span>
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn btn-outline-secondary" (click)="closeModal()">
+                    {{ 'common.cancel' | translate }}
+                </button>
+                <button class="btn add-btn" (click)="save()">
+                    {{ isEdit ? ('common.update' | translate) : ('common.save' | translate) }}
+                </button>
+            </div>
+
+        </div>
+    </div>
+</div>

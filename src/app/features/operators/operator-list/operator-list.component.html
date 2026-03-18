@@ -1,0 +1,40 @@
+<div class="pagecls">
+
+ 
+  <div class="page-header">
+    <div>
+      <h3 class="page-title">{{ 'operator.heading' | translate }}</h3>
+    </div>
+
+    <button class="btn add-btn" (click)="operatorModal.openModal()">
+      {{ 'operator.addOperator' | translate }}
+    </button>
+  </div>
+
+  <app-global-search
+   [label]="'role.searchFilters' | translate"
+    [placeholder]="'operator.searchByOperatorName' | translate"
+    [showStatus]="true"
+    (search)="onSearch($event)"
+    (statusChange)="onStatusChange($event)"
+    (clear)="clearFilters()">
+  </app-global-search>
+
+  <app-reusable-table
+    [columns]="columns"
+    [columnFields]="columnFields"
+    [data]="operators"
+    [pageable]="true"
+    [totalRecords]="totalRecords"
+    [pageSize]="pageSize"
+    [pageIndex]="pageIndex"
+    (pageChange)="onPageChange($event)"
+    (toggleActive)="onToggleActive($event)"
+    (editRow)="operatorModal.openModal(true, $event)"
+     [showActions]="true" 
+    (deleteRow)="onDelete($event)"
+    >
+  </app-reusable-table>
+
+  <app-operator-add-edit #operatorModal></app-operator-add-edit>
+</div>

@@ -1,0 +1,94 @@
+/* .img-container {
+  position: relative;
+  display: inline-block;
+}
+
+.profile-img {
+  width: 120px;
+  height: 120px;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 2px solid #ddd;
+}
+
+.upload-btn, .delete-btn {
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 12px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.upload-btn {
+  background: #007bff;
+  color: white;
+}
+
+.upload-btn:hover {
+  background: #0056b3;
+}
+
+.delete-btn {
+  background: #dc3545;
+  color: white;
+}
+
+.delete-btn:hover {
+  background: #b02a37;
+} */
+
+.img-container {
+  position: relative;
+    width: 120px;
+  height: 120px;
+  margin: auto;
+      margin-bottom: 10px;
+
+}
+
+.profile-img {
+width: 100%;
+height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 2px solid #ddd;
+}
+
+.upload-btn, .delete-btn {
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 12px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.upload-btn {
+    background:#b02a37 ;
+    color: white;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    position: absolute;top: 5px;right: 3px;
+}
+.upload-btn svg{margin: 0 !important  ;}
+.upload-btn:hover {
+  background: #b30c00;
+}
+
+.delete-btn {
+  background: #dc3545;
+  color: white;
+}
+
+.delete-btn:hover {
+  background: #b02a37;
+}
+.link-text{color: #b02a37;}

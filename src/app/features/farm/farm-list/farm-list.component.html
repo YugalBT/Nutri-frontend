@@ -1,0 +1,50 @@
+<div class="pagecls">
+
+  <!-- Page Header -->
+  <div class="page-header ">
+    <div class="border-start border-4 ps-3">
+      <h3 class="page-title">{{ 'farm.Heading' | translate }}</h3>
+    </div>
+
+    <button class="btn add-btn" (click)="farmModal.openModal()">
+      <i class="bi bi-plus-lg me-2"></i>
+      {{ 'farm.addFarm' | translate }}
+    </button>
+  </div>
+
+  <!-- Search Filters Section -->
+  <div class="filters-card">
+    <app-global-search
+     [label]="'role.searchFilters' | translate"
+      [placeholder]="'farm.searchByFarmTownCountry' | translate"
+      [showStatus]="true"
+      (search)="onSearch($event)"
+      (statusChange)="onStatusChange($event)"
+      (clear)="clearFilters()">
+    </app-global-search>
+  </div>
+
+  <!-- Farms Table -->
+  <div class="table-card">
+    <app-reusable-table
+      [columns]="['Farm Name','Milk Price(€)','City','State','Status']"
+      [showActions]="true"
+      [data]="farms"
+      [columnFields]="columnFields"
+      [pageable]="true"
+      [totalRecords]="totalRecords"
+      [clickableField]="'farmName'"
+      (cellClick)="onCellClick($event)"
+      [pageSize]="pageSize"
+      [pageIndex]="pageIndex"
+      (pageChange)="onPageChange($event)"
+      (toggleActive)="onToggleActive($event)"
+      (deleteRow)="onDelete($event)"
+      (editRow)="farmModal.openModal(true, $event)">
+    </app-reusable-table>
+  </div>
+
+  <!-- Add/Edit Modal -->
+  <app-farm-add-edit #farmModal></app-farm-add-edit>
+
+</div>

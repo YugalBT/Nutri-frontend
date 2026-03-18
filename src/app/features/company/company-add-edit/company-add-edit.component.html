@@ -1,0 +1,749 @@
+<div #companyModal class="modal fade" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">
+          {{
+            isEdit ? ("company.edit" | translate) : ("company.add" | translate)
+          }}
+        </h5>
+        <button type="button" class="btn-close" (click)="closeModal()"></button>
+      </div>
+      <div class="modal-body" style="max-height: 70vh; overflow-y: auto">
+        <form [formGroup]="form" enctype="multipart/form-data">
+          <div class="container-fluid">
+            <div class="row g-3">
+              <div class="col-12">
+                <h5 class="mb-3">{{ "company.details" | translate }}</h5>
+              </div>
+
+              <div class="col-md-4 col-12">
+                <label class="form-label"
+                  >{{ "company.companyName" | translate
+                  }}<sup style="color: #f00; font-size: 12px">*</sup></label
+                >
+                <input
+                  type="text"
+                  class="form-control"
+                  formControlName="companyName"
+                  [placeholder]="'company.companyNamePlaceholder' | translate"
+                />
+                <div
+                  *ngIf="isInvalid('companyName', 'required')"
+                  class="text-danger"
+                >
+                  {{ "validation.companyNameRequired" | translate }}
+                </div>
+
+                <div
+                  *ngIf="isInvalid('companyName', 'minlength')"
+                  class="text-danger"
+                >
+                  {{ "validation.minLength" | translate }}
+                </div>
+
+                <div
+                  *ngIf="isInvalid('companyName', 'maxlength')"
+                  class="text-danger"
+                >
+                  {{ "validation.maxLength" | translate }}
+                </div>
+              </div>
+
+              <div class="col-md-4 col-12">
+                <label class="form-label"
+                  >{{ "company.code" | translate
+                  }}<sup style="color: #f00; font-size: 12px">*</sup></label
+                >
+                <input
+                  type="text"
+                  class="form-control"
+                  formControlName="code"
+                  [placeholder]="'company.companyCode' | translate"
+                />
+                <div *ngIf="isInvalid('code', 'required')" class="text-danger">
+                  {{ "validation.companyCodeRequired" | translate }}
+                </div>
+
+                <div *ngIf="isInvalid('code', 'minlength')" class="text-danger">
+                  {{ "validation.minLength" | translate }}
+                </div>
+
+                <div *ngIf="isInvalid('code', 'maxlength')" class="text-danger">
+                  {{ "validation.maxLength" | translate }}
+                </div>
+              </div>
+
+              <!-- <div class="col-md-4 col-12">
+                                <label class="form-label">{{ 'company.suffix' | translate }}</label>
+                                <input type="text" class="form-control" formControlName="suffix" placeholder="Suffix (e.g., Ltd)">
+                            </div> -->
+
+              <div class="col-md-4 col-12">
+                <label class="form-label"
+                  >{{ "company.website" | translate }}
+                  <!-- <sup style="color: #f00; font-size: 12px;">*</sup> -->
+                </label>
+                <input
+                  type="url"
+                  class="form-control"
+                  formControlName="url"
+                  [placeholder]="'company.urlplaceholder' | translate"
+                />
+                <!-- <div *ngIf="form.get('url')?.touched && form.get('url')?.invalid" class="text-danger">
+                                    Website URL is required
+                                </div> -->
+                <div
+                  *ngIf="form.get('url')?.errors?.['pattern']"
+                  class="text-danger"
+                >
+                  {{ "validation.websiteInvalid" | translate }}
+                </div>
+              </div>
+
+              <!-- <div class="col-md-4 col-12">
+                                <label class="form-label">{{ 'company.primaryColor' | translate }}</label>
+                                <input type="color" class="form-control form-control-color" formControlName="primaryColor" title="Choose primary color">
+                          
+                                <div *ngIf="form.get('primaryColor')?.touched && form.get('primaryColor')?.invalid" class="text-danger">
+                                Primary Color is required
+                              </div>
+                            </div>
+
+                            <div class="col-md-4 col-12">
+                                <label class="form-label">{{ 'company.secondaryColor' | translate }}</label>
+                                <input type="color" class="form-control form-control-color" formControlName="secondaryColor" title="Choose secondary color">
+                            </div> -->
+
+              <!-- LOGO INPUT -->
+              <!-- LOGO INPUT -->
+              <div class="col-md-4 col-12">
+                <label class="form-label">
+                  {{ "company.logo" | translate }}
+                  <sup class="text-danger">*</sup>
+                </label>
+
+                <input
+                  #fileInput
+                  type="file"
+                  class="form-control"
+                  formControlName="logo"
+                  (change)="onLogoSelected($event)"
+                  appImageValidator
+                  [width]="300"
+                  [height]="300"
+                  [maxSizeMB]="2"
+                />
+
+                <div class="text-danger mt-1" *ngIf="isInvalid('logo')">
+                  <small *ngIf="form.get('logo')?.errors?.['required']"
+                    >Image required</small
+                  >
+                  <small *ngIf="form.get('logo')?.errors?.['invalidType']">{{
+                    "imageValidator.invalidType" | translate
+                  }}</small>
+                  <small
+                    *ngIf="form.get('logo')?.errors?.['maxSizeExceeded']"
+                    >{{ "imageValidator.maxSizeExceeded" | translate }}</small
+                  >
+                  <small
+                    *ngIf="form.get('logo')?.errors?.['invalidDimension']"
+                    >{{ "imageValidator.invalidDimensions" | translate }}</small
+                  >
+                </div>
+              </div>
+
+              <!-- LOGO PREVIEW -->
+              <!-- <div class="col-md-4 col-12" *ngIf="logoPreview">
+                                <div class="logo-preview-wrapper">
+                                    <img class="logo-preview-img" [src]="logoPreview" />
+                                    <button type="button" class="remove-logo-btn" (click)="removeLogo()">✕</button>
+                                </div>
+                            </div> -->
+
+              <!-- LOGO PREVIEW -->
+              <div class="col-md-4 col-12" *ngIf="logoPreview">
+                <div class="logo-preview-wrapper">
+                  <img class="logo-preview-img" [src]="logoPreview" />
+                  <button
+                    type="button"
+                    class="remove-logo-btn"
+                    (click)="removeLogo()"
+                  >
+                    ✕
+                  </button>
+                </div>
+              </div>
+
+              <div class="col-12 mt-3">
+                <h5 class="mb-3">{{ "company.primaryUser" | translate }}</h5>
+              </div>
+
+              <div class="col-md-4 col-12">
+                <label class="form-label"
+                  >{{ "company.firstName" | translate
+                  }}<sup style="color: #f00; font-size: 12px">*</sup></label
+                >
+                <input
+                  type="text"
+                  class="form-control"
+                  formControlName="firstName"
+                  [placeholder]="'company.firstNamePlaceholder' | translate"
+                />
+
+                <div
+                  *ngIf="
+                    form.get('firstName')?.touched &&
+                    form.get('firstName')?.invalid
+                  "
+                  class="text-danger"
+                >
+                  {{ "validation.firstNameRequired" | translate }}
+                </div>
+                <div
+                  *ngIf="form.get('firstName')?.errors?.['pattern']"
+                  class="text-danger"
+                >
+                  {{ "validation.onlyChars" | translate }}
+                </div>
+                <div
+                  *ngIf="form.get('firstName')?.errors?.['minlength']"
+                  class="text-danger"
+                >
+                  {{ "validation.minLength" | translate }}
+                </div>
+                <div
+                  *ngIf="form.get('firstName')?.errors?.['maxlength']"
+                  class="text-danger"
+                >
+                  {{ "validation.maxLength" | translate }}
+                </div>
+              </div>
+              <div class="col-md-4 col-12">
+                <label class="form-label">{{
+                  "company.middleName" | translate
+                }}</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  formControlName="middleName"
+                  [placeholder]="'company.middleNamePlaceholder' | translate"
+                />
+                <div
+                  *ngIf="form.get('middleName')?.errors?.['pattern']"
+                  class="text-danger"
+                >
+                  {{ "validation.onlyChars" | translate }}
+                </div>
+                <div
+                  *ngIf="form.get('middleName')?.errors?.['minlength']"
+                  class="text-danger"
+                >
+                  {{ "validation.minLength" | translate }}
+                </div>
+                <div
+                  *ngIf="form.get('middleName')?.errors?.['maxlength']"
+                  class="text-danger"
+                >
+                  {{ "validation.maxLength" | translate }}
+                </div>
+              </div>
+              <div class="col-md-4 col-12">
+                <label class="form-label"
+                  >{{ "company.lastName" | translate
+                  }}<sup style="color: #f00; font-size: 12px">*</sup></label
+                >
+                <input
+                  type="text"
+                  class="form-control"
+                  formControlName="lastName"
+                  [placeholder]="'company.lastNamePlaceholder' | translate"
+                />
+                <div
+                  *ngIf="
+                    form.get('lastName')?.touched &&
+                    form.get('lastName')?.invalid
+                  "
+                  class="text-danger"
+                >
+                  {{ "validation.lastNameRequired" | translate }}
+                </div>
+                <div
+                  *ngIf="form.get('lastName')?.errors?.['pattern']"
+                  class="text-danger"
+                >
+                  {{ "validation.onlyChars" | translate }}
+                </div>
+                <div
+                  *ngIf="form.get('lastName')?.errors?.['minlength']"
+                  class="text-danger"
+                >
+                  {{ "validation.minLength" | translate }}
+                </div>
+                <div
+                  *ngIf="form.get('lastName')?.errors?.['maxlength']"
+                  class="text-danger"
+                >
+                  {{ "validation.maxLength" | translate }}
+                </div>
+              </div>
+
+              <div class="col-md-4 col-12">
+                <label class="form-label"
+                  >{{ "company.userEmail" | translate
+                  }}<sup style="color: #f00; font-size: 12px">*</sup></label
+                >
+                <input
+                  type="email"
+                  class="form-control"
+                  formControlName="email"
+                  [placeholder]="'company.userEmailPlaceholder' | translate"
+                />
+                <div *ngIf="isInvalid('email', 'required')" class="text-danger">
+                  {{ "validation.required" | translate }}
+                </div>
+
+                <div *ngIf="isInvalid('email', 'email')" class="text-danger">
+                  {{ "validation.invalidEmail" | translate }}
+                </div>
+              </div>
+              <div class="col-md-4 col-12">
+                <label class="form-label"
+                  >{{ "company.phoneNumber" | translate
+                  }}<sup style="color: #f00; font-size: 12px">*</sup></label
+                >
+                <input
+                  type="tel"
+                  class="form-control"
+                  formControlName="phoneNumber"
+                  [placeholder]="'company.userPhonePlaceholder' | translate"
+                  (input)="
+                    phoneService.enforcePhoneInput(
+                      $event,
+                      form,
+                      'phoneNumber',
+                      15
+                    )
+                  "
+                />
+                <div
+                  *ngIf="isInvalid('phoneNumber', 'required')"
+                  class="text-danger"
+                >
+                  {{ "phoneValidation.phoneNumberRequired" | translate }}
+                </div>
+
+                <div
+                  *ngIf="isInvalid('phoneNumber', 'minlength')"
+                  class="text-danger"
+                >
+                  {{ "phoneValidation.minLength" | translate }}
+                </div>
+
+                <div
+                  *ngIf="isInvalid('phoneNumber', 'maxlength')"
+                  class="text-danger"
+                >
+                  {{ "phoneValidation.maxLength" | translate }}
+                </div>
+
+                <div
+                  *ngIf="isInvalid('phoneNumber', 'pattern')"
+                  class="text-danger"
+                >
+                  {{ "phoneValidation.invalidPhone" | translate }}
+                </div>
+              </div>
+
+              <div class="col-12 mt-3">
+                <h5 class="mb-3">{{ "company.address" | translate }}</h5>
+              </div>
+
+              <div class="col-md-4 col-12">
+                <label class="form-label"
+                  >{{ "company.streetAddress" | translate
+                  }}<sup style="color: #f00; font-size: 12px">*</sup></label
+                >
+                <input
+                  type="text"
+                  class="form-control"
+                  formControlName="streetAddress"
+                  [placeholder]="'company.streetAddressPlaceholder' | translate"
+                />
+                <div
+                  *ngIf="
+                    form.get('streetAddress')?.touched &&
+                    form.get('streetAddress')?.invalid
+                  "
+                  class="text-danger"
+                >
+                  {{ "addressValidation.streetAddressRequired" | translate }}
+                </div>
+              </div>
+              <div class="col-md-4 col-12">
+                <label class="form-label"
+                  >{{ "company.city" | translate
+                  }}<sup style="color: #f00; font-size: 12px">*</sup></label
+                >
+                <input
+                  type="text"
+                  class="form-control"
+                  formControlName="city"
+                  [placeholder]="'company.cityPlaceholder' | translate"
+                />
+                <div *ngIf="isInvalid('city', 'required')" class="text-danger">
+                  {{ "addressValidation.cityRequired" | translate }}
+                </div>
+
+                <div *ngIf="isInvalid('city', 'pattern')" class="text-danger">
+                  {{ "addressValidation.cityPattern" | translate }}
+                </div>
+              </div>
+              <div class="col-md-4 col-12">
+                <label class="form-label"
+                  >{{ "company.zipCode" | translate
+                  }}<sup style="color: #f00; font-size: 12px">*</sup></label
+                >
+                <input
+                  type="text"
+                  class="form-control"
+                  formControlName="zipCode"
+                  [placeholder]="'company.zipCodePlaceholder' | translate"
+                />
+                <div
+                  *ngIf="
+                    form.get('zipCode')?.touched && form.get('zipCode')?.invalid
+                  "
+                  class="text-danger"
+                >
+                  {{ "addressValidation.zipCodeRequired" | translate }}
+                </div>
+                <div
+                  *ngIf="form.get('zipCode')?.errors?.['pattern']"
+                  class="text-danger"
+                >
+                  {{ "addressValidation.invalidZipCode" | translate }}
+                </div>
+              </div>
+
+              <div class="col-md-4 col-12">
+                <label class="form-label"
+                  >{{ "company.country" | translate
+                  }}<sup style="color: #f00; font-size: 12px">*</sup></label
+                >
+                <input
+                  type="text"
+                  class="form-control"
+                  formControlName="country"
+                  [placeholder]="'company.countryPlaceholder' | translate"
+                />
+                <div
+                  *ngIf="
+                    form.get('country')?.touched && form.get('country')?.invalid
+                  "
+                  class="text-danger"
+                >
+                  {{ "addressValidation.countryRequired" | translate }}
+                </div>
+              </div>
+
+              <div class="col-12 mt-3">
+                <h5 class="mb-3">{{ "company.account" | translate }}</h5>
+              </div>
+              <div class="col-12 mt-2">
+                <div class="form-check">
+                  <input
+                    class="form-check-input large-checkbox"
+                    type="checkbox"
+                    id="sameAsPrimaryUser"
+                    formControlName="sameAsPrimaryUser"
+                  />
+                  <label class="form-check-label" for="sameAsPrimaryUser">
+                    {{ "company.sameAsPrimaryUser" | translate }}
+                  </label>
+                </div>
+              </div>
+
+              <div class="col-md-4 col-12">
+                <label class="form-label"
+                  >{{ "company.userFirstName" | translate
+                  }}<sup style="color: #f00; font-size: 12px">*</sup></label
+                >
+                <input
+                  type="text"
+                  class="form-control"
+                  formControlName="userFirstName"
+                  [placeholder]="'company.firstNamePlaceholder' | translate"
+                />
+                <div
+                  *ngIf="
+                    form.get('userFirstName')?.touched &&
+                    form.get('userFirstName')?.invalid
+                  "
+                  class="text-danger"
+                >
+                  {{ "addressValidation.userFirstNameRequired" | translate }}
+                </div>
+                <div
+                  *ngIf="form.get('userFirstName')?.errors?.['pattern']"
+                  class="text-danger"
+                >
+                  {{ "addressValidation.userFirstNamePattern" | translate }}
+                </div>
+                <div
+                  *ngIf="form.get('userFirstName')?.errors?.['minlength']"
+                  class="text-danger"
+                >
+                  {{ "validation.minLength" | translate }}
+                </div>
+                <div
+                  *ngIf="form.get('userFirstName')?.errors?.['maxlength']"
+                  class="text-danger"
+                >
+                  {{ "validation.maxLength" | translate }}
+                </div>
+              </div>
+              <div class="col-md-4 col-12">
+                <label class="form-label">{{
+                  "company.userMiddleName" | translate
+                }}</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  formControlName="userMiddleName"
+                  [placeholder]="'company.middleNamePlaceholder' | translate"
+                />
+                <!-- Middle Name is optional, so no required validation message -->
+                <div
+                  *ngIf="form.get('userMiddleName')?.errors?.['pattern']"
+                  class="text-danger"
+                >
+                  {{ "addressValidation.userMiddleNamePattern" | translate }}
+                </div>
+              </div>
+              <div class="col-md-4 col-12">
+                <label class="form-label"
+                  >{{ "company.userLastName" | translate
+                  }}<sup style="color: #f00; font-size: 12px">*</sup></label
+                >
+                <input
+                  type="text"
+                  class="form-control"
+                  formControlName="userLastName"
+                  [placeholder]="'company.lastNamePlaceholder' | translate"
+                />
+                <div
+                  *ngIf="
+                    form.get('userLastName')?.touched &&
+                    form.get('userLastName')?.invalid
+                  "
+                  class="text-danger"
+                >
+                  {{ "addressValidation.userLastNameRequired" | translate }}
+                </div>
+                <div
+                  *ngIf="form.get('userLastName')?.errors?.['pattern']"
+                  class="text-danger"
+                >
+                  {{ "addressValidation.userLastNamePattern" | translate }}
+                </div>
+                <div
+                  *ngIf="form.get('userLastName')?.errors?.['minlength']"
+                  class="text-danger"
+                >
+                  {{ "validation.minLength" | translate }}
+                </div>
+                <div
+                  *ngIf="form.get('userLastName')?.errors?.['maxlength']"
+                  class="text-danger"
+                >
+                  {{ "validation.maxLength" | translate }}
+                </div>
+              </div>
+
+              <div class="col-md-4 col-12">
+                <label class="form-label"
+                  >{{ "company.adminEmail" | translate
+                  }}<sup style="color: #f00; font-size: 12px">*</sup></label
+                >
+                <input
+                  type="email"
+                  class="form-control"
+                  formControlName="userEmail"
+                  [placeholder]="'company.userEmailPlaceholder' | translate"
+                />
+                <div
+                  *ngIf="
+                    form.get('userEmail')?.touched &&
+                    form.get('userEmail')?.invalid
+                  "
+                  class="text-danger"
+                >
+                  {{ "addressValidation.userEmailRequired" | translate }}
+                </div>
+                <div
+                  *ngIf="form.get('userEmail')?.errors?.['email']"
+                  class="text-danger"
+                >
+                  {{ "addressValidation.userEmailInvalid" | translate }}
+                </div>
+              </div>
+              <div class="col-md-4 col-12">
+                <label class="form-label"
+                  >{{ "company.phoneNumber" | translate
+                  }}<sup style="color: #f00; font-size: 12px">*</sup></label
+                >
+                <input
+                  type="tel"
+                  class="form-control"
+                  formControlName="userPhoneNumber"
+                  maxlength="15"
+                  [placeholder]="'company.userPhonePlaceholder' | translate"
+                  (input)="
+                    phoneService.enforcePhoneInput(
+                      $event,
+                      form,
+                      'userPhoneNumber',
+                      15
+                    )
+                  "
+                />
+                <div
+                  *ngIf="form.get('userPhoneNumber')?.touched"
+                  class="text-danger"
+                >
+                  <!-- Required -->
+                  <div
+                    *ngIf="form.get('userPhoneNumber')?.errors?.['required']"
+                  >
+                    {{ "phoneValidation.phoneNumberRequired" | translate }}
+                  </div>
+
+                  <!-- Minimum length -->
+                  <div
+                    *ngIf="form.get('userPhoneNumber')?.errors?.['minlength']"
+                  >
+                    {{ "phoneValidation.minLength" | translate }}
+                  </div>
+
+                  <!-- Maximum length -->
+                  <div
+                    *ngIf="form.get('userPhoneNumber')?.errors?.['maxlength']"
+                  >
+                    {{ "phoneValidation.maxLength" | translate }}
+                  </div>
+                  <!-- Only numbers allowed -->
+                  <div *ngIf="form.get('userPhoneNumber')?.errors?.['pattern']">
+                    {{ "phoneValidation.phoneNumberPattern" | translate }}
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-md-4 col-12">
+                <label class="form-label"
+                  >{{ "company.userRole" | translate
+                  }}<sup style="color: #f00; font-size: 12px">*</sup></label
+                >
+                <!-- <select class="form-select" formControlName="roleId">
+                                    <option value="">{{ 'company.selectRole' | translate }}</option>
+                                    <option *ngFor="let role of roleList" [value]="role.roleId">{{ role.nameEn }}
+                                    </option>
+                                </select> -->
+                <select class="form-select" formControlName="roleId">
+                  <option [ngValue]="null">
+                    {{ "company.selectRole" | translate }}
+                  </option>
+
+                  <option *ngFor="let role of roleList" [ngValue]="role.roleId">
+                    {{ role.nameEn }}
+                  </option>
+                </select>
+
+                <div
+                  *ngIf="isInvalid('roleId', 'required')"
+                  class="text-danger"
+                >
+                  {{ "companyValidation.roleRequired" | translate }}
+                </div>
+              </div>
+
+              <div class="col-md-4 col-12">
+                <label class="form-label"
+                  >{{ "company.password" | translate }}
+                  <sup style="color: #f00; font-size: 12px" *ngIf="!isEdit"
+                    >*</sup
+                  >
+                </label>
+                <div class="input-group">
+                  <input
+                    [type]="!showCurrent ? 'password' : 'text'"
+                    autocomplete="off"
+                    class="form-control"
+                    formControlName="password"
+                    [placeholder]="'company.passwordPlaceholder' | translate"
+                  />
+                  <span
+                    class="input-group-text"
+                    role="button"
+                    (click)="showCurrent = !showCurrent"
+                  >
+                    <i
+                      class="fa"
+                      [ngClass]="showCurrent ? 'fa-eye' : 'fa-eye-slash'"
+                    ></i>
+                  </span>
+                </div>
+                <!-- PASSWORD ERRORS (REAL TIME) -->
+                <div
+                  *ngIf="form.get('password')?.dirty"
+                  class="text-danger"
+                >
+                  <!-- REQUIRED -->
+                  <span *ngIf="form.get('password')?.errors?.['required']">
+                    {{ "companyValidation.passwordRequired" | translate }}
+                  </span>
+
+                  <!-- MIN LENGTH -->
+                  <span *ngIf="form.get('password')?.errors?.['minlength']">
+                    {{ "companyValidation.passwordMinlength" | translate }}
+                  </span>
+
+                  <!-- PATTERN -->
+                  <span *ngIf="form.get('password')?.errors?.['pattern']">
+                    {{ "companyValidation.passwordPattern" | translate }}
+                  </span>
+                </div>
+              </div>
+              <div
+                class="col-md-6 col-12 d-flex align-items-end"
+                *ngIf="!isEdit"
+              >
+                <div class="form-check">
+                  <input
+                    class="form-check-input large-checkbox"
+                    type="checkbox"
+                    id="isFirstLogin"
+                    [checked]="!form.get('isFirstLogin')?.value"
+                    (change)="onFirstLoginToggle($event)"
+                  />
+                  <label class="form-check-label" for="isFirstLogin">
+                    {{ "company.passwordResetNeeded" | translate }}
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn btn-outline-secondary" (click)="closeModal()">
+          {{ "common.cancel" | translate }}
+        </button>
+        <button class="btn add-btn" (click)="saveCompany()">
+          {{ "common.save" | translate }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

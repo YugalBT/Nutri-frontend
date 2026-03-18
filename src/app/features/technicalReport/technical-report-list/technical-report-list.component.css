@@ -1,0 +1,39 @@
+/* ================= TECH REPORT KPI CARDS ================= */
+
+.report-kpi-card {
+  background: #ffffff;
+  border-radius: 10px;
+  padding: 14px 16px;
+  border: 1px solid #e5e7eb;
+  height: 100%;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.report-kpi-card:hover {
+  border-color: #2563eb;
+  box-shadow: 0 4px 14px rgba(37, 99, 235, 0.08);
+}
+
+.report-kpi-header {
+  margin-bottom: 6px;
+}
+
+.report-kpi-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: #6b7280;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+}
+
+.report-kpi-body {
+  display: flex;
+  align-items: baseline;
+}
+
+.report-kpi-value {
+  font-size: 26px;
+  font-weight: 700;
+  color: #111827;
+  margin: 0;
+}

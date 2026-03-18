@@ -1,285 +1,299 @@
 <div class="body-content">
-    <!-- welcome sec -->
-    <div class="welcome-dashboard">
-        <h3 class="mb-2">Hi, Welcomeback Admin!</h3>
-        <p class="mb-0">Just Do Somethings Better</p>
+
+  <div class="welcome-dashboard" *ngIf="user as u">
+    <h3 class="mb-2">
+      <b>
+        {{ "dashboard.welcome" | translate }}
+        <span class="link-text">{{ u.companyName }}</span>
+      </b>
+    </h3>
+  </div>
+
+  <!-- HEADER -->
+  <div class="d-flex align-items-center justify-content-between py-3">
+    <h4 class="border-start border-4 ps-3">
+      {{ "dashboard.title" | translate }}
+    </h4>
+
+    <div class="d-flex align-items-center gap-2">
+      <label class="mb-0">
+        {{ "dashboard.year" | translate }}
+      </label>
+
+      <select
+        class="form-select"
+        style="width: 120px"
+        [ngModel]="selectedYear"
+        (ngModelChange)="onYearChange($event)">
+
+        <option *ngFor="let year of yearOptions" [value]="year">
+          {{ year }}
+        </option>
+
+      </select>
     </div>
-    <!-- dashboard overview -->
-    <div class="dashboard-overview-main">
-        <div class="d-flex align-items-center justify-content-between py-4">
-            <div class="body_heading mb-0">
-                <h2 class=" mb-0 ">Dashboard Overview</h2>
-            </div>
-            <div class="month-filter-wrapper d-flex gap-2 align-items-center">
+  </div>
 
-                <!-- Month -->
-                <div class="month-filter-input position-relative">
-                    <span class="filter-icon">
-                        <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M2.31958 7.05319H15.6875" stroke="#555555" stroke-width="1.5"
-                                stroke-linecap="round" stroke-linejoin="round" />
-                            <path d="M12.3315 9.98226H12.3384" stroke="#555555" stroke-width="1.5"
-                                stroke-linecap="round" stroke-linejoin="round" />
-                            <path d="M9.00335 9.98226H9.0103" stroke="#555555" stroke-width="1.5" stroke-linecap="round"
-                                stroke-linejoin="round" />
-                            <path d="M5.66839 9.98226H5.67534" stroke="#555555" stroke-width="1.5"
-                                stroke-linecap="round" stroke-linejoin="round" />
-                            <path d="M12.3315 12.8972H12.3384" stroke="#555555" stroke-width="1.5"
-                                stroke-linecap="round" stroke-linejoin="round" />
-                            <path d="M9.00335 12.8972H9.0103" stroke="#555555" stroke-width="1.5" stroke-linecap="round"
-                                stroke-linejoin="round" />
-                            <path d="M5.66839 12.8972H5.67534" stroke="#555555" stroke-width="1.5"
-                                stroke-linecap="round" stroke-linejoin="round" />
-                            <path d="M12.0327 1.5V3.96809" stroke="#555555" stroke-width="1.5" stroke-linecap="round"
-                                stroke-linejoin="round" />
-                            <path d="M5.97411 1.5V3.96809" stroke="#555555" stroke-width="1.5" stroke-linecap="round"
-                                stroke-linejoin="round" />
-                            <path fill-rule="evenodd" clip-rule="evenodd"
-                                d="M12.1787 2.68439H5.82822C3.6257 2.68439 2.25 3.91134 2.25 6.16666V12.9539C2.25 15.2447 3.6257 16.5 5.82822 16.5H12.1718C14.3812 16.5 15.75 15.2659 15.75 13.0106V6.16666C15.7569 3.91134 14.3882 2.68439 12.1787 2.68439Z"
-                                stroke="#555555" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-                        </svg>
+  <!-- LOADING -->
+  <div *ngIf="isLoading" class="text-center py-3">
+    {{ "dashboard.loading" | translate }}
+  </div>
 
-                    </span>
-                    <select class="form-select custom-select">
-                        <option selected>Month</option>
-                        <option>January</option>
-                        <option>February</option>
-                        <option>March</option>
-                    </select>
-                </div>
+  <!-- USER DASHBOARD -->
+  <ng-container *ngIf="!isLoading && !isAdmin">
 
-                <!-- Year -->
-                <div class="month-filter-input position-relative">
-                    <span class="filter-icon">
-                        <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M2.31958 7.05319H15.6875" stroke="#555555" stroke-width="1.5"
-                                stroke-linecap="round" stroke-linejoin="round" />
-                            <path d="M12.3315 9.98226H12.3384" stroke="#555555" stroke-width="1.5"
-                                stroke-linecap="round" stroke-linejoin="round" />
-                            <path d="M9.00335 9.98226H9.0103" stroke="#555555" stroke-width="1.5" stroke-linecap="round"
-                                stroke-linejoin="round" />
-                            <path d="M5.66839 9.98226H5.67534" stroke="#555555" stroke-width="1.5"
-                                stroke-linecap="round" stroke-linejoin="round" />
-                            <path d="M12.3315 12.8972H12.3384" stroke="#555555" stroke-width="1.5"
-                                stroke-linecap="round" stroke-linejoin="round" />
-                            <path d="M9.00335 12.8972H9.0103" stroke="#555555" stroke-width="1.5" stroke-linecap="round"
-                                stroke-linejoin="round" />
-                            <path d="M5.66839 12.8972H5.67534" stroke="#555555" stroke-width="1.5"
-                                stroke-linecap="round" stroke-linejoin="round" />
-                            <path d="M12.0327 1.5V3.96809" stroke="#555555" stroke-width="1.5" stroke-linecap="round"
-                                stroke-linejoin="round" />
-                            <path d="M5.97411 1.5V3.96809" stroke="#555555" stroke-width="1.5" stroke-linecap="round"
-                                stroke-linejoin="round" />
-                            <path fill-rule="evenodd" clip-rule="evenodd"
-                                d="M12.1787 2.68439H5.82822C3.6257 2.68439 2.25 3.91134 2.25 6.16666V12.9539C2.25 15.2447 3.6257 16.5 5.82822 16.5H12.1718C14.3812 16.5 15.75 15.2659 15.75 13.0106V6.16666C15.7569 3.91134 14.3882 2.68439 12.1787 2.68439Z"
-                                stroke="#555555" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-                        </svg>
+    <div class="row g-3">
 
-                    </span>
-                    <select class="form-select custom-select">
-                        <option selected>Year</option>
-                        <option>2023</option>
-                        <option>2024</option>
-                        <option>2025</option>
-                    </select>
-                </div>
+      <!-- Last Entry -->
+      <div class="col-md-3">
+        <div class="dashboard-card">
+          <div class="card-top">
+            <span>{{ "dashboard.lastEntry" | translate }}</span>
+          </div>
 
-            </div>
+          <h3>
+            {{
+              companyDashboard?.lastEntryDate
+                ? (companyDashboard?.lastEntryDate | date: "mediumDate")
+                : "-"
+            }}
+          </h3>
         </div>
+      </div>
 
+      <!-- Milk Price -->
+      <div class="col-md-3">
+        <div class="dashboard-card">
+          <div class="card-top">
+            <span>{{ "dashboard.milkPrice" | translate }}</span>
+          </div>
 
-        <!-- overview box -->
-        <div class="row">
-            <div class="col-lg-3">
-                <div class="overview-card active d-flex gap-3 align-items-center">
-                    <div class="ov-icon">
-                        <svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path
-                                d="M25.9406 4.10977C25.6412 3.98501 25.3115 3.95182 24.9932 4.0144C24.6749 4.07697 24.3823 4.2325 24.1523 4.46133L24.1184 4.49649L21.9633 6.98203C19.89 5.63671 17.4715 4.92077 15 4.92077C12.5285 4.92077 10.11 5.63671 8.03672 6.98203L5.88164 4.50117L5.84766 4.46602C5.61828 4.23662 5.32605 4.08037 5.00789 4.01702C4.68973 3.95367 4.35994 3.98606 4.06018 4.1101C3.76043 4.23414 3.50418 4.44426 3.32382 4.7139C3.14346 4.98354 3.04708 5.3006 3.04688 5.625V15.9375C3.04688 22.0113 8.40937 26.9531 15 26.9531C21.5906 26.9531 26.9531 22.0113 26.9531 15.9375V5.625C26.953 5.30064 26.8568 4.98357 26.6766 4.71387C26.4964 4.44418 26.2403 4.23395 25.9406 4.10977ZM25.5469 15.9375C25.5469 21.0211 21.1922 25.1953 15.7031 25.5246V22.7906L17.3719 21.1219C17.502 20.9897 17.5747 20.8115 17.5741 20.626C17.5734 20.4405 17.4995 20.2628 17.3684 20.1316C17.2374 20.0003 17.0597 19.9262 16.8742 19.9253C16.6887 19.9245 16.5104 19.9969 16.3781 20.127L15 21.5051L13.6219 20.127C13.4896 19.9969 13.3113 19.9245 13.1258 19.9253C12.9403 19.9262 12.7626 20.0003 12.6316 20.1316C12.5005 20.2628 12.4266 20.4405 12.4259 20.626C12.4253 20.8115 12.498 20.9897 12.6281 21.1219L14.2969 22.7906V25.5246C8.80781 25.1953 4.45312 21.0211 4.45312 15.9375V5.625C4.45154 5.57835 4.46459 5.53237 4.49043 5.49349C4.51628 5.45462 4.55363 5.4248 4.59727 5.40821C4.62779 5.39569 4.66037 5.38893 4.69336 5.38828C4.74817 5.38866 4.80086 5.40957 4.84102 5.44688L7.39102 8.37657C7.50726 8.51039 7.66976 8.59537 7.84599 8.61449C8.02222 8.63361 8.19916 8.58546 8.34141 8.47969C9.02448 7.97675 9.76481 7.55663 10.5469 7.22813V10.3125C10.5469 10.499 10.621 10.6778 10.7528 10.8097C10.8847 10.9415 11.0635 11.0156 11.25 11.0156C11.4365 11.0156 11.6153 10.9415 11.7472 10.8097C11.879 10.6778 11.9531 10.499 11.9531 10.3125V6.73946C12.7188 6.52897 13.5043 6.39858 14.2969 6.35039V10.3125C14.2969 10.499 14.371 10.6778 14.5028 10.8097C14.6347 10.9415 14.8135 11.0156 15 11.0156C15.1865 11.0156 15.3653 10.9415 15.4972 10.8097C15.629 10.6778 15.7031 10.499 15.7031 10.3125V6.35039C16.4957 6.39858 17.2812 6.52897 18.0469 6.73946V10.3125C18.0469 10.499 18.121 10.6778 18.2528 10.8097C18.3847 10.9415 18.5635 11.0156 18.75 11.0156C18.9365 11.0156 19.1153 10.9415 19.2472 10.8097C19.379 10.6778 19.4531 10.499 19.4531 10.3125V7.22813C20.2355 7.55847 20.9758 7.98057 21.6586 8.48555C21.8008 8.59132 21.9778 8.63947 22.154 8.62035C22.3302 8.60123 22.4927 8.51625 22.609 8.38242L25.159 5.45274C25.1926 5.42356 25.2339 5.40457 25.2779 5.39799C25.322 5.39141 25.367 5.39752 25.4077 5.41559C25.4484 5.43367 25.4831 5.46296 25.5077 5.50005C25.5324 5.53714 25.546 5.58048 25.5469 5.625V15.9375ZM11.0156 16.4063C11.0156 16.638 10.9469 16.8646 10.8181 17.0573C10.6894 17.25 10.5063 17.4002 10.2922 17.4889C10.0781 17.5776 9.84245 17.6008 9.61513 17.5556C9.38781 17.5104 9.179 17.3988 9.01511 17.2349C8.85122 17.071 8.73961 16.8622 8.69439 16.6349C8.64918 16.4076 8.67238 16.1719 8.76108 15.9578C8.84978 15.7437 8.99998 15.5606 9.19269 15.4319C9.38541 15.3031 9.61198 15.2344 9.84375 15.2344C10.1546 15.2344 10.4526 15.3578 10.6724 15.5776C10.8922 15.7974 11.0156 16.0955 11.0156 16.4063ZM21.3281 16.4063C21.3281 16.638 21.2594 16.8646 21.1306 17.0573C21.0019 17.25 20.8188 17.4002 20.6047 17.4889C20.3906 17.5776 20.155 17.6008 19.9276 17.5556C19.7003 17.5104 19.4915 17.3988 19.3276 17.2349C19.1637 17.071 19.0521 16.8622 19.0069 16.6349C18.9617 16.4076 18.9849 16.1719 19.0736 15.9578C19.1623 15.7437 19.3125 15.5606 19.5052 15.4319C19.6979 15.3031 19.9245 15.2344 20.1562 15.2344C20.4671 15.2344 20.7651 15.3578 20.9849 15.5776C21.2047 15.7974 21.3281 16.0955 21.3281 16.4063Z"
-                                fill="black" />
-                        </svg>
-
-                    </div>
-                    <div class="ov-content">
-                        <span>Total Animals</span>
-                        <h3>245</h3>
-                        <p class="mb-0">+12 from last month</p>
-                    </div>
-                </div>
-
-            </div>
-            <div class="col-lg-3">
-                <div class="overview-card d-flex gap-3 align-items-center">
-                    <div class="ov-icon">
-                        <svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path
-                                d="M20.2184 5.74923C18.784 4.09028 17.1689 2.59665 15.4031 1.29611C15.285 1.21342 15.1442 1.16907 15 1.16907C14.8558 1.16907 14.715 1.21342 14.5969 1.29611C12.8311 2.59665 11.216 4.09028 9.78164 5.74923C6.60234 9.40548 4.92188 13.2527 4.92188 16.875C4.92188 19.5479 5.98367 22.1113 7.87369 24.0013C9.7637 25.8913 12.3271 26.9531 15 26.9531C17.6729 26.9531 20.2363 25.8913 22.1263 24.0013C24.0163 22.1113 25.0781 19.5479 25.0781 16.875C25.0781 13.2527 23.3977 9.40548 20.2184 5.74923ZM22.1344 21.7969H7.86563C7.36766 21.0779 6.98127 20.2877 6.71953 19.4531H23.2805C23.0187 20.2877 22.6323 21.0779 22.1344 21.7969ZM6.40898 18.0469C6.35593 17.6585 6.32892 17.267 6.32812 16.875C6.32873 16.4835 6.35063 16.0923 6.39375 15.7031H23.6063C23.6494 16.0923 23.6713 16.4835 23.6719 16.875C23.6711 17.267 23.6441 17.6585 23.591 18.0469H6.40898ZM15 2.75275C16.5387 3.93868 22.0113 8.50197 23.366 14.2969H6.63398C7.98867 8.50197 13.4613 3.93868 15 2.75275ZM9.07969 23.2031H20.9156C19.3122 24.7074 17.1962 25.5445 14.9977 25.5445C12.7991 25.5445 10.6831 24.7074 9.07969 23.2031Z"
-                                fill="black" />
-                        </svg>
-
-
-                    </div>
-                    <div class="ov-content">
-                        <span>Avg Milk / Day</span>
-                        <h3>8,450 L</h3>
-                        <p class="mb-0">+1.5 L from last month</p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-3">
-                <div class="overview-card d-flex gap-3 align-items-center">
-                    <div class="ov-icon">
-                        <svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path
-                                d="M15 3.04688C12.6359 3.04687 10.3249 3.74791 8.3592 5.06134C6.39352 6.37477 4.86146 8.24159 3.95676 10.4257C3.05205 12.6099 2.81534 15.0133 3.27656 17.3319C3.73777 19.6506 4.87619 21.7805 6.54787 23.4521C8.21954 25.1238 10.3494 26.2622 12.6681 26.7234C14.9867 27.1847 17.3901 26.948 19.5743 26.0432C21.7584 25.1385 23.6252 23.6065 24.9387 21.6408C26.2521 19.6751 26.9531 17.3641 26.9531 15C26.9494 11.831 25.6889 8.79281 23.448 6.55197C21.2072 4.31114 18.169 3.0506 15 3.04688ZM15 25.5469C12.914 25.5469 10.8749 24.9283 9.14048 23.7694C7.40605 22.6105 6.05423 20.9633 5.25596 19.0361C4.4577 17.1089 4.24883 14.9883 4.65579 12.9424C5.06274 10.8965 6.06723 9.01724 7.54224 7.54223C9.01725 6.06723 10.8965 5.06273 12.9424 4.65578C14.9883 4.24883 17.1089 4.45769 19.0361 5.25596C20.9633 6.05423 22.6105 7.40605 23.7694 9.14047C24.9283 10.8749 25.5469 12.914 25.5469 15C25.5438 17.7963 24.4316 20.4771 22.4543 22.4543C20.4771 24.4316 17.7963 25.5438 15 25.5469ZM19.4531 17.3437C19.4531 18.1518 19.1321 18.9268 18.5607 19.4982C17.9893 20.0696 17.2143 20.3906 16.4063 20.3906H15.7031V21.5625C15.7031 21.749 15.6291 21.9278 15.4972 22.0597C15.3653 22.1915 15.1865 22.2656 15 22.2656C14.8135 22.2656 14.6347 22.1915 14.5028 22.0597C14.371 21.9278 14.2969 21.749 14.2969 21.5625V20.3906H12.1875C12.001 20.3906 11.8222 20.3165 11.6903 20.1847C11.5585 20.0528 11.4844 19.874 11.4844 19.6875C11.4844 19.501 11.5585 19.3222 11.6903 19.1903C11.8222 19.0585 12.001 18.9844 12.1875 18.9844H16.4063C16.8414 18.9844 17.2587 18.8115 17.5664 18.5038C17.874 18.1962 18.0469 17.7789 18.0469 17.3437C18.0469 16.9086 17.874 16.4913 17.5664 16.1837C17.2587 15.876 16.8414 15.7031 16.4063 15.7031H13.5938C12.7857 15.7031 12.0107 15.3821 11.4393 14.8107C10.8679 14.2393 10.5469 13.4643 10.5469 12.6562C10.5469 11.8482 10.8679 11.0732 11.4393 10.5018C12.0107 9.93038 12.7857 9.60937 13.5938 9.60937H14.2969V8.4375C14.2969 8.25102 14.371 8.07218 14.5028 7.94032C14.6347 7.80845 14.8135 7.73437 15 7.73437C15.1865 7.73437 15.3653 7.80845 15.4972 7.94032C15.6291 8.07218 15.7031 8.25102 15.7031 8.4375V9.60937H17.8125C17.999 9.60937 18.1778 9.68345 18.3097 9.81532C18.4416 9.94718 18.5156 10.126 18.5156 10.3125C18.5156 10.499 18.4416 10.6778 18.3097 10.8097C18.1778 10.9415 17.999 11.0156 17.8125 11.0156H13.5938C13.1586 11.0156 12.7413 11.1885 12.4337 11.4962C12.126 11.8038 11.9531 12.2211 11.9531 12.6562C11.9531 13.0914 12.126 13.5087 12.4337 13.8163C12.7413 14.124 13.1586 14.2969 13.5938 14.2969H16.4063C17.2143 14.2969 17.9893 14.6179 18.5607 15.1893C19.1321 15.7607 19.4531 16.5357 19.4531 17.3437Z"
-                                fill="black" />
-                        </svg>
-
-
-                    </div>
-                    <div class="ov-content">
-                        <span>Feed Cost / Month</span>
-                        <h3>₹42,000</h3>
-                        <p class="mb-0">-3% from last month</p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-3">
-                <div class="overview-card d-flex gap-3 align-items-center">
-                    <div class="ov-icon">
-                        <svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M9.05615 18.4768L12.7976 13.6141L17.0653 16.9666L20.7266 12.2411" stroke="black"
-                                stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-                            <circle cx="24.9943" cy="5.25031" r="2.40275" stroke="black" stroke-width="1.5"
-                                stroke-linecap="round" stroke-linejoin="round" />
-                            <path
-                                d="M18.6557 3.90018H9.57105C5.80675 3.90018 3.47266 6.56608 3.47266 10.3304V20.4334C3.47266 24.1977 5.76099 26.8521 9.57105 26.8521H20.3262C24.0905 26.8521 26.4246 24.1977 26.4246 20.4334V11.6347"
-                                stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-                        </svg>
-
-
-                    </div>
-                    <div class="ov-content">
-                        <span>Fertility Rate</span>
-                        <h3>₹1,25,00</h3>
-                        <p class="mb-0">+4% from last cycle</p>
-                    </div>
-                </div>
-            </div>
+          <h3>{{ companyDashboard?.milkPrice || 0 | number: "1.2-2" }}</h3>
         </div>
+      </div>
+
+      <!-- IOFC -->
+      <div class="col-md-3">
+        <div class="dashboard-card">
+          <div class="card-top">
+            <span>{{ "dashboard.iofc" | translate }}</span>
+          </div>
+
+          <h3>{{ companyDashboard?.iofc || 0 | number: "1.2-2" }}</h3>
+        </div>
+      </div>
+
+      <!-- D&A Milk -->
+      <div class="col-md-3">
+        <div class="dashboard-card">
+          <div class="card-top">
+            <span>{{ "dashboard.deaMilk" | translate }}</span>
+          </div>
+
+          <h3>{{ companyDashboard?.deaMilk || 0 | number: "1.2-2" }}</h3>
+        </div>
+      </div>
+
     </div>
-    <!-- graph section -->
-    <div class="graph-section py-5">
-        <div class="row g-4">
-            <div class="col-lg-6">
-                <div class="graph-left">
-                    <div class="body_heading mb-4">
-                        <h2 class=" mb-0 ">Feed Cost BreakDown</h2>
-                        <p class="mb-0">Understand which feeds contribute most to your total cost.</p>
-                    </div>
-                    <div class="graph-image">
-                        <img src="assets/image/piechart.png" alt="" class="img-fluid w-100">
-                    </div>
-                </div>
+
+    <!-- PERFORMANCE -->
+    <h5 class="border-start border-4 ps-3 mt-4">
+      {{ "dashboard.performanceIndicators" | translate }}
+    </h5>
+
+    <div class="row dashboard-gauges">
+      <div class="col-md-3">
+        <div class="gauge-card">
+          <div echarts [options]="deaGauge" class="gauge-box"></div>
+        </div>
+      </div>
+
+      <div class="col-md-3">
+        <div class="gauge-card">
+          <div echarts [options]="milkGauge" class="gauge-box"></div>
+        </div>
+      </div>
+
+      <div class="col-md-3">
+        <div class="gauge-card">
+          <div echarts [options]="feedGauge" class="gauge-box"></div>
+        </div>
+      </div>
+
+      <div class="col-md-3">
+        <div class="gauge-card">
+          <div echarts [options]="crepGauge" class="gauge-box"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- DEA BAR -->
+    <div class="row mt-3">
+      <div class="col-12">
+        <div class="dea-performance-bar">
+
+          <div class="performance-scale">
+            <span>0.90</span>
+            <span>1.00</span>
+            <span>1.10</span>
+            <span>1.20</span>
+            <span>1.30</span>
+            <span>1.40</span>
+            <span>1.50</span>
+          </div>
+
+          <div class="performance-bar">
+            <div
+              class="cow-indicator"
+              [style.left.%]="getCowPosition(companyDashboard?.deaMilk ?? 0)">
+              🐄
             </div>
-            <div class="col-lg-6">
-                <div class="graph-left">
-                    <div class="body_heading mb-4">
-                        <h2 class=" mb-0 ">Recent Events (Farm Version)</h2>
-                        <p class="mb-0">A real-time feed of the latest farm activities and alerts.</p>
-                    </div>
-                    <div class="graph-image">
-                        <img src="assets/image/line-chart.png" alt="" class="img-fluid w-100">
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-6">
-                <div class="graph-left mt-2">
-                    <div class="body_heading mb-4">
-                        <h2 class=" mb-0 ">Milk Production Trends </h2>
-                        <p class="mb-0">Track daily milk output and spot trends.</p>
-                    </div>
-                    <div class="activity-card white-with-shadow">
-                        <div class="activity-item d-flex align-items-center justify-content-between mb-3">
-                            <div class="d-flex align-items-center gap-3">
-                                <div class="act-icon">
-                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
-                                        xmlns="http://www.w3.org/2000/svg">
-                                        <path
-                                            d="M8.625 13.125C8.4025 13.125 8.18499 13.059 7.99999 12.9354C7.81498 12.8118 7.67079 12.6361 7.58564 12.4305C7.50049 12.225 7.47821 11.9988 7.52162 11.7805C7.56503 11.5623 7.67217 11.3618 7.82951 11.2045C7.98684 11.0472 8.1873 10.94 8.40553 10.8966C8.62376 10.8532 8.84996 10.8755 9.05552 10.9606C9.26109 11.0458 9.43679 11.19 9.56041 11.375C9.68402 11.56 9.75 11.7775 9.75 12C9.75 12.2984 9.63148 12.5845 9.4205 12.7955C9.20952 13.0065 8.92337 13.125 8.625 13.125ZM15.375 10.875C15.1525 10.875 14.935 10.941 14.75 11.0646C14.565 11.1882 14.4208 11.3639 14.3356 11.5695C14.2505 11.775 14.2282 12.0012 14.2716 12.2195C14.315 12.4377 14.4222 12.6382 14.5795 12.7955C14.7368 12.9528 14.9373 13.06 15.1555 13.1034C15.3738 13.1468 15.6 13.1245 15.8055 13.0394C16.0111 12.9542 16.1868 12.81 16.3104 12.625C16.434 12.44 16.5 12.2225 16.5 12C16.5 11.7016 16.3815 11.4155 16.1705 11.2045C15.9595 10.9935 15.6734 10.875 15.375 10.875ZM14.2247 15.1153C13.5567 15.5299 12.7862 15.7496 12 15.7496C11.2138 15.7496 10.4433 15.5299 9.77532 15.1153C9.60699 15.0091 9.40338 14.9742 9.20928 15.0181C9.01518 15.0621 8.84649 15.1814 8.74032 15.3497C8.63415 15.518 8.5992 15.7216 8.64315 15.9157C8.6871 16.1098 8.80636 16.2785 8.97469 16.3847C9.88233 16.9505 10.9304 17.2504 12 17.2504C13.0696 17.2504 14.1177 16.9505 15.0253 16.3847C15.1936 16.2785 15.3129 16.1098 15.3569 15.9157C15.4008 15.7216 15.3659 15.518 15.2597 15.3497C15.1535 15.1814 14.9848 15.0621 14.7907 15.0181C14.5966 14.9742 14.393 15.0091 14.2247 15.1153ZM21.75 12C21.75 13.9284 21.1782 15.8134 20.1068 17.4168C19.0355 19.0202 17.5127 20.2699 15.7312 21.0078C13.9496 21.7458 11.9892 21.9389 10.0979 21.5627C8.20656 21.1865 6.46928 20.2579 5.10571 18.8943C3.74215 17.5307 2.81355 15.7934 2.43735 13.9021C2.06114 12.0108 2.25422 10.0504 2.99218 8.26884C3.73013 6.48726 4.97982 4.96452 6.58319 3.89317C8.18657 2.82183 10.0716 2.25 12 2.25C14.585 2.25273 17.0634 3.28084 18.8913 5.10872C20.7192 6.93661 21.7473 9.41498 21.75 12ZM20.25 12C20.2474 9.87623 19.4269 7.83506 17.9589 6.30036C16.4909 4.76565 14.4881 3.85533 12.3666 3.75844C11.28 5.28563 11.25 6.73875 11.25 6.75C11.25 6.94891 11.329 7.13968 11.4697 7.28033C11.6103 7.42098 11.8011 7.5 12 7.5C12.1989 7.5 12.3897 7.42098 12.5303 7.28033C12.671 7.13968 12.75 6.94891 12.75 6.75C12.75 6.55109 12.829 6.36032 12.9697 6.21967C13.1103 6.07902 13.3011 6 13.5 6C13.6989 6 13.8897 6.07902 14.0303 6.21967C14.171 6.36032 14.25 6.55109 14.25 6.75C14.25 7.34674 14.013 7.91903 13.591 8.34099C13.169 8.76295 12.5967 9 12 9C11.4033 9 10.831 8.76295 10.409 8.34099C9.98706 7.91903 9.75 7.34674 9.75 6.75C9.75 6.68156 9.76219 5.40937 10.5431 3.87844C8.99846 4.15557 7.56488 4.86752 6.41061 5.93074C5.25633 6.99396 4.42926 8.36435 4.02643 9.8811C3.6236 11.3978 3.66173 12.998 4.13635 14.4939C4.61097 15.9897 5.50238 17.3191 6.70599 18.3262C7.9096 19.3332 9.37546 19.9761 10.9316 20.1793C12.4877 20.3825 14.0695 20.1377 15.4914 19.4736C16.9132 18.8095 18.1162 17.7536 18.9591 16.4298C19.8019 15.106 20.2498 13.5693 20.25 12Z"
-                                            fill="#C74129" />
-                                    </svg>
+          </div>
 
-                                </div>
-                                <div class="act-content">
-                                    <h3 class="mb-1">New birth recorded</h3>
-                                    <p class="mb-0">Female calf born to Cow #182</p>
-                                </div>
-                            </div>
-                            <div class="act-time">2min ago</div>
-                        </div>
-                        <div class="activity-item d-flex align-items-center justify-content-between mb-3">
-                            <div class="d-flex align-items-center gap-3">
-                                <div class="act-icon">
-                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
-                                        xmlns="http://www.w3.org/2000/svg">
-                                        <path
-                                            d="M20.25 5.25H16.5V4.5C16.5 3.90326 16.2629 3.33097 15.841 2.90901C15.419 2.48705 14.8467 2.25 14.25 2.25H9.75C9.15326 2.25 8.58097 2.48705 8.15901 2.90901C7.73705 3.33097 7.5 3.90326 7.5 4.5V5.25H3.75C3.35218 5.25 2.97064 5.40804 2.68934 5.68934C2.40804 5.97064 2.25 6.35218 2.25 6.75V18.75C2.25 19.1478 2.40804 19.5294 2.68934 19.8107C2.97064 20.092 3.35218 20.25 3.75 20.25H20.25C20.6478 20.25 21.0294 20.092 21.3107 19.8107C21.592 19.5294 21.75 19.1478 21.75 18.75V6.75C21.75 6.35218 21.592 5.97064 21.3107 5.68934C21.0294 5.40804 20.6478 5.25 20.25 5.25ZM9 4.5C9 4.30109 9.07902 4.11032 9.21967 3.96967C9.36032 3.82902 9.55109 3.75 9.75 3.75H14.25C14.4489 3.75 14.6397 3.82902 14.7803 3.96967C14.921 4.11032 15 4.30109 15 4.5V5.25H9V4.5ZM20.25 18.75H3.75V6.75H20.25V18.75ZM15 12.75C15 12.9489 14.921 13.1397 14.7803 13.2803C14.6397 13.421 14.4489 13.5 14.25 13.5H12.75V15C12.75 15.1989 12.671 15.3897 12.5303 15.5303C12.3897 15.671 12.1989 15.75 12 15.75C11.8011 15.75 11.6103 15.671 11.4697 15.5303C11.329 15.3897 11.25 15.1989 11.25 15V13.5H9.75C9.55109 13.5 9.36032 13.421 9.21967 13.2803C9.07902 13.1397 9 12.9489 9 12.75C9 12.5511 9.07902 12.3603 9.21967 12.2197C9.36032 12.079 9.55109 12 9.75 12H11.25V10.5C11.25 10.3011 11.329 10.1103 11.4697 9.96967C11.6103 9.82902 11.8011 9.75 12 9.75C12.1989 9.75 12.3897 9.82902 12.5303 9.96967C12.671 10.1103 12.75 10.3011 12.75 10.5V12H14.25C14.4489 12 14.6397 12.079 14.7803 12.2197C14.921 12.3603 15 12.5511 15 12.75Z"
-                                            fill="#2274F6" />
-                                    </svg>
-
-
-                                </div>
-                                <div class="act-content">
-                                    <h3 class="mb-1">Health treatment added</h3>
-                                    <p class="mb-0">Mastitis treatment logged for Cow #97</p>
-                                </div>
-                            </div>
-                            <div class="act-time">2min ago</div>
-                        </div>
-                        <div class="activity-item d-flex align-items-center justify-content-between mb-3">
-                            <div class="d-flex align-items-center gap-3">
-                                <div class="act-icon">
-                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
-                                        xmlns="http://www.w3.org/2000/svg">
-                                        <path
-                                            d="M20.97 6.20155L12.72 1.68749C12.4996 1.56569 12.2518 1.5018 12 1.5018C11.7482 1.5018 11.5004 1.56569 11.28 1.68749L3.03 6.20342C2.7944 6.33233 2.59772 6.52214 2.46052 6.75301C2.32331 6.98388 2.25061 7.24736 2.25 7.51592V16.4822C2.25061 16.7507 2.32331 17.0142 2.46052 17.2451C2.59772 17.476 2.7944 17.6658 3.03 17.7947L11.28 22.3106C11.5004 22.4324 11.7482 22.4963 12 22.4963C12.2518 22.4963 12.4996 22.4324 12.72 22.3106L20.97 17.7947C21.2056 17.6658 21.4023 17.476 21.5395 17.2451C21.6767 17.0142 21.7494 16.7507 21.75 16.4822V7.51686C21.7499 7.24782 21.6774 6.98376 21.5402 6.75234C21.403 6.52093 21.206 6.33069 20.97 6.20155ZM12 2.99999L19.5319 7.12499L16.7409 8.65311L9.20813 4.52811L12 2.99999ZM12 11.25L4.46812 7.12499L7.64625 5.38499L15.1781 9.50999L12 11.25ZM3.75 8.43749L11.25 12.5419V20.5847L3.75 16.4831V8.43749ZM20.25 16.4794L12.75 20.5847V12.5456L15.75 10.904V14.25C15.75 14.4489 15.829 14.6397 15.9697 14.7803C16.1103 14.921 16.3011 15 16.5 15C16.6989 15 16.8897 14.921 17.0303 14.7803C17.171 14.6397 17.25 14.4489 17.25 14.25V10.0828L20.25 8.43749V16.4784V16.4794Z"
-                                            fill="#C74129" />
-                                    </svg>
-
-
-                                </div>
-                                <div class="act-content">
-                                    <h3 class="mb-1">Feed order placed</h3>
-                                    <p class="mb-0">2 tons of Maize Silage ordered</p>
-                                </div>
-                            </div>
-                            <div class="act-time">3h ago</div>
-                        </div>
-                        <div class="activity-item d-flex align-items-center justify-content-between">
-                            <div class="d-flex align-items-center gap-3">
-                                <div class="act-icon">
-                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
-                                        xmlns="http://www.w3.org/2000/svg">
-                                        <path
-                                            d="M21.1744 9.63937C20.8209 9.27 20.4553 8.88937 20.3175 8.55469C20.19 8.24813 20.1825 7.74 20.175 7.24781C20.1609 6.33281 20.1459 5.29594 19.425 4.575C18.7041 3.85406 17.6672 3.83906 16.7522 3.825C16.26 3.8175 15.7519 3.81 15.4453 3.6825C15.1116 3.54469 14.73 3.17906 14.3606 2.82562C13.7137 2.20406 12.9787 1.5 12 1.5C11.0213 1.5 10.2872 2.20406 9.63937 2.82562C9.27 3.17906 8.88937 3.54469 8.55469 3.6825C8.25 3.81 7.74 3.8175 7.24781 3.825C6.33281 3.83906 5.29594 3.85406 4.575 4.575C3.85406 5.29594 3.84375 6.33281 3.825 7.24781C3.8175 7.74 3.81 8.24813 3.6825 8.55469C3.54469 8.88844 3.17906 9.27 2.82562 9.63937C2.20406 10.2862 1.5 11.0213 1.5 12C1.5 12.9787 2.20406 13.7128 2.82562 14.3606C3.17906 14.73 3.54469 15.1106 3.6825 15.4453C3.81 15.7519 3.8175 16.26 3.825 16.7522C3.83906 17.6672 3.85406 18.7041 4.575 19.425C5.29594 20.1459 6.33281 20.1609 7.24781 20.175C7.74 20.1825 8.24813 20.19 8.55469 20.3175C8.88844 20.4553 9.27 20.8209 9.63937 21.1744C10.2862 21.7959 11.0213 22.5 12 22.5C12.9787 22.5 13.7128 21.7959 14.3606 21.1744C14.73 20.8209 15.1106 20.4553 15.4453 20.3175C15.7519 20.19 16.26 20.1825 16.7522 20.175C17.6672 20.1609 18.7041 20.1459 19.425 19.425C20.1459 18.7041 20.1609 17.6672 20.175 16.7522C20.1825 16.26 20.19 15.7519 20.3175 15.4453C20.4553 15.1116 20.8209 14.73 21.1744 14.3606C21.7959 13.7137 22.5 12.9787 22.5 12C22.5 11.0213 21.7959 10.2872 21.1744 9.63937ZM20.0916 13.3228C19.6425 13.7916 19.1775 14.2763 18.9309 14.8716C18.6947 15.4434 18.6844 16.0969 18.675 16.7297C18.6656 17.3859 18.6553 18.0731 18.3638 18.3638C18.0722 18.6544 17.3897 18.6656 16.7297 18.675C16.0969 18.6844 15.4434 18.6947 14.8716 18.9309C14.2763 19.1775 13.7916 19.6425 13.3228 20.0916C12.8541 20.5406 12.375 21 12 21C11.625 21 11.1422 20.5387 10.6772 20.0916C10.2122 19.6444 9.72375 19.1775 9.12844 18.9309C8.55656 18.6947 7.90313 18.6844 7.27031 18.675C6.61406 18.6656 5.92687 18.6553 5.63625 18.3638C5.34562 18.0722 5.33437 17.3897 5.325 16.7297C5.31562 16.0969 5.30531 15.4434 5.06906 14.8716C4.8225 14.2763 4.3575 13.7916 3.90844 13.3228C3.45937 12.8541 3 12.375 3 12C3 11.625 3.46125 11.1422 3.90844 10.6772C4.35562 10.2122 4.8225 9.72375 5.06906 9.12844C5.30531 8.55656 5.31562 7.90313 5.325 7.27031C5.33437 6.61406 5.34469 5.92687 5.63625 5.63625C5.92781 5.34562 6.61031 5.33437 7.27031 5.325C7.90313 5.31562 8.55656 5.30531 9.12844 5.06906C9.72375 4.8225 10.2084 4.3575 10.6772 3.90844C11.1459 3.45937 11.625 3 12 3C12.375 3 12.8578 3.46125 13.3228 3.90844C13.7878 4.35562 14.2763 4.8225 14.8716 5.06906C15.4434 5.30531 16.0969 5.31562 16.7297 5.325C17.3859 5.33437 18.0731 5.34469 18.3638 5.63625C18.6544 5.92781 18.6656 6.61031 18.675 7.27031C18.6844 7.90313 18.6947 8.55656 18.9309 9.12844C19.1775 9.72375 19.6425 10.2084 20.0916 10.6772C20.5406 11.1459 21 11.625 21 12C21 12.375 20.5387 12.8578 20.0916 13.3228ZM11.25 12.75V7.5C11.25 7.30109 11.329 7.11032 11.4697 6.96967C11.6103 6.82902 11.8011 6.75 12 6.75C12.1989 6.75 12.3897 6.82902 12.5303 6.96967C12.671 7.11032 12.75 7.30109 12.75 7.5V12.75C12.75 12.9489 12.671 13.1397 12.5303 13.2803C12.3897 13.421 12.1989 13.5 12 13.5C11.8011 13.5 11.6103 13.421 11.4697 13.2803C11.329 13.1397 11.25 12.9489 11.25 12.75ZM13.125 16.125C13.125 16.3475 13.059 16.565 12.9354 16.75C12.8118 16.935 12.6361 17.0792 12.4305 17.1644C12.225 17.2495 11.9988 17.2718 11.7805 17.2284C11.5623 17.185 11.3618 17.0778 11.2045 16.9205C11.0472 16.7632 10.94 16.5627 10.8966 16.3445C10.8532 16.1262 10.8755 15.9 10.9606 15.6945C11.0458 15.4889 11.19 15.3132 11.375 15.1896C11.56 15.066 11.7775 15 12 15C12.2984 15 12.5845 15.1185 12.7955 15.3295C13.0065 15.5405 13.125 15.8266 13.125 16.125Z"
-                                            fill="#021B43" />
-                                    </svg>
-
-
-
-                                </div>
-                                <div class="act-content">
-                                    <h3 class="mb-1"> Heat detected</h3>
-                                    <p class="mb-0">Heat activity detected for Cow #214</p>
-                                </div>
-                            </div>
-                            <div class="act-time">5h ago</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+          <div class="dea-value">
+            {{ companyDashboard?.deaMilk }}
+          </div>
 
         </div>
+      </div>
     </div>
+
+    <!-- OVERVIEW -->
+    <div class="row g-3 mt-1">
+
+      <div class="col-md-4">
+        <div class="overview-card">
+          <h5>{{ "dashboard.feeding" | translate }}</h5>
+          <p>
+            {{ "dashboard.cost" | translate }}:
+            <b>{{ companyDashboard?.cost || 0 | number: "1.2-2" }}</b>
+          </p>
+          <p>{{ "dashboard.trendYear" | translate }}</p>
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <div class="overview-card">
+          <h5>{{ "dashboard.herd" | translate }}</h5>
+          <p>
+            {{ "dashboard.herdSize" | translate }}:
+            <b>{{ companyDashboard?.herdSize || 0 }}</b>
+          </p>
+          <p>{{ "dashboard.currentHerd" | translate }}</p>
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <div class="overview-card">
+          <h5>{{ "dashboard.production" | translate }}</h5>
+          <p>
+            {{ "dashboard.avgMilkPerDay" | translate }}:
+            <b>{{ companyDashboard?.avgMilkPerDay || 0 | number: "1.2-2" }}</b>
+          </p>
+          <p>{{ "dashboard.avgOutput" | translate }}</p>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- GRAPH -->
+    <div class="card mt-3">
+      <div class="card-header">
+        {{ "dashboard.graphicalKpi" | translate }}
+      </div>
+      <div class="card-body">
+        <div echarts [options]="companyTrendChart" class="chart-box"></div>
+      </div>
+    </div>
+
+  </ng-container>
+
+  <!-- ADMIN DASHBOARD -->
+  <ng-container *ngIf="!isLoading && isAdmin">
+
+    <div class="row g-3">
+
+      <div class="col-md-3">
+        <div class="dashboard-card">
+          <div class="card-top">
+            <span>{{ "dashboard.totalCompanies" | translate }}</span>
+          </div>
+          <h3>{{ aggregatedAnalytics?.totalCompanies }}</h3>
+        </div>
+      </div>
+
+      <div class="col-md-3">
+        <div class="dashboard-card">
+          <div class="card-top">
+            <span>{{ "dashboard.archiveRecords" | translate }}</span>
+          </div>
+          <h3>{{ aggregatedAnalytics?.archiveRecords || 0 }}</h3>
+        </div>
+      </div>
+
+      <div class="col-md-3">
+        <div class="dashboard-card">
+          <div class="card-top">
+            <span>{{ "dashboard.totalUsers" | translate }}</span>
+          </div>
+          <h3>{{ dashboardData.totalUsers }}</h3>
+        </div>
+      </div>
+
+      <div class="col-md-3">
+        <div class="dashboard-card">
+          <div class="card-top">
+            <span>{{ "dashboard.activeFarms" | translate }}</span>
+          </div>
+          <h3>{{ dashboardData.totalActiveFarms }}</h3>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="card mt-3">
+      <div class="card-header">
+        {{ "dashboard.aggregatedTrend" | translate }}
+      </div>
+      <div class="card-body">
+        <div echarts [options]="adminTrendChart" class="chart-box"></div>
+      </div>
+    </div>
+
+    <div class="card mt-3">
+      <div class="card-header">
+        {{ "dashboard.companyComparison" | translate }}
+      </div>
+      <div class="card-body">
+        <div echarts [options]="comparisonChart" class="chart-box"></div>
+      </div>
+    </div>
+
+    <div class="card mt-3" *ngIf="aggregatedAnalytics?.rankingByIofc?.length">
+      <div class="card-header">
+        {{ "dashboard.rankingByIofc" | translate }}
+      </div>
+
+      <div class="card-body p-0">
+        <table class="table mb-0">
+          <thead>
+            <tr>
+              <th>{{ "dashboard.rank" | translate }}</th>
+              <th>{{ "dashboard.company" | translate }}</th>
+              <th>{{ "dashboard.iofc" | translate }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let row of aggregatedAnalytics?.rankingByIofc">
+              <td>{{ row.rank }}</td>
+              <td>{{ row.companyName }}</td>
+              <td>{{ row.iofc | number: "1.2-2" }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </ng-container>
+
 </div>

@@ -1,0 +1,43 @@
+<div class="pagecls">
+
+  <!-- PAGE HEADER -->
+  <div class="page-header d-flex justify-content-between align-items-center">
+    <div>
+      <h3 class="page-title">{{ 'supplierPriceformula.management' | translate }}</h3>
+    </div>
+
+    <button class="btn add-btn" (click)="expressionModal.openModal()">
+      <i class="bi bi-plus-lg me-2"></i>
+      {{ 'formula.addFormula' | translate }}
+    </button>
+  </div>
+
+  <app-global-search
+   [label]="'role.searchFilters' | translate"
+    [showStatus]="true"
+    [placeholder]="'Search by expression name'"
+    (search)="onSearch($event)"
+    (statusChange)="onStatusChange($event)"
+    (clear)="clearFilters()">
+  </app-global-search>
+
+  <!-- TABLE -->
+  <app-reusable-table
+    [columns]="columns"
+    [columnFields]="columnFields"
+    [data]="expressions"
+    [pageable]="true"
+    [totalRecords]="totalRecords"
+    [pageSize]="pageSize"
+    [pageIndex]="pageIndex"
+    [showActions]="true"
+    (pageChange)="onPageChange($event)"
+    (editRow)="onEdit($event)"
+    (deleteRow)="onDelete($event)"
+    (toggleActive)="onToggleActive($event)">
+  </app-reusable-table>
+
+  <!-- ADD / EDIT MODAL -->
+  <app-supplier-pricing-formula-add-edit #expressionModal></app-supplier-pricing-formula-add-edit>
+
+</div>

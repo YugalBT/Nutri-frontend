@@ -1,0 +1,329 @@
+<div #userModal class="modal fade" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">
+          {{
+            isEdit
+              ? ("users.editUser" | translate)
+              : ("users.addUser" | translate)
+          }}
+        </h5>
+        <button type="button" class="btn-close" (click)="closeModal()"></button>
+      </div>
+
+      <div class="modal-body">
+        <form [formGroup]="form">
+          <div class="row g-3">
+            <div class="col-md-4">
+              <label class="form-label"
+                >{{ "users.firstName" | translate }}
+                <sup style="color: #f00; font-size: 12px">*</sup></label
+              >
+              <input
+                type="text"
+                formControlName="name"
+                class="form-control"
+                placeholder="{{ 'users.firstNamePlaceholder' | translate }}"
+              />
+              <div
+                *ngIf="form.get('name')?.touched && form.get('name')?.invalid"
+                class="text-danger"
+              >
+                {{ "validation.required" | translate }}
+              </div>
+
+              <!-- <div
+                *ngIf="form.get('name')?.errors?.['pattern']"
+                class="text-danger"
+              >
+                {{ "validation.onlyChars" | translate }}
+              </div> -->
+            </div>
+
+            <div class="col-md-4">
+              <label class="form-label">{{
+                "users.middleName" | translate
+              }}</label>
+              <input
+                type="text"
+                formControlName="middleName"
+                class="form-control"
+                placeholder="{{ 'users.middleNamePlaceholder' | translate }}"
+              />
+              <!-- <div
+                *ngIf="
+                  form.get('middleName')?.touched &&
+                  form.get('middleName')?.invalid
+                "
+                class="text-danger"
+              >
+                {{ "validation.onlyChars" | translate }}
+              </div> -->
+            </div>
+
+            <div class="col-md-4">
+              <label class="form-label"
+                >{{ "users.lastName" | translate }}
+                <sup style="color: #f00; font-size: 12px">*</sup></label
+              >
+              <input
+                type="text"
+                formControlName="lastName"
+                class="form-control"
+                placeholder="{{ 'users.lastNamePlaceholder' | translate }}"
+              />
+              <div
+                *ngIf="
+                  form.get('lastName')?.touched && form.get('lastName')?.invalid
+                "
+                class="text-danger"
+              >
+                {{ "validation.required" | translate }}
+              </div>
+
+              <!-- <div
+                *ngIf="form.get('lastName')?.errors?.['pattern']"
+                class="text-danger"
+              >
+                {{ "validation.onlyChars" | translate }}
+              </div> -->
+            </div>
+          </div>
+          <div class="row g-3 mt-2">
+            <div class="col-md-4">
+              <label class="form-label"
+                >{{ "users.email" | translate }}
+                <sup style="color: #f00; font-size: 12px">*</sup></label
+              >
+              <input
+                type="email"
+                formControlName="email"
+                class="form-control"
+                placeholder="{{ 'users.emailPlaceholder' | translate }}"
+              />
+              <div
+                *ngIf="form.get('email')?.touched && form.get('email')?.invalid"
+                class="text-danger"
+              >
+                {{ "validation.required" | translate }}
+              </div>
+              <div
+                *ngIf="form.get('email')?.errors?.['email']"
+                class="text-danger"
+              >
+                {{ "validation.invalidEmail" | translate }}
+              </div>
+            </div>
+            <div class="col-md-4">
+              <label class="form-label"
+                >{{ "users.phone" | translate }}
+                <sup style="color: #f00; font-size: 12px">*</sup></label
+              >
+              <input
+                type="email"
+                formControlName="phone"
+                class="form-control"
+                placeholder="{{ 'users.phonePlaceholder' | translate }}"
+                (input)="
+                  phoneService.enforcePhoneInput($event, form, 'phone', 15)
+                "
+              />
+              <div *ngIf="form.get('phone')?.touched" class="text-danger">
+                <!-- Required -->
+                <div *ngIf="form.get('phone')?.errors?.['required']">
+                  {{ "phoneValidation.phoneRequired" | translate }}
+                </div>
+
+                <!-- Minimum length -->
+                <div *ngIf="form.get('phone')?.errors?.['minlength']">
+                  {{ "phoneValidation.minLength" | translate }}
+                </div>
+                <!-- Maximum length -->
+                <div *ngIf="form.get('phone')?.errors?.['maxlength']">
+                  {{ "phoneValidation.maxLength" | translate }}
+                </div>
+                <!-- Only numbers allowed -->
+                <div *ngIf="form.get('phone')?.errors?.['pattern']">
+                  {{ "phoneValidation.invalidPhone" | translate }}
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-4">
+              <label class="form-label"
+                >{{ "users.role" | translate }}
+                <sup style="color: #f00; font-size: 12px">*</sup></label
+              >
+              <ng-container>
+                <select
+                  class="form-select"
+                  formControlName="roleId"
+                  [disabled]="rolesLoading || roles.length === 0"
+                >
+                  <option [ngValue]="null">
+                    {{ "users.select" | translate }}
+                  </option>
+                  <option *ngFor="let r of roles" [value]="r.roleId">
+                    {{ r.nameEn || r.nameEn }}
+                  </option>
+                </select>
+                <span
+                  *ngIf="rolesLoading"
+                  class="select-spinner spinner-border spinner-border-sm"
+                >
+                </span>
+
+                <!-- <div *ngIf="rolesLoading" class="form-text text-muted small">{{ 'common.loading' |
+                                    translate }}</div> -->
+                <div
+                  *ngIf="!rolesLoading && roles.length === 0"
+                  class="form-text text-danger small"
+                >
+                  {{
+                    rolesError
+                      ? rolesError
+                      : ("users.noRolesAvailable" | translate)
+                  }}
+                </div>
+                <div
+                  *ngIf="
+                    form.get('roleId')?.touched && form.get('roleId')?.invalid
+                  "
+                  class="text-danger"
+                >
+                  {{ "validation.required" | translate }}
+                </div>
+              </ng-container>
+            </div>
+
+            <div class="col-md-4">
+              <label class="form-label"
+                >{{ "users.password" | translate }}
+                <sup style="color: #f00; font-size: 12px" *ngIf="!isEdit"
+                  >*</sup
+                >
+              </label>
+              <div class="input-group">
+                <input
+                  [type]="showCurrent ? 'text' : 'password'"
+                  autocomplete="off"
+                  formControlName="password"
+                  class="form-control"
+                  placeholder="{{ 'users.passwordPlaceholder' | translate }}"
+                />
+                <span
+                  class="input-group-text"
+                  role="button"
+                  (click)="showCurrent = !showCurrent"
+                >
+                  <i
+                    class="fa"
+                    [ngClass]="showCurrent ? 'fa-eye' : 'fa-eye-slash'"
+                  ></i>
+                </span>
+              </div>
+              <div
+                *ngIf="
+                  form.get('password')?.touched && form.get('password')?.invalid
+                "
+                class="text-danger"
+              >
+                {{ "validation.passwordRequired" | translate }}
+              </div>
+              <div
+                *ngIf="form.get('password')?.errors?.['minlength']"
+                class="text-danger"
+              >
+                {{ "validation.passwordMinLength" | translate }}
+              </div>
+              <div
+                *ngIf="form.get('password')?.errors?.['pattern']"
+                class="text-danger"
+              >
+                {{ "validation.passwordPattern" | translate }}
+              </div>
+            </div>
+
+            <!-- hide if not superadmin true -->
+@if (user$ | async; as user) {
+
+  @if (user.isSuperAdmin) {
+            <div   class="col-md-4 position-relative" #companyBox>
+              <label id="company" class="form-label">
+                Companies <span class="text-danger">*</span>
+              </label>
+
+              <!-- SELECT INPUT -->
+              <div class="custom-multiselect" (click)="toggleCompanyDropdown()">
+                <span class="placeholder" *ngIf="!tenantIds.length">
+                  Select companies
+                </span>
+
+                <div class="chips" *ngIf="tenantIds.length">
+                  {{ tenantIds.length }} selected
+                </div>
+
+                <span class="arrow">&#9662;</span>
+              </div>
+
+              <!-- DROPDOWN -->
+              <div id="company"
+                class="dropdown-panel"
+                *ngIf="showCompanyDropdown"
+                (click)="$event.stopPropagation()"
+              >
+                <!-- SEARCH -->
+                <input  
+                  type="text"
+                  class="form-control search-input"
+                  placeholder="Search company..."
+                  [(ngModel)]="searchCompany"
+                  [ngModelOptions]="{ standalone: true }"
+                  (input)="onSearchCompany()"
+                />
+
+                <!-- LIST -->
+                <div class="dropdown-list">
+                  <label
+                    class="dropdown-item"
+                    *ngFor="let c of filteredCompanies"
+                  >
+                    <input
+                      type="checkbox"
+                      [checked]="tenantIds.value.includes(c.tenantId)"
+                      (change)="onCompanyCheckboxChange(c.tenantId, $event)"
+                    />
+                    <span class="checkmark"></span>
+                    {{ c.companyName }}
+                  </label>
+                </div>
+
+                <!-- FOOTER -->
+                <!-- <div class="dropdown-footer">
+                  <button
+                    class="btn btn-sm w-50"
+                    (click)="showCompanyDropdown = false"
+                  >
+                    OK
+                  </button>
+                </div> -->
+              </div>
+            </div>
+        }}
+
+          </div>
+        </form>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn btn-outline-secondary" (click)="closeModal()">
+          {{ "common.cancel" | translate }}
+        </button>
+        <button class="btn add-btn" (click)="saveUser()">
+          {{ "common.save" | translate }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

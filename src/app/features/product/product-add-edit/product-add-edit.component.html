@@ -1,0 +1,117 @@
+<div #productModal class="modal fade">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h5 class="modal-title">
+          {{ isEdit ? ('product.editProduct' | translate) : ('product.addProduct' | translate) }}
+        </h5>
+        <button type="button" class="btn-close" (click)="closeModal()"></button>
+      </div>
+
+      <div class="modal-body">
+
+        <form [formGroup]="form">
+
+          <div class="row g-3">
+
+            <!-- Product Name -->
+            <div class="col-md-4">
+
+              <label class="form-label">
+                {{ "product.name" | translate }}
+                <sup class="text-danger">*</sup>
+              </label>
+
+              <input
+                formControlName="productName"
+                class="form-control"
+                 [placeholder]="'product.namePlaceholder' | translate"
+                [class.is-invalid]="form.get('productName')?.touched && form.get('productName')?.invalid"
+              />
+
+              <div class="invalid-feedback"
+                   *ngIf="form.get('productName')?.touched && form.get('productName')?.errors">
+
+                <span *ngIf="form.get('productName')?.errors?.['required']">
+                  {{ "validation.required" | translate }}
+                </span>
+
+              </div>
+
+            </div>
+
+
+            <!-- Product Code -->
+            <div class="col-md-4">
+
+              <label class="form-label">
+                {{ "product.code" | translate }}
+              </label>
+
+              <input
+                formControlName="productCode"
+                class="form-control"
+                readonly
+                [placeholder]="'product.codePlaceholder' | translate"
+              />
+
+            </div>
+
+
+            
+
+
+            <!-- Effective Date -->
+            <div class="col-md-4">
+
+              <label class="form-label">
+                {{ "product.effectiveDate" | translate }}
+                <sup class="text-danger">*</sup>
+              </label>
+
+              <input
+                type="date"
+                formControlName="effectiveDate"
+                class="form-control"
+                [class.is-invalid]="form.get('effectiveDate')?.touched && form.get('effectiveDate')?.invalid"
+              />
+
+              <div class="invalid-feedback"
+                   *ngIf="form.get('effectiveDate')?.touched && form.get('effectiveDate')?.errors">
+
+                {{ "validation.required" | translate }}
+
+              </div>
+
+            </div>
+
+          </div>
+
+        </form>
+
+      </div>
+
+
+      <div class="modal-footer">
+
+        <button class="btn btn-outline-secondary"
+                (click)="closeModal()">
+
+          {{ "common.cancel" | translate }}
+
+        </button>
+
+
+        <button class="btn add-btn"
+                (click)="saveProduct()">
+
+          {{ isEdit ? ('common.update' | translate) : ('common.save' | translate) }}
+
+        </button>
+
+      </div>
+
+    </div>
+  </div>
+</div>

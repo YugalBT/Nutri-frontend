@@ -1,0 +1,66 @@
+<div class="pagecls">
+
+  <div class="page-header">
+
+    <div class="border-start border-4 ps-3">
+      <h3 class="page-title">
+        {{ 'productPrice.heading' | translate }}
+      </h3>
+    </div>
+
+    <button
+      class="btn add-btn"
+      (click)="priceModal.openModal()">
+
+      <i class="bi bi-plus-lg me-2"></i>
+      {{ 'productPrice.addPrice' | translate }}
+    </button>
+
+  </div>
+
+  <!-- Search -->
+
+  <div class="filters-card">
+
+    <app-global-search
+      label="Search"
+      placeholder="Search Product Price"
+      [showStatus]="false"
+      (search)="onSearch($event)"
+      (clear)="clearFilters()">
+
+    </app-global-search>
+
+  </div>
+
+  <!-- Table -->
+
+  <div class="table-card">
+
+    <app-reusable-table
+
+      [columns]="columns"
+      [columnFields]="columnFields"
+      [data]="prices"
+
+      [showActions]="true"
+      [pageable]="true"
+
+      [totalRecords]="totalRecords"
+      [pageSize]="pageSize"
+      [pageIndex]="pageIndex"
+
+      (pageChange)="onPageChange($event)"
+      (toggleActive)="onToggleActive($event)"
+      (deleteRow)="onDelete($event)"
+      (editRow)="priceModal.openModal(true,$event)">
+
+    </app-reusable-table>
+
+  </div>
+
+  <app-product-price-add-edit
+    #priceModal>
+  </app-product-price-add-edit>
+
+</div>

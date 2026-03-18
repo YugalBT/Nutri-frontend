@@ -1,0 +1,92 @@
+<div class="container mt-4 mb-4" *ngIf="emailForm">
+  <div class="card shadow-sm border-0 rounded-4 p-4">
+
+    <h5 class="fw-bold mb-3">{{'configuration.emailConfiguration'| translate}}</h5>
+
+    <form [formGroup]="emailForm" (ngSubmit)="onSubmit()">
+
+      <!-- Method Type -->
+      <div class="row mb-3">
+        <div class="col-md-4">
+          <label>{{'configuration.emailType' | translate}}<sup class="text-danger">*</sup></label>
+          <select class="form-select" formControlName="emailType">
+            <option [ngValue]="null">{{'configuration.selectEmailType' | translate}}</option>
+            <option value="Microsoft365">Microsoft365</option>
+            <option value="SMTP">SMTP</option>
+          </select>
+        </div>
+
+        <div class="col-md-4">
+          <label>{{'configuration.username' | translate}} <sup class="text-danger">*</sup></label>
+          <input class="form-control" placeholder="{{'configuration.usernamePlaceholder' | translate}}" formControlName="username" />
+        </div>
+
+        <div class="col-md-4">
+          <label>{{'configuration.form' | translate}} <sup class="text-danger">*</sup></label>
+          <input class="form-control" placeholder="{{'configuration.fromPlaceholder' | translate}}" formControlName="from" />
+        </div>
+      </div>
+
+      <!-- Reply To -->
+      <div class="row mb-3">
+        <div class="col-md-4">
+          <label>{{'configuration.replyto' | translate}}</label>
+          <input class="form-control" placeholder="{{'configuration.replytoPlaceholder' | translate}}" formControlName="replyTo" />
+        </div>
+
+        <div class="col-md-6 mt-4">
+            <div class="form-check">
+                <input  class="form-check-input large-checkbox" type="checkbox" formControlName="useSsl" />
+                <label class="form-check-label" for="useSsl">
+                   {{'configuration.useSSL' | translate}}
+                </label>
+            </div>
+         
+        </div>
+      </div>
+
+      <!-- SMTP Fields -->
+      <div class="row mb-3" *ngIf="emailForm.get('emailType')?.value === 'SMTP'">
+        <div class="col-md-4">
+          <label>{{'configuration.smtpServer' | translate}}</label>
+          <input class="form-control" placeholder="{{'configuration.smtpServerPlaceholder' | translate}}" formControlName="smtpServer" />
+        </div>
+
+        <div class="col-md-4">
+          <label>{{'configuration.port' | translate}}</label>
+          <input type="number" placeholder="{{'configuration.smtpPortPlaceholder' | translate}}" class="form-control" formControlName="port" />
+        </div>
+
+        <div class="col-md-4">
+          <label>{{'configuration.password' | translate}}</label>
+          <div class="input-group">
+           
+
+          <input formControlName="password" [type]="showPassword ? 'text' : 'password'" placeholder="{{'configuration.passwordPlaceholder' | translate}}" class="form-control" />
+            <span class="input-group-text" role="button"
+                  (click)="showPassword = !showPassword">
+              <i class="fa"
+                 [ngClass]="showPassword ? 'fa-eye' : 'fa-eye-slash'"></i>
+            </span>
+          </div>
+        </div>
+        
+      
+      </div>
+
+      <!-- Microsoft365 Info -->
+      <div class="text-muted mb-3" *ngIf="emailForm.get('accessExpirationtime')?.value">
+        Expiration Date/time:
+        <b>{{ emailForm.get('accessExpirationtime')?.value | date:'medium' }}</b>
+      </div>
+
+      <!-- Submit -->
+      <div class="text-end">
+        <button class="btn add-btn px-4" type="submit" [disabled]="emailForm.invalid">
+          {{'configuration.saveConfiguration' | translate }}
+        </button>
+      </div>
+
+    </form>
+  </div>
+</div>

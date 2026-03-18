@@ -1,0 +1,52 @@
+
+<div class="pagecls">
+
+  <!-- Page Header -->
+  <div class="page-header">
+    <div>
+      <h3 class="page-title">{{ 'company.Heading' | translate }}</h3>
+      <!-- <p class="page-subtitle">{{ 'company.manageDesc' | translate }}</p> -->
+    </div>
+
+    <button class="btn add-btn" (click)="companyAddEdit.openModal()">
+      <i class="bi bi-plus-lg me-2"></i>
+      {{ 'company.addCompany' | translate }}
+    </button>
+  </div>
+
+  <!-- Filters Section -->
+  <div class="filters-card">
+    <app-global-search
+      [label]="'company.searchFilters' | translate"
+      [placeholder]="'company.searchPlaceholder' | translate"
+      [showStatus]="true"
+      (search)="onSearch($event)"
+      (statusChange)="onStatusChange($event)"
+      (clear)="clearFilters()"
+    >
+
+    </app-global-search>
+  </div>
+
+  <!-- Table Section -->
+  <div class="table-card">
+    <app-reusable-table
+      [columns]="columns"
+      [columnFields]="columnFields"
+      [data]="companies"
+      [showActions]="true"
+      [pageable]="true"
+      [totalRecords]="totalRecords"
+      [pageSize]="pageSize"
+      [pageIndex]="pageIndex"
+      (pageChange)="onPageChange($event)"
+      (toggleActive)="toggleCompanyStatus($event)"
+      (editRow)="companyAddEdit.openModal(true, $event)"
+      (deleteRow)="deleteCompany($event)">
+    </app-reusable-table>
+  </div>
+
+  <!-- Modal -->
+  <app-company-add-edit #companyAddEdit></app-company-add-edit>
+
+</div>

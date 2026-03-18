@@ -1,0 +1,255 @@
+.chart-box {
+  width: 100%;
+  height: 320px;
+}
+
+.overview-card {
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 14px;
+  background: #fff;
+}
+
+.overview-card span {
+  color: #6b7280;
+  font-size: 13px;
+}
+
+.overview-card h4,
+.overview-card h5 {
+  margin: 6px 0 0;
+}
+/* ===== Gauge Dashboard Section ===== */
+
+.dashboard-gauges {
+  margin-top: 20px;
+}
+
+.gauge-card {
+  background: #ffffff;
+  border-radius: 10px;
+  padding: 15px;
+  text-align: center;
+  height: 240px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+}
+
+.gauge-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: #374151;
+  margin-bottom: 8px;
+}
+
+.gauge-box {
+  width: 100%;
+  height: 200px;
+}
+
+/* spacing between gauges */
+.dashboard-gauges .col-md-3 {
+  margin-bottom: 15px;
+}
+
+/* responsive for tablets */
+@media (max-width: 992px) {
+
+  .gauge-card {
+    height: 220px;
+  }
+
+  .gauge-box {
+    height: 180px;
+  }
+
+}
+
+/* responsive for mobile */
+
+@media (max-width: 576px) {
+
+  .gauge-card {
+    height: auto;
+    padding: 10px;
+  }
+
+  .gauge-box {
+    height: 160px;
+  }
+
+}
+
+@media (max-width: 992px) {
+  .chart-box {
+    height: 280px;
+  }
+}
+
+@media (max-width: 576px) {
+  .chart-box {
+    height: 240px;
+  }
+}
+
+
+
+.performance-bar{
+height:18px;
+border-radius:10px;
+background:linear-gradient(
+to right,
+red,
+orange,
+yellow,
+green,
+yellow,
+orange,
+red
+);
+position:relative;
+}
+
+.performance-scale{
+display:flex;
+justify-content:space-between;
+font-size:12px;
+margin-bottom:5px;
+}
+
+.cow-indicator{
+position:absolute;
+top:-20px;
+transform: translateX(-50%);
+font-size:22px;
+transition:left .3s ease;
+}
+
+.dea-value{
+text-align:center;
+margin-top:10px;
+font-weight:600;
+}
+
+/* card css */
+
+.dashboard-card{
+  background:#fff;
+  padding:18px;
+  border-radius:10px;
+  box-shadow:0 2px 6px rgba(0,0,0,0.06);
+  height:100%;
+}
+
+.card-top{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:10px;
+}
+
+.dashboard-card span{
+  font-size:14px;
+  color:#6b7280;
+}
+
+.dashboard-card h3{
+  font-size:26px;
+  font-weight:600;
+  margin:0;
+}
+
+.icon-box{
+  width:40px;
+  height:40px;
+  border-radius:10px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+/* colors */
+
+.icon-box.blue{
+  background:#dbeafe;
+  color:#2563eb;
+}
+
+.icon-box.green{
+  background:#dcfce7;
+  color:#16a34a;
+}
+
+.icon-box.orange{
+  background:#fef3c7;
+  color:#d97706;
+}
+
+.icon-box.purple{
+  background:#ede9fe;
+  color:#7c3aed;
+}
+
+/* Company Level Dashboard Data */
+
+.dashboard-title{
+  font-weight:600;
+}
+
+.year-select{
+  width:120px;
+}
+
+.dashboard-card{
+  background:#fff;
+  padding:18px;
+  border-radius:10px;
+  box-shadow:0 2px 6px rgba(0,0,0,0.06);
+  height:100%;
+}
+
+.card-top{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:10px;
+}
+
+.dashboard-card span{
+  font-size:14px;
+  color:#6b7280;
+}
+
+.dashboard-card h3{
+  font-size:26px;
+  font-weight:600;
+  margin:0;
+}
+
+.icon-box{
+  width:40px;
+  height:40px;
+  border-radius:10px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+.icon-box.blue{
+  background:#dbeafe;
+  color:#2563eb;
+}
+
+.icon-box.orange{
+  background:#fef3c7;
+  color:#d97706;
+}
+
+.icon-box.green{
+  background:#dcfce7;
+  color:#16a34a;
+}
+
+.icon-box.purple{
+  background:#ede9fe;
+  color:#7c3aed;
+}
