@@ -486,6 +486,15 @@ export const routes: Routes = [
             (m) => m.ProductPriceListComponent,
           ),
       },
+      {
+        path: 'productbuild',
+        // canActivate: [permissionGuard],
+        // data: { requiredPermissions: [PERMISSIONS.SupplierPriceAdd, PERMISSIONS.SupplierPriceEdit, PERMISSIONS.SupplierPriceView, PERMISSIONS.SupplierPriceDelete] },
+        loadComponent: () =>
+          import('./features/product-build/product-build-list/product-build-list.component').then(
+            (m) => m.ProductBuildListComponent,
+          ),
+      },
 
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
     ],

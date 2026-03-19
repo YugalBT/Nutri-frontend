@@ -1,44 +1,43 @@
 <div class="pagecls">
 
+  <!-- HEADER -->
   <div class="page-header">
-
     <div class="border-start border-4 ps-3">
       <h3 class="page-title">
-        {{ 'product.heading' | translate }}
+        {{ 'productBuild.heading' | translate }}
       </h3>
     </div>
 
-    <button class="btn add-btn"(click)="productModal?.openModal()">
+    <div class="d-flex gap-2">
 
-      <i class="bi bi-plus-lg me-2"></i>
+      <!-- ADD -->
+      <button class="btn add-btn"
+              (click)="modal.openModal()">
+        <i class="bi bi-plus-lg me-2"></i>
+        {{ 'productBuild.add' | translate }}
+      </button>
 
-      {{ 'product.addProduct' | translate }}
-
-    </button>
-
+    </div>
   </div>
 
-
+  <!-- SEARCH -->
   <div class="filters-card">
-
     <app-global-search
       [label]="'common.searchFilters' | translate"
-      [placeholder]="'product.searchPlaceholder' | translate"
+      [placeholder]="'productBuild.searchPlaceholder' | translate"
       [showStatus]="true"
       (search)="onSearch($event)"
       (statusChange)="onStatusChange($event)"
       (clear)="clearFilters()">
     </app-global-search>
-
   </div>
 
-
+  <!-- TABLE -->
   <div class="table-card">
-
     <app-reusable-table
       [columns]="columns"
       [columnFields]="columnFields"
-      [data]="products"
+      [data]="builds"
       [showActions]="true"
       [pageable]="true"
       [totalRecords]="totalRecords"
@@ -47,11 +46,10 @@
       (pageChange)="onPageChange($event)"
       (toggleActive)="onToggleActive($event)"
       (deleteRow)="onDelete($event)"
-      (editRow)="productModal?.openModal(true, $event)">
+      (editRow)="modal.openModal(true, $event)">
     </app-reusable-table>
-
   </div>
 
-  <app-product-add-edit #productModal></app-product-add-edit>
+  <app-product-build-add-edit #modal></app-product-build-add-edit>
 
 </div>

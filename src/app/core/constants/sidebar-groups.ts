@@ -64,10 +64,12 @@ export const SIDEBAR_GROUPS = [
     'Suppliers',
     'Materials',
     'Product',
+    'PricingFormula',
     'Product Pricing',
     'SupplierPrice',
     'Pricing Setting',
-    'PricingFormula',
+    'Product Build'
+    
     
   ]
 },

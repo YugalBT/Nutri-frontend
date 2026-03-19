@@ -57,6 +57,8 @@ export const API_ENDPOINTS = {
     GET_OPERATORS_AND_MATERIAL: '/Common/GetAllOperatorAndMaterial',
     GET_PRODUCT: '/Common/GetAllProduct',
     GET_ALL_MATERIAL_BY_SUPPLIER_ID_IN_FORMULA: '/Common/GetAllMaterialBySupplierId',
+    GET_ALL_PRODUCT_BY_SUPPLIER_ID: '/Common/GetAllProductBySupplierId',
+    GET_ALL_FORMULA_BY_SUPPLIER_ID: '/Common/GetAllFormulaBySupplierId'
   },
 
   Module: {
@@ -284,5 +286,15 @@ export const API_ENDPOINTS = {
     ACTIVE_INACTIVE: '/ProductPricing/ActiveInActive',
     DELETE: '/ProductPricing/Delete',
     GET_PREVIOUS_PRICE: '/ProductPricing/GetPreviousPrice',
+  },
+
+  PRODUCT_BUILD: {
+    CREATE: '/ProductBuild/Create',
+    UPDATE: '/ProductBuild/Update',
+    DELETE: '/ProductBuild/Delete',
+    ACTIVE_INACTIVE: '/ProductBuild/ActiveInActive',
+    GET_ALL: '/ProductBuild/GetAll',
+    GENERATE_SUPPLIER_CODE: '/Supplier/GenerateSupplierCode',
+    GET_BY_ID: '/ProductBuild/GetById',
   },
 };

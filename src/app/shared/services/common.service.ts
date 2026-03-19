@@ -307,17 +307,23 @@ export class CommonService {
     );
   }
 
-  GetAllMaterialBySupplierIdInFormula(
-    supplierId: string,
-  ): Observable<ApiResponse<any>> {
+  GetAllMaterialBySupplierIdInFormula(supplierId: string,): Observable<ApiResponse<any>> {
     const url = `${API_ENDPOINTS.COMMON_API.GET_ALL_MATERIAL_BY_SUPPLIER_ID_IN_FORMULA}?supplierId=${supplierId}`;
     return this.http.get<ApiResponse<any>>(url);
   }
 
-
     getGetAllProductList(): Observable<ApiResponse<any[]>> {
-    return this.http.get<any[]>(
-      API_ENDPOINTS.COMMON_API.GET_PRODUCT,
+    return this.http.get<any[]>(API_ENDPOINTS.COMMON_API.GET_PRODUCT,
     );
+  }
+
+  GetAllProductBySupplierId(supplierId: string,): Observable<ApiResponse<any>> {
+    const url = `${API_ENDPOINTS.COMMON_API.GET_ALL_PRODUCT_BY_SUPPLIER_ID}?SupplierId=${supplierId}`;
+    return this.http.get<ApiResponse<any>>(url);
+  }
+
+    GetAllFormulaBySupplierId(supplierId: string,): Observable<ApiResponse<any>> {
+    const url = `${API_ENDPOINTS.COMMON_API.GET_ALL_FORMULA_BY_SUPPLIER_ID}?SupplierId=${supplierId}`;
+    return this.http.get<ApiResponse<any>>(url);
   }
 }

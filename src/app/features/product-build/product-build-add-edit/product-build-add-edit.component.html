@@ -1,0 +1,168 @@
+<div #modal class="modal fade">
+    <div class="modal-dialog modal-xl modal-dialog-centered">
+        <div class="modal-content">
+
+            <!-- HEADER -->
+            <div class="modal-header">
+                <h5>
+                    {{ isEdit ? ('productBuild.edit' | translate) : ('productBuild.add' | translate) }}
+                </h5>
+                <button class="btn-close" (click)="closeModal()"></button>
+            </div>
+
+            <!-- BODY -->
+            <div class="modal-body">
+
+                <form [formGroup]="form">
+
+                    <div class="row g-3">
+
+                        <!-- SUPPLIER -->
+                        <div class="col-md-4">
+                            <label class="form-label">
+                                {{ 'productBuild.supplier' | translate }} *
+                            </label>
+
+                            <select formControlName="supplierId" class="form-select"
+                                (change)="onSupplierChange(form.get('supplierId')?.value)">
+
+                                <option [ngValue]="null" disabled>
+                                    {{ 'productBuild.selectSupplier' | translate }}
+                                </option>
+
+                                <option *ngFor="let s of suppliers" [ngValue]="s.supplierId">
+                                    {{ s.supplierName }} - {{ s.supplierCode }}
+                                </option>
+
+                            </select>
+                        </div>
+
+                        <!-- PRODUCT -->
+                        <div class="col-md-4">
+                            <label class="form-label">
+                                {{ 'productBuild.product' | translate }} *
+                            </label>
+
+                            <select formControlName="productId" class="form-select" [disabled]="!form.value.supplierId">
+                                <option [ngValue]="null" selected disabled>{{ 'productBuild.selectProduct' | translate }}
+                                </option>
+                                <option *ngFor="let p of products" [ngValue]="p.productId">
+                                    {{ p.productName }} - {{ p.productCode }}
+                                </option>
+                            </select>
+                        </div>
+                        <!-- FORMULA -->
+                        <div class="col-md-4">
+                            <label class="form-label">
+                                {{ 'productBuild.formula' | translate }}
+                            </label>
+
+                            <select formControlName="formulaId" class="form-select"
+                                (change)="onFormulaChange($any($event.target).value)">
+
+                                <option [ngValue]="null" selected disabled>
+                                    Select Formula
+                                </option>
+
+                                <option *ngFor="let f of formulas" [ngValue]="f.formulaId">
+                                    {{ f.formulaName }}
+                                </option>
+
+                            </select>
+                        </div>
+
+                        <!-- DATE -->
+                        <div class="col-md-4">
+                            <label class="form-label">
+                                {{ 'productBuild.date' | translate }} *
+                            </label>
+
+                            <input type="date" formControlName="priceDate" class="form-control">
+                        </div>
+
+                    </div>
+
+                    <hr>
+
+                    <!-- SCROLLABLE TABLE -->
+                    <div class="table-responsive" style="max-height: 300px; overflow-y: auto;">
+
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>{{ 'productBuild.material' | translate }}</th>
+                                    <th>{{ 'productBuild.amount' | translate }}</th>
+                                    <th>%</th>
+                                    <th>{{ 'productBuild.calculated' | translate }}</th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                <tr *ngFor="let item of items.controls; let i=index" [formGroup]="item">
+
+                                    <td>{{ item.value.materialName }}</td>
+
+                                    <td>
+                                        <div class="form-control bg-light">
+                                            {{ item.value.amount }}
+                                        </div>
+                                    </td>
+
+                                    <td>
+                                        <input type="number" formControlName="percentage" (input)="calculate(item)"
+                                            class="form-control">
+                                    </td>
+
+                                    <td>
+                                        <div class="form-control bg-light">
+                                            {{ item.value.calculatedAmount }}
+                                        </div>
+                                    </td>
+
+                                </tr>
+                            </tbody>
+                        </table>
+
+                    </div>
+
+                    <!-- TOTAL -->
+                    <div class="row mt-3">
+
+                        <div class="col-md-6">
+                            <strong>
+                                Total %: {{ getTotalPercentage() }}
+                            </strong>
+
+                            <span class="text-danger" *ngIf="getTotalPercentage() !== 100">
+                                (Must be 100%)
+                            </span>
+                        </div>
+
+                        <div class="col-md-6 text-end">
+                            <strong>
+                                Total Price: {{ getTotalAmount() }}
+                            </strong>
+                        </div>
+
+                    </div>
+
+                </form>
+
+            </div>
+
+            <!-- FOOTER -->
+            <div class="modal-footer">
+
+                <button class="btn btn-secondary" (click)="closeModal()">
+                    {{ 'common.cancel' | translate }}
+                </button>
+
+                <button class="btn add-btn" [disabled]="getTotalPercentage() !== 100" (click)="save()">
+                    {{ 'common.save' | translate }}
+                </button>
+
+            </div>
+
+        </div>
+    </div>
+</div>
