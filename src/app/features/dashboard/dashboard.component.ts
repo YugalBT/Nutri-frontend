@@ -18,6 +18,7 @@ import {
 
 import { CommonService } from '../../shared/services/common.service';
 import { ApiResponse } from '../../core/models/api-response';
+import { TokenService } from '../../shared/services/token.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -63,11 +64,13 @@ export class DashboardComponent implements OnInit {
   milkGauge!: EChartsOption;
   feedGauge!: EChartsOption;
   crepGauge!: EChartsOption;
+  isSupplier = false;
 
   constructor(
     private store: Store,
     private commonService: CommonService,
-    private translate: TranslateService // ✅ added
+    private translate: TranslateService, // ✅ added,
+    private tokenservice: TokenService
   ) {
     this.user$ = this.store.select(selectAuthUser);
   }
@@ -82,6 +85,10 @@ export class DashboardComponent implements OnInit {
     this.translate.lang$.subscribe(() => {
       this.loadDashboard();
     });
+    
+    // ✅ check if user is supplier
+    const supplierData = this.tokenservice.getSupplierData();
+    this.isSupplier = !!supplierData;
   }
 
   get isAdmin(): boolean {

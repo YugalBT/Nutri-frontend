@@ -6,6 +6,7 @@ export interface AuthState {
   token: string | null;
   loading: boolean;
   error: string | null;
+  supplier?: any;
 }
 
 export const initialAuthState: AuthState = {

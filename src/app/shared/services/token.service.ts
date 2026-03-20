@@ -75,4 +75,28 @@ export class TokenService {
   isLoggedIn(): boolean {
     return !!this.getToken();
   }
+
+  setSupplierData(data: any) {
+  localStorage.setItem('SUPPLIER_DATA', JSON.stringify(data));
+}
+
+getSupplierData(): any {
+  const data = localStorage.getItem('SUPPLIER_DATA');
+  return data ? JSON.parse(data) : null;
+}
+
+removeSupplierData() {
+  localStorage.removeItem('SUPPLIER_DATA');
+}
+getSupplierId(): string | null {
+  const supplier = this.getSupplierData();
+  return supplier?.supplierId || null;
+}
+getSupplier(): any {
+  return this.getSupplierData();
+}
+isSupplier(): boolean {
+  return !!this.getSupplierData();
+}
+
 }

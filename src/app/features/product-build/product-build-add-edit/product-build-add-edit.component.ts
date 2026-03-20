@@ -5,6 +5,7 @@ import { FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators } fr
 import { ProductBuildService } from '../../../core/services/product-build-service/product-build-service';
 import { CommonService } from '../../../shared/services/common.service';
 import { ToastService } from '../../../shared/services/toast.service';
+import { TokenService } from '../../../shared/services/token.service';
 
 declare var bootstrap: any;
 
@@ -28,17 +29,35 @@ export class ProductBuildAddEditComponent implements OnInit {
   totalCostFromDb: number = 0;
   isEdit = false;
   currentId: string = '';
+  isSupplier = false;
+  supplierData: any = null;
+  selectedSupplierId: string | null = null;
 
   constructor(
     private fb: FormBuilder,
     private service: ProductBuildService,
     private common: CommonService,
-    private toast: ToastService
+    private toast: ToastService,
+    private tokenservice: TokenService,
   ) { }
 
   ngOnInit() {
     this.initForm();
-    this.loadSuppliers();
+      this.isSupplier = !!this.tokenservice.isSupplier();
+
+  if (this.isSupplier) {
+    this.supplierData = this.tokenservice.getSupplierData();
+
+    const supplierId = this.supplierData?.supplierId;
+
+    this.form.patchValue({
+      supplierId: supplierId
+    });
+    this.form.get('supplierId')?.disable();
+    this.onSupplierChange(supplierId);
+  }
+
+  this.loadSuppliers();
   }
 
   initForm() {
@@ -203,18 +222,29 @@ openModal(isEdit = false, row: any = null) {
   if (!this.modalInstance) {
     this.modalInstance = new bootstrap.Modal(this.modal.nativeElement);
   }
+   // ✅ supplier user case
+  if (this.isSupplier) {
+    const supplierId = this.supplierData?.supplierId;
+
+    this.form.patchValue({
+      supplierId: supplierId,
+      // priceDate: row.priceDate?.substring(0, 10)
+    });
+
+    this.form.get('supplierId')?.disable();
+
+    this.onSupplierChange(supplierId);
+  }
 
   if (isEdit && row) {
 
     this.currentId = row.productBuildId;
 
-    // 👉 ONLY supplier set here
     this.form.patchValue({
       supplierId: row.supplierId,
       priceDate: row.priceDate?.substring(0, 10)
     });
 
-    // 👉 PASS isEdit + row
     this.onSupplierChange(row.supplierId, true, row);
   }
 
@@ -253,7 +283,7 @@ openModal(isEdit = false, row: any = null) {
     }
 
     const payload = {
-      supplierId: this.form.value.supplierId,
+      supplierId: this.form.getRawValue().supplierId,
       productId: this.form.value.productId,
       priceDate: this.form.value.priceDate,
       formulaId: this.form.value.formulaId,

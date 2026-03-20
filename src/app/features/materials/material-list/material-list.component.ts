@@ -30,7 +30,7 @@ export class MaterialListComponent implements OnInit, OnDestroy {
   columnFields: string[] = [
     'materialName',
     'materialCode',
-    'supplierName',
+    // 'supplierName',
     'unit',
     'basePrice',
     'isActive'
@@ -62,7 +62,7 @@ export class MaterialListComponent implements OnInit, OnDestroy {
     this.columns = [
       this.translate.instant('material.name'),
       this.translate.instant('material.code'),
-      this.translate.instant('material.supplier'),
+      //this.translate.instant('material.supplier'),
       this.translate.instant('material.unit'),
       this.translate.instant('material.basePrice'),
       this.translate.instant('common.status')

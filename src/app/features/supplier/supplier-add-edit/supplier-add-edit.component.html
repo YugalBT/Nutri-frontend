@@ -1,23 +1,15 @@
 <div #supplierModal class="modal fade" tabindex="-1">
   <div class="modal-dialog modal-lg modal-dialog-centered">
     <div class="modal-content">
-      <!-- HEADER -->
       <div class="modal-header">
         <h5 class="modal-title">
-          {{
-            isEdit
-              ? ("supplier.update" | translate)
-              : ("supplier.save" | translate)
-          }}
+          {{ isEdit ? ("supplier.update" | translate) : ("supplier.save" | translate) }}
         </h5>
         <button type="button" class="btn-close" (click)="closeModal()"></button>
       </div>
-
-      <!-- BODY -->
       <div class="modal-body">
         <form [formGroup]="form">
           <div class="row g-3">
-            <!-- First Name -->
             <div class="col-md-6">
               <label>
                 {{ "supplier.firstName" | translate }}
@@ -54,14 +46,11 @@
                 </span>
               </div>
             </div>
-
-            <!-- Last Name -->
             <div class="col-md-6">
               <label>
                 {{ "supplier.lastName" | translate }}
                 <sup class="text-danger">*</sup>
               </label>
-
               <input
                 formControlName="lastName"
                 class="form-control"
@@ -296,6 +285,53 @@
                 <span *ngIf="form.get('zipCode')?.errors?.['pattern']">
                   {{ "validation.invalidZip" | translate }}
                 </span>
+              </div>
+            </div>
+           <div class="col-md-4">
+              <label class="form-label"
+                >{{ "users.password" | translate }}
+                <sup style="color: #f00; font-size: 12px" *ngIf="!isEdit"
+                  >*</sup
+                >
+              </label>
+              <div class="input-group">
+                <input
+                  [type]="showCurrent ? 'text' : 'password'"
+                  autocomplete="off"
+                  formControlName="password"
+                  class="form-control"
+                  placeholder="{{ 'users.passwordPlaceholder' | translate }}"
+                />
+                <span
+                  class="input-group-text"
+                  role="button"
+                  (click)="showCurrent = !showCurrent"
+                >
+                  <i
+                    class="fa"
+                    [ngClass]="showCurrent ? 'fa-eye' : 'fa-eye-slash'"
+                  ></i>
+                </span>
+              </div>
+              <div
+                *ngIf="
+                  form.get('password')?.touched && form.get('password')?.invalid
+                "
+                class="text-danger"
+              >
+                {{ "validation.passwordRequired" | translate }}
+              </div>
+              <div
+                *ngIf="form.get('password')?.errors?.['minlength']"
+                class="text-danger"
+              >
+                {{ "validation.passwordMinLength" | translate }}
+              </div>
+              <div
+                *ngIf="form.get('password')?.errors?.['pattern']"
+                class="text-danger"
+              >
+                {{ "validation.passwordPattern" | translate }}
               </div>
             </div>
           </div>

@@ -56,21 +56,50 @@ export const SIDEBAR_GROUPS = [
       // 'Production Trends'
     ]
   },
+// {
+//   key: 'supplier',
+//   title: 'sidebarmenu.supplier',
+//   icon: SIDEBAR_ICONS.SUPPLIER,
+//   items: [
+//     'Suppliers',
+//     'Materials',
+//     'Product',
+//     'PricingFormula',
+//     'Product Pricing',
+//     'SupplierPrice',
+//     'Pricing Setting',
+//     'Product Build'
+    
+    
+//   ]
+// },
 {
-  key: 'supplier',
-  title: 'sidebarmenu.supplier',
-  icon: SIDEBAR_ICONS.SUPPLIER,
+  key: 'supplierMaster',
+  title: 'sidebarmenu.supplierMaster',
+  icon: SIDEBAR_ICONS.SUPPLIER_MASTER,
   items: [
     'Suppliers',
     'Materials',
-    'Product',
-    'PricingFormula',
-    'Product Pricing',
+    'Product'
+  ]
+},
+{
+  key: 'pricing',
+  title: 'sidebarmenu.pricing',
+  icon: SIDEBAR_ICONS.PRICING,
+  items: [
     'SupplierPrice',
-    'Pricing Setting',
+    'Product Pricing',
+    'Pricing Setting'
+  ]
+},
+{
+  key: 'production',
+  title: 'sidebarmenu.production',
+  icon: SIDEBAR_ICONS.PRODUCTION,
+  items: [
+    'PricingFormula',
     'Product Build'
-    
-    
   ]
 },
 

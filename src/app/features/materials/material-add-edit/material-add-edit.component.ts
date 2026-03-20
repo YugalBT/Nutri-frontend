@@ -18,6 +18,7 @@ import { SupplierAddEdit } from '../../../core/models/supplier-add-edit';
 import { CommonService } from '../../../shared/services/common.service';
 import { SupplierList } from '../../../core/models/supplier-list';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
+import { TokenService } from '../../../shared/services/token.service';
 
 
 declare var bootstrap: any;
@@ -39,6 +40,8 @@ export class MaterialAddEditComponent implements OnInit, OnDestroy {
   suppliers: SupplierList[] = [];
 
   subs: Subscription[] = [];
+  isSupplier = false;
+  supplierData: any = null;
 
   @Output() onMaterialSaved = new EventEmitter<void>();
 
@@ -47,13 +50,24 @@ export class MaterialAddEditComponent implements OnInit, OnDestroy {
     private materialService: MaterialService,
     private supplierService: SupplierService,
     private toast: ToastService,
-    private commonService: CommonService
+    private commonService: CommonService,
+    private tokenservice: TokenService,
   ) {}
 
   ngOnInit() {
     this.initializeForm();
     this.loadSuppliers();
     this.listenToMaterialNameChange();
+     this.isSupplier = !!this.tokenservice.isSupplier();
+
+  if (this.isSupplier) {
+    this.supplierData = this.tokenservice.getSupplierData();
+
+    this.form.patchValue({
+      supplierId: this.supplierData?.supplierId
+    });
+    this.form.get('supplierId')?.disable(); 
+  }
   }
 
   private initializeForm() {
@@ -61,7 +75,7 @@ export class MaterialAddEditComponent implements OnInit, OnDestroy {
       materialName: ['', [Validators.required, Validators.maxLength(200)]],
       materialCode: [{ value: '', disabled: true }, [Validators.required, Validators.maxLength(200)]],
       category: ['', [Validators.required, Validators.maxLength(100)]],
-      supplierId: ['', Validators.required],
+      supplierId: [this.isSupplier ? this.supplierData?.supplierId : '', Validators.required],
       unit: ['', Validators.required],
       basePrice: ['', Validators.required]
 

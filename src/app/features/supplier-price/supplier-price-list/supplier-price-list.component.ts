@@ -9,6 +9,7 @@ import { TranslatePipe } from '../../../i18n/translate.pipe';
 import { SupplierPriceService } from '../../../core/services/supplier-price/supplier-price.service';
 import { FormsModule } from '@angular/forms';
 import { ApiResponse } from '../../../core/models/api-response';
+import { TokenService } from '../../../shared/services/token.service';
 
 @Component({
   selector: 'app-supplier-price-list',
@@ -23,6 +24,8 @@ export class SupplierPriceListComponent implements OnInit, OnDestroy {
   selectedSupplierId: string | null = null;
   selectedMonth: string | null = null;
   private subs: Subscription[] = [];
+  isSupplier = false;
+  supplierData: any = null;
 
   constructor(
     private toast: ToastService,
@@ -30,10 +33,19 @@ export class SupplierPriceListComponent implements OnInit, OnDestroy {
     private commonService: CommonService,
     private translate: TranslateService,
     private supplierPriceService: SupplierPriceService,
+    private tokenservice: TokenService
   ) { }
 
   ngOnInit(): void {
-    this.loadSuppliers();
+     this.isSupplier = !!this.tokenservice.isSupplier();
+
+  if (this.isSupplier) {
+    this.supplierData = this.tokenservice.getSupplierData();
+    this.selectedSupplierId = this.supplierData?.supplierId;
+    this.onSupplierChange();
+  }
+
+  this.loadSuppliers();
   }
 
   loadSuppliers(): void {
@@ -169,10 +181,16 @@ export class SupplierPriceListComponent implements OnInit, OnDestroy {
     this.subs.push(sub);
   }
 
-  clearAll(): void {
+clearAll(): void {
+
+  if (this.isSupplier) {
+    this.selectedSupplierId = this.supplierData?.supplierId;
+    this.onSupplierChange();
+  } else {
     this.selectedSupplierId = null;
     this.materials = [];
   }
+}
   private convertToMonthFormat(dateString: string): string {
     const date = new Date(dateString);
     const year = date.getFullYear();

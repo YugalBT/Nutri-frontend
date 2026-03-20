@@ -82,6 +82,11 @@ export class AuthEffects {
             this.tokenService.setUserData(JSON.stringify(user));
             this.tokenService.setUserName(user?.username ?? '');
             this.tokenService.setIsSuperAdmin(user?.isSuperAdmin ?? false);
+        if (user?.supplierDetails) {
+          this.tokenService.setSupplierData(user.supplierDetails);
+        } else {
+          this.tokenService.removeSupplierData();
+        }
 
             try {
               if (typeof document !== 'undefined' && user) {

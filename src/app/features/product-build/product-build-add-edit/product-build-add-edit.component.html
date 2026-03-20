@@ -18,7 +18,7 @@
                     <div class="row g-3">
 
                         <!-- SUPPLIER -->
-                        <div class="col-md-4">
+                        <div class="col-md-4" *ngIf="!isSupplier">
                             <label class="form-label">
                                 {{ 'productBuild.supplier' | translate }} *
                             </label>

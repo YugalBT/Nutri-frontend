@@ -8,8 +8,7 @@
       </b>
     </h3>
   </div>
-
-  <!-- HEADER -->
+<ng-container *ngIf="!isSupplier">
   <div class="d-flex align-items-center justify-content-between py-3">
     <h4 class="border-start border-4 ps-3">
       {{ "dashboard.title" | translate }}
@@ -34,12 +33,10 @@
     </div>
   </div>
 
-  <!-- LOADING -->
   <div *ngIf="isLoading" class="text-center py-3">
     {{ "dashboard.loading" | translate }}
   </div>
 
-  <!-- USER DASHBOARD -->
   <ng-container *ngIf="!isLoading && !isAdmin">
 
     <div class="row g-3">
@@ -208,7 +205,6 @@
 
   </ng-container>
 
-  <!-- ADMIN DASHBOARD -->
   <ng-container *ngIf="!isLoading && isAdmin">
 
     <div class="row g-3">
@@ -295,5 +291,5 @@
     </div>
 
   </ng-container>
-
+</ng-container>
 </div>

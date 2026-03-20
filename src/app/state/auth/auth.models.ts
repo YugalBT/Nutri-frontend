@@ -26,6 +26,7 @@ export interface User {
   allowedCompanyIds?: string[];
   companyMenu?: string[];
   permissions: Permission[];
+  supplierDetails?: SupplierDetails | null;
 }
 export interface Permission {
   permissionId: string;
@@ -37,4 +38,18 @@ export interface AuthResponse {
   token: string;
   user: User;
   permissions: Permission[];
+}
+
+export interface SupplierDetails {
+  supplierId: string;
+  supplierName: string;
+  firstName: string;
+  lastName: string;
+  emailAddress: string;
+  phoneNumber: string;
+  city?: string;
+  state?: string;
+  streetAddress?: string;
+  zipCode?: string;
+  isActive: boolean;
 }

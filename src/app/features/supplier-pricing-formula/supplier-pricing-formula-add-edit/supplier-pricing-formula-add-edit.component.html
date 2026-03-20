@@ -15,7 +15,7 @@
 
         <div class="modal-body">
           <div class="row">
-            <div class="mb-3 col-md-3">
+            <div class="mb-3  col-md-3"  *ngIf="!isSupplier">
               <label class="form-label">
                 {{ "supplierPrice.supplier" | translate }}
                 <span class="text-danger">*</span>

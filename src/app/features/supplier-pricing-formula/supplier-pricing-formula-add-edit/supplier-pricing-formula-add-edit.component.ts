@@ -11,6 +11,7 @@ import { CommonService } from '../../../shared/services/common.service';
 import { ToastService } from '../../../shared/services/toast.service';
 import { SupplierPricingFormulaService } from '../../../core/services/supplier/supplier-pricing-formula.service';
 import { Subscription } from 'rxjs';
+import { TokenService } from '../../../shared/services/token.service';
 
 declare var bootstrap: any;
 
@@ -42,12 +43,15 @@ products: any[] = [];
   selectedSupplierId: string | null = null;
   selectedMonth: string | null = null;
   private subs: Subscription[] = [];
+  isSupplier = false;
+  supplierData: any = null;
 
   selectedStatus: number = 1;
   constructor(
     private commonService: CommonService,
     private supplierformulaService: SupplierPricingFormulaService,
     private toast: ToastService,
+    private tokenservice :TokenService
   ) {}
 
   ngOnInit(): void {
@@ -57,12 +61,28 @@ products: any[] = [];
     this.loadExpressionItems();
     this.loadSuppliers();
      this.loadProducts(); 
+   this.isSupplier = !!this.tokenservice.isSupplier();
+
+  if (this.isSupplier) {
+    this.supplierData = this.tokenservice.getSupplierData();
+
+    this.selectedSupplierId = this.supplierData?.supplierId;
+
+    this.onSupplierChange();
+  }
+
+  this.loadSuppliers();
   }
 
   /* ================= MODAL ================= */
 
   openModal(edit = false, data?: any): void {
     this.isEdit = edit;
+     if (this.isSupplier) {
+    this.selectedSupplierId = this.supplierData?.supplierId;
+  } else {
+    this.selectedSupplierId = null;
+  }
     this.insertIndex = null;
     this.isvalidated = false;
     this.validatedResult = null;
