@@ -297,4 +297,36 @@ export const API_ENDPOINTS = {
     GENERATE_SUPPLIER_CODE: '/Supplier/GenerateSupplierCode',
     GET_BY_ID: '/ProductBuild/GetById',
   },
+  DAY_DATA: {
+  SAVE:             '/DayData/Save',
+  GET_BY_DAY_ID:    '/DayData/GetByDayId',
+  ARCHIVE:          '/DayData/Archive',
+  BULK_RECALC:      '/DayData/BulkRecalculate',
+},
+
+MILK_PRICE_HISTORY: {
+  SAVE:             '/MilkPriceHistory/Save',
+  GET_BY_FARM:      '/MilkPriceHistory/GetByFarm',
+},
+
+CALVING: {
+  CREATE:           '/Calving/Create',
+  UPDATE:           '/Calving/Update',
+  DELETE:           '/Calving/Delete',
+  GET_ALL:          '/Calving/GetAll',
+},
+
+HEALTH_EVENT: {
+  CREATE:           '/HealthEvent/Create',
+  UPDATE:           '/HealthEvent/Update',
+  DELETE:           '/HealthEvent/Delete',
+  GET_ALL:          '/HealthEvent/GetAll',
+},
+
+FERTILITY_RECORD: {
+  CREATE:           '/FertilityRecord/Create',
+  UPDATE:           '/FertilityRecord/Update',
+  DELETE:           '/FertilityRecord/Delete',
+  GET_ALL:          '/FertilityRecord/GetAll',
+},
 };

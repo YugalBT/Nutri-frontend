@@ -12,7 +12,13 @@ export const SIDEBAR_GROUPS = [
     key: 'farm',
     title: 'sidebarmenu.feeding',
     icon: SIDEBAR_ICONS.FARM,
-    items: ['Farm', 'Feed', 'Ration','CalfBarn','Animal Group','Animal Type', 'Animal Lactation Stage']
+    items: ['Farm', 'Feed', 'Ration', 'CalfBarn', 'Animal Group', 'Animal Type', 'Animal Lactation Stage',  'Archive']
+  },
+  {
+    key: 'herd',
+    title: 'sidebarmenu.herd',
+    icon: SIDEBAR_ICONS.FARM,
+    items: ['Parti', 'Sanita', 'Fertilita', 'Milk Price History']
   },
   // {
   //   key: 'nutrition',

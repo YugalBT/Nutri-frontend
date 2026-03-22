@@ -120,6 +120,37 @@ export const PERMISSIONS = {
   SupplierPriceEdit: 'SupplierPriceEdit',
   SupplierPriceAdd: 'SupplierPriceAdd',
   SupplierPriceDelete: 'SupplierPriceDelete',
+
+  // Nutri farm — new modules
+  DailyEntryView: 'DailyEntryView',
+  DailyEntryEdit: 'DailyEntryEdit',
+  DailyEntryAdd: 'DailyEntryAdd',
+  DailyEntryDelete: 'DailyEntryDelete',
+
+  ArchiveView: 'ArchiveView',
+  ArchiveEdit: 'ArchiveEdit',
+  ArchiveAdd: 'ArchiveAdd',
+  ArchiveDelete: 'ArchiveDelete',
+
+  PartiView: 'PartiView',
+  PartiEdit: 'PartiEdit',
+  PartiAdd: 'PartiAdd',
+  PartiDelete: 'PartiDelete',
+
+  SanitaView: 'SanitaView',
+  SanitaEdit: 'SanitaEdit',
+  SanitaAdd: 'SanitaAdd',
+  SanitaDelete: 'SanitaDelete',
+
+  FertilitaView: 'FertilitaView',
+  FertilitaEdit: 'FertilitaEdit',
+  FertilitaAdd: 'FertilitaAdd',
+  FertilitaDelete: 'FertilitaDelete',
+
+  MilkPriceHistoryView: 'MilkPriceHistoryView',
+  MilkPriceHistoryEdit: 'MilkPriceHistoryEdit',
+  MilkPriceHistoryAdd: 'MilkPriceHistoryAdd',
+  MilkPriceHistoryDelete: 'MilkPriceHistoryDelete',
 } as const;
 
 export type PermissionKey = keyof typeof PERMISSIONS;
