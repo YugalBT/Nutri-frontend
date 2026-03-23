@@ -2,10 +2,7 @@ import { Component, ElementRef, ViewChild } from '@angular/core';
 import { SharedModule } from '../../../shared/shared.module';
 import { FormsModule } from '@angular/forms';
 import { TranslatePipe } from '../../../i18n/translate.pipe';
-import {
-  OperatorList,
-  OperatorsAndRationsList,
-} from '../../../core/models/operator-list';
+import { OperatorList, OperatorsAndRationsList,} from '../../../core/models/operator-list';
 import { RationList } from '../../../core/models/ration-list';
 import { CommonService } from '../../../shared/services/common.service';
 import { ToastService } from '../../../shared/services/toast.service';
@@ -72,30 +69,37 @@ products: any[] = [];
   }
 
   this.loadSuppliers();
+
+  // Load materials if selectedSupplierId is set on page load
+  if (this.selectedSupplierId) {
+    this.onSupplierChange();
+  }
   }
 
   /* ================= MODAL ================= */
 
   openModal(edit = false, data?: any): void {
     this.isEdit = edit;
-     if (this.isSupplier) {
-    this.selectedSupplierId = this.supplierData?.supplierId;
-  } else {
-    this.selectedSupplierId = null;
-  }
     this.insertIndex = null;
     this.isvalidated = false;
     this.validatedResult = null;
     this.selectedProductId = null;
     this.resetForm(); 
 
+    // Set supplier ID after reset - preserve supplier ID for supplier users
+    if (this.isSupplier) {
+      this.selectedSupplierId = this.supplierData?.supplierId;
+    } else {
+      this.selectedSupplierId = null;
+    }
+
     if (edit && data) {
       this.formulaId = data.formulaId;
       this.expressionName = data.formulaName;
       this.selectedSupplierId = data.supplierId;
-        this.selectedStatus =
-      data.formulaStatus === 'Active' ? 0 :
-      data.formulaStatus === 'Draft' ? 1 : 1;
+      this.selectedStatus =
+        data.formulaStatus === 'Active' ? 0 :
+        data.formulaStatus === 'Draft' ? 1 : 1;
 
       this.expressionTokens = this.mapFormulaeArrayToTokens(
         data.formulaeArray,
@@ -106,6 +110,11 @@ products: any[] = [];
       this.formulaId = null;
       this.expressionName = '';
       this.expressionTokens = [];
+      
+      // Load materials for new formula if supplier is selected
+      if (this.selectedSupplierId) {
+        this.onSupplierChange();
+      }
     }
 
     this.modal.show();

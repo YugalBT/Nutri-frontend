@@ -18,7 +18,8 @@ import { TranslatePipe } from '../../../i18n/translate.pipe';
     GlobalSearchComponent,
     TranslatePipe
   ],
-  templateUrl: './product-build-list.component.html'
+  templateUrl: './product-build-list.component.html',
+  styleUrls: ['./product-build-list.component.css']
 })
 export class ProductBuildListComponent implements OnInit, OnDestroy {
 

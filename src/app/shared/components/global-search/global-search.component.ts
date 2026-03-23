@@ -39,8 +39,39 @@ export class GlobalSearchComponent implements OnInit, OnDestroy {
   statusControl = new FormControl<string | null>('');
   isShowControl = new FormControl(false);
   isSuperAdmin = false;
+  isFiltersExpanded = true;
   private subs: Subscription[] = [];
   masterControl = new FormControl(false);
+
+  get hasActiveFilters(): boolean {
+    return !!this.searchControl.value || 
+           !!this.statusControl.value || 
+           !!this.masterControl.value || 
+           !!this.isShowControl.value;
+  }
+
+  get activeFilterCount(): number {
+    let count = 0;
+    if (this.searchControl.value) count++;
+    if (this.statusControl.value) count++;
+    if (this.masterControl.value) count++;
+    if (this.isShowControl.value) count++;
+    return count;
+  }
+
+  toggleFilters(): void {
+    this.isFiltersExpanded = !this.isFiltersExpanded;
+  }
+
+  clearAllFilters(): void {
+    this.searchControl.setValue('');
+    this.statusControl.setValue('');
+    this.masterControl.setValue(false);
+    this.isShowControl.setValue(false);
+    this.clear.emit();
+    this.search.emit('');
+    this.statusChange.emit(null);
+  }
   ngOnInit(): void {
     localStorage.getItem('isSuperAdmin') === 'true'
       ? (this.isSuperAdmin = true)

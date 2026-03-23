@@ -1,263 +1,192 @@
-<!-- <div class="pagecls">
+<div class="sp-container">
 
-  <div class="page-header">
-    <div>
-      <h3 class="page-title">
-        {{ 'supplierPrice.heading' | translate }}
+  <!-- PAGE HEADER -->
+  <div class="sp-header">
+    <div class="sp-header-content">
+      <div class="sp-title-wrapper">
+        <i class="bi bi-tag-fill sp-title-icon"></i>
+        <h1 class="sp-title">{{ "supplierPrice.heading" | translate }}</h1>
+      </div>
+      <p class="sp-subtitle">{{ "supplierPrice.subtitle" | translate }}</p>
+    </div>
+  </div>
+
+  <!-- SUPPLIER SELECTOR SECTION -->
+  <div *ngIf="!isSupplier" class="sp-selector-card">
+    <div class="sp-card-header">
+      <h3 class="sp-card-title">
+        <i class="bi bi-building sp-card-icon"></i>
+        {{ "supplierPrice.selectSupplierTitle" | translate }}
       </h3>
     </div>
-
-    <button class="btn add-btn"
-            (click)="supplierPriceModal.openModal()">
-      <i class="bi bi-plus-lg me-2"></i>
-      {{ 'supplierPrice.add' | translate }}
-    </button>
-  </div>
-
-  <div class="filters-card">
-    <app-global-search
-      [label]="'common.searchFilters' | translate"
-      [placeholder]="'supplierPrice.searchPlaceholder' | translate"
-      [showStatus]="true"
-      (search)="onSearch($event)"
-      (statusChange)="onStatusChange($event)"
-      (clear)="clearFilters()">
-    </app-global-search>
-  </div>
-
-  <div class="table-card">
-    <app-reusable-table
-      [columns]="columns"
-      [columnFields]="columnFields"
-      [data]="suppliers"
-      [showActions]="true"
-      [pageable]="true"
-      [totalRecords]="totalRecords"
-      [pageSize]="pageSize"
-      [pageIndex]="pageIndex"
-      (pageChange)="onPageChange($event)"
-      (toggleActive)="onToggleActive($event)"
-      (deleteRow)="onDelete($event)"
-      (editRow)="supplierPriceModal.openModal(true, $event)">
-    </app-reusable-table>
-  </div>
-
-  <app-supplier-price-add-edit #supplierPriceModal></app-supplier-price-add-edit>
-
-</div> -->
-
-<div class="container-fluid py-4">
-
-  <!-- PAGE TITLE -->
-  <div class="d-flex align-items-center mb-4">
-    <div class="border-start border-4 ps-3">
-      <h4 class="fw-bold mb-0">
-        {{ "supplierPrice.heading" | translate }}
-      </h4>
-    </div>
-  </div>
-
-  <!-- SUPPLIER DROPDOWN -->
-  <div *ngIf="!isSupplier" class="card shadow-sm border-0 mb-4">
-    <div class="card-body">
-
-      <div class="row g-3">
-
-        <div class="col-lg-4 col-md-6 col-sm-12">
-
-          <label class="form-label fw-semibold">
-            {{ "supplierPrice.supplier" | translate }}
-            <span class="text-danger">*</span>
-          </label>
-
-          <select class="form-select" [(ngModel)]="selectedSupplierId" (change)="onSupplierChange()">
-
-            <option [ngValue]="null">
-              {{ "supplierPrice.selectSupplier" | translate }}
-            </option>
-
-            <option *ngFor="let s of suppliers" [value]="s.supplierId">
-
-              {{ s.supplierName }}
-
-            </option>
-
-          </select>
-
-        </div>
-
+    <div class="sp-card-body">
+      <div class="sp-form-group">
+        <label class="sp-label" for="supplier-select">
+          {{ "supplierPrice.supplier" | translate }}
+          <span class="sp-required">*</span>
+        </label>
+        <select 
+          id="supplier-select"
+          class="sp-select" 
+          [(ngModel)]="selectedSupplierId" 
+          (change)="onSupplierChange()"
+          [attr.aria-label]="'Select supplier'"
+        >
+          <option [ngValue]="null">{{ "supplierPrice.selectSupplier" | translate }}</option>
+          <option *ngFor="let s of suppliers" [value]="s.supplierId">{{ s.supplierName }}</option>
+        </select>
       </div>
-
     </div>
   </div>
 
 
-  <!-- MATERIAL TABLE -->
-  <div class="card shadow-sm border-0">
-
-    <div class="card-body p-0">
-
-      <div class="table-responsive">
-
-        <table class="table table-hover align-middle mb-0">
-
-          <thead class="table-light">
-
-            <tr>
-
-              <th>{{ "common.sn" | translate }}</th>
-              <th>{{ "supplierPrice.material" | translate }}</th>
-              <th>{{ "supplierPrice.code" | translate }}</th>
-              <th>{{ "supplierPrice.price" | translate }}</th>
-              <th>{{ "supplierPrice.discount" | translate }}</th>
-              <th>{{ "supplierPrice.deliveredPrice" | translate }}</th>
-              <th>{{ "supplierPrice.priceMonth" | translate }}</th>
-
-              <th style="min-width:160px">
-                {{ "supplierPrice.columns.SupplierPriceStatus" | translate }}
-              </th>
-
-            </tr>
-
-          </thead>
-
-
-          <tbody>
-
-            <tr *ngFor="let m of materials; let i=index">
-
-              <!-- SN -->
-              <td class="fw-semibold">
-                {{ i+1 }}
-              </td>
-
-              <!-- MATERIAL -->
-              <td class="fw-medium">
-                {{ m.materialName }}
-              </td>
-
-              <!-- CODE -->
-              <td>
-                {{ m.materialCode }}
-              </td>
-
-
-              <!-- PRICE -->
-              <td>
-
-                <div class="input-group input-group-sm">
-
-                  <span class="input-group-text">€</span>
-
-                  <input type="number" step="0.01" class="form-control" [(ngModel)]="m.price"
-                    (ngModelChange)="onPriceChange(m)" placeholder="{{ 'supplierPrice.zero' | translate }}">
-
-                </div>
-
-              </td>
-
-
-              <!-- DISCOUNT -->
-              <td>
-
-                <div class="input-group input-group-sm">
-
-                  <span class="input-group-text">%</span>
-
-                  <input type="number" step="0.01" class="form-control" [(ngModel)]="m.discountPercent"
-                    (ngModelChange)="markChanged(m)" placeholder="0.00">
-
-                </div>
-
-              </td>
-
-
-              <!-- DELIVERED PRICE -->
-              <td>
-
-                <div class="input-group input-group-sm">
-
-                  <span class="input-group-text">€</span>
-
-                  <input type="number" step="0.01" class="form-control" readonly [(ngModel)]="m.deliveredPrice"
-                    (ngModelChange)="onPriceChange(m)" placeholder="0.00">
-
-                </div>
-
-              </td>
-
-
-              <!-- PRICE MONTH -->
-              <td>
-
-                <input type="month" class="form-control form-control-sm" [(ngModel)]="m.priceMonth"
-                  (ngModelChange)="onPriceChange(m)">
-
-              </td>
-
-              <td>
-
-                <select class="form-select form-select-sm" [(ngModel)]="m.supplierStatus"
-                  (ngModelChange)="onPriceChange(m)">
-
-                  <option [ngValue]="2" disabled>
-  {{ "supplierPrice.selectStatus" | translate }}
-</option>
-
-                <option [ngValue]="0">
-  {{ "supplierPrice.approved" | translate }}
-</option>
-
-<option [ngValue]="1">
-  {{ "supplierPrice.draft" | translate }}
-</option>
-
-                </select>
-
-              </td>
-
-            </tr>
-
-          </tbody>
-
-        </table>
-
-
-        <!-- NO DATA -->
-
-        <div *ngIf="materials.length === 0" class="text-center py-5">
-
-          <img src="assets/image/no-data.png" width="140" class="mb-3">
-
-          <h5 class="text-muted">
-            {{ "common.noData" | translate }}
-          </h5>
-
-        </div>
-
-      </div>
-
+  <!-- MATERIALS TABLE SECTION -->
+  <div class="sp-table-card">
+    <div class="sp-table-header">
+      <h2 class="sp-table-title">
+        <i class="bi bi-list-ul sp-table-icon"></i>
+        {{ "supplierPrice.materials" | translate }}
+      </h2>
+      <span class="sp-material-count" *ngIf="materials.length > 0">{{ materials.length }}</span>
     </div>
 
+    <!-- TABLE WRAPPER -->
+    <div class="sp-table-wrapper">
+      <table class="sp-table" *ngIf="materials.length > 0">
+        <thead class="sp-table-head">
+          <tr class="sp-table-row">
+            <th class="sp-table-cell sp-col-sn">{{ "common.sn" | translate }}</th>
+            <th class="sp-table-cell sp-col-material">{{ "supplierPrice.material" | translate }}</th>
+            <th class="sp-table-cell sp-col-code">{{ "supplierPrice.code" | translate }}</th>
+            <th class="sp-table-cell sp-col-price">{{ "supplierPrice.price" | translate }}</th>
+            <th class="sp-table-cell sp-col-discount">{{ "supplierPrice.discount" | translate }}</th>
+            <th class="sp-table-cell sp-col-delivered">{{ "supplierPrice.deliveredPrice" | translate }}</th>
+            <th class="sp-table-cell sp-col-month">{{ "supplierPrice.priceMonth" | translate }}</th>
+            <th class="sp-table-cell sp-col-status">{{ "supplierPrice.columns.SupplierPriceStatus" | translate }}</th>
+          </tr>
+        </thead>
+        <tbody class="sp-table-body">
+          <tr class="sp-table-row" *ngFor="let m of materials; let i=index" [class.sp-row-changed]="m.isChanged">
+            <!-- SN -->
+            <td class="sp-table-cell sp-cell-sn">{{ i + 1 }}</td>
+            
+            <!-- MATERIAL -->
+            <td class="sp-table-cell sp-cell-material">
+              <span class="sp-material-name">{{ m.materialName }}</span>
+            </td>
+            
+            <!-- CODE -->
+            <td class="sp-table-cell sp-cell-code">
+              <code class="sp-code">{{ m.materialCode }}</code>
+            </td>
+            
+            <!-- PRICE -->
+            <td class="sp-table-cell sp-cell-price">
+              <div class="sp-input-group">
+                <span class="sp-currency-symbol">€</span>
+                <input 
+                  type="number" 
+                  step="0.01" 
+                  class="sp-input sp-input-number"
+                  [(ngModel)]="m.price"
+                  (ngModelChange)="onPriceChange(m)" 
+                  [attr.aria-label]="'Price for ' + m.materialName"
+                  placeholder="0.00"
+                />
+              </div>
+            </td>
+            
+            <!-- DISCOUNT -->
+            <td class="sp-table-cell sp-cell-discount">
+              <div class="sp-input-group">
+                <input 
+                  type="number" 
+                  step="0.01" 
+                  class="sp-input sp-input-number"
+                  [(ngModel)]="m.discountPercent"
+                  (ngModelChange)="markChanged(m)" 
+                  [attr.aria-label]="'Discount for ' + m.materialName"
+                  placeholder="0.00"
+                />
+                <span class="sp-currency-symbol">%</span>
+              </div>
+            </td>
+            
+            <!-- DELIVERED PRICE -->
+            <td class="sp-table-cell sp-cell-delivered">
+              <div class="sp-input-group sp-input-group-readonly">
+                <span class="sp-currency-symbol">€</span>
+                <input 
+                  type="number" 
+                  step="0.01" 
+                  class="sp-input sp-input-number sp-input-readonly"
+                  readonly 
+                  [(ngModel)]="m.deliveredPrice"
+                  [attr.aria-label]="'Delivered price for ' + m.materialName"
+                  placeholder="0.00"
+                />
+              </div>
+            </td>
+            
+            <!-- PRICE MONTH -->
+            <td class="sp-table-cell sp-cell-month">
+              <input 
+                type="month" 
+                class="sp-input sp-input-month"
+                [(ngModel)]="m.priceMonth"
+                (ngModelChange)="onPriceChange(m)"
+                [attr.aria-label]="'Price month for ' + m.materialName"
+              />
+            </td>
+            
+            <!-- STATUS -->
+            <td class="sp-table-cell sp-cell-status">
+              <select 
+                class="sp-select sp-select-status"
+                [(ngModel)]="m.supplierStatus"
+                (ngModelChange)="onPriceChange(m)"
+                [attr.aria-label]="'Status for ' + m.materialName"
+              >
+                <option [ngValue]="2" disabled>{{ "supplierPrice.selectStatus" | translate }}</option>
+                <option [ngValue]="0">{{ "supplierPrice.approved" | translate }}</option>
+                <option [ngValue]="1">{{ "supplierPrice.draft" | translate }}</option>
+              </select>
+            </td>
+          </tr>
+        </tbody>
+      </table>
 
-    <!-- FOOTER -->
+      <!-- NO DATA STATE -->
+      <div *ngIf="materials.length === 0" class="sp-empty-state">
+        <div class="sp-empty-icon">
+          <i class="bi bi-inbox"></i>
+        </div>
+        <h3 class="sp-empty-title">{{ "common.noData" | translate }}</h3>
+        <p class="sp-empty-message" *ngIf="!isSupplier && !selectedSupplierId">
+          {{ "supplierPrice.selectSupplierFirst" | translate }}
+        </p>
+      </div>
+    </div>
 
-    <div class="card-footer bg-white text-end py-3">
-
-      <button class="btn btn-outline-secondary me-2 px-4" (click)="clearAll()">
-
+    <!-- TABLE FOOTER -->
+    <div class="sp-table-footer">
+      <button 
+        class="sp-btn sp-btn-secondary" 
+        (click)="clearAll()"
+        [attr.aria-label]="'Clear filters'"
+      >
+        <i class="bi bi-arrow-counterclockwise"></i>
         {{ "supplierPrice.clear" | translate }}
-
       </button>
-
-      <button class="btn add-btn px-5 shadow-sm" (click)="saveAll()">
-
-       {{ "supplierPrice.saveAll" | translate }}
-
+      <button 
+        class="sp-btn sp-btn-primary" 
+        (click)="saveAll()"
+        [attr.aria-label]="'Save all changes'"
+      >
+        <i class="bi bi-check-circle"></i>
+        {{ "supplierPrice.saveAll" | translate }}
       </button>
-
     </div>
-
   </div>
 
 </div>

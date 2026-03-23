@@ -52,22 +52,25 @@ export class MaterialAddEditComponent implements OnInit, OnDestroy {
     private toast: ToastService,
     private commonService: CommonService,
     private tokenservice: TokenService,
-  ) {}
+  ) {
+    // Initialize supplier data before component init
+    this.isSupplier = !!this.tokenservice.isSupplier();
+    if (this.isSupplier) {
+      this.supplierData = this.tokenservice.getSupplierData();
+    }
+  }
 
   ngOnInit() {
     this.initializeForm();
     this.loadSuppliers();
     this.listenToMaterialNameChange();
-     this.isSupplier = !!this.tokenservice.isSupplier();
 
-  if (this.isSupplier) {
-    this.supplierData = this.tokenservice.getSupplierData();
-
-    this.form.patchValue({
-      supplierId: this.supplierData?.supplierId
-    });
-    this.form.get('supplierId')?.disable(); 
-  }
+    if (this.isSupplier && this.supplierData?.supplierId) {
+      this.form.patchValue({
+        supplierId: this.supplierData.supplierId
+      });
+      this.form.get('supplierId')?.disable();
+    }
   }
 
   private initializeForm() {
@@ -158,48 +161,61 @@ private loadSuppliers(): void {
       this.currentId = null;
     }
 
+    // For supplier users, ensure supplierId is always set
+    if (this.isSupplier && this.supplierData?.supplierId) {
+      this.form.patchValue({
+        supplierId: this.supplierData.supplierId
+      });
+      this.form.get('supplierId')?.disable();
+    }
+
     this.modalInstance = new bootstrap.Modal(this.materialModal.nativeElement);
     this.modalInstance.show();
   }
 
   saveMaterial() {
 
-  if (!this.form.valid) {
-    this.form.markAllAsTouched();
-    return;
+    if (!this.form.valid) {
+      this.form.markAllAsTouched();
+      return;
+    }
+
+    const payload = { ...this.form.getRawValue() };
+
+    // Ensure supplierId is always included
+    if (this.isSupplier && this.supplierData?.supplierId && !payload.supplierId) {
+      payload.supplierId = this.supplierData.supplierId;
+    }
+
+    if (this.isEdit && this.currentId) {
+
+      payload.materialId = this.currentId;
+
+      this.materialService.updateMaterial(payload)
+        .subscribe(res => {
+          if (res.isSuccess) {
+            this.toast.success(res.message);
+            this.materialService.notifyMaterialsChanged();
+            this.closeModal();
+          } else {
+            this.toast.error(res.message);
+          }
+        });
+
+    } else {
+
+      this.materialService.createMaterial(payload)
+        .subscribe(res => {
+          if (res.isSuccess) {
+            this.toast.success(res.message);
+            this.materialService.notifyMaterialsChanged();
+            this.closeModal();
+          } else {
+            this.toast.error(res.message);
+          }
+        });
+    }
   }
-
-  const payload = { ...this.form.getRawValue() };
-
-  if (this.isEdit && this.currentId) {
-
-    payload.materialId = this.currentId;
-
-    this.materialService.updateMaterial(payload)
-      .subscribe(res => {
-        if (res.isSuccess) {
-          this.toast.success(res.message);
-          this.materialService.notifyMaterialsChanged();
-          this.closeModal();
-        }else{
-          this.toast.error(res.message);
-        }
-      });
-
-  } else {
-
-    this.materialService.createMaterial(payload)
-      .subscribe(res => {
-        if (res.isSuccess) {
-          this.toast.success(res.message);
-          this.materialService.notifyMaterialsChanged();
-          this.closeModal();
-        }else{
-          this.toast.error(res.message);
-        }
-      });
-  }
-}
 
 
   closeModal() {

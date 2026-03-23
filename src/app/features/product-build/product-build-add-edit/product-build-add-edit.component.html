@@ -1,168 +1,232 @@
-<div #modal class="modal fade">
-    <div class="modal-dialog modal-xl modal-dialog-centered">
-        <div class="modal-content">
+<div #modal class="modal fade pb-modal">
+  <div class="modal-dialog modal-xl modal-dialog-centered">
+    <div class="modal-content pb-modal-content">
 
-            <!-- HEADER -->
-            <div class="modal-header">
-                <h5>
-                    {{ isEdit ? ('productBuild.edit' | translate) : ('productBuild.add' | translate) }}
-                </h5>
-                <button class="btn-close" (click)="closeModal()"></button>
-            </div>
-
-            <!-- BODY -->
-            <div class="modal-body">
-
-                <form [formGroup]="form">
-
-                    <div class="row g-3">
-
-                        <!-- SUPPLIER -->
-                        <div class="col-md-4" *ngIf="!isSupplier">
-                            <label class="form-label">
-                                {{ 'productBuild.supplier' | translate }} *
-                            </label>
-
-                            <select formControlName="supplierId" class="form-select"
-                                (change)="onSupplierChange(form.get('supplierId')?.value)">
-
-                                <option [ngValue]="null" disabled>
-                                    {{ 'productBuild.selectSupplier' | translate }}
-                                </option>
-
-                                <option *ngFor="let s of suppliers" [ngValue]="s.supplierId">
-                                    {{ s.supplierName }} - {{ s.supplierCode }}
-                                </option>
-
-                            </select>
-                        </div>
-
-                        <!-- PRODUCT -->
-                        <div class="col-md-4">
-                            <label class="form-label">
-                                {{ 'productBuild.product' | translate }} *
-                            </label>
-
-                            <select formControlName="productId" class="form-select" [disabled]="!form.value.supplierId">
-                                <option [ngValue]="null" selected disabled>{{ 'productBuild.selectProduct' | translate }}
-                                </option>
-                                <option *ngFor="let p of products" [ngValue]="p.productId">
-                                    {{ p.productName }} - {{ p.productCode }}
-                                </option>
-                            </select>
-                        </div>
-                        <!-- FORMULA -->
-                        <div class="col-md-4">
-                            <label class="form-label">
-                                {{ 'productBuild.formula' | translate }}
-                            </label>
-
-                            <select formControlName="formulaId" class="form-select"
-                                (change)="onFormulaChange($any($event.target).value)">
-
-                                <option [ngValue]="null" selected disabled>
-                                    Select Formula
-                                </option>
-
-                                <option *ngFor="let f of formulas" [ngValue]="f.formulaId">
-                                    {{ f.formulaName }}
-                                </option>
-
-                            </select>
-                        </div>
-
-                        <!-- DATE -->
-                        <div class="col-md-4">
-                            <label class="form-label">
-                                {{ 'productBuild.date' | translate }} *
-                            </label>
-
-                            <input type="date" formControlName="priceDate" class="form-control">
-                        </div>
-
-                    </div>
-
-                    <hr>
-
-                    <!-- SCROLLABLE TABLE -->
-                    <div class="table-responsive" style="max-height: 300px; overflow-y: auto;">
-
-                        <table class="table table-bordered">
-                            <thead>
-                                <tr>
-                                    <th>{{ 'productBuild.material' | translate }}</th>
-                                    <th>{{ 'productBuild.amount' | translate }}</th>
-                                    <th>%</th>
-                                    <th>{{ 'productBuild.calculated' | translate }}</th>
-                                </tr>
-                            </thead>
-
-                            <tbody>
-                                <tr *ngFor="let item of items.controls; let i=index" [formGroup]="item">
-
-                                    <td>{{ item.value.materialName }}</td>
-
-                                    <td>
-                                        <div class="form-control bg-light">
-                                            {{ item.value.amount }}
-                                        </div>
-                                    </td>
-
-                                    <td>
-                                        <input type="number" formControlName="percentage" (input)="calculate(item)"
-                                            class="form-control">
-                                    </td>
-
-                                    <td>
-                                        <div class="form-control bg-light">
-                                            {{ item.value.calculatedAmount }}
-                                        </div>
-                                    </td>
-
-                                </tr>
-                            </tbody>
-                        </table>
-
-                    </div>
-
-                    <!-- TOTAL -->
-                    <div class="row mt-3">
-
-                        <div class="col-md-6">
-                            <strong>
-                                Total %: {{ getTotalPercentage() }}
-                            </strong>
-
-                            <span class="text-danger" *ngIf="getTotalPercentage() !== 100">
-                                (Must be 100%)
-                            </span>
-                        </div>
-
-                        <div class="col-md-6 text-end">
-                            <strong>
-                                Total Price: {{ getTotalAmount() }}
-                            </strong>
-                        </div>
-
-                    </div>
-
-                </form>
-
-            </div>
-
-            <!-- FOOTER -->
-            <div class="modal-footer">
-
-                <button class="btn btn-secondary" (click)="closeModal()">
-                    {{ 'common.cancel' | translate }}
-                </button>
-
-                <button class="btn add-btn" [disabled]="getTotalPercentage() !== 100" (click)="save()">
-                    {{ 'common.save' | translate }}
-                </button>
-
-            </div>
-
+      <!-- MODAL HEADER -->
+      <div class="pb-modal-header">
+        <div class="pb-modal-title-group">
+          <div class="pb-modal-icon">
+            <i class="bi" [ngClass]="isEdit ? 'bi-pencil-square' : 'bi-plus-square'"></i>
+          </div>
+          <div>
+            <h3 class="pb-modal-title">
+              {{ isEdit ? ('productBuild.edit' | translate) : ('productBuild.add' | translate) }}
+            </h3>
+            <!-- <p class="pb-modal-subtitle">
+              {{ isEdit ? ('productBuild.editDescription' | translate) : ('productBuild.addDescription' | translate) }}
+            </p> -->
+          </div>
         </div>
+        <button type="button" class="pb-modal-close" (click)="closeModal()" title="Close">
+          <i class="bi bi-x-lg"></i>
+        </button>
+      </div>
+
+      <!-- MODAL BODY -->
+      <div class="pb-modal-body">
+        <form [formGroup]="form">
+
+          <!-- INFO SECTION -->
+          <div class="pb-form-section">
+            <div class="pb-section-header">
+              <div class="pb-section-icon">
+                <i class="bi bi-info-circle"></i>
+              </div>
+              <h4>{{ 'productBuild.basicInfo' | translate }}</h4>
+            </div>
+            <div class="pb-section-body">
+              <div class="row g-3">
+
+                <!-- SUPPLIER -->
+                <div class="col-lg-4" *ngIf="!isSupplier">
+                  <div class="pb-form-group">
+                    <label class="pb-form-label">
+                      <i class="bi bi-shop"></i>
+                      {{ 'productBuild.supplier' | translate }}
+                      <span class="pb-required">*</span>
+                    </label>
+                    <select formControlName="supplierId" class="pb-form-input pb-form-select"
+                      (change)="onSupplierChange(form.get('supplierId')?.value)">
+                      <option [ngValue]="null" disabled selected>
+                        {{ 'productBuild.selectSupplier' | translate }}
+                      </option>
+                      <option *ngFor="let s of suppliers" [ngValue]="s.supplierId">
+                        {{ s.supplierName }} - {{ s.supplierCode }}
+                      </option>
+                    </select>
+                    <!-- <p class="pb-form-hint">{{ 'productBuild.supplierHint' | translate }}</p> -->
+                  </div>
+                </div>
+
+                <!-- PRODUCT -->
+                <div class="col-lg-4">
+                  <div class="pb-form-group">
+                    <label class="pb-form-label">
+                      <i class="bi bi-box"></i>
+                      {{ 'productBuild.product' | translate }}
+                      <span class="pb-required">*</span>
+                    </label>
+                    <select formControlName="productId" class="pb-form-input pb-form-select"
+                      [disabled]="!form.value.supplierId">
+                      <option [ngValue]="null" selected disabled>
+                        {{ 'productBuild.selectProduct' | translate }}
+                      </option>
+                      <option *ngFor="let p of products" [ngValue]="p.productId">
+                        {{ p.productName }} - {{ p.productCode }}
+                      </option>
+                    </select>
+                    <!-- <p class="pb-form-hint" *ngIf="!form.value.supplierId">
+                      {{ 'productBuild.SelectSupplier' | translate }}
+                    </p> -->
+                  </div>
+                </div>
+
+                <!-- DATE -->
+                <div class="col-lg-4">
+                  <div class="pb-form-group">
+                    <label class="pb-form-label">
+                      <i class="bi bi-calendar-event"></i>
+                      {{ 'productBuild.date' | translate }}
+                      <span class="pb-required">*</span>
+                    </label>
+                    <input type="date" formControlName="priceDate" class="pb-form-input">
+                    <!-- <p class="pb-form-hint">{{ 'productBuild.dateHint' | translate }}</p> -->
+                  </div>
+                </div>
+
+                <!-- FORMULA -->
+                <div class="col-lg-4">
+                  <div class="pb-form-group">
+                    <label class="pb-form-label">
+                      <i class="bi bi-calculator"></i>
+                      {{ 'productBuild.formula' | translate }}
+                    </label>
+                    <select formControlName="formulaId" class="pb-form-input pb-form-select"
+                      (change)="onFormulaChange($any($event.target).value)">
+                      <option [ngValue]="null" selected disabled>
+                        {{ 'productBuild.selectFormula' | translate }}
+                      </option>
+                      <option *ngFor="let f of formulas" [ngValue]="f.formulaId">
+                        {{ f.formulaName }}
+                      </option>
+                    </select>
+                    <!-- <p class="pb-form-hint">{{ 'productBuild.formulaHint' | translate }}</p> -->
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- MATERIALS SECTION -->
+          <div class="pb-form-section">
+            <!-- <div class="pb-section-header">
+              <div class="pb-section-icon">
+                <i class="bi bi-layers"></i>
+              </div>
+              <h4>{{ 'productBuild.materials' | translate }}</h4>
+            </div> -->
+            <div class="pb-section-body">
+              <div class="pb-table-container">
+                <table class="pb-materials-table">
+                  <thead>
+                    <tr>
+                      <th class="pb-col-material">
+                        <span class="pb-col-header">
+                          <i class="bi bi-card-list"></i>
+                          {{ 'productBuild.material' | translate }}
+                        </span>
+                      </th>
+                      <th class="pb-col-amount">
+                        <span class="pb-col-header">
+                          <i class="bi bi-currency-dollar"></i>
+                          {{ 'productBuild.amount' | translate }}
+                        </span>
+                      </th>
+                      <th class="pb-col-percentage">
+                        <span class="pb-col-header">%</span>
+                      </th>
+                      <th class="pb-col-calculated">
+                        <span class="pb-col-header">
+                          <i class="bi bi-calculator"></i>
+                          {{ 'productBuild.calculated' | translate }}
+                        </span>
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let item of items.controls; let i=index" [formGroup]="item" class="pb-table-row">
+                      <td class="pb-col-material">
+                        <div class="pb-cell-content">
+                          <span class="pb-material-name">{{ item.value.materialName }}</span>
+                        </div>
+                      </td>
+                      <td class="pb-col-amount">
+                        <div class="pb-cell-content pb-cell-readonly">
+                          <span class="pb-amount-value">{{ item.value.amount | number:'1.2-2' }}</span>
+                        </div>
+                      </td>
+                      <td class="pb-col-percentage">
+                        <div class="pb-cell-input">
+                          <input type="number" formControlName="percentage" (input)="calculate(item)"
+                            class="pb-percentage-input" placeholder="0" min="0" max="100">
+                          <span class="pb-input-unit">%</span>
+                        </div>
+                      </td>
+                      <td class="pb-col-calculated">
+                        <div class="pb-cell-content pb-cell-readonly">
+                          <span class="pb-calculated-value">{{ item.value.calculatedAmount | number:'1.2-2' }}</span>
+                        </div>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <!-- SUMMARY SECTION -->
+          <div class="pb-form-section pb-summary-section">
+            <div class="pb-summary-grid">
+              <div class="pb-summary-card pb-summary-percentage" [class.pb-invalid]="getTotalPercentage() !== 100">
+                <div class="pb-summary-label">
+                  <i class="bi bi-percent"></i>
+                  {{ 'productBuild.totalPercentage' | translate }}
+                </div>
+                <div class="pb-summary-value" [class.pb-error]="getTotalPercentage() !== 100">
+                  {{ getTotalPercentage() }}%
+                </div>
+                <div class="pb-summary-status" *ngIf="getTotalPercentage() !== 100">
+                  <i class="bi bi-exclamation-circle"></i>
+                  {{ 'productBuild.mustBe100' | translate }}
+                </div>
+              </div>
+              <div class="pb-summary-card pb-summary-price">
+                <div class="pb-summary-label">
+                  <i class="bi bi-currency-dollar"></i>
+                  {{ 'productBuild.totalPrice' | translate }}
+                </div>
+                <div class="pb-summary-value">
+                  {{ getTotalAmount() | number:'1.2-2' }}
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </form>
+      </div>
+
+      <!-- MODAL FOOTER -->
+      <div class="pb-modal-footer">
+        <button type="button" class="pb-btn-secondary" (click)="closeModal()">
+          <i class="bi bi-x-circle"></i>
+          {{ 'common.cancel' | translate }}
+        </button>
+        <button type="button" class="pb-btn-primary" [disabled]="getTotalPercentage() !== 100" (click)="save()">
+          <i class="bi" [ngClass]="isEdit ? 'bi-pencil-fill' : 'bi-plus-circle-fill'"></i>
+          {{ 'common.save' | translate }}
+        </button>
+      </div>
+
     </div>
+  </div>
 </div>

@@ -37,23 +37,32 @@ export class SupplierPriceListComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit(): void {
-     this.isSupplier = !!this.tokenservice.isSupplier();
+    this.isSupplier = !!this.tokenservice.isSupplier();
 
-  if (this.isSupplier) {
-    this.supplierData = this.tokenservice.getSupplierData();
-    this.selectedSupplierId = this.supplierData?.supplierId;
-    this.onSupplierChange();
-  }
-
-  this.loadSuppliers();
+    if (this.isSupplier) {
+      this.supplierData = this.tokenservice.getSupplierData();
+      this.selectedSupplierId = this.supplierData?.supplierId;
+      
+      if (this.selectedSupplierId) {
+        this.onSupplierChange();
+      }
+    } else {
+      this.loadSuppliers();
+    }
   }
 
   loadSuppliers(): void {
     const sub = this.commonService.getSupplierList().subscribe({
       next: (res) => {
         this.suppliers = res?.data ?? [];
+        if (this.suppliers.length === 0) {
+          this.toast.warning('No suppliers available');
+        }
       },
-      error: () => this.toast.error('Failed to load suppliers'),
+      error: (err) => {
+        this.toast.error('Failed to load suppliers');
+        console.error('Error loading suppliers:', err);
+      },
     });
 
     this.subs.push(sub);

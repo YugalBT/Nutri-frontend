@@ -13,7 +13,8 @@ declare var bootstrap: any;
   selector: 'app-product-build-add-edit',
   standalone: true,
   imports: [SharedModule, ReactiveFormsModule, TranslatePipe],
-  templateUrl: './product-build-add-edit.component.html'
+  templateUrl: './product-build-add-edit.component.html',
+  styleUrls: ['./product-build-add-edit.component.css']
 })
 export class ProductBuildAddEditComponent implements OnInit {
 

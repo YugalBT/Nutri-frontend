@@ -3,3 +3,4 @@ export const environment = {
    //apiUrl: 'https://localhost:44392/api'
    apiUrl: 'https://nutri.braintechnosys.dev/apis/api'
 };
+
