@@ -8,11 +8,15 @@ export const SIDEBAR_GROUPS = [
     icon: SIDEBAR_ICONS.ACCESS,
     items: ['Users', 'Roles',]
   },
+  { key: 'farm', title: 'sidebarmenu.feeding', icon: SIDEBAR_ICONS.FARM,
+  items: ['Farm','Feed','Ration','CalfBarn','Animal Group','Animal Type',
+          'Animal Lactation Stage','Archive','Daily Entry']  // ← add Daily Entry
+},
   {
-    key: 'farm',
-    title: 'sidebarmenu.feeding',
+    key: 'herd',
+    title: 'sidebarmenu.herd',
     icon: SIDEBAR_ICONS.FARM,
-    items: ['Farm', 'Feed', 'Ration','CalfBarn','Animal Group','Animal Type', 'Animal Lactation Stage']
+    items: ['Parti', 'Sanita', 'Fertilita', 'Milk Price History']
   },
   // {
   //   key: 'nutrition',

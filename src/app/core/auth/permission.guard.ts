@@ -13,10 +13,11 @@ export const permissionGuard: CanActivateFn = (route, state) => {
   const toast = inject(ToastService);
 
   const requiredPermissions: string[] = route.data?.['requiredPermissions'] || [];
-
+  console.log("requiredPermissions",requiredPermissions);
   return store.select(selectUserRoles).pipe(
     take(1),
     map((roles: string[]) => {
+  console.log("selectUserRoles",roles);
       return requiredPermissions.some(p => roles.includes(p));
     }),
     tap((allowed) => {

@@ -1,0 +1,64 @@
+<div #modal class="modal fade" tabindex="-1">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">{{ (isEdit ? 'sanita.modal.editTitle' : 'sanita.modal.addTitle') | translate }}</h5>
+        <button class="btn-close" (click)="closeModal()"></button>
+      </div>
+      <div class="modal-body">
+        <form [formGroup]="form">
+          <div class="row g-3">
+            <div class="col-md-4">
+              <label class="form-label">{{ 'sanita.fields.eventDate' | translate }} <span class="text-danger">*</span></label>
+              <input type="date" class="form-control" formControlName="eventDate">
+            </div>
+
+            <div class="col-md-4">
+              <label class="form-label">{{ 'sanita.fields.cowId' | translate }}</label>
+              <input type="text" class="form-control" formControlName="cowId" [placeholder]="'sanita.placeholders.cowId' | translate">
+            </div>
+
+            <div class="col-md-4">
+              <label class="form-label">{{ 'sanita.fields.eventType' | translate }} <span class="text-danger">*</span></label>
+              <select class="form-select" formControlName="eventType">
+                <option *ngFor="let t of eventTypes" [value]="t">{{ t | translate }}</option>
+              </select>
+            </div>
+
+            <div class="col-md-6">
+              <label class="form-label">{{ 'sanita.fields.diagnosis' | translate }}</label>
+              <input type="text" class="form-control" formControlName="diagnosis" [placeholder]="'sanita.placeholders.diagnosis' | translate">
+            </div>
+
+            <div class="col-md-6">
+              <label class="form-label">{{ 'sanita.fields.treatment' | translate }}</label>
+              <input type="text" class="form-control" formControlName="treatment" [placeholder]="'sanita.placeholders.treatment' | translate">
+            </div>
+
+            <div class="col-md-6">
+              <label class="form-label">{{ 'sanita.fields.veterinarian' | translate }}</label>
+              <input type="text" class="form-control" formControlName="veterinarianName" [placeholder]="'sanita.placeholders.veterinarian' | translate">
+            </div>
+
+            <div class="col-md-3">
+              <label class="form-label">{{ 'sanita.fields.withholdingDays' | translate }}</label>
+              <input type="number" class="form-control" formControlName="withholdingDays" min="0" [placeholder]="'sanita.placeholders.withholdingDays' | translate">
+              <small class="text-muted">{{ 'sanita.help.withholdingDays' | translate }}</small>
+            </div>
+
+            <div class="col-12">
+              <label class="form-label">{{ 'sanita.fields.notes' | translate }}</label>
+              <textarea class="form-control" formControlName="notes" rows="2" [placeholder]="'sanita.placeholders.notes' | translate"></textarea>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button class="btn" (click)="closeModal()">{{ 'common.cancel' | translate }}</button>
+        <button class="btn add-btn" [disabled]="isSaving" (click)="save()">
+          {{ isSaving ? ('common.saving' | translate) : ((isEdit ? 'common.update' : 'common.save') | translate) }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

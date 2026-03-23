@@ -5,10 +5,9 @@ import { PERMISSIONS } from './core/constants/permissions.constants';
 import { firstLoginGuard } from './core/auth/first-login.guard';
 
 export const routes: Routes = [
-  // Public Routes
+  // ── Public Routes ──────────────────────────────────────────
   {
     path: 'login',
-    // canActivate: [companyGuard],
     loadComponent: () =>
       import('./features/auth/login/login.component').then(
         (m) => m.LoginComponent,
@@ -30,6 +29,7 @@ export const routes: Routes = [
       ),
   },
 
+  // ── Layout (authenticated) ─────────────────────────────────
   {
     path: '',
     loadComponent: () =>
@@ -60,7 +60,6 @@ export const routes: Routes = [
             (m) => m.CompanyListComponent,
           ),
       },
-
       {
         path: 'users',
         canActivate: [permissionGuard],
@@ -77,7 +76,6 @@ export const routes: Routes = [
             (m) => m.ListComponent,
           ),
       },
-
       {
         path: 'roles',
         canActivate: [permissionGuard],
@@ -94,7 +92,6 @@ export const routes: Routes = [
             (m) => m.RoleComponent,
           ),
       },
-
       {
         path: 'notifications',
         canActivate: [permissionGuard],
@@ -223,8 +220,6 @@ export const routes: Routes = [
       },
       {
         path: 'reports',
-        //canActivate: [permissionGuard],
-        // data: { requiredPermissions: [PERMISSIONS.ReportsView, PERMISSIONS.ReportsEdit, PERMISSIONS.ReportsAdd, PERMISSIONS.ReportsDelete] },
         loadComponent: () =>
           import('./features/reports/reports/reports.component').then(
             (m) => m.ReportsComponent,
@@ -246,15 +241,6 @@ export const routes: Routes = [
             (m) => m.KpiListComponent,
           ),
       },
-      // {
-      //   path: 'calvesration',
-      //   canActivate: [permissionGuard],
-      //   data: { requiredPermissions: [PERMISSIONS.CalvesRationView, PERMISSIONS.CalvesRationEdit, PERMISSIONS.CalvesRationAdd, PERMISSIONS.CalvesRationDelete] },
-      //   loadComponent: () =>
-      //     import('./features/calves/calves-list/calves-list.component')
-      //       .then(m => m.CalvesListComponent),
-      // },
-
       {
         path: 'animalType',
         canActivate: [permissionGuard],
@@ -287,7 +273,103 @@ export const routes: Routes = [
             (m) => m.AnimalLactationListComponent,
           ),
       },
-
+      // ── NEW NUTRI FARM MODULE ROUTES ────────────────────────
+      {
+        path: 'daily-entry',
+        canActivate: [permissionGuard],
+        data: {
+          requiredPermissions: [
+            PERMISSIONS.DailyEntryView,
+            PERMISSIONS.DailyEntryAdd,
+            PERMISSIONS.DailyEntryEdit,
+            PERMISSIONS.DailyEntryDelete,
+          ],
+        },
+        loadComponent: () =>
+          import('./features/daily-entry/daily-entry.component').then(
+            (m) => m.DailyEntryComponent,
+          ),
+      },
+      {
+        path: 'archive',
+        canActivate: [permissionGuard],
+        data: {
+          requiredPermissions: [
+            PERMISSIONS.ArchiveView,
+            PERMISSIONS.ArchiveAdd,
+            PERMISSIONS.ArchiveEdit,
+            PERMISSIONS.ArchiveDelete,
+          ],
+        },
+        loadComponent: () =>
+          import('./features/archive/archive.component').then(
+            (m) => m.ArchiveComponent,
+          ),
+      },
+      {
+        path: 'parti',
+        canActivate: [permissionGuard],
+        data: {
+          requiredPermissions: [
+            PERMISSIONS.PartiView,
+            PERMISSIONS.PartiAdd,
+            PERMISSIONS.PartiEdit,
+            PERMISSIONS.PartiDelete,
+          ],
+        },
+        loadComponent: () =>
+          import('./features/parti/parti-list.component').then(
+            (m) => m.PartiListComponent,
+          ),
+      },
+      {
+        path: 'sanita',
+        canActivate: [permissionGuard],
+        data: {
+          requiredPermissions: [
+            PERMISSIONS.SanitaView,
+            PERMISSIONS.SanitaAdd,
+            PERMISSIONS.SanitaEdit,
+            PERMISSIONS.SanitaDelete,
+          ],
+        },
+        loadComponent: () =>
+          import('./features/sanita/sanita-list.component').then(
+            (m) => m.SanitaListComponent,
+          ),
+      },
+      {
+        path: 'fertilita',
+        canActivate: [permissionGuard],
+        data: {
+          requiredPermissions: [
+            PERMISSIONS.FertilitaView,
+            PERMISSIONS.FertilitaAdd,
+            PERMISSIONS.FertilitaEdit,
+            PERMISSIONS.FertilitaDelete,
+          ],
+        },
+        loadComponent: () =>
+          import('./features/fertilita/fertilita-list.component').then(
+            (m) => m.FertilitaListComponent,
+          ),
+      },
+      {
+        path: 'milk-price-history',
+        canActivate: [permissionGuard],
+        data: {
+          requiredPermissions: [
+            PERMISSIONS.MilkPriceHistoryView,
+            PERMISSIONS.MilkPriceHistoryAdd,
+            PERMISSIONS.MilkPriceHistoryEdit,
+            PERMISSIONS.MilkPriceHistoryDelete,
+          ],
+        },
+        loadComponent: () =>
+          import('./features/milk-price-history/milk-price-history.component').then(
+            (m) => m.MilkPriceHistoryComponent,
+          ),
+      },
       {
         path: 'animalGroup',
         canActivate: [permissionGuard],
@@ -322,8 +404,6 @@ export const routes: Routes = [
       },
       {
         path: 'template',
-        // canActivate: [permissionGuard],
-        // data: { requiredPermissions: [PERMISSIONS.EmailConfigurationAdd, PERMISSIONS.EmailConfigurationEdit, PERMISSIONS.EmailConfigurationView, PERMISSIONS.EmailConfigurationDelete] },
         loadComponent: () =>
           import('./features/template-builder/template-builder.component').then(
             (m) => m.TemplateBuilderComponent,
@@ -331,8 +411,6 @@ export const routes: Routes = [
       },
       {
         path: 'operators',
-        // canActivate: [permissionGuard],
-        // data: { requiredPermissions: [PERMISSIONS.EmailConfigurationAdd, PERMISSIONS.EmailConfigurationEdit, PERMISSIONS.EmailConfigurationView, PERMISSIONS.EmailConfigurationDelete] },
         loadComponent: () =>
           import('./features/operators/operator-list/operator-list.component').then(
             (m) => m.OperatorListComponent,
@@ -356,8 +434,6 @@ export const routes: Routes = [
       },
       {
         path: 'technicalReport',
-        // canActivate: [permissionGuard],
-        // data: { requiredPermissions: [PERMISSIONS.FormulaAdd, PERMISSIONS.formulasEdit, PERMISSIONS.formulasView, PERMISSIONS.formulasDelete] },
         loadComponent: () =>
           import('./features/technicalReport/technical-report-list/technical-report-list.component').then(
             (m) => m.TechnicalReportListComponent,
@@ -365,8 +441,6 @@ export const routes: Routes = [
       },
       {
         path: 'language',
-        // canActivate: [permissionGuard],
-        // data: { requiredPermissions: [PERMISSIONS.FormulaAdd, PERMISSIONS.formulasEdit, PERMISSIONS.formulasView, PERMISSIONS.formulasDelete] },
         loadComponent: () =>
           import('./features/language/language-list/language-list.component').then(
             (m) => m.LanguageListComponent,
@@ -374,8 +448,6 @@ export const routes: Routes = [
       },
       {
         path: 'economic-report',
-        // canActivate: [permissionGuard],
-        // data: { requiredPermissions: [PERMISSIONS.FormulaAdd, PERMISSIONS.formulasEdit, PERMISSIONS.formulasView, PERMISSIONS.formulasDelete] },
         loadComponent: () =>
           import('./features/economic-report/economic-report-list/economic-report-list.component').then(
             (m) => m.EconomicReportListComponent,
@@ -383,8 +455,6 @@ export const routes: Routes = [
       },
       {
         path: 'nutrition',
-        // canActivate: [permissionGuard],
-        // data: { requiredPermissions: [PERMISSIONS.FormulaAdd, PERMISSIONS.formulasEdit, PERMISSIONS.formulasView, PERMISSIONS.formulasDelete] },
         loadComponent: () =>
           import('./features/nutrition/nutrition/nutrition.component').then(
             (m) => m.NutritionComponent,
@@ -438,31 +508,22 @@ export const routes: Routes = [
             (m) => m.SupplierPriceListComponent,
           ),
       },
-
       {
         path: 'supplier-pricing-formula',
-        // canActivate: [permissionGuard],
-        // data: { requiredPermissions: [PERMISSIONS.SupplierPriceAdd, PERMISSIONS.SupplierPriceEdit, PERMISSIONS.SupplierPriceView, PERMISSIONS.SupplierPriceDelete] },
         loadComponent: () =>
           import('./features/supplier-pricing-formula/supplier-pricing-formula-list/supplier-pricing-formula-list.component').then(
             (m) => m.SupplierPricingFormulaListComponent,
           ),
       },
-
       {
         path: 'calfbarn',
-        // canActivate: [permissionGuard],
-        // data: { requiredPermissions: [PERMISSIONS.SupplierPriceAdd, PERMISSIONS.SupplierPriceEdit, PERMISSIONS.SupplierPriceView, PERMISSIONS.SupplierPriceDelete] },
         loadComponent: () =>
           import('./features/calfbarn/calfbarn-list/calfbarn-list.component').then(
             (m) => m.CalfbarnListComponent,
           ),
       },
-
       {
         path: 'pricingSetting',
-        // canActivate: [permissionGuard],
-        // data: { requiredPermissions: [PERMISSIONS.SupplierPriceAdd, PERMISSIONS.SupplierPriceEdit, PERMISSIONS.SupplierPriceView, PERMISSIONS.SupplierPriceDelete] },
         loadComponent: () =>
           import('./features/supplier-pricing-setting/supplier-pricing-setting/supplier-pricing-setting.component').then(
             (m) => m.SupplierPricingSettingComponent,
@@ -470,8 +531,6 @@ export const routes: Routes = [
       },
       {
         path: 'product',
-        // canActivate: [permissionGuard],
-        // data: { requiredPermissions: [PERMISSIONS.SupplierPriceAdd, PERMISSIONS.SupplierPriceEdit, PERMISSIONS.SupplierPriceView, PERMISSIONS.SupplierPriceDelete] },
         loadComponent: () =>
           import('./features/product/product-list/product-list.component').then(
             (m) => m.ProductListComponent,
@@ -479,8 +538,6 @@ export const routes: Routes = [
       },
       {
         path: 'productpricing',
-        // canActivate: [permissionGuard],
-        // data: { requiredPermissions: [PERMISSIONS.SupplierPriceAdd, PERMISSIONS.SupplierPriceEdit, PERMISSIONS.SupplierPriceView, PERMISSIONS.SupplierPriceDelete] },
         loadComponent: () =>
           import('./features/product-price/product-price-list/product-price-list.component').then(
             (m) => m.ProductPriceListComponent,
@@ -488,13 +545,14 @@ export const routes: Routes = [
       },
       {
         path: 'productbuild',
-        // canActivate: [permissionGuard],
-        // data: { requiredPermissions: [PERMISSIONS.SupplierPriceAdd, PERMISSIONS.SupplierPriceEdit, PERMISSIONS.SupplierPriceView, PERMISSIONS.SupplierPriceDelete] },
         loadComponent: () =>
           import('./features/product-build/product-build-list/product-build-list.component').then(
             (m) => m.ProductBuildListComponent,
           ),
       },
+
+      
+      // ────────────────────────────────────────────────────────
 
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
     ],
@@ -507,10 +565,5 @@ export const routes: Routes = [
         (m) => m.NotFoundComponent,
       ),
   },
-  {
-    path: '**',
-    redirectTo: '404',
-  },
+  { path: '**', redirectTo: '404' },
 ];
-
-
