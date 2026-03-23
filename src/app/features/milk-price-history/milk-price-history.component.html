@@ -1,59 +1,52 @@
-<!-- milk-price-history.component.html -->
 <div class="table-card">
   <div class="table-card-header d-flex justify-content-between align-items-center">
-    <strong>Milk Price History</strong>
-    <small class="text-muted">Set monthly prices — retroactive correction supported</small>
+    <strong>{{ 'milkPriceHistory.title' | translate }}</strong>
+    <small class="text-muted">{{ 'milkPriceHistory.subtitle' | translate }}</small>
   </div>
 
   <div class="row g-0">
-    <!-- LEFT: form to add/edit a month -->
     <div class="col-md-5 border-end p-3">
       <p class="text-muted mb-3" style="font-size:12px;">
-        Enter or update the milk price for a month.
-        Click any row on the right to load it for editing.
+        {{ 'milkPriceHistory.description.line1' | translate }}
+        {{ 'milkPriceHistory.description.line2' | translate }}
       </p>
       <form [formGroup]="form">
         <div class="row g-2">
           <div class="col-12">
-            <label class="form-label form-label-sm">Month <span class="text-danger">*</span></label>
+            <label class="form-label form-label-sm">{{ 'milkPriceHistory.fields.month' | translate }} <span class="text-danger">*</span></label>
             <input type="month" class="form-control form-control-sm" formControlName="priceMonth">
           </div>
           <div class="col-6">
-            <label class="form-label form-label-sm">Aziendali €/L <span class="text-danger">*</span></label>
-            <input type="number" class="form-control form-control-sm" formControlName="priceAziendali"
-              step="0.001" placeholder="0.000">
+            <label class="form-label form-label-sm">{{ 'milkPriceHistory.fields.aziendaliPrice' | translate }} <span class="text-danger">*</span></label>
+            <input type="number" class="form-control form-control-sm" formControlName="priceAziendali" step="0.001" placeholder="0.000">
           </div>
           <div class="col-6">
-            <label class="form-label form-label-sm">Mercato €/L</label>
-            <input type="number" class="form-control form-control-sm" formControlName="priceMercato"
-              step="0.001" placeholder="0.000">
+            <label class="form-label form-label-sm">{{ 'milkPriceHistory.fields.mercatoPrice' | translate }}</label>
+            <input type="number" class="form-control form-control-sm" formControlName="priceMercato" step="0.001" placeholder="0.000">
           </div>
           <div class="col-6">
-            <label class="form-label form-label-sm">Quality Bonus €/L</label>
-            <input type="number" class="form-control form-control-sm" formControlName="qualityBonus"
-              step="0.001" placeholder="0.000">
+            <label class="form-label form-label-sm">{{ 'milkPriceHistory.fields.qualityBonus' | translate }}</label>
+            <input type="number" class="form-control form-control-sm" formControlName="qualityBonus" step="0.001" placeholder="0.000">
           </div>
           <div class="col-6 d-flex align-items-end pb-1">
             <div class="form-check">
               <input type="checkbox" class="form-check-input" formControlName="isFinalized" id="finalized">
-              <label class="form-check-label form-label-sm" for="finalized">Finalized</label>
+              <label class="form-check-label form-label-sm" for="finalized">{{ 'milkPriceHistory.fields.finalized' | translate }}</label>
             </div>
           </div>
           <div class="col-12">
-            <label class="form-label form-label-sm">Notes</label>
-            <input type="text" class="form-control form-control-sm" formControlName="notes"
-              placeholder="e.g. End-of-month correction">
+            <label class="form-label form-label-sm">{{ 'milkPriceHistory.fields.notes' | translate }}</label>
+            <input type="text" class="form-control form-control-sm" formControlName="notes" [placeholder]="'milkPriceHistory.placeholders.notes' | translate">
           </div>
           <div class="col-12 mt-2">
             <button class="btn add-btn btn-sm w-100" [disabled]="isSaving" (click)="save()">
-              {{ isSaving ? 'Saving...' : '💾 Save Price' }}
+              {{ isSaving ? ('common.saving' | translate) : ('milkPriceHistory.actions.savePrice' | translate) }}
             </button>
           </div>
         </div>
       </form>
     </div>
 
-    <!-- RIGHT: price history table -->
     <div class="col-md-7 p-3">
       <div *ngIf="isLoading" class="text-center py-3">
         <div class="spinner-border spinner-border-sm text-primary"></div>
@@ -61,27 +54,27 @@
       <table class="table table-sm table-hover mb-0" *ngIf="!isLoading">
         <thead class="table-light">
           <tr>
-            <th>Month</th>
-            <th>Aziendali</th>
-            <th>Mercato</th>
-            <th>Quality Bonus</th>
-            <th>Status</th>
+            <th>{{ 'milkPriceHistory.columns.month' | translate }}</th>
+            <th>{{ 'milkPriceHistory.columns.aziendali' | translate }}</th>
+            <th>{{ 'milkPriceHistory.columns.mercato' | translate }}</th>
+            <th>{{ 'milkPriceHistory.columns.qualityBonus' | translate }}</th>
+            <th>{{ 'milkPriceHistory.columns.status' | translate }}</th>
           </tr>
         </thead>
         <tbody>
           <tr *ngFor="let h of history" style="cursor:pointer" (click)="loadMonthIntoForm(h)">
             <td class="fw-500">{{ h.priceMonth }}</td>
             <td>{{ h.priceAziendali | number:'1.3-3' }}</td>
-            <td>{{ h.priceMercato != null ? (h.priceMercato | number:'1.3-3') : '—' }}</td>
-            <td>{{ h.qualityBonus != null ? (h.qualityBonus | number:'1.3-3') : '—' }}</td>
+            <td>{{ h.priceMercato != null ? (h.priceMercato | number:'1.3-3') : '-' }}</td>
+            <td>{{ h.qualityBonus != null ? (h.qualityBonus | number:'1.3-3') : '-' }}</td>
             <td>
               <span class="badge" [ngClass]="h.isFinalized ? 'bg-success' : 'bg-warning text-dark'">
-                {{ h.isFinalized ? 'Finalized' : 'Draft' }}
+                {{ h.isFinalized ? ('milkPriceHistory.status.finalized' | translate) : ('milkPriceHistory.status.draft' | translate) }}
               </span>
             </td>
           </tr>
           <tr *ngIf="history.length === 0">
-            <td colspan="5" class="text-center text-muted py-3">No price history yet.</td>
+            <td colspan="5" class="text-center text-muted py-3">{{ 'milkPriceHistory.messages.noData' | translate }}</td>
           </tr>
         </tbody>
       </table>

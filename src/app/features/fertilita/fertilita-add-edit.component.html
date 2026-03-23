@@ -1,71 +1,68 @@
-<!-- fertilita-add-edit.component.html -->
 <div #modal class="modal fade" tabindex="-1">
   <div class="modal-dialog modal-lg modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title">{{ isEdit ? 'Edit Fertility Record' : 'Add Fertility Record' }}</h5>
+        <h5 class="modal-title">{{ (isEdit ? 'fertilita.modal.editTitle' : 'fertilita.modal.addTitle') | translate }}</h5>
         <button class="btn-close" (click)="closeModal()"></button>
       </div>
       <div class="modal-body">
         <form [formGroup]="form">
           <div class="row g-3">
-
             <div class="col-md-4">
-              <label class="form-label">Date <span class="text-danger">*</span></label>
+              <label class="form-label">{{ 'fertilita.fields.date' | translate }} <span class="text-danger">*</span></label>
               <input type="date" class="form-control" formControlName="recordDate">
             </div>
 
             <div class="col-md-4">
-              <label class="form-label">Cow ID / Ear Tag</label>
-              <input type="text" class="form-control" formControlName="cowId" placeholder="e.g. IT001">
+              <label class="form-label">{{ 'fertilita.fields.cowId' | translate }}</label>
+              <input type="text" class="form-control" formControlName="cowId" [placeholder]="'fertilita.placeholders.cowId' | translate">
             </div>
 
             <div class="col-md-4">
-              <label class="form-label">Cow Name</label>
+              <label class="form-label">{{ 'fertilita.fields.cowName' | translate }}</label>
               <input type="text" class="form-control" formControlName="cowName">
             </div>
 
             <div class="col-md-4">
-              <label class="form-label">Event Type <span class="text-danger">*</span></label>
+              <label class="form-label">{{ 'fertilita.fields.eventType' | translate }} <span class="text-danger">*</span></label>
               <select class="form-select" formControlName="eventType">
-                <option *ngFor="let t of eventTypes" [value]="t">{{ t }}</option>
+                <option *ngFor="let t of eventTypes" [value]="t">{{ t | translate }}</option>
               </select>
             </div>
 
             <div class="col-md-4">
-              <label class="form-label">Result</label>
+              <label class="form-label">{{ 'fertilita.fields.result' | translate }}</label>
               <select class="form-select" formControlName="result">
-                <option *ngFor="let r of resultOptions" [value]="r">{{ r }}</option>
+                <option *ngFor="let r of resultOptions" [value]="r">{{ r | translate }}</option>
               </select>
             </div>
 
             <div class="col-md-4">
-              <label class="form-label">Days in Milk</label>
+              <label class="form-label">{{ 'fertilita.fields.daysInMilk' | translate }}</label>
               <input type="number" class="form-control" formControlName="daysInMilk" min="0">
             </div>
 
             <div class="col-md-4" *ngIf="showBullCode()">
-              <label class="form-label">Bull / Semen Code</label>
-              <input type="text" class="form-control" formControlName="bullCode" placeholder="e.g. BULL001">
+              <label class="form-label">{{ 'fertilita.fields.bullCode' | translate }}</label>
+              <input type="text" class="form-control" formControlName="bullCode" [placeholder]="'fertilita.placeholders.bullCode' | translate">
             </div>
 
             <div class="col-md-4" *ngIf="showPregnancyDays()">
-              <label class="form-label">Est. Days Pregnant</label>
+              <label class="form-label">{{ 'fertilita.fields.estimatedDaysPregnant' | translate }}</label>
               <input type="number" class="form-control" formControlName="estimatedDaysPregnant" min="0">
             </div>
 
             <div class="col-12">
-              <label class="form-label">Notes</label>
-              <textarea class="form-control" formControlName="notes" rows="2" placeholder="Additional observations..."></textarea>
+              <label class="form-label">{{ 'fertilita.fields.notes' | translate }}</label>
+              <textarea class="form-control" formControlName="notes" rows="2" [placeholder]="'fertilita.placeholders.notes' | translate"></textarea>
             </div>
-
           </div>
         </form>
       </div>
       <div class="modal-footer">
-        <button class="btn" (click)="closeModal()">Cancel</button>
+        <button class="btn" (click)="closeModal()">{{ 'common.cancel' | translate }}</button>
         <button class="btn add-btn" [disabled]="isSaving" (click)="save()">
-          {{ isSaving ? 'Saving...' : (isEdit ? 'Update' : 'Save') }}
+          {{ isSaving ? ('common.saving' | translate) : ((isEdit ? 'common.update' : 'common.save') | translate) }}
         </button>
       </div>
     </div>

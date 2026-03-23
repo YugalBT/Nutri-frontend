@@ -1,20 +1,20 @@
-// milk-price-history.component.ts
-import { Component, Input, OnInit, OnDestroy } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
+import { API_ENDPOINTS } from '../../core/constants/api-endpoints';
+import { TranslatePipe } from '../../i18n/translate.pipe';
+import { TranslateService } from '../../i18n/translate.service';
 import { HttpService } from '../../shared/services/http.service';
 import { ToastService } from '../../shared/services/toast.service';
-import { API_ENDPOINTS } from '../../core/constants/api-endpoints';
 
 @Component({
   selector: 'app-milk-price-history',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, TranslatePipe],
   templateUrl: './milk-price-history.component.html'
 })
 export class MilkPriceHistoryComponent implements OnInit, OnDestroy {
-
   @Input() farmId!: string;
 
   history: any[] = [];
@@ -26,7 +26,8 @@ export class MilkPriceHistoryComponent implements OnInit, OnDestroy {
   constructor(
     private fb: FormBuilder,
     private http: HttpService,
-    private toast: ToastService
+    private toast: ToastService,
+    private translate: TranslateService
   ) { }
 
   ngOnInit(): void {
@@ -52,8 +53,13 @@ export class MilkPriceHistoryComponent implements OnInit, OnDestroy {
     this.isLoading = true;
     const sub = this.http.get<any>(`${API_ENDPOINTS.MILK_PRICE_HISTORY.GET_BY_FARM}/${this.farmId}`)
       .subscribe({
-        next: (res) => { this.history = res?.data ?? []; this.isLoading = false; },
-        error: () => { this.isLoading = false; }
+        next: (res) => {
+          this.history = res?.data ?? [];
+          this.isLoading = false;
+        },
+        error: () => {
+          this.isLoading = false;
+        }
       });
     this.subs.push(sub);
   }
@@ -70,20 +76,33 @@ export class MilkPriceHistoryComponent implements OnInit, OnDestroy {
   }
 
   save(): void {
-    if (this.form.invalid || this.isSaving) { this.form.markAllAsTouched(); return; }
+    if (this.form.invalid || this.isSaving) {
+      this.form.markAllAsTouched();
+      return;
+    }
+
     this.isSaving = true;
     const payload = { ...this.form.value, farmId: this.farmId };
 
     const sub = this.http.post<any>(API_ENDPOINTS.MILK_PRICE_HISTORY.SAVE, payload).subscribe({
       next: (res) => {
-        if (res.isSuccess) { this.toast.success(res.message); this.load(); }
-        else this.toast.error(res.message);
+        if (res.isSuccess) {
+          this.toast.success(res.message);
+          this.load();
+        } else {
+          this.toast.error(res.message);
+        }
         this.isSaving = false;
       },
-      error: () => { this.toast.error('Error saving price'); this.isSaving = false; }
+      error: () => {
+        this.toast.error(this.translate.instant('milkPriceHistory.messages.saveError'));
+        this.isSaving = false;
+      }
     });
     this.subs.push(sub);
   }
 
-  ngOnDestroy(): void { this.subs.forEach(s => s.unsubscribe()); }
+  ngOnDestroy(): void {
+    this.subs.forEach(s => s.unsubscribe());
+  }
 }

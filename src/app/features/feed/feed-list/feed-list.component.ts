@@ -9,7 +9,7 @@ import { ApiResponse } from '../../../core/models/api-response';
 import { SharedModule } from '../../../shared/shared.module';
 import { ReusableTableComponent } from '../../../shared/components/reusable-table/reusable-table.component';
 import { GlobalSearchComponent } from '../../../shared/components/global-search/global-search.component';
-import { FeedAddEditComponent } from "../feed-add-edit/feed-add-edit.component";
+import { FeedAddEditComponent } from '../feed-add-edit/feed-add-edit.component';
 import { CommonService } from '../../../shared/services/common.service';
 import { PERMISSIONS } from '../../../core/constants/permissions.constants';
 import { TranslatePipe } from '../../../i18n/translate.pipe';
@@ -37,7 +37,6 @@ export class FeedListComponent {
   subs: Subscription[] = [];
   langSub!: Subscription;
   @ViewChild(FeedAddEditComponent) feedModalRef!: FeedAddEditComponent;
-
 
   constructor(
     private translate: TranslateService,
@@ -114,7 +113,7 @@ export class FeedListComponent {
 
     const id = event?.row?.feedId;
     if (!id) {
-      this.toast.error("Invalid feed id");
+      this.toast.error('Invalid feed id');
       return;
     }
 
@@ -135,16 +134,15 @@ export class FeedListComponent {
   }
 
   onDelete(row: any): void {
-
     if (!this.commonService.checkPermission(PERMISSIONS.FeedDelete))
       return;
     const id = row?.feedId;
     if (!id) {
-      this.toast.error("Invalid feed id");
+      this.toast.error('Invalid feed id');
       return;
     }
 
-    this.confirm.confirm("Are you sure you want to delete this feed?")
+    this.confirm.confirm('Are you sure you want to delete this feed?')
       .subscribe((confirmed) => {
         if (!confirmed) return;
 
@@ -160,35 +158,27 @@ export class FeedListComponent {
       });
   }
 
+  // ── Mattia's 5 columns only (Req #4)
+  // Removed: Protein, NDF, Energy, ADF, FatContent, Calcium, Phosphorus, Starch
   private setColumns(): void {
     this.columns = [
-      this.translate.instant('feed.columns.feed') ?? " ",
-      this.translate.instant('feed.columns.category') ?? " ",
-      this.translate.instant('feed.columns.dm') ?? " ",
-      this.translate.instant('feed.columns.cp') ?? " ",
-      this.translate.instant('feed.columns.ndf') ?? " ",
-      this.translate.instant('feed.columns.energy') ?? " ",
-      this.translate.instant('feed.columns.price') ?? " ",
-      this.translate.instant('feed.columns.phosphorus') ?? " ",
-      this.translate.instant('feed.columns.starch') ?? " ",
-      this.translate.instant('common.status') ?? " "
+      this.translate.instant('feed.columns.feed') ?? 'Feed Name',
+      this.translate.instant('feed.columns.category') ?? 'Category',
+      this.translate.instant('feed.columns.dm') ?? 'Dry Matter %',
+      this.translate.instant('feed.columns.price') ?? 'Price / ton',
+      'VAT',
+      this.translate.instant('common.status') ?? 'Status'
     ];
-
 
     this.columnFields = [
       'feedName',
       'category',
       'dryMatter',
-      'protein',
-      'ndf',
-      'energy',
       'pricePerKg',
-      'phosphorus',
-      'starch',
+      'vatApplicable',
       'isActive'
     ];
   }
-
 
   ngOnDestroy(): void {
     this.langSub?.unsubscribe();
@@ -196,10 +186,8 @@ export class FeedListComponent {
   }
 
   openAddFeedModal(): void {
-  this.feedModalRef.openModal(false, {
-    farmId: this.farmId
-  });
-}
-
-  
+    this.feedModalRef.openModal(false, {
+      farmId: this.farmId
+    });
+  }
 }
