@@ -17,7 +17,7 @@ declare var bootstrap: any;
 })
 export class PartiAddEditComponent implements OnDestroy {
 
-  @ViewChild('modal') modalRef!: ElementRef;
+  @ViewChild('modal', { static: true }) modalRef!: ElementRef;
   @Input() farmId!: string;
   @Output() saved = new EventEmitter<void>();
 
@@ -61,7 +61,12 @@ export class PartiAddEditComponent implements OnDestroy {
       });
     }
 
-    this.modal = new bootstrap.Modal(this.modalRef.nativeElement);
+    const modalElement = this.modalRef?.nativeElement;
+    if (!modalElement) {
+      return;
+    }
+
+    this.modal = new bootstrap.Modal(modalElement);
     this.modal.show();
   }
 

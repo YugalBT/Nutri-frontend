@@ -17,7 +17,7 @@ declare var bootstrap: any;
 })
 export class SanitaAddEditComponent implements OnDestroy {
 
-  @ViewChild('modal') modalRef!: ElementRef;
+  @ViewChild('modal', { static: true }) modalRef!: ElementRef;
   @Input() farmId!: string;
   @Output() saved = new EventEmitter<void>();
 
@@ -58,7 +58,12 @@ export class SanitaAddEditComponent implements OnDestroy {
       });
     }
 
-    this.modal = new bootstrap.Modal(this.modalRef.nativeElement);
+    const modalElement = this.modalRef?.nativeElement;
+    if (!modalElement) {
+      return;
+    }
+
+    this.modal = new bootstrap.Modal(modalElement);
     this.modal.show();
   }
 
