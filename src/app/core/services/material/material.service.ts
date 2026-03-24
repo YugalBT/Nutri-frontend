@@ -51,9 +51,13 @@ export class MaterialService {
     return this.http.post<any>(API_ENDPOINTS.MATERIAL.IMPORTMATERIAL,formData);
   }
 
-  exportMaterials(): Observable<Blob> {
-    return this.http.getFile(
-      API_ENDPOINTS.MATERIAL.EXPORTMATERIAL
-    );
+  exportMaterials(): Observable<any> {
+  return this.http.get(API_ENDPOINTS.MATERIAL.EXPORTMATERIAL);
+
+  }
+
+  exportSampleCSV(): Observable<any> {
+    return this.http.get(API_ENDPOINTS.MATERIAL.EXPORTSAMPLECSV);
   }
 }
+

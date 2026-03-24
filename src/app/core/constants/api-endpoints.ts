@@ -30,7 +30,7 @@ export const API_ENDPOINTS = {
   },
 
   COMMON_API: {
-    GET_ALL_TENANT : '/Common/GetAllTenant',
+    GET_ALL_TENANT: '/Common/GetAllTenant',
     GET_ALL_ROLES: '/Common/GetAllRoles',
     GET_ALL_NOTIFICATION: '/Common/GetAllNotification',
     GET_ALL_FARMS: '/Common/GetAllFarm',
@@ -235,8 +235,9 @@ export const API_ENDPOINTS = {
     ACTIVE_INACTIVE: '/Material/ActiveInActive',
     GET_ALL: '/Material/GetAll',
     GENERATE_SUPPLIER_CODE: '/Material/GenerateMaterialCode',
-     IMPORTMATERIAL: '/Material/ImportMaterials',
-  EXPORTMATERIAL: '/Material/ExportMaterials',
+    IMPORTMATERIAL: '/Material/ImportMaterials',
+    EXPORTMATERIAL: '/Material/ExportMaterials',
+    EXPORTSAMPLECSV: '/Material/DownloadSample',
   },
 
   PRODUCT: {
@@ -265,21 +266,21 @@ export const API_ENDPOINTS = {
     ACTIVE_INACTIVE: '/MstFormula/ActiveInActive',
     GET_ALL: '/MstFormula/GetAll',
     VALIDATE_FORMULA: '/MstFormula/Validate',
-    
+
   },
 
-   CALFBARN: {
+  CALFBARN: {
     CREATE: '/CalfBarn/Create',
     UPDATE: '/CalfBarn/Update',
     DELETE: '/CalfBarn/Delete',
     ACTIVE_INACTIVE: '/CalfBarn/ActiveInActive',
     GET_ALL: '/CalfBarn/GetAll',
   },
-   PRICINGSETTING: {
+  PRICINGSETTING: {
     UPDATE: '/PricingSetting/Add',
     GET_ALL: '/PricingSetting/GetAll',
   },
-   PRODUCTPRICING: {
+  PRODUCTPRICING: {
     CREATE: '/ProductPricing/Create',
     GET_ALL: '/ProductPricing/GetAll',
     UPDATE: '/ProductPricing/Update',
@@ -298,35 +299,35 @@ export const API_ENDPOINTS = {
     GET_BY_ID: '/ProductBuild/GetById',
   },
   DAY_DATA: {
-  SAVE:             '/DayData/Save',
-  GET_BY_DAY_ID:    '/DayData/GetByDayId',
-  ARCHIVE:          '/DayData/Archive',
-  BULK_RECALC:      '/DayData/BulkRecalculate',
-},
+    SAVE: '/DayData/Save',
+    GET_BY_DAY_ID: '/DayData/GetByDayId',
+    ARCHIVE: '/DayData/Archive',
+    BULK_RECALC: '/DayData/BulkRecalculate',
+  },
 
-MILK_PRICE_HISTORY: {
-  SAVE:             '/MilkPriceHistory/Save',
-  GET_BY_FARM:      '/MilkPriceHistory/GetByFarm',
-},
+  MILK_PRICE_HISTORY: {
+    SAVE: '/MilkPriceHistory/Save',
+    GET_BY_FARM: '/MilkPriceHistory/GetByFarm',
+  },
 
-CALVING: {
-  CREATE:           '/Calving/Create',
-  UPDATE:           '/Calving/Update',
-  DELETE:           '/Calving/Delete',
-  GET_ALL:          '/Calving/GetAll',
-},
+  CALVING: {
+    CREATE: '/Calving/Create',
+    UPDATE: '/Calving/Update',
+    DELETE: '/Calving/Delete',
+    GET_ALL: '/Calving/GetAll',
+  },
 
-HEALTH_EVENT: {
-  CREATE:           '/HealthEvent/Create',
-  UPDATE:           '/HealthEvent/Update',
-  DELETE:           '/HealthEvent/Delete',
-  GET_ALL:          '/HealthEvent/GetAll',
-},
+  HEALTH_EVENT: {
+    CREATE: '/HealthEvent/Create',
+    UPDATE: '/HealthEvent/Update',
+    DELETE: '/HealthEvent/Delete',
+    GET_ALL: '/HealthEvent/GetAll',
+  },
 
-FERTILITY_RECORD: {
-  CREATE:           '/FertilityRecord/Create',
-  UPDATE:           '/FertilityRecord/Update',
-  DELETE:           '/FertilityRecord/Delete',
-  GET_ALL:          '/FertilityRecord/GetAll',
-},
+  FERTILITY_RECORD: {
+    CREATE: '/FertilityRecord/Create',
+    UPDATE: '/FertilityRecord/Update',
+    DELETE: '/FertilityRecord/Delete',
+    GET_ALL: '/FertilityRecord/GetAll',
+  },
 };

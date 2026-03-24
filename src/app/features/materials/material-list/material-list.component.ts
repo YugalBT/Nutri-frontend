@@ -101,28 +101,66 @@ export class MaterialListComponent implements OnInit, OnDestroy {
 
     this.subs.push(sub);
   }
-
 exportMaterials(): void {
 
-  const sub = this.materialService
-    .exportMaterials()
-    .subscribe((blob: Blob) => {
+  const sub = this.materialService.exportMaterials()
+    .subscribe((res) => {
 
-      const url = window.URL.createObjectURL(blob);
+      if (!res?.isSuccess || !res?.data) {
+        this.toast.error('Export failed');
+        return;
+      }
+
+      // 🔥 Direct Base64 → Blob (short method)
+      const blob = new Blob(
+        [Uint8Array.from(atob(res.data), c => c.charCodeAt(0))],
+        { type: 'text/csv;charset=utf-8;' }
+      );
+
+      const url = URL.createObjectURL(blob);
 
       const link = document.createElement('a');
       link.href = url;
       link.download = 'materials.csv';
       link.click();
 
-      window.URL.revokeObjectURL(url);
+      URL.revokeObjectURL(url);
 
       this.toast.success('Materials exported successfully');
-
     });
 
   this.subs.push(sub);
+}
 
+exportSampleCSV(): void {
+
+  const sub = this.materialService.exportSampleCSV()
+    .subscribe((res) => {
+
+      if (!res?.isSuccess || !res?.data) {
+        this.toast.error('Export failed');
+        return;
+      }
+
+      // 🔥 Direct Base64 → Blob (short method)
+      const blob = new Blob(
+        [Uint8Array.from(atob(res.data), c => c.charCodeAt(0))],
+        { type: 'text/csv;charset=utf-8;' }
+      );
+
+      const url = URL.createObjectURL(blob);
+
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = 'materials.csv';
+      link.click();
+
+      URL.revokeObjectURL(url);
+
+      this.toast.success('Materials exported successfully');
+    });
+
+  this.subs.push(sub);
 }
 
   onSearch(value: string): void {

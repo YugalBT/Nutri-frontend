@@ -31,6 +31,15 @@ declare var bootstrap: any;
 })
 export class MaterialAddEditComponent implements OnInit, OnDestroy {
 
+  unitList: string[] = [
+  'Kg',
+  'Ton',
+  'Gram',
+  'Quintal',
+  'Litre',
+  'Millilitre',
+  'Piece'
+];
   @ViewChild('materialModal') materialModal!: ElementRef;
    private CodeDebounce: any;
   form!: FormGroup;

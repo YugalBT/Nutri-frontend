@@ -3,7 +3,6 @@ import { RouterLink, RouterModule } from '@angular/router';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { Store } from '@ngrx/store';
 import { take } from 'rxjs/operators';
-
 import { TranslatePipe } from '../../i18n/translate.pipe';
 import { AuthService } from '../../core/auth/auth.service';
 import { selectAuthUser } from '../../state/auth/auth.selectors';
