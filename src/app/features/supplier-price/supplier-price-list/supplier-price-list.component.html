@@ -39,6 +39,18 @@
     </div>
   </div>
 
+  <!-- DATE RANGE FILTER SECTION -->
+  <div class="sp-filter-section">
+    <app-date-range-filter
+      [startDate]="filterStartDate"
+      [endDate]="filterEndDate"
+      [label]="'Price Date Range'"
+      [startDateLabel]="'Start Date'"
+      [endDateLabel]="'End Date'"
+      (apply)="onDateFilterApply($event)"
+      (dateRangeChange)="onDateFilterChange($event)"
+    ></app-date-range-filter>
+  </div>
 
   <!-- MATERIALS TABLE SECTION -->
   <div class="sp-table-card">

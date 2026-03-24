@@ -122,7 +122,6 @@
   font-weight: 600;
   cursor: pointer;
   transition: var(--ml-transition-fast);
-  text-transform: uppercase;
   letter-spacing: 0.3px;
   font-family: inherit;
   white-space: nowrap;
