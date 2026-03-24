@@ -186,7 +186,12 @@
                 class="rounded-sm profile-image"
               />
               <div class="profile-right-content">
-                <h3 class="mb-0">{{ user?.firstName }} {{ user?.lastName }}</h3>
+                <div class="name-with-role d-flex align-items-center gap-2">
+                  <h3 class="mb-0">{{ user?.firstName }} {{ user?.lastName }}</h3>
+                  <span class="role-badge" *ngIf="user?.roleType">
+                    {{ user?.roleType }}
+                  </span>
+                </div>
                 <p class="mb-0">{{ user?.email }}</p>
               </div>
             </div>
