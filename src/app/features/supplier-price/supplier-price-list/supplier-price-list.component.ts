@@ -10,11 +10,12 @@ import { SupplierPriceService } from '../../../core/services/supplier-price/supp
 import { FormsModule } from '@angular/forms';
 import { ApiResponse } from '../../../core/models/api-response';
 import { TokenService } from '../../../shared/services/token.service';
+import { DateRangeFilterComponent, DateRangeFilter } from '../../../shared/components/date-range-filter/date-range-filter.component';
 
 @Component({
   selector: 'app-supplier-price-list',
   standalone: true,
-  imports: [SharedModule, TranslatePipe, FormsModule],
+  imports: [SharedModule, TranslatePipe, FormsModule, DateRangeFilterComponent],
   templateUrl: './supplier-price-list.component.html',
   styleUrl: './supplier-price-list.component.css',
 })
@@ -23,6 +24,8 @@ export class SupplierPriceListComponent implements OnInit, OnDestroy {
   suppliers: any[] = [];
   selectedSupplierId: string | null = null;
   selectedMonth: string | null = null;
+  filterStartDate: string | null = null;
+  filterEndDate: string | null = null;
   private subs: Subscription[] = [];
   isSupplier = false;
   supplierData: any = null;
@@ -200,6 +203,37 @@ clearAll(): void {
     this.materials = [];
   }
 }
+
+onDateFilterChange(filter: DateRangeFilter): void {
+  this.filterStartDate = filter.startDate;
+  this.filterEndDate = filter.endDate;
+  this.applyDateFilter();
+}
+
+onDateFilterApply(filter: DateRangeFilter): void {
+  this.filterStartDate = filter.startDate;
+  this.filterEndDate = filter.endDate;
+  this.applyDateFilter();
+}
+
+private applyDateFilter(): void {
+  if (!this.filterStartDate || !this.filterEndDate) {
+    this.onSupplierChange();
+    return;
+  }
+
+  const startDate = new Date(this.filterStartDate);
+  const endDate = new Date(this.filterEndDate);
+
+  const filtered = this.materials.filter((m) => {
+    if (!m.priceMonth) return false;
+    const materialDate = new Date(m.priceMonth + '-01');
+    return materialDate >= startDate && materialDate <= endDate;
+  });
+
+  this.materials = filtered;
+}
+
   private convertToMonthFormat(dateString: string): string {
     const date = new Date(dateString);
     const year = date.getFullYear();

@@ -1,0 +1,48 @@
+<div class="drf-container">
+  <div class="drf-grid">
+    <!-- Start Date -->
+    <div class="drf-form-group">
+      <label class="drf-label">{{ startDateLabel }}</label>
+      <div class="drf-input-wrapper">
+        <i class="bi bi-calendar-event"></i>
+        <input
+          type="date"
+          class="drf-input"
+          [(ngModel)]="localStartDate"
+          (change)="onDateChange()"
+          [max]="localEndDate || undefined"
+        />
+      </div>
+    </div>
+
+    <!-- End Date -->
+    <div class="drf-form-group">
+      <label class="drf-label">{{ endDateLabel }}</label>
+      <div class="drf-input-wrapper">
+        <i class="bi bi-calendar-event"></i>
+        <input
+          type="date"
+          class="drf-input"
+          [(ngModel)]="localEndDate"
+          (change)="onDateChange()"
+          [min]="localStartDate || undefined"
+        />
+      </div>
+    </div>
+
+    <!-- Buttons -->
+    <div class="drf-actions">
+      <button class="drf-btn drf-btn-secondary" (click)="onReset()" title="Reset filters">
+        <i class="bi bi-arrow-clockwise"></i>
+      </button>
+      <button
+        class="drf-btn drf-btn-primary"
+        (click)="onApply()"
+        [disabled]="!localStartDate || !localEndDate"
+        title="Apply filters"
+      >
+        <i class="bi bi-check-circle"></i>
+      </button>
+    </div>
+  </div>
+</div>
