@@ -41,6 +41,12 @@
 
 .pb-modal ::ng-deep .modal-dialog {
   animation: slideInDown 0.4s ease-out;
+  max-width: 800px;
+  width: 90%;
+}
+
+.pb-modal ::ng-deep .modal-dialog.modal-xl {
+  max-width: 800px;
 }
 
 /* MODAL CONTENT */
@@ -50,6 +56,9 @@
   border-radius: var(--pb-border-radius-xl);
   box-shadow: 0 20px 25px rgba(0, 0, 0, 0.1);
   overflow: hidden;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
 }
 
 .dark-mode .pb-modal-content {
@@ -125,8 +134,10 @@
 /* MODAL BODY */
 .pb-modal-body {
   padding: var(--pb-spacing-2xl);
-  max-height: calc(100vh - 250px);
   overflow-y: auto;
+  overflow-x: hidden;
+  flex: 1;
+  max-height: calc(90vh - 160px);
 }
 
 .pb-modal-body::-webkit-scrollbar {
@@ -139,12 +150,12 @@
 }
 
 .pb-modal-body::-webkit-scrollbar-thumb {
-  background: rgba(0, 0, 0, 0.2);
+  background: rgba(44, 162, 143, 0.3);
   border-radius: 3px;
 }
 
 .pb-modal-body::-webkit-scrollbar-thumb:hover {
-  background: rgba(0, 0, 0, 0.3);
+  background: rgba(44, 162, 143, 0.5);
 }
 
 .dark-mode .pb-modal-body::-webkit-scrollbar-track {
@@ -300,15 +311,52 @@
 
 /* MATERIALS TABLE */
 .pb-table-container {
-  overflow-x: auto;
   border-radius: var(--pb-border-radius-lg);
   border: 1px solid rgba(0, 0, 0, 0.06);
   background: white;
+  max-height: 340px;
+  overflow-y: auto;
+  overflow-x: auto;
+}
+
+.pb-table-container::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.pb-table-container::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.02);
+  border-radius: 4px;
+}
+
+.pb-table-container::-webkit-scrollbar-thumb {
+  background: rgba(44, 162, 143, 0.35);
+  border-radius: 4px;
+  border: 2px solid transparent;
+  background-clip: content-box;
+  transition: background 0.2s ease;
+}
+
+.pb-table-container::-webkit-scrollbar-thumb:hover {
+  background: rgba(44, 162, 143, 0.55);
+  background-clip: content-box;
 }
 
 .dark-mode .pb-table-container {
   background: rgba(0, 0, 0, 0.1);
   border-color: rgba(255, 255, 255, 0.06);
+}
+
+.dark-mode .pb-table-container::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.dark-mode .pb-table-container::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.25);
+}
+
+.dark-mode .pb-table-container::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.35);
 }
 
 .pb-materials-table {
@@ -356,7 +404,7 @@
 }
 
 .pb-materials-table td {
-  padding: var(--pb-spacing-lg);
+  padding: var(--pb-spacing-lg) var(--pb-spacing-md);
   border-bottom: 1px solid rgba(0, 0, 0, 0.04);
   color: var(--pb-text-gray);
   font-size: 14px;
@@ -379,19 +427,23 @@
 }
 
 .pb-col-material {
-  min-width: 150px;
+  min-width: 160px;
+  flex: 1;
 }
 
 .pb-col-amount {
-  width: 50px;
+  width: 110px;
+  text-align: right;
 }
 
 .pb-col-percentage {
-  width: 100px;
+  width: 140px;
+  text-align: center;
 }
 
 .pb-col-calculated {
-  width: 120px;
+  width: 140px;
+  text-align: right;
 }
 
 /* CELL CONTENT */
@@ -401,8 +453,14 @@
   border-radius: var(--pb-border-radius);
   border: 1px solid rgba(0, 0, 0, 0.04);
   display: flex;
- 
-  min-height: 36px;
+  align-items: center;
+  justify-content: flex-start;
+  min-height: 40px;
+}
+
+.pb-col-amount .pb-cell-content,
+.pb-col-calculated .pb-cell-content {
+  justify-content: flex-end;
 }
 
 .dark-mode .pb-cell-content {
@@ -437,19 +495,22 @@
   position: relative;
   display: flex;
   align-items: center;
+  justify-content: space-between;
   gap: var(--pb-spacing-sm);
+  width: 100%;
 }
 
 .pb-percentage-input {
   width: 100%;
-  padding: 8px var(--pb-spacing-md);
+  padding: 10px var(--pb-spacing-md);
   border: 1.5px solid rgba(0, 0, 0, 0.08);
   border-radius: var(--pb-border-radius);
-  font-size: 14px;
+  font-size: 15px;
   color: var(--pb-text-dark);
   background: white;
-  font-weight: 500;
+  font-weight: 600;
   transition: var(--pb-transition);
+  text-align: center;
 }
 
 .dark-mode .pb-percentage-input {
@@ -462,6 +523,7 @@
   outline: none;
   border-color: var(--pb-primary);
   box-shadow: 0 0 0 3px rgba(44, 162, 143, 0.1);
+  background: white;
 }
 
 .pb-percentage-input::placeholder {
@@ -473,10 +535,11 @@
 }
 
 .pb-input-unit {
-  font-size: 12px;
-  font-weight: 600;
-  color: var(--pb-text-gray);
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--pb-primary);
   letter-spacing: 0.5px;
+  margin-left: auto;
 }
 
 /* SUMMARY SECTION */
