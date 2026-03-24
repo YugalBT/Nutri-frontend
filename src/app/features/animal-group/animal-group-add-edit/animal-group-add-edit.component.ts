@@ -1,4 +1,3 @@
-// animal-group-add-edit.component.ts (refactored)
 import { Component, ElementRef, EventEmitter, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { forkJoin, Observable, of, Subscription } from 'rxjs';
@@ -18,7 +17,7 @@ declare var bootstrap: any;
 @Component({
   selector: 'app-animal-group-add-edit',
   standalone: true,
-  imports: [SharedModule,TranslatePipe],
+  imports: [SharedModule, TranslatePipe],
   templateUrl: './animal-group-add-edit.component.html',
   styleUrls: ['./animal-group-add-edit.component.css']
 })
@@ -32,18 +31,13 @@ export class AnimalGroupAddEditComponent implements OnInit, OnDestroy {
   isEdit = false;
   currentAnimalGroupId: string | null = null;
 
-  // dropdowns
-  farms: any[] = [];
   animalTypes: any[] = [];
   lactations: any[] = [];
 
-  // loading flags
-  farmsLoading = false;
   typesLoading = false;
   lactationsLoading = false;
 
   subs: Subscription[] = [];
-
   isAddEditPermission = false;
 
   constructor(
@@ -52,7 +46,7 @@ export class AnimalGroupAddEditComponent implements OnInit, OnDestroy {
     private toast: ToastService,
     private commonService: CommonService,
     private translate: TranslateService
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     this.initializeForm();
@@ -65,35 +59,14 @@ export class AnimalGroupAddEditComponent implements OnInit, OnDestroy {
 
   private initializeForm(): void {
     this.form = this.fb.group({
-      farmId: ['', Validators.required],
+      farmId: [''],
       animalTypeId: ['', Validators.required],
       animalLactationId: ['', Validators.required],
       animalGroupNameEn: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(20), Validators.pattern(/^[A-Za-z\s]+$/)]],
       animalGroupNameIt: ['', [Validators.minLength(3), Validators.maxLength(20), Validators.pattern(/^[A-Za-z\s]+$/)]],
       numberOfAnimal: ['', [Validators.required, CustomValidators.maxDigits(20)]],
       avgMilkPerDay: ['', [Validators.required, CustomValidators.maxDigits(20)]],
-
     });
-  }
-
-  // ---------- loaders that RETURN observables (cached when available) ----------
-  private loadFarmList(force = false): Observable<any[]> {
-    if (!force && this.farms.length > 0) {
-      return of(this.farms);
-    }
-    this.farmsLoading = true;
-    return this.commonService.getFarmsList().pipe(
-      map((res: ApiResponse<any>) => res?.data ?? []),
-      tap((data: any[]) => {
-        // normalize id to string to ensure select matching works
-        this.farms = Array.isArray(data) ? data.map(r => ({ ...r, farmId: r.farmId != null ? String(r.farmId) : '' })) : [];
-      }),
-      catchError(err => {
-        this.toast.error(this.translate.instant('common.failedToLoadFarms') || 'Failed to load farms');
-        return of([]);
-      }),
-      finalize(() => this.farmsLoading = false)
-    );
   }
 
   private loadAnimalTypeList(force = false): Observable<any[]> {
@@ -104,9 +77,11 @@ export class AnimalGroupAddEditComponent implements OnInit, OnDestroy {
     return this.commonService.getAnimalTypeList().pipe(
       map((res: ApiResponse<any>) => res?.data ?? []),
       tap((data: any[]) => {
-        this.animalTypes = Array.isArray(data) ? data.map(t => ({ ...t, animalTypeId: t.animalTypeId != null ? String(t.animalTypeId) : '' })) : [];
+        this.animalTypes = Array.isArray(data)
+          ? data.map(t => ({ ...t, animalTypeId: t.animalTypeId != null ? String(t.animalTypeId) : '' }))
+          : [];
       }),
-      catchError((err :ApiResponse<any>) => {
+      catchError((err: ApiResponse<any>) => {
         this.toast.error(err.message);
         return of([]);
       }),
@@ -115,16 +90,19 @@ export class AnimalGroupAddEditComponent implements OnInit, OnDestroy {
   }
 
   private loadLactationList(force = false): Observable<any[]> {
-    if (!force && this.lactations.length > 0) return of(this.lactations);
+    if (!force && this.lactations.length > 0) {
+      return of(this.lactations);
+    }
 
     this.lactationsLoading = true;
     return this.commonService.getAnimalLactationStageList().pipe(
       map((res: ApiResponse<any>) => res?.data ?? []),
       tap((data: any[]) => {
-        //this.lactations = data
-        this.lactations = Array.isArray(data) ? data.map(l => ({ ...l, animalLactationId: l.animalLactationId != null ? String(l.animalLactationId) : '' })) : [];
+        this.lactations = Array.isArray(data)
+          ? data.map(l => ({ ...l, animalLactationId: l.animalLactationId != null ? String(l.animalLactationId) : '' }))
+          : [];
       }),
-      catchError(err => {
+      catchError(() => {
         this.toast.error(this.translate.instant('common.failedToLoadAnimalTypes') || 'Failed to load animal types');
         return of([]);
       }),
@@ -132,34 +110,23 @@ export class AnimalGroupAddEditComponent implements OnInit, OnDestroy {
     );
   }
 
-
-
   openModal(edit = false, data?: any): void {
     this.isEdit = edit;
     this.form.reset();
     this.currentAnimalGroupId = data?.animalGroupId ?? null;
-
-    const farmIdFromQuery = data?.farmId ? String(data.farmId) : null;
     this.isAddEditPermission = edit
       ? this.commonService.checkPermission(PERMISSIONS.AnimalGroupEdit)
       : this.commonService.checkPermission(PERMISSIONS.AnimalGroupAdd);
 
     const join$ = forkJoin({
-      farms: this.loadFarmList(false),
       types: this.loadAnimalTypeList(false),
       lactations: this.loadLactationList(false)
     });
 
     const s = join$.subscribe({
       next: () => {
-      if (!edit && farmIdFromQuery) {
-        this.form.patchValue({ farmId: farmIdFromQuery });
-
-        this.form.get('farmId')?.disable();
-      }
         if (edit && data) {
           this.form.patchValue({
-            farmId: data?.farmId != null ? String(data?.farmId) : '',
             animalTypeId: data?.animalTypeId != null ? String(data?.animalTypeId) : '',
             animalLactationId: data?.animalLactationId != null ? String(data?.animalLactationId) : '',
             animalGroupNameEn: data?.animalGroupNameEn,
@@ -167,7 +134,6 @@ export class AnimalGroupAddEditComponent implements OnInit, OnDestroy {
             numberOfAnimal: data?.numberOfAnimal,
             avgMilkPerDay: data?.avgMilkPerDay,
           });
-           this.form.get('farmId')?.disable();
         }
         this.modalInstance.show();
       },
@@ -205,8 +171,10 @@ export class AnimalGroupAddEditComponent implements OnInit, OnDestroy {
 
     const payload: any = { ...this.form.getRawValue(), animalGroupId: this.currentAnimalGroupId ?? undefined };
 
-    if (this.isEdit && this.currentAnimalGroupId) {
-      const sub = this.animalGroupService.updateAnimalGroup(payload).subscribe({
+    const sub = (this.isEdit && this.currentAnimalGroupId
+      ? this.animalGroupService.updateAnimalGroup(payload)
+      : this.animalGroupService.createAnimalGroup(payload))
+      .subscribe({
         next: (res: ApiResponse<any>) => {
           if (res.isSuccess) {
             this.toast.success(res?.message);
@@ -218,28 +186,14 @@ export class AnimalGroupAddEditComponent implements OnInit, OnDestroy {
         },
         error: (err) => this.toast.error(err?.error?.message)
       });
-      this.subs.push(sub);
-    } else {
-      const sub = this.animalGroupService.createAnimalGroup(payload).subscribe({
-        next: (res: ApiResponse<any>) => {
-          if (res.isSuccess) {
-            this.toast.success(res?.message);
-            this.afterSuccess();
-            this.onAnimalGroupSaved.emit();
-          } else {
-            this.toast.error(res?.message);
-          }
-        },
-        error: (err) => this.toast.error(err?.error?.message)
-      });
-      this.subs.push(sub);
-    }
+
+    this.subs.push(sub);
   }
 
   private afterSuccess(): void {
     try {
       this.animalGroupService.notifyanimalGroupsChanged();
-    } catch (e) {
+    } catch {
     }
     this.closeModal();
   }

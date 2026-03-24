@@ -131,15 +131,17 @@ export class CommonService {
     )
   }
   getAnimalGroupByFarmID(
-    FarmId: string,
+    FarmId?: string,
   ): Observable<ApiResponse<AnimalGroupList[]>> {
+    const query = FarmId ? `?FarmId=${FarmId}` : '';
     return this.http.get<AnimalGroupList[]>(
-      `${API_ENDPOINTS.COMMON_API.GET_ANIMALGROUPS_BY_FARM_ID}?FarmId=${FarmId}`,
+      `${API_ENDPOINTS.COMMON_API.GET_ANIMALGROUPS_BY_FARM_ID}${query}`,
     );
   }
-  getFeedByFarmID(FarmId: string): Observable<ApiResponse<FeedList[]>> {
+  getFeedByFarmID(FarmId?: string): Observable<ApiResponse<FeedList[]>> {
+    const query = FarmId ? `?FarmId=${FarmId}` : '';
     return this.http.get<FeedList[]>(
-      `${API_ENDPOINTS.COMMON_API.GET_FEEDS_BY_FARM_ID}?FarmId=${FarmId}`,
+      `${API_ENDPOINTS.COMMON_API.GET_FEEDS_BY_FARM_ID}${query}`,
     );
   }
 

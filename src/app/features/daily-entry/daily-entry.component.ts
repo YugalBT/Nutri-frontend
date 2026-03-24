@@ -8,9 +8,6 @@ import { TranslateService } from '../../i18n/translate.service';
 import { CommonService } from '../../shared/services/common.service';
 import { HttpService } from '../../shared/services/http.service';
 import { ToastService } from '../../shared/services/toast.service';
-import { Store } from '@ngrx/store';
-import { take } from 'rxjs/operators';
-import { selectAuthUser } from '../../state/auth/auth.selectors';
 
 @Component({
   selector: 'app-daily-entry',
@@ -21,23 +18,17 @@ import { selectAuthUser } from '../../state/auth/auth.selectors';
 export class DailyEntryComponent implements OnInit, OnDestroy {
   form!: FormGroup;
 
-  // Farm & day resolution — no query params needed
-  farmId = '';
   dayId = '';
-  farms: any[] = [];
+  farmId = '';
   days: any[] = [];
-
-  // For admin: show farm selector. For company: auto-set.
-  isAdminUser = false;
-  selectedFarmId = '';
-  selectedDate = '';       // date string 'YYYY-MM-DD'
+  selectedDate = '';
 
   animalGroups: any[] = [];
   rations: any[] = [];
 
   isLoading = false;
   isSaving = false;
-  isInitializing = true;  // true while resolving farm + days
+  isInitializing = true;
 
   priceTypes = [
     { value: 0, labelKey: 'dailyEntry.priceType.company' },
@@ -52,110 +43,60 @@ export class DailyEntryComponent implements OnInit, OnDestroy {
     private toast: ToastService,
     private common: CommonService,
     private translate: TranslateService,
-    private store: Store,
   ) {}
 
   ngOnInit(): void {
     this.initForm();
-    // Set today as default date
     this.selectedDate = new Date().toISOString().split('T')[0];
-    this.resolveUserAndFarm();
+    this.loadDaysAndResolve();
   }
 
-  // ─────────────────────────────────────────────────────────────
-  // Step 1: detect role → resolve farm
-  // ─────────────────────────────────────────────────────────────
-  private resolveUserAndFarm(): void {
-    const sub = this.store.select(selectAuthUser).pipe(take(1)).subscribe(user => {
-      const roleType = (user?.roleType ?? '').toUpperCase();
-      this.isAdminUser = roleType === 'ADMIN' || user?.isSuperAdmin === true;
-
-      // Load farms + days in parallel
-      const farmSub = forkJoin({
-        farms: this.common.getFarmsList(),
-        days: this.common.getDayList(),
-      }).subscribe({
-        next: ({ farms, days }) => {
-          this.farms = Array.isArray(farms?.data) ? farms.data : [];
-          this.days = Array.isArray(days?.data) ? days.data : [];
-
-          if (!this.isAdminUser && this.farms.length > 0) {
-            // Company user: auto-select their only farm
-            const farmId = this.farms[0]?.farmId;
-            if (farmId) {
-              this.farmId = farmId;
-              this.selectedFarmId = farmId;
-              this.resolveDayAndLoad();
-            }
-          } else if (this.farms.length > 0) {
-            // Admin: pre-select first farm, they can change it
-            const farmId = this.farms[0]?.farmId;
-            if (farmId) {
-              this.farmId = farmId;
-              this.selectedFarmId = farmId;
-              this.resolveDayAndLoad();
-            }
-          }
-          this.isInitializing = false;
-        },
-        error: () => {
-          this.isInitializing = false;
-          this.toast.error('Failed to load farm data.');
-        }
-      });
-      this.subs.push(farmSub);
+  private loadDaysAndResolve(): void {
+    const sub = this.common.getDayList().subscribe({
+      next: (days) => {
+        this.days = Array.isArray(days?.data) ? days.data : [];
+        this.resolveDayAndLoad();
+        this.isInitializing = false;
+      },
+      error: () => {
+        this.isInitializing = false;
+        this.toast.error('Failed to load day data.');
+      }
     });
     this.subs.push(sub);
   }
 
-  // ─────────────────────────────────────────────────────────────
-  // Step 2: find the TblDay record matching the selected date
-  // TblDay has a date field — find the day whose date = selectedDate
-  // If none exists for today, use the most recent available day
-  // ─────────────────────────────────────────────────────────────
   private resolveDayAndLoad(): void {
     if (!this.days.length) {
-      // No days at all — load structure with empty rows
+      this.dayId = '';
+      this.farmId = '';
       this.loadDependenciesAndBuild(null);
       return;
     }
 
-    // Try to match selectedDate to a day record
-    const matched = this.days.find((d: any) => {
-      const dayDate = d?.date ?? d?.dayDate ?? d?.dataGiorno ?? '';
-      return dayDate && dayDate.toString().startsWith(this.selectedDate);
-    });
+    const matched = this.days.find((d: any) => this.isMatchingSelectedDate(d));
 
     if (matched) {
-      this.dayId = String(matched.dayId ?? matched.id ?? '');
+      this.dayId = this.extractDayId(matched);
+      this.farmId = this.extractFarmId(matched);
     } else {
-      // Fall back to most recent day
-      const sorted = [...this.days].sort((a: any, b: any) => {
-        const da = new Date(a?.date ?? a?.dayDate ?? 0).getTime();
-        const db = new Date(b?.date ?? b?.dayDate ?? 0).getTime();
-        return db - da;
-      });
-      this.dayId = String(sorted[0]?.dayId ?? sorted[0]?.id ?? '');
+      this.dayId = '';
+      this.farmId = '';
     }
 
     this.loadDependenciesAndBuild(this.dayId || null);
   }
 
-  // ─────────────────────────────────────────────────────────────
-  // Step 3: load animal groups + rations + existing day data
-  // ─────────────────────────────────────────────────────────────
   private loadDependenciesAndBuild(dayId: string | null): void {
     this.isLoading = true;
 
     const requests: any = {
-      groups: this.common.getAnimalGroupByFarmID(this.farmId),
+      groups: this.common.getAnimalGroupsList(),
       rations: this.common.getGetAllRationList(),
     };
 
     if (dayId) {
-      requests.existing = this.http.get<any>(
-        `${API_ENDPOINTS.DAY_DATA.GET_BY_DAY_ID}/${dayId}`
-      );
+      requests.existing = this.http.get<any>(`${API_ENDPOINTS.DAY_DATA.GET_BY_DAY_ID}/${dayId}`);
     }
 
     const sub = forkJoin(requests).subscribe({
@@ -177,16 +118,6 @@ export class DailyEntryComponent implements OnInit, OnDestroy {
     this.subs.push(sub);
   }
 
-  // Called when admin changes farm selector
-  onFarmChange(): void {
-    this.farmId = this.selectedFarmId;
-    this.dayId = '';
-    this.form.reset();
-    this.initForm();
-    this.resolveDayAndLoad();
-  }
-
-  // Called when date picker changes
   onDateChange(): void {
     this.resolveDayAndLoad();
   }
@@ -230,12 +161,12 @@ export class DailyEntryComponent implements OnInit, OnDestroy {
 
     this.animalGroups.forEach((g) => {
       fa.push(this.fb.group({
-        animalGroupId:   [g.animalGroupId],
+        animalGroupId: [g.animalGroupId],
         animalGroupName: [g.animalGroupNameEn],
-        rationId:        [null],
-        headCount:       [null],
-        scaricatoKg:     [null],
-        avanzoKg:        [null],
+        rationId: [null],
+        headCount: [null],
+        scaricatoKg: [null],
+        avanzoKg: [null],
         avgProductionKg: [null],
       }));
     });
@@ -243,29 +174,29 @@ export class DailyEntryComponent implements OnInit, OnDestroy {
 
   private patchForm(data: any): void {
     this.form.patchValue({
-      priceType:            data.priceType ?? 0,
-      gim:                  data.gim,
-      nonMungitura:         data.nonMungitura,
-      totalCapi:            data.totalCapi,
-      milkProducedKg:       data.milkProducedKg,
-      milkDeliveredKg:      data.milkDeliveredKg,
-      milkPriceEurLitre:    data.milkPriceEurLitre,
-      fatPercent:           data.fatPercent,
-      proteinPercent:       data.proteinPercent,
-      caseinPercent:        data.caseinPercent,
-      ureaMgDl:             data.ureaMgDl,
-      somaticCellsThousands:data.somaticCellsThousands,
-      qualityBonusEur:      data.qualityBonusEur,
-      robotCows:            data.robotCows,
-      robotMilkKg:          data.robotMilkKg,
-      robotMilkings:        data.robotMilkings,
-      robotRefusals:        data.robotRefusals,
-      robotFreeTimeMin:     data.robotFreeTimeMin,
-      mastitis:             data.mastitis ?? 0,
-      retentions:           data.retentions ?? 0,
-      abortions:            data.abortions ?? 0,
-      calvingsCount:        data.calvingsCount ?? 0,
-      healthNotes:          data.healthNotes,
+      priceType: data.priceType ?? 0,
+      gim: data.gim,
+      nonMungitura: data.nonMungitura,
+      totalCapi: data.totalCapi,
+      milkProducedKg: data.milkProducedKg,
+      milkDeliveredKg: data.milkDeliveredKg,
+      milkPriceEurLitre: data.milkPriceEurLitre,
+      fatPercent: data.fatPercent,
+      proteinPercent: data.proteinPercent,
+      caseinPercent: data.caseinPercent,
+      ureaMgDl: data.ureaMgDl,
+      somaticCellsThousands: data.somaticCellsThousands,
+      qualityBonusEur: data.qualityBonusEur,
+      robotCows: data.robotCows,
+      robotMilkKg: data.robotMilkKg,
+      robotMilkings: data.robotMilkings,
+      robotRefusals: data.robotRefusals,
+      robotFreeTimeMin: data.robotFreeTimeMin,
+      mastitis: data.mastitis ?? 0,
+      retentions: data.retentions ?? 0,
+      abortions: data.abortions ?? 0,
+      calvingsCount: data.calvingsCount ?? 0,
+      healthNotes: data.healthNotes,
     });
 
     if (data.groupData?.length) {
@@ -275,10 +206,10 @@ export class DailyEntryComponent implements OnInit, OnDestroy {
         );
         if (match) {
           ctrl.patchValue({
-            rationId:        match.rationId,
-            headCount:       match.headCount,
-            scaricatoKg:     match.scaricatoKg,
-            avanzoKg:        match.avanzoKg,
+            rationId: match.rationId,
+            headCount: match.headCount,
+            scaricatoKg: match.scaricatoKg,
+            avanzoKg: match.avanzoKg,
             avgProductionKg: match.avgProductionKg,
           });
         }
@@ -288,20 +219,91 @@ export class DailyEntryComponent implements OnInit, OnDestroy {
 
   save(): void {
     if (this.isSaving) return;
+    if (!this.isValidGuid(this.dayId)) {
+      this.createDayAndSave();
+      return;
+    }
+
+    this.persistDayData(this.dayId);
+  }
+
+  private createDayAndSave(): void {
     this.isSaving = true;
+
+    const sub = this.http.post<any>(API_ENDPOINTS.DAY.CREATE, {
+      date: this.selectedDate,
+      isClosed: false,
+      farmId: null,
+    }).subscribe({
+      next: (res) => {
+        if (!res?.isSuccess) {
+          this.toast.error(res?.message ?? this.translate.instant('dailyEntry.messages.saveError'));
+          this.isSaving = false;
+          return;
+        }
+
+        this.refreshDayIdForSelectedDateAndSave();
+      },
+      error: () => {
+        this.toast.error(this.translate.instant('dailyEntry.messages.saveError'));
+        this.isSaving = false;
+      },
+    });
+
+    this.subs.push(sub);
+  }
+
+  private refreshDayIdForSelectedDateAndSave(): void {
+    const sub = this.common.getDayList().subscribe({
+      next: (days) => {
+        this.days = Array.isArray(days?.data) ? days.data : [];
+        const matched = this.days.find((d: any) => this.isMatchingSelectedDate(d));
+        const resolvedDayId = matched ? this.extractDayId(matched) : '';
+        const resolvedFarmId = matched ? this.extractFarmId(matched) : '';
+        if (!this.isValidGuid(resolvedDayId)) {
+          this.toast.error(this.translate.instant('dailyEntry.messages.saveError'));
+          this.isSaving = false;
+          return;
+        }
+        if (!this.isValidGuid(resolvedFarmId)) {
+          this.toast.error(this.translate.instant('dailyEntry.messages.saveError'));
+          this.isSaving = false;
+          return;
+        }
+
+        this.dayId = resolvedDayId;
+        this.farmId = resolvedFarmId;
+        this.persistDayData(this.dayId);
+      },
+      error: () => {
+        this.toast.error(this.translate.instant('dailyEntry.messages.saveError'));
+        this.isSaving = false;
+      },
+    });
+
+    this.subs.push(sub);
+  }
+
+  private persistDayData(dayId: string): void {
+    this.isSaving = true;
+    if (!this.isValidGuid(this.farmId)) {
+      this.toast.error(this.translate.instant('dailyEntry.messages.saveError'));
+      this.isSaving = false;
+      return;
+    }
 
     const v = this.form.value;
     const payload = {
-      dayId:    this.dayId || null,
-      farmId:   this.farmId,
-      date:     this.selectedDate,
+      dayId,
+      farmId: this.farmId,
+      date: this.selectedDate,
       ...v,
       groupData: v.groupData.map((g: any) => ({
-        animalGroupId:   g.animalGroupId,
-        rationId:        g.rationId || null,
-        headCount:       g.headCount,
-        scaricatoKg:     g.scaricatoKg,
-        avanzoKg:        g.avanzoKg,
+        animalGroupId: g.animalGroupId,
+        rationId: g.rationId || null,
+        headCount: g.headCount,
+        scaricatoKg: g.scaricatoKg,
+        avanzoKg: g.avanzoKg,
         avgProductionKg: g.avgProductionKg,
       })),
     };
@@ -310,8 +312,7 @@ export class DailyEntryComponent implements OnInit, OnDestroy {
       next: (res) => {
         if (res.isSuccess) {
           this.toast.success(res.message ?? this.translate.instant('dailyEntry.messages.saveSuccess'));
-          // Reload to pick up any server-computed values (IOFC etc)
-          if (res.data?.dayId) {
+          if (this.isValidGuid(res.data?.dayId)) {
             this.dayId = res.data.dayId;
           }
         } else {
@@ -328,13 +329,45 @@ export class DailyEntryComponent implements OnInit, OnDestroy {
     this.subs.push(sub);
   }
 
-  // Display helpers
-  getDayLabel(day: any): string {
-    return day?.date || day?.dayName || day?.name || day?.label || day?.dayId || '';
+  private isValidGuid(value: unknown): value is string {
+    return typeof value === 'string'
+      && /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(value);
   }
 
-  getDayValue(day: any): string {
-    return String(day?.dayId ?? day?.id ?? '');
+  private extractDayId(day: any): string {
+    return String(day?.dayId ?? day?.DayId ?? day?.id ?? day?.Id ?? '');
+  }
+
+  private extractFarmId(day: any): string {
+    return String(day?.farmId ?? day?.FarmId ?? '');
+  }
+
+  private isMatchingSelectedDate(day: any): boolean {
+    const rawDate = day?.date ?? day?.Date ?? day?.dayDate ?? day?.DayDate ?? day?.dataGiorno ?? '';
+    if (!rawDate) {
+      return false;
+    }
+
+    const normalized = this.normalizeDateString(rawDate);
+    return normalized === this.selectedDate;
+  }
+
+  private normalizeDateString(value: unknown): string {
+    if (!value) {
+      return '';
+    }
+
+    const text = String(value).trim();
+    if (/^\d{4}-\d{2}-\d{2}/.test(text)) {
+      return text.slice(0, 10);
+    }
+
+    const parsed = new Date(text);
+    if (Number.isNaN(parsed.getTime())) {
+      return '';
+    }
+
+    return parsed.toISOString().slice(0, 10);
   }
 
   get selectedDateLabel(): string {

@@ -298,6 +298,13 @@ export const API_ENDPOINTS = {
     GENERATE_SUPPLIER_CODE: '/Supplier/GenerateSupplierCode',
     GET_BY_ID: '/ProductBuild/GetById',
   },
+  DAY: {
+    CREATE: '/Day/Create',
+    UPDATE: '/Day/Update',
+    DELETE: '/Day/Delete',
+    ACTIVE_INACTIVE: '/Day/ActiveInActive',
+    GET_ALL: '/Day/GetAll',
+  },
   DAY_DATA: {
     SAVE: '/DayData/Save',
     GET_BY_DAY_ID: '/DayData/GetByDayId',

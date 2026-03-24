@@ -20,40 +20,6 @@
       <div class="modal-body">
         <form [formGroup]="form">
           <div class="row g-3">
-            <!-- Farm -->
-
-            <div class="col-md-6">
-              <label class="form-label">
-                {{ "calfBarn.farm" | translate }}
-                <sup class="text-danger">*</sup>
-              </label>
-
-              <select
-                class="form-select"
-                formControlName="farmId"
-                [class.is-invalid]="
-                  form.get('farmId')?.touched && form.get('farmId')?.invalid
-                "
-              >
-                <option [ngValue]="null" disabled selected>
-                  {{ "farm.selectFarm" | translate }}
-                </option>
-
-                <option *ngFor="let f of farms" [value]="f.farmId">
-                  {{ f.farmName }}
-                </option>
-              </select>
-
-              <div
-                class="invalid-feedback"
-                *ngIf="
-                  form.get('farmId')?.touched && form.get('farmId')?.errors
-                "
-              >
-                {{ "validation.required" | translate }}
-              </div>
-            </div>
-
             <!-- Animal Group -->
 
             <div class="col-md-6">

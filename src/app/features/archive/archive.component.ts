@@ -1,9 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { ActivatedRoute, Router, RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { FarmList } from '../../core/models/farm-list';
 import { API_ENDPOINTS } from '../../core/constants/api-endpoints';
 import { TranslatePipe } from '../../i18n/translate.pipe';
 import { TranslateService } from '../../i18n/translate.service';
@@ -19,15 +18,10 @@ import { ToastService } from '../../shared/services/toast.service';
   templateUrl: './archive.component.html',
 })
 export class ArchiveComponent implements OnInit, OnDestroy {
-  farmId!: string;
-  selectedFarmId = '';
-  farms: FarmList[] = [];
   records: any[] = [];
   totalRecords = 0;
   isLoading = false;
   isRecalculating = false;
-  isSelectionLoading = false;
-  needsSelection = false;
 
   fromDate: string = this.getMonthStart();
   toDate: string = new Date().toISOString().split('T')[0];
@@ -37,7 +31,6 @@ export class ArchiveComponent implements OnInit, OnDestroy {
   private subs: Subscription[] = [];
 
   constructor(
-    private route: ActivatedRoute,
     private router: Router,
     private http: HttpService,
     private toast: ToastService,
@@ -47,56 +40,12 @@ export class ArchiveComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    const sub = this.route.queryParams.subscribe((params) => {
-      this.farmId = params['farmId'];
-
-      if (!this.farmId) {
-        this.needsSelection = true;
-        this.loadFarms();
-        return;
-      }
-
-      this.needsSelection = false;
-      this.selectedFarmId = this.farmId;
-      this.pageNo = 1;
-      this.loadArchive();
-    });
-
-    this.subs.push(sub);
-  }
-
-  private loadFarms(): void {
-    this.isSelectionLoading = true;
-
-    const sub = this.common.getFarmsList().subscribe({
-      next: (res) => {
-        this.farms = Array.isArray(res?.data) ? res.data : [];
-        this.isSelectionLoading = false;
-      },
-      error: () => {
-        this.farms = [];
-        this.isSelectionLoading = false;
-        this.toast.error(this.translate.instant('archive.messages.loadFarmsError'));
-      },
-    });
-
-    this.subs.push(sub);
-  }
-
-  openSelectedArchive(): void {
-    if (!this.selectedFarmId) {
-      this.toast.warning(this.translate.instant('archive.messages.selectFarm'));
-      return;
-    }
-
-    this.router.navigate(['/archive'], {
-      queryParams: { farmId: this.selectedFarmId },
-    });
+    this.loadArchive();
   }
 
   loadArchive(): void {
     this.isLoading = true;
-    const url = `${API_ENDPOINTS.DAY_DATA.ARCHIVE}?farmId=${this.farmId}&fromDate=${this.fromDate}&toDate=${this.toDate}&pageNo=${this.pageNo}&pageSize=${this.pageSize}`;
+    const url = `${API_ENDPOINTS.DAY_DATA.ARCHIVE}?fromDate=${this.fromDate}&toDate=${this.toDate}&pageNo=${this.pageNo}&pageSize=${this.pageSize}`;
     const sub = this.http.get<any>(url).subscribe({
       next: (res) => {
         this.records = res?.data ?? [];
@@ -112,7 +61,7 @@ export class ArchiveComponent implements OnInit, OnDestroy {
 
   loadRecord(record: any): void {
     this.router.navigate(['/daily-entry'], {
-      queryParams: { farmId: this.farmId, dayId: record.dayId },
+      queryParams: { dayId: record.dayId },
     });
   }
 
@@ -131,7 +80,6 @@ export class ArchiveComponent implements OnInit, OnDestroy {
 
         this.isRecalculating = true;
         const payload = {
-          farmId: this.farmId,
           fromDate: this.fromDate,
           toDate: this.toDate,
         };

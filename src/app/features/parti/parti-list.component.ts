@@ -1,5 +1,4 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Subscription } from 'rxjs';
@@ -32,14 +31,13 @@ import { TranslateService } from '../../i18n/translate.service';
           (onDelete)="onDelete($event)">
         </app-reusable-table>
       </div>
-      <app-parti-add-edit #modal [farmId]="farmId" (saved)="load()"></app-parti-add-edit>
+      <app-parti-add-edit #modal (saved)="load()"></app-parti-add-edit>
     </div>
   `
 })
 export class PartiListComponent implements OnInit, OnDestroy {
   @ViewChild('modal') modal!: PartiAddEditComponent;
 
-  farmId!: string;
   records: any[] = [];
   totalRecords = 0;
   columns: string[] = [];
@@ -47,7 +45,6 @@ export class PartiListComponent implements OnInit, OnDestroy {
   private langSub?: Subscription;
 
   constructor(
-    private route: ActivatedRoute,
     private http: HttpService,
     private toast: ToastService,
     private confirm: ConfirmDialogService,
@@ -58,15 +55,12 @@ export class PartiListComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.route.queryParams.subscribe(p => {
-      this.farmId = p['farmId'];
-      this.load();
-    });
+    this.load();
   }
 
   load(): void {
     const payload = { pageNo: 1, recordPerPage: 100 };
-    this.http.post<any>(`${API_ENDPOINTS.CALVING.GET_ALL}?farmId=${this.farmId}`, payload)
+    this.http.post<any>(API_ENDPOINTS.CALVING.GET_ALL, payload)
       .subscribe(res => {
         this.records = res?.data ?? [];
         this.totalRecords = res?.totalRecords ?? 0;

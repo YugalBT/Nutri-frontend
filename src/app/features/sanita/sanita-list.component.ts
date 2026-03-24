@@ -1,5 +1,4 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { Subscription } from 'rxjs';
 import { ReusableTableComponent } from '../../shared/components/reusable-table/reusable-table.component';
@@ -31,14 +30,13 @@ import { TranslateService } from '../../i18n/translate.service';
           (onDelete)="onDelete($event)">
         </app-reusable-table>
       </div>
-      <app-sanita-add-edit #modal [farmId]="farmId" (saved)="load()"></app-sanita-add-edit>
+      <app-sanita-add-edit #modal (saved)="load()"></app-sanita-add-edit>
     </div>
   `
 })
 export class SanitaListComponent implements OnInit, OnDestroy {
   @ViewChild('modal') modal!: SanitaAddEditComponent;
 
-  farmId!: string;
   records: any[] = [];
   totalRecords = 0;
   columns: string[] = [];
@@ -46,7 +44,6 @@ export class SanitaListComponent implements OnInit, OnDestroy {
   private langSub?: Subscription;
 
   constructor(
-    private route: ActivatedRoute,
     private http: HttpService,
     private toast: ToastService,
     private confirm: ConfirmDialogService,
@@ -57,14 +54,11 @@ export class SanitaListComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.route.queryParams.subscribe(p => {
-      this.farmId = p['farmId'];
-      this.load();
-    });
+    this.load();
   }
 
   load(): void {
-    this.http.post<any>(`${API_ENDPOINTS.HEALTH_EVENT.GET_ALL}?farmId=${this.farmId}`,
+    this.http.post<any>(API_ENDPOINTS.HEALTH_EVENT.GET_ALL,
       { pageNo: 1, recordPerPage: 100 })
       .subscribe(res => {
         this.records = res?.data ?? [];

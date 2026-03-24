@@ -1,4 +1,4 @@
-import { Component, Input, ViewChild } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { FeedService } from '../../../core/services/feed/feed.service';
 import { ToastService } from '../../../shared/services/toast.service';
@@ -25,8 +25,6 @@ export class FeedListComponent {
 
   columns: string[] = [];
   columnFields: string[] = [];
-  @Input() farmId!: string;
-
   feeds: FeedList[] = [];
   totalRecords = 0;
   pageSize = 10;
@@ -50,7 +48,6 @@ export class FeedListComponent {
   }
 
   ngOnInit(): void {
-    this.searchValue = this.farmId || '';
     if (!this.commonService.checkPermission(PERMISSIONS.FeedView)
       || !this.commonService.checkPermission(PERMISSIONS.FeedDelete))
       return;
@@ -186,8 +183,6 @@ export class FeedListComponent {
   }
 
   openAddFeedModal(): void {
-    this.feedModalRef.openModal(false, {
-      farmId: this.farmId
-    });
+    this.feedModalRef.openModal(false);
   }
 }

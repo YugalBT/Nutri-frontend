@@ -40,7 +40,6 @@ export class CalfbarnListComponent implements OnInit, OnDestroy {
   columns: string[] = [];
 
   columnFields: string[] = [
-    'farmName',
     'animalGroup',
     'calfAgeDays',
     'milkFeed',
@@ -69,7 +68,6 @@ export class CalfbarnListComponent implements OnInit, OnDestroy {
   private setColumns(): void {
 
     this.columns = [
-      this.translate.instant('calfBarn.farm'),
       this.translate.instant('calfBarn.animalGroup'),
       this.translate.instant('calfBarn.calfAgeDays'),
       this.translate.instant('calfBarn.milkFeed'),

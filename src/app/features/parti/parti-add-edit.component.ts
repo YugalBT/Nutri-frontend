@@ -83,7 +83,6 @@ export class PartiAddEditComponent implements OnDestroy {
     this.isSaving = true;
     const payload = {
       ...this.form.value,
-      farmId: this.farmId,
       calvingType: this.mapCalvingTypeFromKey(this.form.value.calvingType),
       calvingOutcome: this.mapCalvingOutcomeFromKey(this.form.value.calvingOutcome)
     };

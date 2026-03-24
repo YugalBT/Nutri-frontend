@@ -1,4 +1,3 @@
-<!-- feed-add-edit.component.html — simplified to Mattia's 5 fields -->
 <div #feedModal class="modal fade" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
@@ -13,21 +12,6 @@
       <div class="modal-body">
         <form [formGroup]="form">
           <div class="row g-3">
-
-            <!-- Farm selector — ONLY for admin/superadmin (Bug #1 fix) -->
-            <div class="col-12" *ngIf="isAdminUser">
-              <label class="form-label">{{ 'farm.farmName' | translate }} <sup class="text-danger">*</sup></label>
-              <select formControlName="farmId" class="form-select" [disabled]="farmsLoading">
-                <option [ngValue]="null">{{ 'farm.selectFarm' | translate }}</option>
-                <option *ngFor="let f of farms" [value]="f.farmId">{{ f.farmName }}</option>
-              </select>
-              <span *ngIf="farmsLoading" class="spinner-border spinner-border-sm ms-1"></span>
-              <div *ngIf="form.get('farmId')?.touched && form.get('farmId')?.invalid" class="text-danger small">
-                {{ 'farm.farmNameRequired' | translate }}
-              </div>
-            </div>
-
-            <!-- Field 1: Feed Name -->
             <div class="col-12">
               <label class="form-label">{{ 'feed.feedName' | translate }} <sup class="text-danger">*</sup></label>
               <input type="text" formControlName="feedName" class="form-control"
@@ -37,11 +21,10 @@
               </div>
             </div>
 
-            <!-- Field 2: Category -->
             <div class="col-md-6">
               <label class="form-label">{{ 'feed.category' | translate }} <sup class="text-danger">*</sup></label>
               <select formControlName="category" class="form-select">
-                <option value="">— select —</option>
+                <option value="">Select</option>
                 <option *ngFor="let c of categoryOptions" [value]="c">{{ c }}</option>
               </select>
               <div *ngIf="form.get('category')?.touched && form.get('category')?.invalid" class="text-danger small">
@@ -49,7 +32,6 @@
               </div>
             </div>
 
-            <!-- Field 3: Dry Matter % -->
             <div class="col-md-6">
               <label class="form-label">{{ 'feed.dm' | translate }} % <sup class="text-danger">*</sup></label>
               <input type="number" step="0.01" min="0" max="100" formControlName="dryMatter" class="form-control"
@@ -59,7 +41,6 @@
               </div>
             </div>
 
-            <!-- Field 4: Price with unit selector -->
             <div class="col-12">
               <label class="form-label">{{ 'feed.pricePerKg' | translate }} <sup class="text-danger">*</sup></label>
               <div class="input-group">
@@ -70,21 +51,19 @@
                 </select>
               </div>
               <div class="form-text text-muted" *ngIf="form.get('pricePerKg')?.value">
-                = € {{ (form.get('pricePerKg')?.value | number:'1.4-4') }} / kg (stored)
+                = {{ (form.get('pricePerKg')?.value | number:'1.4-4') }} / kg
               </div>
               <div *ngIf="form.get('price')?.touched && form.get('price')?.invalid" class="text-danger small">
                 {{ 'feed.pricePerKgRequired' | translate }}
               </div>
             </div>
 
-            <!-- Field 5: VAT toggle -->
             <div class="col-12">
               <div class="form-check form-switch">
                 <input type="checkbox" class="form-check-input" formControlName="vatApplicable" id="vatToggle" role="switch">
                 <label class="form-check-label" for="vatToggle">IVA applicabile (VAT applicable)</label>
               </div>
             </div>
-
           </div>
         </form>
       </div>

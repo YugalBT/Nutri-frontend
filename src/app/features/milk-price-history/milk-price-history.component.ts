@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
@@ -15,8 +15,6 @@ import { ToastService } from '../../shared/services/toast.service';
   templateUrl: './milk-price-history.component.html'
 })
 export class MilkPriceHistoryComponent implements OnInit, OnDestroy {
-  @Input() farmId!: string;
-
   history: any[] = [];
   form!: FormGroup;
   isLoading = false;
@@ -49,9 +47,8 @@ export class MilkPriceHistoryComponent implements OnInit, OnDestroy {
   }
 
   load(): void {
-    if (!this.farmId) return;
     this.isLoading = true;
-    const sub = this.http.get<any>(`${API_ENDPOINTS.MILK_PRICE_HISTORY.GET_BY_FARM}/${this.farmId}`)
+    const sub = this.http.get<any>(API_ENDPOINTS.MILK_PRICE_HISTORY.GET_BY_FARM)
       .subscribe({
         next: (res) => {
           this.history = res?.data ?? [];
@@ -82,7 +79,7 @@ export class MilkPriceHistoryComponent implements OnInit, OnDestroy {
     }
 
     this.isSaving = true;
-    const payload = { ...this.form.value, farmId: this.farmId };
+    const payload = { ...this.form.value };
 
     const sub = this.http.post<any>(API_ENDPOINTS.MILK_PRICE_HISTORY.SAVE, payload).subscribe({
       next: (res) => {

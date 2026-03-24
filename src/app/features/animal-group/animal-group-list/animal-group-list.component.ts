@@ -1,5 +1,5 @@
 // animal-group-list.component.ts
-import { Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { AnimalGroupService } from '../../../core/services/animal-group/animal-group.service';
 import { ToastService } from '../../../shared/services/toast.service';
@@ -29,7 +29,6 @@ import { TranslateService } from '../../../i18n/translate.service';
 export class AnimalGroupListComponent implements OnInit, OnDestroy {
   @ViewChild('animalGroupModal')
   animalGroupModalRef!: AnimalGroupAddEditComponent;
-  @Input() farmId!: string;
   columns: string[] = [];
   columnFields: string[] = [];
 
@@ -62,7 +61,6 @@ export class AnimalGroupListComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.searchValue = this.farmId || '';
     this.loadUserPermissions();
     this.loadAnimalGroups(1, this.pageSize);
 
@@ -78,7 +76,6 @@ export class AnimalGroupListComponent implements OnInit, OnDestroy {
 
   private setColumns(): void {
     this.columns = [
-      this.translateService.instant('farm.columns.farmName') ?? ' ',
       this.translateService.instant('animalGroup.columns.animalGroupName') ??
         ' ',
       this.translateService.instant('animalGroup.columns.animalType') ?? ' ',
@@ -90,7 +87,6 @@ export class AnimalGroupListComponent implements OnInit, OnDestroy {
     ];
 
     this.columnFields = [
-      'farmName',
       'animalGroupNameEn',
       'typeNameEn',
       'lactationNameEn',
@@ -207,8 +203,6 @@ export class AnimalGroupListComponent implements OnInit, OnDestroy {
     this.loadAnimalGroups(1, this.pageSize);
   }
   openAddModal(): void {
-  this.animalGroupModalRef.openModal(false, {
-    farmId: this.farmId 
-  });
-}
+    this.animalGroupModalRef.openModal(false);
+  }
 }
