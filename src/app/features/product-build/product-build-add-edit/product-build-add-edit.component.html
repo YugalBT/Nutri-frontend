@@ -185,33 +185,56 @@
           </div>
 
           <!-- SUMMARY SECTION -->
-          <div class="pb-form-section pb-summary-section">
-            <div class="pb-summary-grid">
-              <div class="pb-summary-card pb-summary-percentage" [class.pb-invalid]="getTotalPercentage() !== 100">
-                <div class="pb-summary-label">
-                  <i class="bi bi-percent"></i>
-                  {{ 'productBuild.totalPercentage' | translate }}
-                </div>
-                <div class="pb-summary-value" [class.pb-error]="getTotalPercentage() !== 100">
-                  {{ getTotalPercentage() }}%
-                </div>
-                <div class="pb-summary-status" *ngIf="getTotalPercentage() !== 100">
-                  <i class="bi bi-exclamation-circle"></i>
-                  {{ 'productBuild.mustBe100' | translate }}
-                </div>
-              </div>
-              <div class="pb-summary-card pb-summary-price">
-                <div class="pb-summary-label">
-                  <i class="bi bi-currency-dollar"></i>
-                  {{ 'productBuild.totalPrice' | translate }}
-                </div>
-                <div class="pb-summary-value">
-                  {{ getTotalAmount() | number:'1.2-2' }}
-                </div>
-              </div>
-            </div>
-          </div>
+          <!-- SUMMARY SECTION -->
+<div class="pb-form-section pb-summary-section">
+  <div class="pb-summary-grid">
 
+    <!-- TOTAL % -->
+    <div class="pb-summary-card pb-summary-percentage"
+         [class.pb-invalid]="getTotalPercentage() !== 100">
+
+      <div class="pb-summary-label">
+        <i class="bi bi-percent"></i>
+        {{ 'productBuild.totalPercentage' | translate }}
+      </div>
+
+      <div class="pb-summary-value"
+           [class.pb-error]="getTotalPercentage() !== 100">
+        {{ getTotalPercentage() }}%
+      </div>
+
+      <div class="pb-summary-status" *ngIf="getTotalPercentage() !== 100">
+        <i class="bi bi-exclamation-circle"></i>
+        {{ 'productBuild.mustBe100' | translate }}
+      </div>
+    </div>
+
+    <!-- BASE COST (same translation use kiya) -->
+    <div class="pb-summary-card pb-summary-price">
+      <div class="pb-summary-label">
+        <i class="bi bi-currency-dollar"></i>
+        {{ 'productBuild.totalPrice' | translate }}
+      </div>
+
+      <div class="pb-summary-value">
+        {{ getTotalAmount() | number:'1.2-2' }}
+      </div>
+    </div>
+
+    <!-- FINAL COST (NEW — but no translation change required) -->
+    <div class="pb-summary-card pb-summary-price">
+      <div class="pb-summary-label">
+        <i class="bi bi-calculator"></i>
+        Final Cost
+      </div>
+
+      <div class="pb-summary-value text-success fw-bold">
+        {{ finalCost | number:'1.2-2' }}
+      </div>
+    </div>
+
+  </div>
+</div>
         </form>
       </div>
 
