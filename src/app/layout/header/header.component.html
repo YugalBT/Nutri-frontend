@@ -188,8 +188,8 @@
               <div class="profile-right-content">
                 <div class="name-with-role d-flex align-items-center gap-2">
                   <h3 class="mb-0">{{ user?.firstName }} {{ user?.lastName }}</h3>
-                  <span class="role-badge" *ngIf="user?.roleType">
-                    {{ user?.roleType }}
+                  <span class="role-badge" *ngIf="user">
+                    {{ user?.roleName }}
                   </span>
                 </div>
                 <p class="mb-0">{{ user?.email }}</p>
