@@ -25,6 +25,7 @@ interface SidebarGroup {
   items: MenuItem[];
 }
 
+
 const HIDDEN_MENU_NAMES = [
   'Placeholder',
   'Category Mapping',
@@ -32,6 +33,10 @@ const HIDDEN_MENU_NAMES = [
   // 'Animal Group',
   // 'Ration',
   // 'Feed',
+];
+const TOP_MENU_NAMES = [
+  'Companies',
+  'Daily Entry'
 ];
 
 // const COMPANY_MENU_ROUTE_MAP: Record<string, string> = {
@@ -63,7 +68,7 @@ export class SidebarComponent implements OnInit {
   standaloneMenus: MenuItem[] = [];
   user: any = null;
   lang = 'en';
-
+  topMenus: MenuItem[] = [];
   constructor(
     private sanitizer: DomSanitizer,
     private authService: AuthService,
@@ -147,24 +152,32 @@ export class SidebarComponent implements OnInit {
   //         (this.currentLang === 'it' ? 'Pannello di controllo' : 'Dashboard'),
   //   );
   // }
-  private buildAccordionMenu(flatMenu: MenuItem[]): void {
+private buildAccordionMenu(flatMenu: MenuItem[]): void {
 
   const groupedItemNames = SIDEBAR_GROUPS.flatMap(group => group.items);
 
+  this.topMenus = flatMenu.filter(m =>
+    TOP_MENU_NAMES.includes(m.roleDisplayName || '')
+  );
+
+  // ✅ Remove TOP from further processing
+  const filteredMenu = flatMenu.filter(m =>
+    !TOP_MENU_NAMES.includes(m.roleDisplayName || '')
+  );
+
+  // ✅ GROUPS (UNCHANGED)
   this.groupedMenus = SIDEBAR_GROUPS.map(group => {
 
     const orderedItems: MenuItem[] = [];
 
     group.items.forEach(itemName => {
-
-      const found = flatMenu.find(
+      const found = filteredMenu.find(
         m => (m.roleDisplayName || '') === itemName
       );
 
       if (found) {
         orderedItems.push(found);
       }
-
     });
 
     return {
@@ -178,16 +191,13 @@ export class SidebarComponent implements OnInit {
 
   }).filter(group => group.items.length > 0);
 
-
-  this.standaloneMenus = flatMenu.filter(
-    m =>
-      !groupedItemNames.includes(m.roleDisplayName || '') &&
-      m.roleDisplayName !==
-      (this.currentLang === 'it'
-        ? 'Pannello di controllo'
-        : 'Dashboard')
+  this.standaloneMenus = filteredMenu.filter(m =>
+    !groupedItemNames.includes(m.roleDisplayName || '') &&
+    m.roleDisplayName !==
+    (this.currentLang === 'it'
+      ? 'Pannello di controllo'
+      : 'Dashboard')
   );
-
 }
 
   logout(): void {
