@@ -416,7 +416,7 @@
   padding: 6px 8px;
   background: var(--sp-bg);
   color: var(--sp-text-primary);
-  font-size: 12px;
+  font-size: 12px; 
   font-weight: 500;
   cursor: pointer;
   transition: var(--sp-transition-fast);
