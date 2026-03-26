@@ -55,7 +55,7 @@
                 </ng-container>
 
                 <!-- TEXT CELL -->
-                <ng-container *ngIf="cell.type === 'text'">
+                <ng-container  *ngIf="cell.type === 'text'">
                   <a *ngIf="clickableField === (columnFields?.[i] || col.toLowerCase())"
                     href="javascript:void(0)"
                     class="rt-cell-link"
@@ -75,7 +75,7 @@
             <td *ngIf="showActions" class="rt-cell rt-actions-cell">
               <div class="rt-actions-group">
                 <!-- VIEW BUTTON -->
-                <button class="rt-action-btn rt-view-btn"
+                <button *ngIf="showView" class="rt-action-btn rt-view-btn"
                   matTooltip="{{ 'common.view' | translate }}"
                   matTooltipPosition="above"
                   (click)="viewRow.emit(row)"

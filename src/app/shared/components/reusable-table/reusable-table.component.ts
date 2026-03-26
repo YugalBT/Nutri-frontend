@@ -46,6 +46,7 @@ export class ReusableTableComponent implements OnChanges {
 
   @Input() pageSize = 10;
   @Input() pageIndex = 0;
+  @Input() showView: boolean = false;
 
   @Output() pageChange = new EventEmitter<{
     pageIndex: number;
