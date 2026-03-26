@@ -255,26 +255,38 @@ export class SupplierPricingFormulaAddEditComponent {
     }
   }
 
-  private mapFormulaeArrayToTokens(
-    formulaeArray: string[] | null,
-    displayArray: string[] | null,
-  ): string[] {
+private mapFormulaeArrayToTokens(
+  formulaeArray: string[] | null,
+  displayArray: string[] | null,
+): any[] {
 
-    if (!formulaeArray || !Array.isArray(formulaeArray)) {
-      return []; // 🔥 important fix
+  if (!formulaeArray || !Array.isArray(formulaeArray)) {
+    return [];
+  }
+
+  return formulaeArray.map((item, index) => {
+
+    if (!item.includes('__')) {
+      return {
+        name: item,
+        displayName: displayArray?.[index] || item,
+        id: null
+      };
     }
 
-    return formulaeArray.map((item, index) => {
-      if (!item.includes('__')) {
-        return item;
-      }
+    const parts = item.split('__');
 
-      const [, id] = item.split('__');
-      const found = this.expressionItems.find((x) => x.id === id);
+    const id = parts.length > 1 ? parts[1] : null;
 
-      return found ? found.displayName : (displayArray?.[index] || '');
-    });
-  }
+    const found = this.expressionItems.find((x) => x.id === id);
+
+    return {
+      name: item, 
+      displayName: found?.displayName || displayArray?.[index] || item,
+      id: id
+    };
+  });
+}
 
   isOperator(token: string): boolean {
     return this.operators.some((o) => o.operatorDisplayName === token);
@@ -364,7 +376,7 @@ export class SupplierPricingFormulaAddEditComponent {
     const displayArray: string[] = [];
 
     this.expressionTokens.forEach((token) => {
-      formulaeArray.push(`${token.name}__${token.id}`);
+      formulaeArray.push(token.name); 
       displayArray.push(token.displayName);
     });
 
