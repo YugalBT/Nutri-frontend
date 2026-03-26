@@ -44,7 +44,7 @@ export class CommonService {
     private httpClient: HttpClient,
     private toast: ToastService,
     private translate: TranslateService,
-  ) {}
+  ) { }
 
   checkPermission(roleName: string, showAlert: boolean = true) {
     const hasPermission = StorageHelper.CheckRole(roleName);
@@ -125,7 +125,7 @@ export class CommonService {
     );
   }
 
-  getAllCompany():Observable<ApiResponse<any>>{
+  getAllCompany(): Observable<ApiResponse<any>> {
     return this.http.get<ApiResponse<any>>(
       API_ENDPOINTS.COMMON_API.GET_ALL_TENANT
     )
@@ -314,7 +314,7 @@ export class CommonService {
     return this.http.get<ApiResponse<any>>(url);
   }
 
-    getGetAllProductList(): Observable<ApiResponse<any[]>> {
+  getGetAllProductList(): Observable<ApiResponse<any[]>> {
     return this.http.get<any[]>(API_ENDPOINTS.COMMON_API.GET_PRODUCT,
     );
   }
@@ -324,7 +324,7 @@ export class CommonService {
     return this.http.get<ApiResponse<any>>(url);
   }
 
-    GetAllFormulaBySupplierId(supplierId: string,): Observable<ApiResponse<any>> {
+  GetAllFormulaBySupplierId(supplierId: string,): Observable<ApiResponse<any>> {
     const url = `${API_ENDPOINTS.COMMON_API.GET_ALL_FORMULA_BY_SUPPLIER_ID}?SupplierId=${supplierId}`;
     return this.http.get<ApiResponse<any>>(url);
   }

@@ -42,6 +42,14 @@ products: any[] = [];
   private subs: Subscription[] = [];
   isSupplier = false;
   supplierData: any = null;
+  @ViewChild('validateModal') validateModal!: ElementRef;
+validateModalInstance: any;
+
+validateModel: any = {
+  baseCost: 1000,
+  commissionPercent: 10,
+  bulkProcessingCost: 50
+};
 
   selectedStatus: number = 1;
   constructor(
@@ -75,6 +83,9 @@ products: any[] = [];
     this.onSupplierChange();
   }
   }
+  ngAfterViewInit() {
+  this.validateModalInstance = new bootstrap.Modal(this.validateModal.nativeElement);
+}
 
   /* ================= MODAL ================= */
 
@@ -391,16 +402,33 @@ onValidate(): void {
     return;
   }
 
+  this.validateModalInstance.show();
+}
+
+closeValidateModal(): void {
+  this.validateModalInstance.hide();
+}
+
+runValidation() {
+
   const formula = this.expressionTokens
     .map(t => t.name)
     .join(' ');
 
-  this.supplierformulaService.validateformula({ formula })
+  const payload = {
+    formula: formula,
+    baseCost: this.validateModel.baseCost,
+    commissionPercent: this.validateModel.commissionPercent,
+    bulkProcessingCost: this.validateModel.bulkProcessingCost
+  };
+
+  this.supplierformulaService.validateformula(payload)
     .subscribe(res => {
       if (res.isSuccess) {
         this.isvalidated = true;
         this.validatedResult = res.data;
         this.toast.success("Formula is valid");
+        this.closeValidateModal();  
       } else {
         this.isvalidated = false;
         this.toast.error(res.message);

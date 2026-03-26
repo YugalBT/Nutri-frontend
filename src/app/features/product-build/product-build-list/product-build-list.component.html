@@ -65,6 +65,7 @@
           [pageIndex]="pageIndex"
           (pageChange)="onPageChange($event)"
           (toggleActive)="onToggleActive($event)"
+          (viewRow)="onView($event)"
           (deleteRow)="onDelete($event)"
           (editRow)="modal.openModal(true, $event)">
         </app-reusable-table>

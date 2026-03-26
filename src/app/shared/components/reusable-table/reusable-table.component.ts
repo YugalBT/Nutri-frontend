@@ -51,6 +51,7 @@ export class ReusableTableComponent implements OnChanges {
     pageIndex: number;
     pageSize: number;
   }>();
+  @Output() viewRow = new EventEmitter<any>();
   @Output() editRow = new EventEmitter<any>();
   @Output() deleteRow = new EventEmitter<any>();
   @Output() toggleActive = new EventEmitter<{ row: any; isActive: boolean }>();

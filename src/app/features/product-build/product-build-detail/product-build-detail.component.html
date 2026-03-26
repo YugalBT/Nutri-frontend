@@ -1,0 +1,146 @@
+<div class="pb-detail-container" *ngIf="!loading && build">
+
+  <!-- HEADER -->
+  <div class="pb-detail-header">
+    <div class="pb-header-content">
+      <div class="pb-header-left">
+        <button class="pb-back-btn" (click)="goBack()" title="Go Back">
+          <i class="bi bi-arrow-left"></i>
+        </button>
+        <div class="pb-header-info">
+          <h1 class="pb-detail-title">{{ build.productName || 'Product Build' }}</h1>
+          <!-- <p class="pb-detail-subtitle">Product Build ID: {{ build.productBuildId }}</p> -->
+        </div>
+      </div>
+      <div class="pb-header-status" [ngClass]="build.isActive ? 'active' : 'inactive'">
+        <i class="bi" [ngClass]="build.isActive ? 'bi-check-circle-fill' : 'bi-x-circle-fill'"></i>
+        <span>{{ build.isActive ? 'Active' : 'Inactive' }}</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- DETAILS SECTION -->
+  <div class="pb-detail-section">
+    <h2 class="pb-section-title">
+      <i class="bi bi-info-circle"></i>
+      Build Details
+    </h2>
+    
+    <div class="pb-details-grid">
+      <!-- Product -->
+      <div class="pb-detail-card">
+        <label class="pb-detail-label">Product</label>
+        <p class="pb-detail-value">{{ build.productName || '-' }}</p>
+      </div>
+
+      <!-- Supplier -->
+      <div class="pb-detail-card" *ngIf="!isSupplier">
+        <label class="pb-detail-label">Supplier</label>
+        <p class="pb-detail-value">{{ build.supplierName || '-' }}</p>
+      </div>
+
+      <!-- Formula -->
+      <div class="pb-detail-card">
+        <label class="pb-detail-label">Formula</label>
+        <p class="pb-detail-value">{{ build.formulaName || 'N/A' }}</p>
+      </div>
+
+      <!-- Date -->
+      <div class="pb-detail-card">
+        <label class="pb-detail-label">Price Date</label>
+        <p class="pb-detail-value">{{ build.priceDate | date:'short' }}</p>
+      </div>
+
+      <!-- Total Cost -->
+      <div class="pb-detail-card">
+        <label class="pb-detail-label">Total Cost</label>
+        <p class="pb-detail-value pb-cost">{{ build.totalCost | number:'1.2-2' }}</p>
+      </div>
+
+      <!-- Status -->
+      <div class="pb-detail-card">
+        <label class="pb-detail-label">Status</label>
+        <p class="pb-detail-value">
+          <span class="pb-status-badge" [ngClass]="build.isActive ? 'badge-success' : 'badge-danger'">
+            {{ build.isActive ? 'Active' : 'Inactive' }}
+          </span>
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- MATERIALS SECTION -->
+  <div class="pb-detail-section">
+    <h2 class="pb-section-title">
+      <i class="bi bi-layers"></i>
+      Materials Breakdown
+    </h2>
+
+    <div class="pb-table-responsive">
+      <table class="pb-detail-table" *ngIf="build.items && build.items.length > 0">
+        <thead>
+          <tr>
+            <th>Material</th>
+            <th class="text-center">Unit Price</th>
+            <th class="text-center">Percentage</th>
+            <th class="text-center">Calculated Cost</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of build.items">
+            <td class="pb-material-cell">{{ item.materialName || 'Unknown Material' }}</td>
+            <td class="text-center">{{ item.unitPrice | number:'1.2-2' }}</td>
+            <td class="text-center">{{ item.percentage | number:'1.0-0' }}%</td>
+            <td class="text-center pb-cost">{{ item.calculatedCost | number:'1.2-2' }}</td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="pb-no-items" *ngIf="!build.items || build.items.length === 0">
+        <p>No materials found</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- SUMMARY SECTION -->
+  <div class="pb-summary-container">
+    <div class="pb-summary-right">
+      <div class="pb-summary-card">
+        <div class="pb-summary-row">
+          <span class="pb-summary-label">Total Percentage:</span>
+          <span class="pb-summary-val" [ngClass]="getTotalPercentage() === 100 ? 'success' : 'warning'">
+            {{ getTotalPercentage() | number:'1.0-0' }}%
+          </span>
+        </div>
+
+        <div class="pb-summary-row">
+          <span class="pb-summary-label">Total Material Cost:</span>
+          <span class="pb-summary-val">{{ getTotalAmount() | number:'1.2-2' }}</span>
+        </div>
+
+        <div class="pb-summary-divider"></div>
+
+        <div class="pb-summary-row pb-summary-total">
+          <span class="pb-summary-label">Final Cost:</span>
+          <span class="pb-summary-val pb-total">{{ build.totalCost | number:'1.2-2' }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ACTION BUTTONS -->
+  <div class="pb-detail-actions">
+    <button class="pb-btn-secondary" (click)="goBack()">
+      <i class="bi bi-arrow-left"></i>
+      Back to List
+    </button>
+  </div>
+
+</div>
+
+<!-- LOADING STATE -->
+<div class="pb-loading" *ngIf="loading">
+  <div class="pb-spinner">
+    <div class="spinner-border"></div>
+    <p>Loading product build details...</p>
+  </div>
+</div>

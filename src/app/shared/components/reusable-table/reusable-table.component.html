@@ -74,6 +74,16 @@
             <!-- ACTIONS CELL -->
             <td *ngIf="showActions" class="rt-cell rt-actions-cell">
               <div class="rt-actions-group">
+                <!-- VIEW BUTTON -->
+                <button class="rt-action-btn rt-view-btn"
+                  matTooltip="{{ 'common.view' | translate }}"
+                  matTooltipPosition="above"
+                  (click)="viewRow.emit(row)"
+                  type="button"
+                  [attr.aria-label]="'View row'">
+                  <i class="bi bi-eye-fill"></i>
+                </button>
+
                 <!-- EDIT BUTTON -->
                 <button class="rt-action-btn rt-edit-btn"
                   matTooltip="{{ 'common.edit' | translate }}"

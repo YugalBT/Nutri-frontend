@@ -51,6 +51,6 @@ export class ProductBuildService {
   }
 
   calculateFormula(payload: { formulaId: string, baseCost: number }): Observable<ApiResponse<any>> {
-  return this.http.post(API_ENDPOINTS.FORMULA.CALCULATE, payload);
+  return this.http.post(API_ENDPOINTS.SUPPLIER_PRICE_FORMULA.CALCULATE, payload);
 }
 }

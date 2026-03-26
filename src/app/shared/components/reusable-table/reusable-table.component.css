@@ -119,9 +119,6 @@
 }
 
 /* ===== TABLE BODY ===== */
-.rt-tbody {
-}
-
 .rt-body-row {
   border-bottom: 1px solid var(--rt-border);
   transition: var(--rt-transition);
@@ -323,7 +320,6 @@
   font-size: 16px;
   transition: var(--rt-transition);
   padding: 0;
-  type: button;
 }
 
 .rt-action-btn:hover {
@@ -339,6 +335,11 @@
 .rt-edit-btn:hover {
   color: var(--rt-success);
   background: rgba(5, 150, 105, 0.1);
+}
+
+.rt-view-btn:hover {
+  color: var(--rt-primary);
+  background: rgba(44, 162, 143, 0.1);
 }
 
 .rt-delete-btn:hover {

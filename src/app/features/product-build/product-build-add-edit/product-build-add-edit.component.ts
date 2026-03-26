@@ -36,6 +36,12 @@ export class ProductBuildAddEditComponent implements OnInit {
   finalCost: number = 0;
   isCalculating = false;
 
+  // Display properties for viewing
+  displaySupplierName: string = '';
+  displayProductName: string = '';
+  displayFormulaName: string = '';
+  displayIsActive: boolean = false;
+
   constructor(
     private fb: FormBuilder,
     private service: ProductBuildService,
@@ -185,8 +191,21 @@ calculateFinal() {
                 calculatedAmount: match.calculatedCost,
                 isChanged: true
               });
+              
+              // Ensure form control is properly updated
+              item.get('percentage')?.setValue(match.percentage, { emitEvent: false });
+              item.get('calculatedAmount')?.setValue(match.calculatedCost, { emitEvent: false });
+              item.updateValueAndValidity({ emitEvent: false });
             }
           });
+          
+          // Mark form as pristine to avoid showing dirty state
+          this.form.markAsPristine();
+          
+          // Recalculate final cost after loading edit data
+          setTimeout(() => {
+            this.calculateFinal();
+          }, 100);
         }
 
       });
@@ -212,6 +231,11 @@ calculateFinal() {
           this.form.patchValue({
             formulaId: row.formulaId
           });
+          
+          // Apply formula if exists
+          if (row.formulaId) {
+            this.onFormulaChange(row.formulaId);
+          }
         }
       });
 
@@ -248,21 +272,35 @@ calculateFinal() {
   openModal(isEdit = false, row: any = null) {
 
     this.isEdit = isEdit;
+    
+    // Reset form with default values
     this.form.reset({
-      priceDate: this.getTodayDate()
+      supplierId: '',
+      productId: '',
+      priceDate: this.getTodayDate(),
+      formulaId: ''
     });
+    
     this.items.clear();
+
+    // Reset display properties
+    this.displaySupplierName = '';
+    this.displayProductName = '';
+    this.displayFormulaName = '';
+    this.displayIsActive = false;
+    this.totalCostFromDb = 0;
 
     if (!this.modalInstance) {
       this.modalInstance = new bootstrap.Modal(this.modal.nativeElement);
     }
+    
     // ✅ supplier user case
     if (this.isSupplier) {
       const supplierId = this.supplierData?.supplierId;
 
       this.form.patchValue({
         supplierId: supplierId,
-        // priceDate: row.priceDate?.substring(0, 10)
+        priceDate: this.getTodayDate()
       });
 
       this.form.get('supplierId')?.disable();
@@ -274,9 +312,17 @@ calculateFinal() {
 
       this.currentId = row.productBuildId;
 
+      // Set display properties from row
+      this.displaySupplierName = row.supplierName;
+      this.displayProductName = row.productName;
+      this.displayFormulaName = row.formulaName || 'N/A';
+      this.displayIsActive = row.isActive;
+      this.totalCostFromDb = row.totalCost || 0;
+
       this.form.patchValue({
         supplierId: row.supplierId,
-        priceDate: row.priceDate?.substring(0, 10)
+        productId: row.productId,
+        priceDate: row.priceDate?.substring(0, 10) || this.getTodayDate()
       });
 
       this.onSupplierChange(row.supplierId, true, row);

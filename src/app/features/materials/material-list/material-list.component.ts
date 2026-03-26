@@ -9,6 +9,7 @@ import { ConfirmDialogService } from '../../../shared/services/confirm-dialog.se
 import { TranslateService } from '../../../i18n/translate.service';
 import { TranslatePipe } from '../../../i18n/translate.pipe';
 import { ApiResponse } from '../../../core/models/api-response';
+import { TokenService } from '../../../shared/services/token.service';
 
 @Component({
   selector: 'app-material-list',
@@ -42,6 +43,8 @@ export class MaterialListComponent implements OnInit, OnDestroy {
   pageIndex = 0;
   searchValue = '';
   filterStatus: number | null = 2;
+  isSupplier = false;
+  supplierData: any = null;
 
   private subs: Subscription[] = [];
 
@@ -49,13 +52,18 @@ export class MaterialListComponent implements OnInit, OnDestroy {
     private materialService: MaterialService,
     private toast: ToastService,
     private confirm: ConfirmDialogService,
-    private translate: TranslateService
+    private translate: TranslateService,
+     private tokenservice: TokenService,
   ) {
     this.setColumns();
 
     this.translate.lang$.subscribe(() => {
       this.setColumns();
     });
+    this.isSupplier = !!this.tokenservice.isSupplier();
+    if (this.isSupplier) {
+      this.supplierData = this.tokenservice.getSupplierData();
+    }
   }
 
   private setColumns(): void {
@@ -78,7 +86,10 @@ export class MaterialListComponent implements OnInit, OnDestroy {
         this.loadMaterials(this.pageIndex + 1, this.pageSize);
       });
 
+      
     this.subs.push(sub);
+
+    
   }
 
   private loadMaterials(pageNo: number, recordPerPage: number): void {
@@ -87,7 +98,8 @@ export class MaterialListComponent implements OnInit, OnDestroy {
       pageNo,
       recordPerPage,
       searchValue: this.searchValue || '',
-      status: this.filterStatus
+      status: this.filterStatus,
+      supplierId:this.supplierData?.supplierId
     };
 
     const sub = this.materialService.getMaterials(payload)
