@@ -2,7 +2,7 @@ import { Component, ElementRef, ViewChild } from '@angular/core';
 import { SharedModule } from '../../../shared/shared.module';
 import { FormsModule } from '@angular/forms';
 import { TranslatePipe } from '../../../i18n/translate.pipe';
-import { OperatorList, OperatorsAndRationsList,} from '../../../core/models/operator-list';
+import { OperatorList, OperatorsAndRationsList, } from '../../../core/models/operator-list';
 import { RationList } from '../../../core/models/ration-list';
 import { CommonService } from '../../../shared/services/common.service';
 import { ToastService } from '../../../shared/services/toast.service';
@@ -21,11 +21,11 @@ declare var bootstrap: any;
 })
 export class SupplierPricingFormulaAddEditComponent {
   @ViewChild('expressionModal', { static: true }) expressionModal!: ElementRef;
-selectedProductId: string | null = null;
+  selectedProductId: string | null = null;
   modal: any;
   isEdit = false;
   formulaId: string | null = null;
-products: any[] = [];
+  products: any[] = [];
   expressionName = '';
   expressionTokens: any[] = [];
   insertIndex: number | null = null;
@@ -43,21 +43,21 @@ products: any[] = [];
   isSupplier = false;
   supplierData: any = null;
   @ViewChild('validateModal') validateModal!: ElementRef;
-validateModalInstance: any;
+  validateModalInstance: any;
 
-validateModel: any = {
-  baseCost: 1000,
-  commissionPercent: 10,
-  bulkProcessingCost: 50
-};
+  validateModel: any = {
+    baseCost: 1000,
+    commissionPercent: 10,
+    bulkProcessingCost: 50
+  };
 
   selectedStatus: number = 1;
   constructor(
     private commonService: CommonService,
     private supplierformulaService: SupplierPricingFormulaService,
     private toast: ToastService,
-    private tokenservice :TokenService
-  ) {}
+    private tokenservice: TokenService
+  ) { }
 
   ngOnInit(): void {
     this.modal = new bootstrap.Modal(this.expressionModal.nativeElement, {
@@ -65,27 +65,27 @@ validateModel: any = {
     });
     this.loadExpressionItems();
     this.loadSuppliers();
-     this.loadProducts(); 
-   this.isSupplier = !!this.tokenservice.isSupplier();
+    this.loadProducts();
+    this.isSupplier = !!this.tokenservice.isSupplier();
 
-  if (this.isSupplier) {
-    this.supplierData = this.tokenservice.getSupplierData();
+    if (this.isSupplier) {
+      this.supplierData = this.tokenservice.getSupplierData();
 
-    this.selectedSupplierId = this.supplierData?.supplierId;
+      this.selectedSupplierId = this.supplierData?.supplierId;
 
-    this.onSupplierChange();
-  }
+      this.onSupplierChange();
+    }
 
-  this.loadSuppliers();
+    this.loadSuppliers();
 
-  // Load materials if selectedSupplierId is set on page load
-  if (this.selectedSupplierId) {
-    this.onSupplierChange();
-  }
+    // Load materials if selectedSupplierId is set on page load
+    if (this.selectedSupplierId) {
+      this.onSupplierChange();
+    }
   }
   ngAfterViewInit() {
-  this.validateModalInstance = new bootstrap.Modal(this.validateModal.nativeElement);
-}
+    this.validateModalInstance = new bootstrap.Modal(this.validateModal.nativeElement);
+  }
 
   /* ================= MODAL ================= */
 
@@ -95,7 +95,7 @@ validateModel: any = {
     this.isvalidated = false;
     this.validatedResult = null;
     this.selectedProductId = null;
-    this.resetForm(); 
+    this.resetForm();
 
     // Set supplier ID after reset - preserve supplier ID for supplier users
     if (this.isSupplier) {
@@ -110,18 +110,18 @@ validateModel: any = {
       this.selectedSupplierId = data.supplierId;
       this.selectedStatus =
         data.formulaStatus === 'Active' ? 0 :
-        data.formulaStatus === 'Draft' ? 1 : 1;
+          data.formulaStatus === 'Draft' ? 1 : 1;
 
       this.expressionTokens = this.mapFormulaeArrayToTokens(
-        data.formulaeArray,
-        data.displayArray,
+        data?.formulaeArray ?? [],
+        data?.displayArray ?? []
       );
       this.loadMaterialsForEdit(data.materialItems);
     } else {
       this.formulaId = null;
       this.expressionName = '';
       this.expressionTokens = [];
-      
+
       // Load materials for new formula if supplier is selected
       if (this.selectedSupplierId) {
         this.onSupplierChange();
@@ -131,44 +131,44 @@ validateModel: any = {
     this.modal.show();
   }
   private loadMaterialsForEdit(savedItems: any[]): void {
-  if (!this.selectedSupplierId) {
-    this.materials = [];
-    return;
+    if (!this.selectedSupplierId) {
+      this.materials = [];
+      return;
+    }
+
+    const sub = this.commonService
+      .GetAllMaterialBySupplierIdInFormula(this.selectedSupplierId)
+      .subscribe({
+        next: (res: any) => {
+
+          const apiMaterials = res?.data ?? [];
+
+          this.materials = apiMaterials.map((m: any) => {
+
+            const matched = savedItems?.find(
+              (x: any) => x.materialId === m.materialId
+            );
+
+            return {
+              materialId: m.materialId,
+              materialName: m.materialName,
+              materialCode: m.materialCode,
+              totalCost: matched?.totalCost ?? 0,
+              marginPct: matched?.marginPct ?? 0,
+              sellingPrice: matched?.sellingPrice ?? 0
+            };
+          });
+
+        },
+        error: () => {
+          this.toast.error('Failed to load materials');
+          this.materials = [];
+        }
+      });
+
+    this.subs.push(sub);
   }
-
-  const sub = this.commonService
-    .GetAllMaterialBySupplierIdInFormula(this.selectedSupplierId)
-    .subscribe({
-      next: (res: any) => {
-
-        const apiMaterials = res?.data ?? [];
-
-        this.materials = apiMaterials.map((m: any) => {
-
-          const matched = savedItems?.find(
-            (x: any) => x.materialId === m.materialId
-          );
-
-          return {
-            materialId: m.materialId,
-            materialName: m.materialName,
-            materialCode: m.materialCode,
-            totalCost: matched?.totalCost ?? 0,
-            marginPct: matched?.marginPct ?? 0,
-            sellingPrice: matched?.sellingPrice ?? 0
-          };
-        });
-
-      },
-      error: () => {
-        this.toast.error('Failed to load materials');
-        this.materials = [];
-      }
-    });
-
-  this.subs.push(sub);
-}
- loadProducts() {
+  loadProducts() {
 
     this.commonService
       .getGetAllProductList()
@@ -189,7 +189,7 @@ validateModel: any = {
     this.isvalidated = false;
     this.validatedResult = null;
   }
-   loadSuppliers(): void {
+  loadSuppliers(): void {
     const sub = this.commonService.getSupplierList().subscribe({
       next: (res) => {
         this.suppliers = res?.data ?? [];
@@ -201,74 +201,78 @@ validateModel: any = {
   }
 
 
-onSupplierChange(): void {
-  if (!this.selectedSupplierId) {
-    this.materials = [];
-    return;
-  }
+  onSupplierChange(): void {
+    if (!this.selectedSupplierId) {
+      this.materials = [];
+      return;
+    }
 
-  const sub = this.commonService
-    .GetAllMaterialBySupplierIdInFormula(this.selectedSupplierId)
-    .subscribe({
-      next: (res: any) => {
-        if (!res || !res.data) {
+    const sub = this.commonService
+      .GetAllMaterialBySupplierIdInFormula(this.selectedSupplierId)
+      .subscribe({
+        next: (res: any) => {
+          if (!res || !res.data) {
+            this.materials = [];
+            return;
+          }
+
+          this.materials = res.data.map((m: any) => ({
+            materialId: m.materialId,
+            materialName: m.materialName,
+            materialCode: m.materialCode,
+            totalCost: 0,
+            sellingPrice: 0,
+            marginPct: 0
+          }));
+        },
+        error: () => {
+          this.toast.error('Failed to load materials');
           this.materials = [];
-          return;
-        }
+        },
+      });
 
-        this.materials = res.data.map((m: any) => ({
-          materialId: m.materialId,
-          materialName: m.materialName,
-          materialCode: m.materialCode,
-          totalCost: 0,
-          sellingPrice: 0,
-          marginPct: 0
-        }));
-      },
-      error: () => {
-        this.toast.error('Failed to load materials');
-        this.materials = [];
-      },
-    });
-
-  this.subs.push(sub);
-}
-
-calculateFromCost(material: any) {
-  if (material.totalCost && material.marginPct != null) {
-    material.sellingPrice =
-      material.totalCost * (1 + material.marginPct / 100);
+    this.subs.push(sub);
   }
-}
 
-calculateFromSelling(material: any) {
-  if (material.totalCost && material.sellingPrice) {
-    material.marginPct =
-      ((material.sellingPrice - material.totalCost) / material.totalCost) * 100;
+  calculateFromCost(material: any) {
+    if (material.totalCost && material.marginPct != null) {
+      material.sellingPrice =
+        material.totalCost * (1 + material.marginPct / 100);
+    }
   }
-}
 
-calculateFromMargin(material: any) {
-  if (material.totalCost && material.marginPct != null) {
-    material.sellingPrice =
-      material.totalCost * (1 + material.marginPct / 100);
+  calculateFromSelling(material: any) {
+    if (material.totalCost && material.sellingPrice) {
+      material.marginPct =
+        ((material.sellingPrice - material.totalCost) / material.totalCost) * 100;
+    }
   }
-}
+
+  calculateFromMargin(material: any) {
+    if (material.totalCost && material.marginPct != null) {
+      material.sellingPrice =
+        material.totalCost * (1 + material.marginPct / 100);
+    }
+  }
 
   private mapFormulaeArrayToTokens(
-    formulaeArray: string[],
-    displayArray: string[],
+    formulaeArray: string[] | null,
+    displayArray: string[] | null,
   ): string[] {
+
+    if (!formulaeArray || !Array.isArray(formulaeArray)) {
+      return []; // 🔥 important fix
+    }
+
     return formulaeArray.map((item, index) => {
       if (!item.includes('__')) {
         return item;
       }
 
       const [, id] = item.split('__');
-
       const found = this.expressionItems.find((x) => x.id === id);
 
-      return found ? found.displayName : displayArray[index];
+      return found ? found.displayName : (displayArray?.[index] || '');
     });
   }
 
@@ -280,40 +284,40 @@ calculateFromMargin(material: any) {
     this.insertIndex = index;
   }
 
-addToken(item: any): void {
-  const token = {
-    name: item.name,             
-    displayName: item.displayName,
-    id: item.id
-  };
+  addToken(item: any): void {
+    const token = {
+      name: item.name,
+      displayName: item.displayName,
+      id: item.id
+    };
 
-  if (this.insertIndex === null) {
-    this.expressionTokens.push(token);
-  } else {
-    this.expressionTokens.splice(this.insertIndex++, 0, token);
+    if (this.insertIndex === null) {
+      this.expressionTokens.push(token);
+    } else {
+      this.expressionTokens.splice(this.insertIndex++, 0, token);
+    }
   }
-}
 
 
-getDisplayName(token: any): string {
-  if (typeof token === 'string') return token;
-  return token?.displayName || '';
-}
-addNumber(value: string): void {
-  if (!value) return;
-
-  const token = {
-    name: value,
-    displayName: value,
-    id: null
-  };
-
-  if (this.insertIndex === null) {
-    this.expressionTokens.push(token);
-  } else {
-    this.expressionTokens.splice(this.insertIndex++, 0, token);
+  getDisplayName(token: any): string {
+    if (typeof token === 'string') return token;
+    return token?.displayName || '';
   }
-}
+  addNumber(value: string): void {
+    if (!value) return;
+
+    const token = {
+      name: value,
+      displayName: value,
+      id: null
+    };
+
+    if (this.insertIndex === null) {
+      this.expressionTokens.push(token);
+    } else {
+      this.expressionTokens.splice(this.insertIndex++, 0, token);
+    }
+  }
 
   removeToken(index: number): void {
     this.expressionTokens.splice(index, 1);
@@ -328,126 +332,126 @@ addNumber(value: string): void {
   }
 
 
-validateExpression(): void {
-  if (!this.isvalidated) {
-    this.toast.warning("Please validate formula first");
-    return;
-  }
+  validateExpression(): void {
+    if (!this.isvalidated) {
+      this.toast.warning("Please validate formula first");
+      return;
+    }
 
-  const payload = this.buildPayload();
+    const payload = this.buildPayload();
 
-  const api$ = this.isEdit
-    ? this.supplierformulaService.updateformula({
+    const api$ = this.isEdit
+      ? this.supplierformulaService.updateformula({
         ...payload,
         formulaId: this.formulaId
       })
-    : this.supplierformulaService.createformula(payload);
+      : this.supplierformulaService.createformula(payload);
 
-  api$.subscribe(res => {
-    if (res.isSuccess) {
-      this.toast.success(res.message);
-      this.closeModal();
-    } else {
-      this.toast.error(res.message);
-    }
-  });
-}
+    api$.subscribe(res => {
+      if (res.isSuccess) {
+        this.toast.success(res.message);
+        this.closeModal();
+      } else {
+        this.toast.error(res.message);
+      }
+    });
+  }
 
   /* ================= PAYLOAD BUILDER ================= */
 
-private buildPayload() {
-  const formulaeArray: string[] = [];
-  const displayArray: string[] = [];
+  private buildPayload() {
+    const formulaeArray: string[] = [];
+    const displayArray: string[] = [];
 
-  this.expressionTokens.forEach((token) => {
-    formulaeArray.push(`${token.name}__${token.id}`);
-    displayArray.push(token.displayName);
-  });
+    this.expressionTokens.forEach((token) => {
+      formulaeArray.push(`${token.name}__${token.id}`);
+      displayArray.push(token.displayName);
+    });
 
-  return {
-    supplierId: this.selectedSupplierId,
-    formulaName: this.expressionName,
-    productId: this.selectedProductId,
+    return {
+      supplierId: this.selectedSupplierId,
+      formulaName: this.expressionName,
+      productId: this.selectedProductId,
 
-    formula: this.expressionTokens
-  .map(t => this.isOperatorToken(t) ? t.displayName : t.name)
-  .join(' '),
+      formula: this.expressionTokens
+        .map(t => this.isOperatorToken(t) ? t.displayName : t.name)
+        .join(' '),
 
-    formulaeArray,
-    displayArray,
-    formulaStatus: this.selectedStatus,
+      formulaeArray,
+      displayArray,
+      formulaStatus: this.selectedStatus,
 
-    materialItems: this.materials
-      .filter(m => m.marginPct > 0)
-      .map(m => ({
-        materialId: m.materialId,
-        totalCost: m.totalCost,
-        marginPct: m.marginPct,
-        sellingPrice: m.sellingPrice
-      }))
-  };
-}
-isOperatorToken(token: any): boolean {
-  return token.name?.startsWith('operator__');
-}
+      materialItems: this.materials
+        .filter(m => m.marginPct > 0)
+        .map(m => ({
+          materialId: m.materialId,
+          totalCost: m.totalCost,
+          marginPct: m.marginPct,
+          sellingPrice: m.sellingPrice
+        }))
+    };
+  }
+  isOperatorToken(token: any): boolean {
+    return token.name?.startsWith('operator__');
+  }
   private loadExpressionItems(): void {
     this.commonService.getGetAllOperatorsAndMaterialList().subscribe((res) => {
       this.expressionItems = res.data ?? [];
     });
   }
 
-onValidate(): void {
-  if (!this.expressionTokens.length) {
-    this.toast.warning('Expression cannot be empty');
-    return;
+  onValidate(): void {
+    if (!this.expressionTokens.length) {
+      this.toast.warning('Expression cannot be empty');
+      return;
+    }
+
+    this.validateModalInstance.show();
   }
 
-  this.validateModalInstance.show();
-}
+  closeValidateModal(): void {
+    this.validateModalInstance.hide();
+  }
 
-closeValidateModal(): void {
-  this.validateModalInstance.hide();
-}
+  runValidation() {
 
-runValidation() {
+    const formula = this.expressionTokens
+      .map(t => t.name)
+      .join(' ');
 
-  const formula = this.expressionTokens
-    .map(t => t.name)
-    .join(' ');
+    const payload = {
+      formula: formula,
+      baseCost: this.validateModel.baseCost,
+      commissionPercent: this.validateModel.commissionPercent,
+      bulkProcessingCost: this.validateModel.bulkProcessingCost
+    };
 
-  const payload = {
-    formula: formula,
-    baseCost: this.validateModel.baseCost,
-    commissionPercent: this.validateModel.commissionPercent,
-    bulkProcessingCost: this.validateModel.bulkProcessingCost
-  };
+    this.supplierformulaService.validateformula(payload)
+      .subscribe(res => {
+        if (res.isSuccess) {
+          this.isvalidated = true;
+          this.validatedResult = res.data;
+          this.toast.success("Formula is valid");
+          this.closeValidateModal();
+        } else {
+          this.isvalidated = false;
+          this.toast.error(res.message);
+        }
+      });
+  }
 
-  this.supplierformulaService.validateformula(payload)
-    .subscribe(res => {
-      if (res.isSuccess) {
-        this.isvalidated = true;
-        this.validatedResult = res.data;
-        this.toast.success("Formula is valid");
-        this.closeValidateModal();  
-      } else {
-        this.isvalidated = false;
-        this.toast.error(res.message);
-      }
-    });
-}
+  private resetForm(): void {
+    this.expressionName = '';
+    this.expressionTokens = [];
+    this.insertIndex = null;
 
-private resetForm(): void {
-  this.expressionName = '';
-  this.expressionTokens = [];
-  this.insertIndex = null;
+    this.selectedSupplierId = null;
+    this.selectedProductId = null;
+    this.selectedStatus = 1;
 
-  this.selectedSupplierId = null;
-  this.selectedProductId = null;
-  this.selectedStatus = 1;
+    this.materials = [];
 
-  this.materials = [];
-
-  this.isvalidated = false;
-  this.validatedResult = null;
-}
+    this.isvalidated = false;
+    this.validatedResult = null;
+  }
 }

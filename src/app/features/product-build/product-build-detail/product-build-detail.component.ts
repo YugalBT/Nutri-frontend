@@ -28,23 +28,25 @@ export class ProductBuildDetailComponent implements OnInit, OnDestroy {
     private toast: ToastService
   ) {}
 
-  ngOnInit(): void {
-    this.isSupplier = !!this.tokenService.isSupplier();
-    
-    // Try to get data from navigation state first
-    const navData = window.history.state?.build;
-    
-    if (navData) {
-      this.build = navData;
-      this.loading = false;
-    } else {
-      // Fallback: fetch from API if no navigation state
-      const id = this.route.snapshot.paramMap.get('id');
-      if (id) {
-        this.loadBuildDetail(id);
-      }
-    }
+ ngOnInit(): void {
+  this.isSupplier = !!this.tokenService.isSupplier();
+
+  const id = this.route.snapshot.paramMap.get('id');
+  const navData = window.history.state?.build;
+
+  // Show quick data (optional)
+  if (navData) {
+    this.build = navData;
   }
+
+  // ✅ ALWAYS load full detail
+  if (id) {
+    this.loadBuildDetail(id);
+  } else {
+    this.toast.error('Invalid ID');
+    this.goBack();
+  }
+}
 
   private loadBuildDetail(id: string): void {
     const sub = this.service.getById(id).subscribe({
