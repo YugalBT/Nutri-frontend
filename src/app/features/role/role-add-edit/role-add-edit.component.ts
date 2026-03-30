@@ -17,6 +17,8 @@ import { AddEditRoleService } from '../../../core/services/role/add-edit-role.se
 import { RoleItem, CreateUpdateRolePayload, Module, GetAllModulesResponse } from '../../../core/models/add-edit-role';
 import { SharedModule } from '../../../shared/shared.module';
 import { PERMISSIONS } from '../../../core/constants/permissions.constants';
+import { PermissionService } from '../../../shared/services/permission.service';
+import { selectUserRoles } from '../../../state/auth/auth.selectors';
 
 declare var bootstrap: any;
 

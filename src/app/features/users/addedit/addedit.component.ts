@@ -21,7 +21,8 @@ import { CompanyService } from '../../../core/services/company/company.service';
 import { CompanyList } from '../../../core/models/company-list';
 import { Store } from '@ngrx/store';
 import { User } from '../../../state/auth/auth.models';
-import { selectAuthUser } from '../../../state/auth/auth.selectors';
+import { selectAuthUser, selectUserRoles } from '../../../state/auth/auth.selectors';
+import { PermissionService } from '../../../shared/services/permission.service';
 
 declare var bootstrap: any;
 

@@ -6,7 +6,7 @@
       <h3 class="page-title">{{ 'farm.Heading' | translate }}</h3>
     </div>
 
-    <button class="btn add-btn" *ngIf="canAddFarm" (click)="farmAddEdit.openModal()">
+    <button class="btn add-btn" *ngIf="canAddFarm" (click)="farmModal.openModal()">
       <i class="bi bi-plus-lg me-2"></i>
       {{ 'farm.addFarm' | translate }}
     </button>

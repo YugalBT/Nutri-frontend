@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ReusableTableComponent } from '../../../shared/components/reusable-table/reusable-table.component';
 import { AddeditComponent } from '../addedit/addedit.component';
@@ -21,7 +22,7 @@ import { selectUserRoles } from '../../../state/auth/auth.selectors';
 @Component({
   selector: 'app-list',
   standalone: true,
-  imports: [ReusableTableComponent, AddeditComponent, TranslatePipe, GlobalSearchComponent],
+  imports: [CommonModule, ReusableTableComponent, AddeditComponent, TranslatePipe, GlobalSearchComponent],
   templateUrl: './list.component.html',
   styleUrls: ['./list.component.css']
 })

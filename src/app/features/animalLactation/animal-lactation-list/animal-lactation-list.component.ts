@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { AnimallactationList } from '../../../core/models/animallactation-list';
 import { Subscription } from 'rxjs';
@@ -20,7 +21,7 @@ import { selectUserRoles } from '../../../state/auth/auth.selectors';
 @Component({
   selector: 'app-animal-lactation-list',
   standalone: true,
-  imports: [SharedModule, AnimalLactationAddEditComponent, ReusableTableComponent, GlobalSearchComponent,TranslatePipe],
+  imports: [CommonModule, SharedModule, AnimalLactationAddEditComponent, ReusableTableComponent, GlobalSearchComponent, TranslatePipe],
   templateUrl: './animal-lactation-list.component.html',
   styleUrls: ['./animal-lactation-list.component.css']
 })
@@ -81,10 +82,6 @@ export class AnimalLactationListComponent implements OnInit, OnDestroy {
       this.canAddAnimalLactation = this.userRoles.includes(PERMISSIONS.AnimalLactationAdd);
     });
     this.subs.push(subRoles);
-  }
-
-  ngOnDestroy(): void {
-    this.subs.forEach(sub => sub.unsubscribe());
   }
 
   private loadAnimalLactation(pageNo: number, recordPerPage: number): void {

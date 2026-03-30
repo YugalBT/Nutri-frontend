@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common';
 import { Component, ViewChild, OnDestroy, OnInit } from '@angular/core';
 import { ReusableTableComponent } from '../../../shared/components/reusable-table/reusable-table.component';
 import { MaterialAddEditComponent } from '../material-add-edit/material-add-edit.component';
@@ -19,6 +20,7 @@ import { selectUserRoles } from '../../../state/auth/auth.selectors';
   selector: 'app-material-list',
   standalone: true,
   imports: [
+    CommonModule,
     ReusableTableComponent,
     MaterialAddEditComponent,
     GlobalSearchComponent,
@@ -101,10 +103,6 @@ export class MaterialListComponent implements OnInit, OnDestroy {
       });
 
     this.subs.push(sub);
-  }
-
-  ngOnDestroy(): void {
-    this.subs.forEach(sub => sub.unsubscribe());
   }
 
   private loadUserPermissions(): void {
