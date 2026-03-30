@@ -13,8 +13,8 @@ export const SIDEBAR_GROUPS = [
           'Animal Lactation Stage','Archive','Daily Entry']  
 },
   {
-    key: 'herd',
-    title: 'sidebarmenu.herd',
+    key: 'consultation',
+    title: 'sidebarmenu.consultation',
     icon: SIDEBAR_ICONS.FARM,
     items: ['Parti', 'Sanita', 'Fertilita', 'Milk Price History']
   },
