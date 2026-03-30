@@ -13,6 +13,7 @@ export interface User {
   primaryColor?: string;
   secondaryColor?: string;
   companyName?: string;
+  roleName?: string;
   tenantId: string;
   parentTenantId?: string | null;
   isCompany?: boolean;

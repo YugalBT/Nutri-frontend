@@ -2,6 +2,7 @@ import { Component, ViewChild, OnDestroy, OnInit } from '@angular/core';
 import { ReusableTableComponent } from '../../../shared/components/reusable-table/reusable-table.component';
 import { ProductBuildAddEditComponent } from '../product-build-add-edit/product-build-add-edit.component';
 import { GlobalSearchComponent } from '../../../shared/components/global-search/global-search.component';
+import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { ProductBuildService } from '../../../core/services/product-build-service/product-build-service';
 import { ToastService } from '../../../shared/services/toast.service';
@@ -47,7 +48,8 @@ export class ProductBuildListComponent implements OnInit, OnDestroy {
     private service: ProductBuildService,
     private toast: ToastService,
     private confirm: ConfirmDialogService,
-    private translate: TranslateService
+    private translate: TranslateService,
+    private router: Router
   ) {
     this.setColumns();
 
@@ -62,7 +64,8 @@ export class ProductBuildListComponent implements OnInit, OnDestroy {
       this.translate.instant('productBuild.supplier'),
       this.translate.instant('productBuild.date'),
       this.translate.instant('productBuild.totalCost'),
-      this.translate.instant('common.status')
+      this.translate.instant('common.status'),
+      
     ];
   }
 
@@ -186,6 +189,17 @@ export class ProductBuildListComponent implements OnInit, OnDestroy {
         });
 
       this.subs.push(sub);
+    });
+  }
+
+  onView(row: any): void {
+    if (!row?.productBuildId) {
+      this.toast.error("Invalid Product Build ID");
+      return;
+    }
+
+    this.router.navigate(['/productbuild', row.productBuildId, 'detail'], {
+      state: { build: row }
     });
   }
 

@@ -33,6 +33,14 @@ export class ProductBuildAddEditComponent implements OnInit {
   isSupplier = false;
   supplierData: any = null;
   selectedSupplierId: string | null = null;
+  finalCost: number = 0;
+  isCalculating = false;
+
+  // Display properties for viewing
+  displaySupplierName: string = '';
+  displayProductName: string = '';
+  displayFormulaName: string = '';
+  displayIsActive: boolean = false;
 
   constructor(
     private fb: FormBuilder,
@@ -44,21 +52,21 @@ export class ProductBuildAddEditComponent implements OnInit {
 
   ngOnInit() {
     this.initForm();
-      this.isSupplier = !!this.tokenservice.isSupplier();
+    this.isSupplier = !!this.tokenservice.isSupplier();
 
-  if (this.isSupplier) {
-    this.supplierData = this.tokenservice.getSupplierData();
+    if (this.isSupplier) {
+      this.supplierData = this.tokenservice.getSupplierData();
 
-    const supplierId = this.supplierData?.supplierId;
+      const supplierId = this.supplierData?.supplierId;
 
-    this.form.patchValue({
-      supplierId: supplierId
-    });
-    this.form.get('supplierId')?.disable();
-    this.onSupplierChange(supplierId);
-  }
+      this.form.patchValue({
+        supplierId: supplierId
+      });
+      this.form.get('supplierId')?.disable();
+      this.onSupplierChange(supplierId);
+    }
 
-  this.loadSuppliers();
+    this.loadSuppliers();
   }
 
   initForm() {
@@ -81,109 +89,158 @@ export class ProductBuildAddEditComponent implements OnInit {
     });
   }
 
-onFormulaChange(formulaId: string) {
-  if (!formulaId) return;
 
-  const selected = this.formulas.find(x => x.formulaId == formulaId);
-  if (!selected || !selected.items) return;
+calculateFinal() {
 
-  this.items.controls.forEach((item: FormGroup) => {
+  const baseCost = this.getTotalAmount();
+  if (!this.form.value.formulaId) {
+    this.finalCost = baseCost;
+    return;
+  }
 
-    const match = selected.items.find(
-      (x: any) => x.materialId === item.value.materialId
-    );
+  if (this.getTotalPercentage() !== 100) {
+    this.finalCost = baseCost;
+    return;
+  }
 
-    if (match) {
-      item.patchValue({
-        percentage: match.percentage,
-        calculatedAmount: match.calculatedCost,
-        isChanged: true
-      });
+  this.isCalculating = true;
 
-      this.calculate(item);
-    } else {
-      item.patchValue({
-        percentage: 0,
-        calculatedAmount: 0
-      });
+  this.service.calculateFormula({
+    formulaId: this.form.value.formulaId,
+    baseCost: baseCost
+  }).subscribe({
+    next: (res: any) => {
+      this.finalCost = res?.data || baseCost;
+      this.isCalculating = false;
+    },
+    error: () => {
+      this.finalCost = baseCost;
+      this.isCalculating = false;
     }
-
   });
 }
-getTodayDate(): string {
-  const today = new Date();
-  const offset = today.getTimezoneOffset();
-  const localDate = new Date(today.getTime() - offset * 60000);
-  return localDate.toISOString().split('T')[0];
-}
+  onFormulaChange(formulaId: string) {
+    if (!formulaId) return;
 
-onSupplierChange(supplierId: string, isEdit = false, row: any = null) {
+    const selected = this.formulas.find(x => x.formulaId == formulaId);
+    if (!selected || !selected.items) return;
 
-  if (!supplierId) return;
-  this.common
-    .GetAllMaterialBySupplierId(supplierId, {})
-    .subscribe(res => {
+    this.items.controls.forEach((item: FormGroup) => {
 
-      this.materials = res?.data ?? [];
-      this.items.clear();
+      const match = selected.items.find(
+        (x: any) => x.materialId === item.value.materialId
+      );
 
-      this.materials.forEach((m: any) => {
-        this.items.push(this.fb.group({
-          productBuildItemId: null,
-          materialId: m.materialId,
-          materialName: m.materialName,
-          amount: m.unitPrice || m.deliveredPrice || 0,
+      if (match) {
+        item.patchValue({
+          percentage: match.percentage,
+          calculatedAmount: match.calculatedCost,
+          isChanged: true
+        });
+
+        this.calculate(item);
+      } else {
+        item.patchValue({
           percentage: 0,
-          calculatedAmount: 0,
-          isChanged: false
-        }));
+          calculatedAmount: 0
+        });
+      }
+
+    });
+    this.calculateFinal();
+  }
+  getTodayDate(): string {
+    const today = new Date();
+    const offset = today.getTimezoneOffset();
+    const localDate = new Date(today.getTime() - offset * 60000);
+    return localDate.toISOString().split('T')[0];
+  }
+
+  onSupplierChange(supplierId: string, isEdit = false, row: any = null) {
+
+    if (!supplierId) return;
+    this.common
+      .GetAllMaterialBySupplierId(supplierId, {})
+      .subscribe(res => {
+
+        this.materials = res?.data ?? [];
+        this.items.clear();
+
+        this.materials.forEach((m: any) => {
+          this.items.push(this.fb.group({
+            productBuildItemId: null,
+            materialId: m.materialId,
+            materialName: m.materialName,
+            amount: m.unitPrice || m.deliveredPrice || 0,
+            percentage: 0,
+            calculatedAmount: 0,
+            isChanged: false
+          }));
+        });
+
+        if (isEdit && row) {
+          this.items.controls.forEach((item: FormGroup) => {
+
+            const match = row.items.find(
+              (x: any) => x.materialId === item.value.materialId
+            );
+
+            if (match) {
+              item.patchValue({
+                percentage: match.percentage,
+                calculatedAmount: match.calculatedCost,
+                isChanged: true
+              });
+              
+              // Ensure form control is properly updated
+              item.get('percentage')?.setValue(match.percentage, { emitEvent: false });
+              item.get('calculatedAmount')?.setValue(match.calculatedCost, { emitEvent: false });
+              item.updateValueAndValidity({ emitEvent: false });
+            }
+          });
+          
+          // Mark form as pristine to avoid showing dirty state
+          this.form.markAsPristine();
+          
+          // Recalculate final cost after loading edit data
+          setTimeout(() => {
+            this.calculateFinal();
+          }, 100);
+        }
+
       });
 
-      if (isEdit && row) {
-        this.items.controls.forEach((item: FormGroup) => {
+    this.common
+      .GetAllProductBySupplierId(supplierId)
+      .subscribe(res => {
+        this.products = res?.data ?? [];
 
-          const match = row.items.find(
-            (x: any) => x.materialId === item.value.materialId
-          );
+        if (isEdit && row) {
+          this.form.patchValue({
+            productId: row.productId
+          });
+        }
+      });
 
-          if (match) {
-            item.patchValue({
-              percentage: match.percentage,
-              calculatedAmount: match.calculatedCost,
-              isChanged: true
-            });
+    this.common
+      .GetAllFormulaBySupplierId(supplierId)
+      .subscribe(res => {
+        this.formulas = res?.data ?? [];
+
+        if (isEdit && row) {
+          this.form.patchValue({
+            formulaId: row.formulaId
+          });
+          
+          // Apply formula if exists
+          if (row.formulaId) {
+            this.onFormulaChange(row.formulaId);
           }
-        });
-      }
-
-    });
-
-  this.common
-    .GetAllProductBySupplierId(supplierId)
-    .subscribe(res => {
-      this.products = res?.data ?? [];
-
-      if (isEdit && row) {
-        this.form.patchValue({
-          productId: row.productId
-        });
-      }
-    });
-
-  this.common
-    .GetAllFormulaBySupplierId(supplierId)
-    .subscribe(res => {
-      this.formulas = res?.data ?? [];
-
-      if (isEdit && row) {
-        this.form.patchValue({
-          formulaId: row.formulaId
-        });
-      }
-    });
+        }
+      });
 
 
-}
+  }
 
   calculate(item: FormGroup) {
 
@@ -212,45 +269,67 @@ onSupplierChange(supplierId: string, isEdit = false, row: any = null) {
       sum + (x.value.percentage || 0), 0);
   }
 
-openModal(isEdit = false, row: any = null) {
+  openModal(isEdit = false, row: any = null) {
 
-  this.isEdit = isEdit;
-  this.form.reset({
-  priceDate: this.getTodayDate() 
-});
-  this.items.clear();
-
-  if (!this.modalInstance) {
-    this.modalInstance = new bootstrap.Modal(this.modal.nativeElement);
-  }
-   // ✅ supplier user case
-  if (this.isSupplier) {
-    const supplierId = this.supplierData?.supplierId;
-
-    this.form.patchValue({
-      supplierId: supplierId,
-      // priceDate: row.priceDate?.substring(0, 10)
+    this.isEdit = isEdit;
+    
+    // Reset form with default values
+    this.form.reset({
+      supplierId: '',
+      productId: '',
+      priceDate: this.getTodayDate(),
+      formulaId: ''
     });
+    
+    this.items.clear();
 
-    this.form.get('supplierId')?.disable();
+    // Reset display properties
+    this.displaySupplierName = '';
+    this.displayProductName = '';
+    this.displayFormulaName = '';
+    this.displayIsActive = false;
+    this.totalCostFromDb = 0;
 
-    this.onSupplierChange(supplierId);
+    if (!this.modalInstance) {
+      this.modalInstance = new bootstrap.Modal(this.modal.nativeElement);
+    }
+    
+    // ✅ supplier user case
+    if (this.isSupplier) {
+      const supplierId = this.supplierData?.supplierId;
+
+      this.form.patchValue({
+        supplierId: supplierId,
+        priceDate: this.getTodayDate()
+      });
+
+      this.form.get('supplierId')?.disable();
+
+      this.onSupplierChange(supplierId);
+    }
+
+    if (isEdit && row) {
+
+      this.currentId = row.productBuildId;
+
+      // Set display properties from row
+      this.displaySupplierName = row.supplierName;
+      this.displayProductName = row.productName;
+      this.displayFormulaName = row.formulaName || 'N/A';
+      this.displayIsActive = row.isActive;
+      this.totalCostFromDb = row.totalCost || 0;
+
+      this.form.patchValue({
+        supplierId: row.supplierId,
+        productId: row.productId,
+        priceDate: row.priceDate?.substring(0, 10) || this.getTodayDate()
+      });
+
+      this.onSupplierChange(row.supplierId, true, row);
+    }
+
+    this.modalInstance.show();
   }
-
-  if (isEdit && row) {
-
-    this.currentId = row.productBuildId;
-
-    this.form.patchValue({
-      supplierId: row.supplierId,
-      priceDate: row.priceDate?.substring(0, 10)
-    });
-
-    this.onSupplierChange(row.supplierId, true, row);
-  }
-
-  this.modalInstance.show();
-}
 
   save() {
     if (this.getTotalPercentage() !== 100) {
@@ -289,7 +368,6 @@ openModal(isEdit = false, row: any = null) {
       priceDate: this.form.value.priceDate,
       formulaId: this.form.value.formulaId,
       items: changedItems,
-      totalCost: this.getTotalAmount(),
       productBuildId: this.isEdit ? this.currentId : undefined
     };
 

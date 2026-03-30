@@ -545,10 +545,22 @@ export const routes: Routes = [
       },
       {
         path: 'productbuild',
-        loadComponent: () =>
-          import('./features/product-build/product-build-list/product-build-list.component').then(
-            (m) => m.ProductBuildListComponent,
-          ),
+        children: [
+          {
+            path: '',
+            loadComponent: () =>
+              import('./features/product-build/product-build-list/product-build-list.component').then(
+                (m) => m.ProductBuildListComponent,
+              ),
+          },
+          {
+            path: ':id/detail',
+            loadComponent: () =>
+              import('./features/product-build/product-build-detail/product-build-detail.component').then(
+                (m) => m.ProductBuildDetailComponent,
+              ),
+          },
+        ],
       },
 
       

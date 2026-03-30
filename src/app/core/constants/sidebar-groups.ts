@@ -9,8 +9,8 @@ export const SIDEBAR_GROUPS = [
     items: ['Users', 'Roles',]
   },
   { key: 'farm', title: 'sidebarmenu.feeding', icon: SIDEBAR_ICONS.FARM,
-  items: ['Farm','Feed','Ration','CalfBarn','Animal Group','Animal Type',
-          'Animal Lactation Stage','Archive','Daily Entry']  // ← add Daily Entry
+  items: ['Farm','Animal Group','Feed','CalfBarn','Ration','Animal Type',
+          'Animal Lactation Stage','Archive','Daily Entry']  
 },
   {
     key: 'consultation',

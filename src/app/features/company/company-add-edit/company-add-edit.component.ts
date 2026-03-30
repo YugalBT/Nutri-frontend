@@ -72,7 +72,7 @@ export class CompanyAddEditComponent implements OnInit {
           
         ],
       ],
-      middleName: ['', [Validators.required]],
+      middleName: [''],
       lastName: [
         '',
         [
