@@ -41,6 +41,12 @@ export class RationListComponent {
   // permissions
   userRoles: string[] = [];
   canAddRation = false;
+  
+  // Permission properties for table
+  viewPermission = PERMISSIONS.RationView;
+  editPermission = PERMISSIONS.RationEdit;
+  deletePermission = PERMISSIONS.RationDelete;
+  
   @ViewChild(RationAddEditComponent) rationModalRef!: RationAddEditComponent;
 
 

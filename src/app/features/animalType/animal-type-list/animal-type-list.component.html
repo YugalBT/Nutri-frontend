@@ -3,7 +3,7 @@
   <div class="page-header">
     <h3 class="page-title">{{ 'animalType.Heading' | translate }}</h3>
 
-    <button class="btn add-btn" (click)="animalTypeModal.openModal()">
+    <button class="btn add-btn" *ngIf="canAddAnimalType" (click)="animalTypeModal.openModal()">
       <i class="bi bi-plus-lg me-2"></i> {{ 'animalType.addAnimalType' | translate }}
     </button>
   </div>
@@ -28,6 +28,10 @@
       [totalRecords]="totalRecords"
       [pageSize]="pageSize"
       [pageIndex]="pageIndex"
+      [viewPermission]="viewPermission"
+      [editPermission]="editPermission"
+      [deletePermission]="deletePermission"
+      [showView]="true"
       (pageChange)="onPageChange($event)"
       (editRow)="animalTypeModal.openModal(true, $event)"
       (deleteRow)="deleteAnimalType($event)"

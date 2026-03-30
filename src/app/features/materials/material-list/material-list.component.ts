@@ -10,6 +10,10 @@ import { TranslateService } from '../../../i18n/translate.service';
 import { TranslatePipe } from '../../../i18n/translate.pipe';
 import { ApiResponse } from '../../../core/models/api-response';
 import { TokenService } from '../../../shared/services/token.service';
+import { PERMISSIONS } from '../../../core/constants/permissions.constants';
+import { PermissionService } from '../../../shared/services/permission.service';
+import { Store } from '@ngrx/store';
+import { selectUserRoles } from '../../../state/auth/auth.selectors';
 
 @Component({
   selector: 'app-material-list',
@@ -46,6 +50,13 @@ export class MaterialListComponent implements OnInit, OnDestroy {
   isSupplier = false;
   supplierData: any = null;
 
+  // Permissions
+  canAddMaterials = false;
+  viewPermission = PERMISSIONS.MaterialsView;
+  editPermission = PERMISSIONS.MaterialsEdit;
+  deletePermission = PERMISSIONS.MaterialsDelete;
+  userRoles: string[] = [];
+
   private subs: Subscription[] = [];
 
   constructor(
@@ -53,7 +64,9 @@ export class MaterialListComponent implements OnInit, OnDestroy {
     private toast: ToastService,
     private confirm: ConfirmDialogService,
     private translate: TranslateService,
-     private tokenservice: TokenService,
+    private tokenservice: TokenService,
+    private permissionService: PermissionService,
+    private store: Store
   ) {
     this.setColumns();
 
@@ -78,6 +91,7 @@ export class MaterialListComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    this.loadUserPermissions();
 
     this.loadMaterials(1, this.pageSize);
 
@@ -86,10 +100,19 @@ export class MaterialListComponent implements OnInit, OnDestroy {
         this.loadMaterials(this.pageIndex + 1, this.pageSize);
       });
 
-      
     this.subs.push(sub);
+  }
 
-    
+  ngOnDestroy(): void {
+    this.subs.forEach(sub => sub.unsubscribe());
+  }
+
+  private loadUserPermissions(): void {
+    const subRoles = this.store.select(selectUserRoles).subscribe(roles => {
+      this.userRoles = roles || [];
+      this.canAddMaterials = this.userRoles.includes(PERMISSIONS.MaterialsAdd);
+    });
+    this.subs.push(subRoles);
   }
 
   private loadMaterials(pageNo: number, recordPerPage: number): void {

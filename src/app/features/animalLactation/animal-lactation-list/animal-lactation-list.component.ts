@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { AnimallactationList } from '../../../core/models/animallactation-list';
 import { Subscription } from 'rxjs';
 import { TranslateService } from '../../../i18n/translate.service';
@@ -13,6 +13,9 @@ import { GlobalSearchComponent } from '../../../shared/components/global-search/
 import { CommonService } from '../../../shared/services/common.service';
 import { PERMISSIONS } from '../../../core/constants/permissions.constants';
 import { TranslatePipe } from '../../../i18n/translate.pipe';
+import { PermissionService } from '../../../shared/services/permission.service';
+import { Store } from '@ngrx/store';
+import { selectUserRoles } from '../../../state/auth/auth.selectors';
 
 @Component({
   selector: 'app-animal-lactation-list',
@@ -21,7 +24,7 @@ import { TranslatePipe } from '../../../i18n/translate.pipe';
   templateUrl: './animal-lactation-list.component.html',
   styleUrls: ['./animal-lactation-list.component.css']
 })
-export class AnimalLactationListComponent {
+export class AnimalLactationListComponent implements OnInit, OnDestroy {
 
   columns: string[] = [];
   columnFields: string[] = [];
@@ -33,6 +36,13 @@ export class AnimalLactationListComponent {
   searchValue = '';
   filterStatus: number | null = 2;
 
+  // Permissions
+  canAddAnimalLactation = false;
+  viewPermission = PERMISSIONS.AnimalLactationView;
+  editPermission = PERMISSIONS.AnimalLactationEdit;
+  deletePermission = PERMISSIONS.AnimalLactationDelete;
+  userRoles: string[] = [];
+
   subs: Subscription[] = [];
   langSub!: Subscription;
 
@@ -43,15 +53,18 @@ export class AnimalLactationListComponent {
     private toast: ToastService,
     private confirm: ConfirmDialogService,
     private commonService : CommonService,
-    private translateService: TranslateService
+    private translateService: TranslateService,
+    private permissionService: PermissionService,
+    private store: Store
   ) {
     this.setColumns();
     this.langSub = this.translate.lang$.subscribe(() => this.setColumns());
   }
 
   ngOnInit(): void {
-    if(!this.commonService.checkPermission(PERMISSIONS.AnimalLactationView))
+    this.loadUserPermissions();
 
+    if(!this.commonService.checkPermission(PERMISSIONS.AnimalLactationView))
       return;
 
     this.loadAnimalLactation(1, this.pageSize);
@@ -60,6 +73,18 @@ export class AnimalLactationListComponent {
       this.loadAnimalLactation(this.pageIndex + 1, this.pageSize);
     });
     this.subs.push(sub);
+  }
+
+  private loadUserPermissions(): void {
+    const subRoles = this.store.select(selectUserRoles).subscribe(roles => {
+      this.userRoles = roles || [];
+      this.canAddAnimalLactation = this.userRoles.includes(PERMISSIONS.AnimalLactationAdd);
+    });
+    this.subs.push(subRoles);
+  }
+
+  ngOnDestroy(): void {
+    this.subs.forEach(sub => sub.unsubscribe());
   }
 
   private loadAnimalLactation(pageNo: number, recordPerPage: number): void {

@@ -7,7 +7,7 @@
       <!-- <p class="page-subtitle">{{ 'role.manageDesc' | translate }}</p> -->
     </div>
 
-    <button class="btn add-btn" (click)="roleAddEdit.openModal(false)">
+    <button class="btn add-btn" *ngIf="canAddRole" (click)="roleAddEdit.openModal(false)">
       <i class="bi bi-plus-lg me-2"></i>
       {{ 'role.addRole' | translate }}
     </button>
@@ -38,6 +38,10 @@
       [totalRecords]="totalRecords"
       [pageSize]="pageSize"
       [pageIndex]="pageIndex"
+      [viewPermission]="viewPermission"
+      [editPermission]="editPermission"
+      [deletePermission]="deletePermission"
+      [showView]="true"
       (pageChange)="onPageChange($event)"
       (toggleActive)="onToggleActive($event)"
       (editRow)="roleAddEdit.openModal(true, $event)"

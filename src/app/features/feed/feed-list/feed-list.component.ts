@@ -13,6 +13,9 @@ import { FeedAddEditComponent } from '../feed-add-edit/feed-add-edit.component';
 import { CommonService } from '../../../shared/services/common.service';
 import { PERMISSIONS } from '../../../core/constants/permissions.constants';
 import { TranslatePipe } from '../../../i18n/translate.pipe';
+import { PermissionService } from '../../../shared/services/permission.service';
+import { Store } from '@ngrx/store';
+import { selectUserRoles } from '../../../state/auth/auth.selectors';
 
 @Component({
   selector: 'app-feed-list',
@@ -32,6 +35,13 @@ export class FeedListComponent {
   searchValue = '';
   filterStatus: number | null = 2;
 
+  // Permissions
+  canAddFeed = false;
+  viewPermission = PERMISSIONS.FeedView;
+  editPermission = PERMISSIONS.FeedEdit;
+  deletePermission = PERMISSIONS.FeedDelete;
+  userRoles: string[] = [];
+
   subs: Subscription[] = [];
   langSub!: Subscription;
   @ViewChild(FeedAddEditComponent) feedModalRef!: FeedAddEditComponent;
@@ -41,13 +51,17 @@ export class FeedListComponent {
     private feedService: FeedService,
     private toast: ToastService,
     private confirm: ConfirmDialogService,
-    private commonService: CommonService
+    private commonService: CommonService,
+    private permissionService: PermissionService,
+    private store: Store
   ) {
     this.setColumns();
     this.langSub = this.translate.lang$.subscribe(() => this.setColumns());
   }
 
   ngOnInit(): void {
+    this.loadUserPermissions();
+
     if (!this.commonService.checkPermission(PERMISSIONS.FeedView)
       || !this.commonService.checkPermission(PERMISSIONS.FeedDelete))
       return;
@@ -57,6 +71,14 @@ export class FeedListComponent {
       this.loadFeeds(this.pageIndex + 1, this.pageSize);
     });
     this.subs.push(sub);
+  }
+
+  private loadUserPermissions(): void {
+    const subRoles = this.store.select(selectUserRoles).subscribe(roles => {
+      this.userRoles = roles || [];
+      this.canAddFeed = this.userRoles.includes(PERMISSIONS.FeedAdd);
+    });
+    this.subs.push(subRoles);
   }
 
   private loadFeeds(pageNo: number, recordPerPage: number): void {

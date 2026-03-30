@@ -38,13 +38,11 @@
                   </div>
                 </ng-container>
 
-                <!-- SWITCH/TOGGLE CELL -->
+                <!-- SWITCH/TOGGLE CELL - ONLY RENDER AS BOOLEAN BADGE, NOT SWITCH -->
                 <ng-container *ngIf="cell.type === 'switch'">
-                  <label class="rt-switch">
-                    <input type="checkbox" [checked]="cell.value"
-                      (change)="toggleActive.emit({ row, isActive: $any($event.target).checked })">
-                    <span class="rt-slider"></span>
-                  </label>
+                  <span class="rt-badge" [class.rt-active]="cell.value" [class.rt-inactive]="!cell.value">
+                    {{ cell.value ? 'Active' : 'Inactive' }}
+                  </span>
                 </ng-container>
 
                 <!-- BOOLEAN BADGE CELL -->
@@ -75,7 +73,7 @@
             <td *ngIf="showActions" class="rt-cell rt-actions-cell">
               <div class="rt-actions-group">
                 <!-- VIEW BUTTON -->
-                <button *ngIf="showView" class="rt-action-btn rt-view-btn"
+                <button *ngIf="showView && hasPermission(viewPermission)" class="rt-action-btn rt-view-btn"
                   matTooltip="{{ 'common.view' | translate }}"
                   matTooltipPosition="above"
                   (click)="viewRow.emit(row)"
@@ -84,8 +82,8 @@
                   <i class="bi bi-eye-fill"></i>
                 </button>
 
-                <!-- EDIT BUTTON -->
-                <button class="rt-action-btn rt-edit-btn"
+                <!-- EDIT BUTTON - ONLY SHOW IF HAS EDIT PERMISSION -->
+                <button *ngIf="hasPermission(editPermission)" class="rt-action-btn rt-edit-btn"
                   matTooltip="{{ 'common.edit' | translate }}"
                   matTooltipPosition="above"
                   (click)="editRow.emit(row)"
@@ -94,8 +92,8 @@
                   <i class="bi bi-pencil-fill"></i>
                 </button>
 
-                <!-- DELETE BUTTON -->
-                <button class="rt-action-btn rt-delete-btn"
+                <!-- DELETE BUTTON - ONLY SHOW IF HAS DELETE PERMISSION -->
+                <button *ngIf="hasPermission(deletePermission)" class="rt-action-btn rt-delete-btn"
                   matTooltip="{{ 'common.delete' | translate }}"
                   matTooltipPosition="above"
                   (click)="deleteRow.emit(row)"

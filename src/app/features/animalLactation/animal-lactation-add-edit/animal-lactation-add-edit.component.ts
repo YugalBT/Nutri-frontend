@@ -1,4 +1,4 @@
-import { Component, ElementRef, ViewChild } from '@angular/core';
+import { Component, ElementRef, ViewChild, OnInit, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { ToastService } from '../../../shared/services/toast.service';
@@ -8,6 +8,9 @@ import { AnimallactationList } from '../../../core/models/animallactation-list';
 import { CommonService } from '../../../shared/services/common.service';
 import { PERMISSIONS } from '../../../core/constants/permissions.constants';
 import { TranslatePipe } from '../../../i18n/translate.pipe';
+import { PermissionService } from '../../../shared/services/permission.service';
+import { Store } from '@ngrx/store';
+import { selectUserRoles } from '../../../state/auth/auth.selectors';
 
 declare var bootstrap: any;
 
@@ -18,7 +21,7 @@ declare var bootstrap: any;
   templateUrl: './animal-lactation-add-edit.component.html',
   styleUrls: ['./animal-lactation-add-edit.component.css']
 })
-export class AnimalLactationAddEditComponent {
+export class AnimalLactationAddEditComponent implements OnInit, OnDestroy {
 
   @ViewChild('animalLactationModal', { static: true }) animalLactationModal!: ElementRef;
   form!: FormGroup;
@@ -26,20 +29,37 @@ export class AnimalLactationAddEditComponent {
 
   isEdit = false;
   currentAnimallactationId: string | null = null;
+  canSave = false;
+  userRoles: string[] = [];
 
   subs: Subscription[] = [];
-  isAddEditPermission = false;
   constructor(
     private fb: FormBuilder,
     private toast: ToastService,
     private animallactationService: AnimallactationService,
-    private commonService: CommonService
+    private commonService: CommonService,
+    private permissionService: PermissionService,
+    private store: Store
   ) {}
 
   ngOnInit() {
-    
+    this.loadUserPermissions();  
     this.initializeForm();
     this.modalInstance = new bootstrap.Modal(this.animalLactationModal.nativeElement, { backdrop: 'static' });
+  }
+
+  private loadUserPermissions(): void {
+    const subRoles = this.store.select(selectUserRoles).subscribe(roles => {
+      this.userRoles = roles || [];
+      this.updateCanSave();
+    });
+    this.subs.push(subRoles);
+  }
+
+  private updateCanSave(): void {
+    this.canSave = this.isEdit 
+      ? this.userRoles.includes(PERMISSIONS.AnimalLactationEdit) 
+      : this.userRoles.includes(PERMISSIONS.AnimalLactationAdd);
   }
 
   ngOnDestroy() {
@@ -55,12 +75,9 @@ export class AnimalLactationAddEditComponent {
 
   openModal(edit = false, data?: AnimallactationList) {
     this.isEdit = edit;
+    this.updateCanSave();
     this.form.reset();
-     this.currentAnimallactationId = null;
-
-     this.isAddEditPermission = this.isEdit
-      ? this.commonService.checkPermission(PERMISSIONS.AnimalLactationEdit)
-      : this.commonService.checkPermission(PERMISSIONS.AnimalLactationAdd);
+    this.currentAnimallactationId = null;
 
     if (edit && data) {
       this.form.patchValue({
@@ -80,19 +97,11 @@ export class AnimalLactationAddEditComponent {
   }
 
   save() {
-    const hasPermission = this.isEdit
-      ? this.commonService.checkPermission(PERMISSIONS.AnimalLactationEdit)
-      : this.commonService.checkPermission(PERMISSIONS.AnimalLactationAdd);
-
-    if (!hasPermission) {
+    if (!this.canSave) {
       this.toast.error('You do not have permission to perform this action.');
       return;
     }
 
-    if(!this.isAddEditPermission){
-      this.toast.error('You do not have permission');
-      return;
-    }
     if (!this.form.valid) {
       this.toast.warning('Please fill all required fields');
       this.form.markAllAsTouched();

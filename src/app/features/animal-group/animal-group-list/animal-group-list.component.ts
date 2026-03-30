@@ -8,6 +8,7 @@ import { ApiResponse } from '../../../core/models/api-response';
 import { PERMISSIONS } from '../../../core/constants/permissions.constants';
 import { Store } from '@ngrx/store';
 import { selectUserRoles } from '../../../state/auth/auth.selectors';
+import { PermissionService } from '../../../shared/services/permission.service';
 import { AnimalGroupAddEditComponent } from '../animal-group-add-edit/animal-group-add-edit.component';
 import { GlobalSearchComponent } from '../../../shared/components/global-search/global-search.component';
 import { ReusableTableComponent } from '../../../shared/components/reusable-table/reusable-table.component';
@@ -41,10 +42,12 @@ export class AnimalGroupListComponent implements OnInit, OnDestroy {
 
   private subs: Subscription[] = [];
 
-  // permissions
-  canAdd = false;
-  canEdit = false;
-  canDelete = false;
+  // Permissions
+  canAddAnimalGroup = false;
+  viewPermission = PERMISSIONS.AnimalGroupView;
+  editPermission = PERMISSIONS.AnimalGroupEdit;
+  deletePermission = PERMISSIONS.AnimalGroupDelete;
+  userRoles: string[] = [];
   langSub: any;
 
   constructor(
@@ -53,6 +56,7 @@ export class AnimalGroupListComponent implements OnInit, OnDestroy {
     private confirm: ConfirmDialogService,
     private store: Store,
     private translateService: TranslateService,
+    private permissionService: PermissionService
   ) {
     this.setColumns();
     this.langSub = this.translateService.lang$.subscribe(() =>
@@ -97,13 +101,11 @@ export class AnimalGroupListComponent implements OnInit, OnDestroy {
   }
 
   private loadUserPermissions(): void {
-    const s = this.store.select(selectUserRoles).subscribe((roles) => {
-      const userRoles = roles || [];
-      this.canAdd = userRoles.includes(PERMISSIONS.AnimalGroupAdd);
-      this.canEdit = userRoles.includes(PERMISSIONS.AnimalGroupEdit);
-      this.canDelete = userRoles.includes(PERMISSIONS.AnimalGroupDelete);
+    const subRoles = this.store.select(selectUserRoles).subscribe(roles => {
+      this.userRoles = roles || [];
+      this.canAddAnimalGroup = this.userRoles.includes(PERMISSIONS.AnimalGroupAdd);
     });
-    this.subs.push(s);
+    this.subs.push(subRoles);
   }
 
   loadAnimalGroups(pageNo: number, recordPerPage: number): void {

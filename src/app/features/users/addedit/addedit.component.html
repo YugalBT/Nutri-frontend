@@ -320,7 +320,7 @@
         <button class="btn btn-outline-secondary" (click)="closeModal()">
           {{ "common.cancel" | translate }}
         </button>
-        <button class="btn add-btn" (click)="saveUser()">
+        <button class="btn add-btn" *ngIf="canSave" (click)="saveUser()">
           {{ "common.save" | translate }}
         </button>
       </div>

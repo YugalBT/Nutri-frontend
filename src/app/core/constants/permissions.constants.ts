@@ -147,6 +147,40 @@ export const PERMISSIONS = {
   FertilitaAdd: 'FertilitaAdd',
   FertilitaDelete: 'FertilitaDelete',
 
+  // Language
+LanguageView: 'LanguageView',
+LanguageEdit: 'LanguageEdit',
+LanguageAdd: 'LanguageAdd',
+LanguageDelete: 'LanguageDelete',
+
+// Pricing Setting (⚠️ backend me space hai)
+PricingSettingView: 'Pricing SettingView',
+PricingSettingEdit: 'Pricing SettingEdit',
+
+// Pricing Formula
+PricingFormulaView: 'PricingFormulaView',
+PricingFormulaEdit: 'PricingFormulaEdit',
+PricingFormulaAdd: 'PricingFormulaAdd',
+PricingFormulaDelete: 'PricingFormulaDelete',
+
+// Product
+ProductView: 'ProductView',
+ProductEdit: 'ProductEdit',
+ProductAdd: 'ProductAdd',
+ProductDelete: 'ProductDelete',
+
+// Product Build (⚠️ backend me space hai)
+ProductBuildView: 'Product BuildView',
+ProductBuildEdit: 'Product BuildEdit',
+ProductBuildAdd: 'Product BuildAdd',
+ProductBuildDelete: 'Product BuildDelete',
+
+// Product Pricing (⚠️ backend me space hai)
+ProductPricingView: 'Product PricingView',
+ProductPricingEdit: 'Product PricingEdit',
+ProductPricingAdd: 'Product PricingAdd',
+ProductPricingDelete: 'Product PricingDelete',
+
   MilkPriceHistoryView: 'MilkPriceHistoryView',
   MilkPriceHistoryEdit: 'MilkPriceHistoryEdit',
   MilkPriceHistoryAdd: 'MilkPriceHistoryAdd',

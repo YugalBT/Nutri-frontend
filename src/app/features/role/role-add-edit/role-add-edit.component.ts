@@ -35,6 +35,8 @@ export class UserRoleAddEditComponent implements OnInit, OnDestroy {
   isEditMode = false;
   roleId: string | null = null;
   canManageRoles = false;
+  canSave = false;
+  userRoles: string[] = [];
   isLoading = false;
   modules: Module[] = [];
   modulesLoading = false;
@@ -56,12 +58,15 @@ export class UserRoleAddEditComponent implements OnInit, OnDestroy {
     private confirm: ConfirmDialogService,
     private spinner: NgxSpinnerService,
     private roleService: AddEditRoleService,
-    private commonService: CommonService
+    private commonService: CommonService,
+    private permissionService: PermissionService
   ) {
     this.initForm();
   }
 
   ngOnInit(): void {
+    this.loadUserPermissions();
+    
     // Check permission to manage roles
     localStorage.getItem('isSuperAdmin') === 'true' ? this.isSuperAdmin = true : this.isSuperAdmin = false;
     // const canManageSub = this.store.select(selectCanManageRoles).pipe(take(1)).subscribe((canManage) => {
@@ -76,6 +81,20 @@ export class UserRoleAddEditComponent implements OnInit, OnDestroy {
       return;
 
     this.loadModules();
+  }
+
+  private loadUserPermissions(): void {
+    const subRoles = this.store.select(selectUserRoles).subscribe(roles => {
+      this.userRoles = roles || [];
+      this.updateCanSave();
+    });
+    this.subs.push(subRoles);
+  }
+
+  private updateCanSave(): void {
+    this.canSave = this.isEditMode
+      ? this.userRoles.includes(PERMISSIONS.RoleEdit)
+      : this.userRoles.includes(PERMISSIONS.RoleAdd);
   }
 
   private initForm(): void {
@@ -138,6 +157,7 @@ private loadModules(masterRoles: boolean = false): void {
  
   openModal(isEdit: boolean, roleData?: RoleItem | undefined): void {
     this.isEditMode = isEdit;
+    this.updateCanSave();
     this.roleId = isEdit && roleData ? roleData.roleId : null;
     
     if (isEdit && roleData) {
@@ -225,6 +245,11 @@ private loadModules(masterRoles: boolean = false): void {
 
   
   saveRole(): void {
+
+ if (!this.canSave) {
+      this.toast.error(this.translate.instant('common.noPermission') || 'No permission to save');
+      return;
+    }
 
  if(!this.commonService.checkPermission(PERMISSIONS.RoleAdd)|| !this.commonService.checkPermission(PERMISSIONS.RoleEdit))
       return;

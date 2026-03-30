@@ -16,6 +16,9 @@ import { CustomValidators } from '../../../core/helpers/validators';
 import { TranslatePipe } from '../../../i18n/translate.pipe';
 import { TranslateService } from '../../../i18n/translate.service';
 import { AnimalGroupList } from '../../../core/models/animal-group-list';
+import { PERMISSIONS } from '../../../core/constants/permissions.constants';
+import { PermissionService } from '../../../shared/services/permission.service';
+import { Store } from '@ngrx/store';
 
 declare var bootstrap: any;
 
@@ -38,6 +41,10 @@ export class RationAddEditComponent implements OnInit, OnDestroy {
 
   animalGroups: AnimalGroupList[] = [];
   feeds: FeedList[] = [];
+  
+  // Permission properties
+  canSave = false;
+  userRoles: string[] = [];
 
   animalGroupsLoading = false;
   feedsLoading = false;
@@ -50,15 +57,34 @@ export class RationAddEditComponent implements OnInit, OnDestroy {
     private toast: ToastService,
     private commonService: CommonService,
     private translate: TranslateService,
+    private permissionService: PermissionService,
+    private store: Store
   ) {}
 
   ngOnInit() {
     this.initializeForm();
     this.modalInstance = new bootstrap.Modal(this.rationModal.nativeElement, { backdrop: 'static' });
+    this.loadUserPermissions();
   }
 
   ngOnDestroy() {
     this.subs.forEach(s => s.unsubscribe());
+  }
+
+  private loadUserPermissions(): void {
+    const sub = this.permissionService.userRoles$.subscribe(roles => {
+      this.userRoles = roles || [];
+      this.updateCanSave();
+    });
+    this.subs.push(sub);
+  }
+
+  private updateCanSave(): void {
+    if (this.isEdit) {
+      this.canSave = this.userRoles.includes(PERMISSIONS.RationEdit);
+    } else {
+      this.canSave = this.userRoles.includes(PERMISSIONS.RationAdd);
+    }
   }
 
   private initializeForm() {
@@ -120,6 +146,7 @@ export class RationAddEditComponent implements OnInit, OnDestroy {
     this.feeds = [];
     this.form.reset();
     this.resetRationItems();
+    this.updateCanSave(); // Update canSave based on isEdit mode
 
     const groupsSub = this.loadAnimalGroups().subscribe(() => {
       const feedsSub = this.loadFeeds().subscribe(() => {
@@ -162,6 +189,11 @@ export class RationAddEditComponent implements OnInit, OnDestroy {
   }
 
   saveRation() {
+    if (!this.canSave) {
+      this.toast.error(this.translate.instant('common.noPermission') || 'You do not have permission to perform this action');
+      return;
+    }
+
     if (!this.form.valid) {
       this.form.markAllAsTouched();
       this.toast.warning(this.translate.instant('common.formInvalid') || 'Please fill all required fields');

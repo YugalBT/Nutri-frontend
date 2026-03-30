@@ -6,7 +6,8 @@
       <h3 class="page-title">{{ 'ration.Heading' | translate }}</h3>
     </div>
 
-    <button class="btn add-btn" (click)="openAddRationModal()" [disabled]="!canAddRation">
+    <!-- ADD BUTTON - ONLY SHOW IF HAS ADD PERMISSION -->
+    <button *ngIf="canAddRation" class="btn add-btn" (click)="openAddRationModal()">
       <i class="bi bi-plus-lg me-2"></i>
       {{ 'ration.addRation' | translate }}
     </button>
@@ -31,6 +32,10 @@
       [pageable]="true"
       [totalRecords]="totalRecords",
       [clickableField]="'rationName'"
+      [viewPermission]="viewPermission"
+      [editPermission]="editPermission"
+      [deletePermission]="deletePermission"
+      [showView]="true"
       (cellClick)="onCellClick($event)"
       [pageSize]="pageSize"
       [pageIndex]="pageIndex"

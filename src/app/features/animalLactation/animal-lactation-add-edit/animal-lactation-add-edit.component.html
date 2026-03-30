@@ -3,7 +3,7 @@
     <div class="modal-content">
 
       <div class="modal-header">
-        <h5 *ngIf="isAddEditPermission" class="modal-title">
+        <h5 class="modal-title">
             {{ (isEdit 
                 ? 'animalLactationStage.editLactationStage' 
                 : 'animalLactationStage.addLactationStage') | translate }}
@@ -34,7 +34,7 @@
 
       <div class="modal-footer">
         <button class="btn btn-outline-secondary" (click)="closeModal()">{{ 'common.cancel' | translate }}</button>
-        <button class="btn add-btn" [disabled]="!isAddEditPermission" (click)="save()">
+        <button class="btn add-btn" *ngIf="canSave" (click)="save()">
           {{ isEdit ? ('common.update' |  translate) : ('common.save' | translate) }}
         </button>
       </div>

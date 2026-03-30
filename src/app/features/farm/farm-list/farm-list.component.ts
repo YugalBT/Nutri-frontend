@@ -13,6 +13,9 @@ import { CommonService } from '../../../shared/services/common.service';
 import { PERMISSIONS } from '../../../core/constants/permissions.constants';
 import { ROUTE_CONST } from '../../../core/constants/route.constants';
 import { Router } from '@angular/router';
+import { PermissionService } from '../../../shared/services/permission.service';
+import { Store } from '@ngrx/store';
+import { selectUserRoles } from '../../../state/auth/auth.selectors';
 
 @Component({
   selector: 'app-farm-list',
@@ -35,6 +38,13 @@ export class FarmListComponent {
   searchValue = '';
   filterStatus: number | null = 2;
 
+  // Permissions
+  canAddFarm = false;
+  viewPermission = PERMISSIONS.FarmView;
+  editPermission = PERMISSIONS.FarmEdit;
+  deletePermission = PERMISSIONS.FarmDelete;
+  userRoles: string[] = [];
+
   private subs: Subscription[] = [];
   private langSub: Subscription | undefined;
 
@@ -44,13 +54,16 @@ export class FarmListComponent {
     private toast: ToastService,
     private confirm: ConfirmDialogService,
     private commonService: CommonService,
-    private router: Router
+    private router: Router,
+    private permissionService: PermissionService,
+    private store: Store
   ) {
     this.setColumns();
     this.langSub = this.translate.lang$.subscribe(() => this.setColumns());
   }
 
   ngOnInit(): void {
+    this.loadUserPermissions();
 
     if (!this.commonService.checkPermission(PERMISSIONS.FarmView)
       || !this.commonService.checkPermission(PERMISSIONS.FarmDelete))
@@ -60,6 +73,14 @@ export class FarmListComponent {
       this.loadFarms(this.pageIndex + 1, this.pageSize);
     });
     this.subs.push(sub);
+  }
+
+  private loadUserPermissions(): void {
+    const subRoles = this.store.select(selectUserRoles).subscribe(roles => {
+      this.userRoles = roles || [];
+      this.canAddFarm = this.userRoles.includes(PERMISSIONS.FarmAdd);
+    });
+    this.subs.push(subRoles);
   }
 
   private loadFarms(pageNo: number, recordPerPage: number): void {
