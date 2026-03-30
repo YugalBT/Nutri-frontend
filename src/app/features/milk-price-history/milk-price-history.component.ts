@@ -38,8 +38,8 @@ export class MilkPriceHistoryComponent implements OnInit, OnDestroy {
     const thisMonth = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
     this.form = this.fb.group({
       priceMonth: [thisMonth, Validators.required],
-      priceAziendali: [null, [Validators.required, Validators.min(0)]],
-      priceMercato: [null],
+      priceAziendali: [null, [Validators.min(0)]],
+      priceMercato: [null, [Validators.min(0)]],
       qualityBonus: [null],
       isFinalized: [false],
       notes: [null]
@@ -73,8 +73,10 @@ export class MilkPriceHistoryComponent implements OnInit, OnDestroy {
   }
 
   save(): void {
-    if (this.form.invalid || this.isSaving) {
+    if (this.isSaving) return;
+    if (this.form.invalid) {
       this.form.markAllAsTouched();
+      this.toast.warning(this.translate.instant('common.formInvalid') || 'Please fill all required fields');
       return;
     }
 
