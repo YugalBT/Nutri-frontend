@@ -68,8 +68,7 @@ export class ListComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.loadUserPermissions();
 
-    if(!this.commonService.checkPermission(PERMISSIONS.UserView)
-      || !this.commonService.checkPermission(PERMISSIONS.UserDelete))
+    if(!this.commonService.checkPermission(PERMISSIONS.UserView, false))
         return;
     this.loadUsers(1, this.pageSize);
     const sub = this.usersService.usersChanged$.subscribe(() => {
@@ -179,8 +178,7 @@ export class ListComponent implements OnInit, OnDestroy {
 
 
   onDelete(row: any): void {
-    if(!this.commonService.checkPermission(PERMISSIONS.UserView)
-      || !this.commonService.checkPermission(PERMISSIONS.UserDelete))
+    if(!this.commonService.checkPermission(PERMISSIONS.UserDelete))
         return;
     const id = row?.userId;
     if (!id) {

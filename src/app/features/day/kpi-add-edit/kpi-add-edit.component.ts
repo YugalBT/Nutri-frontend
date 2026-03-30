@@ -28,6 +28,7 @@ export class KpiAddEditComponent implements OnInit, OnDestroy {
   modalInstance: any;
 
   isEdit = false;
+  canSave = false;
   currentKpiId: string | null = null;
 
   formula: FormulaList[] = [];
@@ -43,8 +44,6 @@ export class KpiAddEditComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
-    if (!this.commonService.checkPermission(PERMISSIONS.KpiAdd) || !this.commonService.checkPermission(PERMISSIONS.KpiEdit))
-      return;
     this.initializeForm();
     this.loadFormulaList();
   }
@@ -81,6 +80,13 @@ export class KpiAddEditComponent implements OnInit, OnDestroy {
 
   openModal(edit = false, data?: any) {
     this.isEdit = edit;
+    this.canSave = edit
+      ? this.commonService.checkPermission(PERMISSIONS.KpiEdit, false)
+      : this.commonService.checkPermission(PERMISSIONS.KpiAdd, false);
+    if (!this.canSave) {
+      this.toast.warning('No permission');
+      return;
+    }
     this.form.reset();
 
     if (edit && data) {
@@ -104,9 +110,10 @@ export class KpiAddEditComponent implements OnInit, OnDestroy {
   }
 
   savekpi() {
-    if (!this.commonService.checkPermission(PERMISSIONS.KpiAdd) ||
-      !this.commonService.checkPermission(PERMISSIONS.KpiEdit))
-      return;
+    const hasPermission = this.isEdit
+      ? this.commonService.checkPermission(PERMISSIONS.KpiEdit)
+      : this.commonService.checkPermission(PERMISSIONS.KpiAdd);
+    if (!hasPermission) return;
     if (!this.form.valid) {
       this.toast.warning('Please fill all required fields');
       return;

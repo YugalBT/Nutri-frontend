@@ -39,7 +39,7 @@
             <input type="text" class="form-control form-control-sm" formControlName="notes" [placeholder]="'milkPriceHistory.placeholders.notes' | translate">
           </div>
           <div class="col-12 mt-2">
-            <button class="btn add-btn btn-sm w-100" [disabled]="isSaving" (click)="save()">
+            <button *ngIf="canSave" class="btn add-btn btn-sm w-100" [disabled]="isSaving" (click)="save()">
               {{ isSaving ? ('common.saving' | translate) : ('milkPriceHistory.actions.savePrice' | translate) }}
             </button>
           </div>

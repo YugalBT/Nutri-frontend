@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common';
 import {
   Component,
   ElementRef,
@@ -20,12 +21,15 @@ import { LanguageAddEditComponent } from '../language-add-edit/language-add-edit
 import { base64ToBlob, downloadBlob } from '../../../core/helpers/file.helper';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { LocalizationService } from '../../../core/services/localization/localization.service';
+import { CommonService } from '../../../shared/services/common.service';
+import { PERMISSIONS } from '../../../core/constants/permissions.constants';
 
 @Component({
   selector: 'app-language-list',
   standalone: true,
   imports: [
     TranslatePipe,
+    CommonModule,
     GlobalSearchComponent,
     ReusableTableComponent,
     LanguageAddEditComponent,
@@ -56,6 +60,10 @@ export class LanguageListComponent implements OnInit, OnDestroy {
   private langSub?: Subscription;
   private searchDebounce: any;
   currentLang: any = '';
+  canAddLanguage = false;
+  viewPermission = PERMISSIONS.LanguageView;
+  editPermission = PERMISSIONS.LanguageEdit;
+  deletePermission = PERMISSIONS.LanguageDelete;
 
   constructor(
     private translate: TranslateService,
@@ -63,7 +71,8 @@ export class LanguageListComponent implements OnInit, OnDestroy {
     private spinner: NgxSpinnerService,
     private toast: ToastService,
     private confirm: ConfirmDialogService,
-    private localizationService: LocalizationService
+    private localizationService: LocalizationService,
+    private commonService: CommonService
   ) {
     this.setColumns();
     this.langSub = this.translate.lang$.subscribe(() => this.setColumns());
@@ -73,6 +82,10 @@ export class LanguageListComponent implements OnInit, OnDestroy {
   // INIT
   // --------------------------------------------------
   ngOnInit(): void {
+  this.canAddLanguage = this.commonService.checkPermission(PERMISSIONS.LanguageAdd, false);
+  if (!this.commonService.checkPermission(PERMISSIONS.LanguageView, false)) {
+    return;
+  }
   // Load languages list
   this.loadLanguages(1, this.pageSize);
 
@@ -185,6 +198,9 @@ export class LanguageListComponent implements OnInit, OnDestroy {
   // DELETE
   // --------------------------------------------------
   deleteLanguage(row: any): void {
+    if (!this.commonService.checkPermission(PERMISSIONS.LanguageDelete)) {
+      return;
+    }
     const id = row?.languageId;
     if (!id) {
       this.toast.error('Invalid Language ID');
@@ -221,6 +237,10 @@ export class LanguageListComponent implements OnInit, OnDestroy {
   // STATUS TOGGLE
   // --------------------------------------------------
   toggleLanguageStatus(event: any): void {
+    if (!this.commonService.checkPermission(PERMISSIONS.LanguageEdit)) {
+      this.toast.warning(this.translate.instant('common.noPermission') || 'No permission');
+      return;
+    }
     const row = event.row;
     const newStatus = event.isActive;
 

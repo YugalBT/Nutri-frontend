@@ -26,6 +26,7 @@ export class ChangePasswordComponent {
   showNew = false;
   showConfirm = false;
   passwordStrength = '';
+  canSave = false;
 
   constructor(private fb: FormBuilder, 
     private toastr: ToastrService, 
@@ -33,6 +34,7 @@ export class ChangePasswordComponent {
     private commonService : CommonService
   ) {
     this.createForm();
+    this.canSave = this.commonService.checkPermission(PERMISSIONS.ChangePasswordEdit, false);
   }
 
   createForm() {
@@ -77,7 +79,7 @@ export class ChangePasswordComponent {
   get f() { return this.changePasswordForm.controls; }
 
   onSubmit() {
-    if(!this.commonService.checkPermission(PERMISSIONS.ChangePasswordEdit)|| !this.commonService.checkPermission(PERMISSIONS.ChangePasswordView))
+    if(!this.commonService.checkPermission(PERMISSIONS.ChangePasswordEdit))
       return;
     this.isSubmitted.set(true);
     if (this.changePasswordForm.invalid) {

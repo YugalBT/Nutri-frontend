@@ -40,6 +40,10 @@ export class KpiListComponent implements OnInit, OnDestroy {
   pageIndex = 0;
   searchValue = '';
   filterStatus: number | null = 2;
+  canAddKpi = false;
+  viewPermission = PERMISSIONS.KpiView;
+  editPermission = PERMISSIONS.KpiEdit;
+  deletePermission = PERMISSIONS.KpiDelete;
 
   subs: Subscription[] = [];
   langSub!: Subscription;
@@ -56,10 +60,10 @@ export class KpiListComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+  this.canAddKpi = this.commonService.checkPermission(PERMISSIONS.KpiAdd, false);
 
 if (
-    !this.commonService.checkPermission(PERMISSIONS.KpiView) &&
-    !this.commonService.checkPermission(PERMISSIONS.KpiDelete)
+    !this.commonService.checkPermission(PERMISSIONS.KpiView, false)
   ) {
     return;
   }

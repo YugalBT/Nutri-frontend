@@ -16,6 +16,7 @@ import { SharedModule } from '../../../shared/shared.module';
 import { TranslatePipe } from '../../../i18n/translate.pipe';
 import { ProductSellingPriceService } from '../../../core/services/product-selling-price/product-selling-price.service';
 import { CommonService } from '../../../shared/services/common.service';
+import { PERMISSIONS } from '../../../core/constants/permissions.constants';
 
 declare var bootstrap: any;
 
@@ -36,6 +37,7 @@ export class ProductPriceAddEditComponent implements OnInit {
   products: any[] = [];
 
   isEdit = false;
+  canSave = false;
 
   currentId: any;
 
@@ -163,6 +165,13 @@ export class ProductPriceAddEditComponent implements OnInit {
   openModal(isEdit: boolean = false, row: any = null) {
 
     this.isEdit = isEdit;
+    this.canSave = isEdit
+      ? this.commonService.checkPermission(PERMISSIONS.ProductPricingEdit, false)
+      : this.commonService.checkPermission(PERMISSIONS.ProductPricingAdd, false);
+    if (!this.canSave) {
+      this.toast.error('No permission');
+      return;
+    }
 
     this.form.reset();
 
@@ -196,6 +205,10 @@ export class ProductPriceAddEditComponent implements OnInit {
   }
 
   save() {
+    const hasPermission = this.isEdit
+      ? this.commonService.checkPermission(PERMISSIONS.ProductPricingEdit)
+      : this.commonService.checkPermission(PERMISSIONS.ProductPricingAdd);
+    if (!hasPermission) return;
 
     if (!this.form.valid) {
 

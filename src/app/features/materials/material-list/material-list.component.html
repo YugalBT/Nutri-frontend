@@ -34,7 +34,7 @@
       </label>
 
       <!-- ADD -->
-      <button class="btn add-btn"
+      <button *ngIf="canAddMaterials" class="btn add-btn"
               (click)="materialModal.openModal()">
         <i class="bi bi-plus-lg me-2"></i>
         {{ 'material.addMaterial' | translate }}
@@ -66,6 +66,9 @@
       [totalRecords]="totalRecords"
       [pageSize]="pageSize"
       [pageIndex]="pageIndex"
+      [viewPermission]="viewPermission"
+      [editPermission]="editPermission"
+      [deletePermission]="deletePermission"
       (pageChange)="onPageChange($event)"
       (toggleActive)="onToggleActive($event)"
       (deleteRow)="onDelete($event)"

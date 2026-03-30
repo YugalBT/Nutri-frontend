@@ -344,7 +344,7 @@
           {{ "common.cancel" | translate }}
         </button>
 
-        <button class="btn add-btn" (click)="saveSupplier()">
+        <button *ngIf="canSave" class="btn add-btn" (click)="saveSupplier()" [disabled]="form.invalid">
           {{
             isEdit
               ? ("supplier.update" | translate)

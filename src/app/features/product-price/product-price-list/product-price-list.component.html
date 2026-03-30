@@ -8,7 +8,7 @@
       </h3>
     </div>
 
-    <button
+    <button *ngIf="canAddProductPrice"
       class="btn add-btn"
       (click)="priceModal.openModal()">
 
@@ -49,6 +49,9 @@
       [totalRecords]="totalRecords"
       [pageSize]="pageSize"
       [pageIndex]="pageIndex"
+      [viewPermission]="viewPermission"
+      [editPermission]="editPermission"
+      [deletePermission]="deletePermission"
 
       (pageChange)="onPageChange($event)"
       (toggleActive)="onToggleActive($event)"

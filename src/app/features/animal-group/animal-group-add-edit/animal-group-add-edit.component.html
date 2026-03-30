@@ -69,7 +69,7 @@
 
       <div class="modal-footer">
         <button class="btn btn-outline-secondary" (click)="closeModal()">Cancel</button>
-        <button class="btn add-btn" (click)="saveAnimalGroup()" [disabled]="!canSave()">
+        <button *ngIf="isAddEditPermission" class="btn add-btn" (click)="saveAnimalGroup()" [disabled]="form.invalid">
           {{ isEdit ? 'Update' : 'Save' }}
         </button>
       </div>

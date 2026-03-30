@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CompanyAddEditComponent } from '../company-add-edit/company-add-edit.component';
 import { ReusableTableComponent } from '../../../shared/components/reusable-table/reusable-table.component';
@@ -19,6 +20,7 @@ import { PERMISSIONS } from '../../../core/constants/permissions.constants';
   selector: 'app-company-list',
   standalone: true,
   imports: [
+    CommonModule,
     CompanyAddEditComponent,
     ReusableTableComponent,
     TranslatePipe,
@@ -39,6 +41,10 @@ export class CompanyListComponent implements OnInit, OnDestroy {
 
   searchValue = '';
   filterStatus: number | null = null;
+  canAddCompany = false;
+  viewPermission = PERMISSIONS.TenantView;
+  editPermission = PERMISSIONS.TenantEdit;
+  deletePermission = PERMISSIONS.TenantDelete;
 
   private searchDebounce: any;
   private langSub: any;
@@ -58,9 +64,9 @@ export class CompanyListComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    this.canAddCompany = this.commonService.checkPermission(PERMISSIONS.TenantAdd, false);
 
-  
-    if(!this.commonService.checkPermission(PERMISSIONS.TenantView) || !this.commonService.checkPermission(PERMISSIONS.TenantDelete))
+    if(!this.commonService.checkPermission(PERMISSIONS.TenantView, false))
             return;
   this.loadCompanies(this.pageIndex, this.pageSize);
 

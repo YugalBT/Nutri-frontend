@@ -22,6 +22,8 @@ import { ProductService } from '../../../core/services/product/product.service';
 import { ToastService } from '../../../shared/services/toast.service';
 import { SharedModule } from '../../../shared/shared.module';
 import { TranslatePipe } from '../../../i18n/translate.pipe';
+import { CommonService } from '../../../shared/services/common.service';
+import { PERMISSIONS } from '../../../core/constants/permissions.constants';
 
 declare var bootstrap: any;
 
@@ -41,6 +43,7 @@ export class ProductAddEditComponent implements OnInit, OnDestroy {
   modalInstance: any;
 
   isEdit = false;
+  canSave = false;
 
   currentId: string | null = null;
 
@@ -54,7 +57,8 @@ export class ProductAddEditComponent implements OnInit, OnDestroy {
   constructor(
     private fb: FormBuilder,
     private productService: ProductService,
-    private toast: ToastService
+    private toast: ToastService,
+    private commonService: CommonService
   ) {}
 
 
@@ -139,6 +143,13 @@ export class ProductAddEditComponent implements OnInit, OnDestroy {
   openModal(edit = false, data?: any) {
 
     this.isEdit = edit;
+    this.canSave = edit
+      ? this.commonService.checkPermission(PERMISSIONS.ProductEdit, false)
+      : this.commonService.checkPermission(PERMISSIONS.ProductAdd, false);
+    if (!this.canSave) {
+      this.toast.error('No permission');
+      return;
+    }
 
     this.form.reset();
 
@@ -167,6 +178,10 @@ export class ProductAddEditComponent implements OnInit, OnDestroy {
 
 
   saveProduct() {
+    const hasPermission = this.isEdit
+      ? this.commonService.checkPermission(PERMISSIONS.ProductEdit)
+      : this.commonService.checkPermission(PERMISSIONS.ProductAdd);
+    if (!hasPermission) return;
 
     if (!this.form.valid) {
 

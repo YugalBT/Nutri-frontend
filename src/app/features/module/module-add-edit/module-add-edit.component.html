@@ -65,7 +65,7 @@
 
       <div class="modal-footer">
         <button class="btn btn-outline-secondary" (click)="closeModal()">Cancel</button>
-        <button class="btn add-btn" (click)="saveModule()">
+        <button *ngIf="canSave" class="btn add-btn" (click)="saveModule()" [disabled]="form.invalid">
           {{ isEdit ? 'Update' : 'Save' }}
         </button>
       </div>

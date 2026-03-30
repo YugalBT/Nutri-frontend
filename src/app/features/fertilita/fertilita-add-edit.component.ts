@@ -4,7 +4,9 @@ import { CommonModule } from '@angular/common';
 import { Subscription } from 'rxjs';
 import { HttpService } from '../../shared/services/http.service';
 import { ToastService } from '../../shared/services/toast.service';
+import { CommonService } from '../../shared/services/common.service';
 import { API_ENDPOINTS } from '../../core/constants/api-endpoints';
+import { PERMISSIONS } from '../../core/constants/permissions.constants';
 import { TranslatePipe } from '../../i18n/translate.pipe';
 
 declare var bootstrap: any;
@@ -26,6 +28,7 @@ export class FertilitaAddEditComponent implements OnDestroy {
   isEdit = false;
   currentId: string | null = null;
   isSaving = false;
+  canSave = false;
   private subs: Subscription[] = [];
 
   eventTypes = [
@@ -41,11 +44,27 @@ export class FertilitaAddEditComponent implements OnDestroy {
     'fertilita.results.notApplicable'
   ];
 
-  constructor(private fb: FormBuilder, private http: HttpService, private toast: ToastService) { }
+  constructor(
+    private fb: FormBuilder,
+    private http: HttpService,
+    private toast: ToastService,
+    private commonService: CommonService
+  ) { }
 
   openModal(edit = false, data?: any): void {
+    if (
+      edit
+        ? !this.commonService.checkPermission(PERMISSIONS.FertilitaEdit)
+        : !this.commonService.checkPermission(PERMISSIONS.FertilitaAdd)
+    ) {
+      return;
+    }
+
     this.isEdit = edit;
     this.currentId = null;
+    this.canSave = edit
+      ? this.commonService.checkPermission(PERMISSIONS.FertilitaEdit, false)
+      : this.commonService.checkPermission(PERMISSIONS.FertilitaAdd, false);
     this.initForm();
 
     if (edit && data) {
@@ -95,6 +114,13 @@ export class FertilitaAddEditComponent implements OnDestroy {
   }
 
   save(): void {
+    if (
+      this.isEdit
+        ? !this.commonService.checkPermission(PERMISSIONS.FertilitaEdit)
+        : !this.commonService.checkPermission(PERMISSIONS.FertilitaAdd)
+    ) {
+      return;
+    }
     if (this.form.invalid || this.isSaving) { this.form.markAllAsTouched(); return; }
     this.isSaving = true;
     const payload = {

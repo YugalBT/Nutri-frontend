@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common';
 import { Component, ViewChild, OnDestroy, OnInit } from '@angular/core';
 import { ReusableTableComponent } from '../../../shared/components/reusable-table/reusable-table.component';
 import { ProductBuildAddEditComponent } from '../product-build-add-edit/product-build-add-edit.component';
@@ -5,8 +6,10 @@ import { GlobalSearchComponent } from '../../../shared/components/global-search/
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { ProductBuildService } from '../../../core/services/product-build-service/product-build-service';
+import { PERMISSIONS } from '../../../core/constants/permissions.constants';
 import { ToastService } from '../../../shared/services/toast.service';
 import { ConfirmDialogService } from '../../../shared/services/confirm-dialog.service';
+import { CommonService } from '../../../shared/services/common.service';
 import { TranslateService } from '../../../i18n/translate.service';
 import { TranslatePipe } from '../../../i18n/translate.pipe';
 
@@ -14,6 +17,7 @@ import { TranslatePipe } from '../../../i18n/translate.pipe';
   selector: 'app-product-build-list',
   standalone: true,
   imports: [
+    CommonModule,
     ReusableTableComponent,
     ProductBuildAddEditComponent,
     GlobalSearchComponent,
@@ -41,6 +45,10 @@ export class ProductBuildListComponent implements OnInit, OnDestroy {
   pageIndex = 0;
   searchValue = '';
   filterStatus: number | null = 2;
+  canAddProductBuild = false;
+  viewPermission = PERMISSIONS.ProductBuildView;
+  editPermission = PERMISSIONS.ProductBuildEdit;
+  deletePermission = PERMISSIONS.ProductBuildDelete;
 
   private subs: Subscription[] = [];
 
@@ -48,6 +56,7 @@ export class ProductBuildListComponent implements OnInit, OnDestroy {
     private service: ProductBuildService,
     private toast: ToastService,
     private confirm: ConfirmDialogService,
+    private commonService: CommonService,
     private translate: TranslateService,
     private router: Router
   ) {
@@ -70,6 +79,10 @@ export class ProductBuildListComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    this.canAddProductBuild = this.commonService.checkPermission(PERMISSIONS.ProductBuildAdd, false);
+    if (!this.commonService.checkPermission(PERMISSIONS.ProductBuildView, false)) {
+      return;
+    }
     this.loadBuilds(1, this.pageSize);
 
     const sub = this.service.buildChanged$
@@ -161,6 +174,9 @@ export class ProductBuildListComponent implements OnInit, OnDestroy {
   }
 
   onDelete(row: any): void {
+    if (!this.commonService.checkPermission(PERMISSIONS.ProductBuildDelete)) {
+      return;
+    }
 
     if (!row?.productBuildId) {
       this.toast.error("Invalid Id");

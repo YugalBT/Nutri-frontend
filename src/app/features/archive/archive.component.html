@@ -10,7 +10,7 @@
         <label class="form-label form-label-sm mb-1">{{ 'archive.filters.to' | translate }}</label>
         <input type="date" class="form-control form-control-sm" [(ngModel)]="toDate" (change)="loadArchive()" />
       </div>
-      <button class="btn btn-sm btn-warning" [disabled]="isRecalculating" (click)="bulkRecalculate()">
+      <button *ngIf="canRecalculate" class="btn btn-sm btn-warning" [disabled]="isRecalculating" (click)="bulkRecalculate()">
         {{ isRecalculating ? ('archive.actions.recalculating' | translate) : ('archive.actions.bulkRecalculate' | translate) }}
       </button>
     </div>

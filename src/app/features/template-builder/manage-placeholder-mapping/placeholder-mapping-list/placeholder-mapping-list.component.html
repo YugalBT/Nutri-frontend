@@ -5,7 +5,7 @@
       <h3 class="page-title">{{ 'placeholderMapping.heading' | translate }}</h3>
     </div>
 
-    <button class="btn add-btn" (click)="mappingModal.openModal()">
+    <button *ngIf="canAddMapping" class="btn add-btn" (click)="mappingModal.openModal()">
       <i class="bi bi-plus-lg me-2"></i>
        {{ 'placeholderMapping.add' | translate }}
     </button>
@@ -28,6 +28,9 @@
     [totalRecords]="totalRecords"
     [pageSize]="pageSize"
     [pageIndex]="pageIndex"
+    [viewPermission]="viewPermission"
+    [editPermission]="editPermission"
+    [deletePermission]="deletePermission"
     (toggleActive)="onToggleActive($event)"
     (deleteRow)="onDelete($event)"
     [showActions]="true"

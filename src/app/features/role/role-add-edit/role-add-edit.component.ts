@@ -79,7 +79,10 @@ export class UserRoleAddEditComponent implements OnInit, OnDestroy {
     //   this.canManageRoles = true;
     // });
     // this.subs.push(canManageSub);
-    if(!this.commonService.checkPermission(PERMISSIONS.RoleAdd)|| !this.commonService.checkPermission(PERMISSIONS.RoleEdit))
+    if(
+      !this.commonService.checkPermission(PERMISSIONS.RoleAdd, false) &&
+      !this.commonService.checkPermission(PERMISSIONS.RoleEdit, false)
+    )
       return;
 
     this.loadModules();
@@ -252,10 +255,6 @@ private loadModules(masterRoles: boolean = false): void {
       this.toast.error(this.translate.instant('common.noPermission') || 'No permission to save');
       return;
     }
-
- if(!this.commonService.checkPermission(PERMISSIONS.RoleAdd)|| !this.commonService.checkPermission(PERMISSIONS.RoleEdit))
-      return;
-
 
   if (this.form.invalid) {
     this.toast.error(this.translate.instant('common.formInvalid') || 'Please fill required fields');

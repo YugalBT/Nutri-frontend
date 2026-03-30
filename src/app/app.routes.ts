@@ -220,6 +220,15 @@ export const routes: Routes = [
       },
       {
         path: 'reports',
+        canActivate: [permissionGuard],
+        data: {
+          requiredPermissions: [
+            PERMISSIONS.ReportsView,
+            PERMISSIONS.ReportsEdit,
+            PERMISSIONS.ReportsAdd,
+            PERMISSIONS.ReportsDelete,
+          ],
+        },
         loadComponent: () =>
           import('./features/reports/reports/reports.component').then(
             (m) => m.ReportsComponent,
@@ -441,6 +450,15 @@ export const routes: Routes = [
       },
       {
         path: 'language',
+        canActivate: [permissionGuard],
+        data: {
+          requiredPermissions: [
+            PERMISSIONS.LanguageView,
+            PERMISSIONS.LanguageEdit,
+            PERMISSIONS.LanguageAdd,
+            PERMISSIONS.LanguageDelete,
+          ],
+        },
         loadComponent: () =>
           import('./features/language/language-list/language-list.component').then(
             (m) => m.LanguageListComponent,
@@ -510,6 +528,15 @@ export const routes: Routes = [
       },
       {
         path: 'supplier-pricing-formula',
+        canActivate: [permissionGuard],
+        data: {
+          requiredPermissions: [
+            PERMISSIONS.PricingFormulaView,
+            PERMISSIONS.PricingFormulaEdit,
+            PERMISSIONS.PricingFormulaAdd,
+            PERMISSIONS.PricingFormulaDelete,
+          ],
+        },
         loadComponent: () =>
           import('./features/supplier-pricing-formula/supplier-pricing-formula-list/supplier-pricing-formula-list.component').then(
             (m) => m.SupplierPricingFormulaListComponent,
@@ -524,6 +551,13 @@ export const routes: Routes = [
       },
       {
         path: 'pricingSetting',
+        canActivate: [permissionGuard],
+        data: {
+          requiredPermissions: [
+            PERMISSIONS.PricingSettingView,
+            PERMISSIONS.PricingSettingEdit,
+          ],
+        },
         loadComponent: () =>
           import('./features/supplier-pricing-setting/supplier-pricing-setting/supplier-pricing-setting.component').then(
             (m) => m.SupplierPricingSettingComponent,
@@ -531,6 +565,15 @@ export const routes: Routes = [
       },
       {
         path: 'product',
+        canActivate: [permissionGuard],
+        data: {
+          requiredPermissions: [
+            PERMISSIONS.ProductView,
+            PERMISSIONS.ProductEdit,
+            PERMISSIONS.ProductAdd,
+            PERMISSIONS.ProductDelete,
+          ],
+        },
         loadComponent: () =>
           import('./features/product/product-list/product-list.component').then(
             (m) => m.ProductListComponent,
@@ -538,6 +581,15 @@ export const routes: Routes = [
       },
       {
         path: 'productpricing',
+        canActivate: [permissionGuard],
+        data: {
+          requiredPermissions: [
+            PERMISSIONS.ProductPricingView,
+            PERMISSIONS.ProductPricingEdit,
+            PERMISSIONS.ProductPricingAdd,
+            PERMISSIONS.ProductPricingDelete,
+          ],
+        },
         loadComponent: () =>
           import('./features/product-price/product-price-list/product-price-list.component').then(
             (m) => m.ProductPriceListComponent,
@@ -545,6 +597,15 @@ export const routes: Routes = [
       },
       {
         path: 'productbuild',
+        canActivate: [permissionGuard],
+        data: {
+          requiredPermissions: [
+            PERMISSIONS.ProductBuildView,
+            PERMISSIONS.ProductBuildEdit,
+            PERMISSIONS.ProductBuildAdd,
+            PERMISSIONS.ProductBuildDelete,
+          ],
+        },
         children: [
           {
             path: '',

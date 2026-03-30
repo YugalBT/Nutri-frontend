@@ -24,6 +24,7 @@ export class ModuleAddEditComponent implements OnInit, OnDestroy {
   modalInstance: any;
 
   isEdit = false;
+  canSave = false;
   currentModuleId: string | null = null;
 
   subs: Subscription[] = [];
@@ -36,10 +37,6 @@ export class ModuleAddEditComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
- 
-  if(!this.commonService.checkPermission(PERMISSIONS.ModuleAdd)
-    || !this.commonService.checkPermission(PERMISSIONS.ModuleEdit))
-      return;
     this.initializeForm();
   }
 
@@ -62,6 +59,14 @@ export class ModuleAddEditComponent implements OnInit, OnDestroy {
 
   openModal(edit = false, data?: any) {
   this.isEdit = edit;
+  this.canSave = edit
+    ? this.commonService.checkPermission(PERMISSIONS.ModuleEdit, false)
+    : this.commonService.checkPermission(PERMISSIONS.ModuleAdd, false);
+
+  if (!this.canSave) {
+    this.toast.error('No permission');
+    return;
+  }
 
   if (edit && data) {
     this.currentModuleId = data.moduleId;
@@ -102,9 +107,10 @@ export class ModuleAddEditComponent implements OnInit, OnDestroy {
   }
 
   saveModule() {
-    if(!this.commonService.checkPermission(PERMISSIONS.ModuleAdd)
-      || !this.commonService.checkPermission(PERMISSIONS.ModuleEdit))
-        return;
+    const hasPermission = this.isEdit
+      ? this.commonService.checkPermission(PERMISSIONS.ModuleEdit)
+      : this.commonService.checkPermission(PERMISSIONS.ModuleAdd);
+    if(!hasPermission) return;
     if (!this.form.valid) {
       this.toast.warning('Please fill all required fields');
       return;

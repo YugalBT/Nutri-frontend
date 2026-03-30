@@ -56,6 +56,34 @@ export class CommonService {
 
     return hasPermission;
   }
+
+  hasAnyPermission(roleNames: string[], showAlert: boolean = false): boolean {
+    const hasPermission = roleNames.some((roleName) =>
+      StorageHelper.CheckRole(roleName),
+    );
+
+    if (!hasPermission && showAlert) {
+      this.toast.error(
+        this.translate.instant('common.noPermission') || 'No permission',
+      );
+    }
+
+    return hasPermission;
+  }
+
+  hasAllPermissions(roleNames: string[], showAlert: boolean = false): boolean {
+    const hasPermission = roleNames.every((roleName) =>
+      StorageHelper.CheckRole(roleName),
+    );
+
+    if (!hasPermission && showAlert) {
+      this.toast.error(
+        this.translate.instant('common.noPermission') || 'No permission',
+      );
+    }
+
+    return hasPermission;
+  }
   getRoles(): Observable<ApiResponse<RoleList[]>> {
     return this.http.get<RoleList[]>(API_ENDPOINTS.COMMON_API.GET_ALL_ROLES);
   }

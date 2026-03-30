@@ -13,11 +13,15 @@ import { TranslateService } from "../../../../i18n/translate.service";
 import { User } from "../../../../state/auth/auth.models";
 import { Store } from "@ngrx/store";
 import { selectAuthUser } from "../../../../state/auth/auth.selectors";
+import { CommonService } from "../../../../shared/services/common.service";
+import { PERMISSIONS } from "../../../../core/constants/permissions.constants";
+import { CommonModule } from "@angular/common";
 
 @Component({
   selector: 'app-template-list',
   standalone: true,
   imports: [
+    CommonModule,
     SharedModule,
     ReusableTableComponent,
     GlobalSearchComponent,
@@ -42,12 +46,17 @@ export class TemplateListComponent {
   private langSub: Subscription | undefined;
   user$: Observable<User | null>;
   isMasterData: boolean | null = null;
+  canAddTemplate = false;
+  viewPermission = PERMISSIONS.TemplateView;
+  editPermission = PERMISSIONS.TemplateEdit;
+  deletePermission = PERMISSIONS.TemplateDelete;
   constructor(
     private templateService: ManageTemplateService,
     private toast: ToastService,
     private confirm: ConfirmDialogService,
     private translate :TranslateService, 
     private store: Store,
+    private commonService: CommonService,
   ) {
     this.setColumns();
     this.langSub = this.translate.lang$.subscribe(() => this.setColumns());
@@ -55,6 +64,10 @@ export class TemplateListComponent {
   }
 
   ngOnInit() {
+    this.canAddTemplate = this.commonService.checkPermission(PERMISSIONS.TemplateAdd, false);
+    if (!this.commonService.checkPermission(PERMISSIONS.TemplateView, false)) {
+      return;
+    }
     this.loadTemplates(1, this.pageSize);
 
     const sub = this.templateService.templatesChanged$.subscribe(() => {
@@ -116,6 +129,9 @@ export class TemplateListComponent {
   }
 
   onToggleActive(event: any): void {
+    if (!this.commonService.checkPermission(PERMISSIONS.TemplateEdit)) {
+      return;
+    }
     const row = event.row;
     const previousStatus = row.isActive;
 
@@ -143,6 +159,9 @@ export class TemplateListComponent {
 
 
   onDelete(row: TemplateList): void {
+    if (!this.commonService.checkPermission(PERMISSIONS.TemplateDelete)) {
+      return;
+    }
     this.confirm
       .confirm(this.translate.instant('templates.deleteConfirm')??"")
       .subscribe(confirmed => {

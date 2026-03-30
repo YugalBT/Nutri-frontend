@@ -9,6 +9,7 @@ import { ToastService } from '../../../shared/services/toast.service';
 import { SupplierPricingFormulaService } from '../../../core/services/supplier/supplier-pricing-formula.service';
 import { Subscription } from 'rxjs';
 import { TokenService } from '../../../shared/services/token.service';
+import { PERMISSIONS } from '../../../core/constants/permissions.constants';
 
 declare var bootstrap: any;
 
@@ -24,6 +25,7 @@ export class SupplierPricingFormulaAddEditComponent {
   selectedProductId: string | null = null;
   modal: any;
   isEdit = false;
+  canSave = false;
   formulaId: string | null = null;
   products: any[] = [];
   expressionName = '';
@@ -91,6 +93,13 @@ export class SupplierPricingFormulaAddEditComponent {
 
   openModal(edit = false, data?: any): void {
     this.isEdit = edit;
+    this.canSave = edit
+      ? this.commonService.checkPermission(PERMISSIONS.PricingFormulaEdit, false)
+      : this.commonService.checkPermission(PERMISSIONS.PricingFormulaAdd, false);
+    if (!this.canSave) {
+      this.toast.error('No permission');
+      return;
+    }
     this.insertIndex = null;
     this.isvalidated = false;
     this.validatedResult = null;
@@ -345,6 +354,10 @@ private mapFormulaeArrayToTokens(
 
 
   validateExpression(): void {
+    const hasPermission = this.isEdit
+      ? this.commonService.checkPermission(PERMISSIONS.PricingFormulaEdit)
+      : this.commonService.checkPermission(PERMISSIONS.PricingFormulaAdd);
+    if (!hasPermission) return;
     if (!this.isvalidated) {
       this.toast.warning("Please validate formula first");
       return;

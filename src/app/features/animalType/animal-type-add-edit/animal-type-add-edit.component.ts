@@ -42,11 +42,8 @@ export class AnimalTypeAddEditComponent implements OnInit, OnDestroy {
     private store: Store
   ) {}
   
-    ngOnInit(): void {
+  ngOnInit(): void {
     this.loadUserPermissions();
-
-    if(!this.commonService.checkPermission(PERMISSIONS.AnimalTypeAdd)|| !this.commonService.checkPermission(PERMISSIONS.AnimalTypeEdit))
-      return;
     this.form = this.fb.group({
       typeNameIt: ['', 
         [Validators.minLength(3),Validators.maxLength(20),
@@ -81,6 +78,11 @@ export class AnimalTypeAddEditComponent implements OnInit, OnDestroy {
     this.isEdit = edit;
     this.updateCanSave();
 
+    if (!this.canSave) {
+      this.toast.error('No permission to open this action');
+      return;
+    }
+
     if (edit && data) {
       this.form.patchValue(data);
     } else {
@@ -101,9 +103,6 @@ export class AnimalTypeAddEditComponent implements OnInit, OnDestroy {
       return;
     }
 
-    if(!this.commonService.checkPermission(PERMISSIONS.AnimalTypeAdd)|| !this.commonService.checkPermission(PERMISSIONS.AnimalTypeEdit))
-      return;
-    
     if (this.form.invalid) {
       this.form.markAllAsTouched();
       return;

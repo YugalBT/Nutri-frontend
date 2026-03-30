@@ -66,8 +66,7 @@ export class FarmListComponent {
   ngOnInit(): void {
     this.loadUserPermissions();
 
-    if (!this.commonService.checkPermission(PERMISSIONS.FarmView)
-      || !this.commonService.checkPermission(PERMISSIONS.FarmDelete))
+    if (!this.commonService.checkPermission(PERMISSIONS.FarmView, false))
       return;
     this.loadFarms(1, this.pageSize);
     const sub = this.farmService.farmsChanged$.subscribe(() => {

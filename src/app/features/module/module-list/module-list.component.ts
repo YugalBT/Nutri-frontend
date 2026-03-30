@@ -64,8 +64,7 @@ export class ModuleListComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.loadUserPermissions();
 
-    if(!this.commonService.checkPermission(PERMISSIONS.ModuleView)
-      || !this.commonService.checkPermission(PERMISSIONS.ModuleDelete))
+    if(!this.commonService.checkPermission(PERMISSIONS.ModuleView, false))
         return;
     this.loadModules();
   }

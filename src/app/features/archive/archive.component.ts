@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { API_ENDPOINTS } from '../../core/constants/api-endpoints';
+import { PERMISSIONS } from '../../core/constants/permissions.constants';
 import { TranslatePipe } from '../../i18n/translate.pipe';
 import { TranslateService } from '../../i18n/translate.service';
 import { ConfirmDialogService } from '../../shared/services/confirm-dialog.service';
@@ -22,6 +23,7 @@ export class ArchiveComponent implements OnInit, OnDestroy {
   totalRecords = 0;
   isLoading = false;
   isRecalculating = false;
+  canRecalculate = false;
 
   fromDate: string = this.getMonthStart();
   toDate: string = new Date().toISOString().split('T')[0];
@@ -40,6 +42,10 @@ export class ArchiveComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
+    this.canRecalculate = this.common.checkPermission(PERMISSIONS.ArchiveEdit, false);
+    if (!this.common.checkPermission(PERMISSIONS.ArchiveView, false)) {
+      return;
+    }
     this.loadArchive();
   }
 
@@ -66,6 +72,9 @@ export class ArchiveComponent implements OnInit, OnDestroy {
   }
 
   bulkRecalculate(): void {
+    if (!this.common.checkPermission(PERMISSIONS.ArchiveEdit)) {
+      return;
+    }
     this.confirm
       .confirm(
         this.translate

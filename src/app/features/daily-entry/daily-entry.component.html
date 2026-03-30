@@ -29,7 +29,7 @@
             {{ pt.labelKey | translate }}
           </option>
         </select>
-        <button type="button" class="btn add-btn btn-sm" [disabled]="isSaving || isLoading" (click)="save()">
+        <button *ngIf="canSave" type="button" class="btn add-btn btn-sm" [disabled]="isSaving || isLoading" (click)="save()">
           {{ isSaving ? ('dailyEntry.actions.saving' | translate) : ('dailyEntry.actions.saveAndArchive' | translate) }}
         </button>
       </div>
@@ -186,7 +186,7 @@
       </div>
 
       <div class="d-flex justify-content-end gap-2 mt-2 mb-4">
-        <button type="button" class="btn add-btn" [disabled]="isSaving" (click)="save()">
+        <button *ngIf="canSave" type="button" class="btn add-btn" [disabled]="isSaving" (click)="save()">
           {{ isSaving ? ('dailyEntry.actions.saving' | translate) : ('dailyEntry.actions.saveAndArchive' | translate) }}
         </button>
       </div>

@@ -14,6 +14,7 @@ import { CustomValidators } from '../../../../core/helpers/validators';
 import { User } from '../../../../state/auth/auth.models';
 import { Store } from '@ngrx/store';
 import { selectAuthUser } from '../../../../state/auth/auth.selectors';
+import { PERMISSIONS } from '../../../../core/constants/permissions.constants';
 
 declare const bootstrap: any;
 declare const CKEDITOR: any;
@@ -33,6 +34,7 @@ implements AfterViewInit, OnDestroy {
   form: FormGroup;
   modalInstance: any;
   isEdit = false;
+  canSave = false;
   currentTemplateId: string | null = null;
   isMasterData: boolean = false;
   categories: TemplateCategoryList[] = [];
@@ -167,6 +169,13 @@ implements AfterViewInit, OnDestroy {
 
   openModal(edit = false, data?: TemplateList): void {
     this.isEdit = edit;
+    this.canSave = edit
+      ? this.commonService.checkPermission(PERMISSIONS.TemplateEdit, false)
+      : this.commonService.checkPermission(PERMISSIONS.TemplateAdd, false);
+    if (!this.canSave) {
+      this.toast.error('No permission');
+      return;
+    }
     this.form.reset();
     this.currentTemplateId = null;
 
@@ -241,6 +250,10 @@ implements AfterViewInit, OnDestroy {
   /* ---------------- SAVE ---------------- */
 
   save(): void {
+    const hasPermission = this.isEdit
+      ? this.commonService.checkPermission(PERMISSIONS.TemplateEdit)
+      : this.commonService.checkPermission(PERMISSIONS.TemplateAdd);
+    if (!hasPermission) return;
     if (this.form.invalid) {
       this.form.markAllAsTouched();
       this.toast.warning('Please fill required fields');

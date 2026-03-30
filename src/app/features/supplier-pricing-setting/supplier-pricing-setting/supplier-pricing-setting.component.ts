@@ -18,6 +18,7 @@ import { PERMISSIONS } from '../../../core/constants/permissions.constants';
 export class SupplierPricingSettingComponent implements OnInit {
 
   pricingForm!: FormGroup;
+  canSave = false;
 
   constructor(
     private fb: FormBuilder,
@@ -27,13 +28,10 @@ export class SupplierPricingSettingComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-
-    // if (
-    //   !this.commonService.checkPermission(PERMISSIONS.PricingSettingEdit) ||
-    //   !this.commonService.checkPermission(PERMISSIONS.PricingSettingView)
-    // ) {
-    //   return;
-    // }
+    if (!this.commonService.checkPermission(PERMISSIONS.PricingSettingView, false)) {
+      return;
+    }
+    this.canSave = this.commonService.checkPermission(PERMISSIONS.PricingSettingEdit, false);
     
     this.initializeForm();
     this.getPricingSetting();
@@ -109,6 +107,9 @@ export class SupplierPricingSettingComponent implements OnInit {
   }
 
   onSubmit() {
+    if (!this.commonService.checkPermission(PERMISSIONS.PricingSettingEdit)) {
+      return;
+    }
 
     if (this.pricingForm.invalid) {
 

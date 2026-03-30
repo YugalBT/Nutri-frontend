@@ -3,6 +3,7 @@ import { SharedModule } from '../../../shared/shared.module';
 import { TranslatePipe } from '../../../i18n/translate.pipe';
 import { FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ProductBuildService } from '../../../core/services/product-build-service/product-build-service';
+import { PERMISSIONS } from '../../../core/constants/permissions.constants';
 import { CommonService } from '../../../shared/services/common.service';
 import { ToastService } from '../../../shared/services/toast.service';
 import { TokenService } from '../../../shared/services/token.service';
@@ -35,6 +36,7 @@ export class ProductBuildAddEditComponent implements OnInit {
   selectedSupplierId: string | null = null;
   finalCost: number = 0;
   isCalculating = false;
+  canSave = false;
 
   // Display properties for viewing
   displaySupplierName: string = '';
@@ -270,8 +272,18 @@ calculateFinal() {
   }
 
   openModal(isEdit = false, row: any = null) {
+    if (
+      isEdit
+        ? !this.common.checkPermission(PERMISSIONS.ProductBuildEdit)
+        : !this.common.checkPermission(PERMISSIONS.ProductBuildAdd)
+    ) {
+      return;
+    }
 
     this.isEdit = isEdit;
+    this.canSave = isEdit
+      ? this.common.checkPermission(PERMISSIONS.ProductBuildEdit, false)
+      : this.common.checkPermission(PERMISSIONS.ProductBuildAdd, false);
     
     // Reset form with default values
     this.form.reset({
@@ -332,6 +344,13 @@ calculateFinal() {
   }
 
   save() {
+    if (
+      this.isEdit
+        ? !this.common.checkPermission(PERMISSIONS.ProductBuildEdit)
+        : !this.common.checkPermission(PERMISSIONS.ProductBuildAdd)
+    ) {
+      return;
+    }
     if (this.getTotalPercentage() !== 100) {
       this.toast.error('Total % must be 100');
       return;

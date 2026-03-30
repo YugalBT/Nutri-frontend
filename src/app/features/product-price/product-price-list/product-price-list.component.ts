@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common';
 import { Component, ViewChild, OnInit, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs';
 
@@ -11,11 +12,13 @@ import { TranslateService } from '../../../i18n/translate.service';
 import { ReusableTableComponent } from '../../../shared/components/reusable-table/reusable-table.component';
 import { GlobalSearchComponent } from '../../../shared/components/global-search/global-search.component';
 import { TranslatePipe } from '../../../i18n/translate.pipe';
+import { CommonService } from '../../../shared/services/common.service';
+import { PERMISSIONS } from '../../../core/constants/permissions.constants';
 
 @Component({
   selector: 'app-product-price-list',
   standalone: true,
-  imports: [ProductPriceAddEditComponent,ReusableTableComponent ,GlobalSearchComponent,TranslatePipe],
+  imports: [CommonModule, ProductPriceAddEditComponent,ReusableTableComponent ,GlobalSearchComponent,TranslatePipe],
   templateUrl: './product-price-list.component.html',
   styleUrl: './product-price-list.component.css'
 })
@@ -49,6 +52,10 @@ export class ProductPriceListComponent implements OnInit, OnDestroy {
   searchValue = '';
 
   filterStatus: number | null = 2;
+  canAddProductPrice = false;
+  viewPermission = PERMISSIONS.ProductPricingView;
+  editPermission = PERMISSIONS.ProductPricingEdit;
+  deletePermission = PERMISSIONS.ProductPricingDelete;
 
   private subs: Subscription[] = [];
 
@@ -56,7 +63,8 @@ export class ProductPriceListComponent implements OnInit, OnDestroy {
     private priceService: ProductSellingPriceService,
     private toast: ToastService,
     private confirm: ConfirmDialogService,
-    private translate: TranslateService
+    private translate: TranslateService,
+    private commonService: CommonService
   ) {
 
     this.setColumns();
@@ -88,6 +96,10 @@ export class ProductPriceListComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    this.canAddProductPrice = this.commonService.checkPermission(PERMISSIONS.ProductPricingAdd, false);
+    if (!this.commonService.checkPermission(PERMISSIONS.ProductPricingView, false)) {
+      return;
+    }
 
     this.loadPrices(1, this.pageSize);
 
@@ -175,6 +187,9 @@ export class ProductPriceListComponent implements OnInit, OnDestroy {
   }
 
   onToggleActive(event: { row: any; isActive: boolean }) {
+    if (!this.commonService.checkPermission(PERMISSIONS.ProductPricingEdit)) {
+      return;
+    }
     if (!event?.row?.productPriceId) {
       debugger;
 
@@ -214,6 +229,9 @@ export class ProductPriceListComponent implements OnInit, OnDestroy {
   }
 
   onDelete(row: any) {
+    if (!this.commonService.checkPermission(PERMISSIONS.ProductPricingDelete)) {
+      return;
+    }
 
     if (!row?.productPriceId) {
 

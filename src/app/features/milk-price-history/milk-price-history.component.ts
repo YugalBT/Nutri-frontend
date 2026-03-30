@@ -3,8 +3,10 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { API_ENDPOINTS } from '../../core/constants/api-endpoints';
+import { PERMISSIONS } from '../../core/constants/permissions.constants';
 import { TranslatePipe } from '../../i18n/translate.pipe';
 import { TranslateService } from '../../i18n/translate.service';
+import { CommonService } from '../../shared/services/common.service';
 import { HttpService } from '../../shared/services/http.service';
 import { ToastService } from '../../shared/services/toast.service';
 
@@ -19,16 +21,25 @@ export class MilkPriceHistoryComponent implements OnInit, OnDestroy {
   form!: FormGroup;
   isLoading = false;
   isSaving = false;
+  canSave = false;
   private subs: Subscription[] = [];
 
   constructor(
     private fb: FormBuilder,
+    private commonService: CommonService,
     private http: HttpService,
     private toast: ToastService,
     private translate: TranslateService
   ) { }
 
   ngOnInit(): void {
+    this.canSave = this.commonService.hasAnyPermission(
+      [PERMISSIONS.MilkPriceHistoryAdd, PERMISSIONS.MilkPriceHistoryEdit],
+      false
+    );
+    if (!this.commonService.checkPermission(PERMISSIONS.MilkPriceHistoryView, false)) {
+      return;
+    }
     this.initForm();
     this.load();
   }
@@ -73,6 +84,9 @@ export class MilkPriceHistoryComponent implements OnInit, OnDestroy {
   }
 
   save(): void {
+    if (!this.commonService.hasAnyPermission([PERMISSIONS.MilkPriceHistoryAdd, PERMISSIONS.MilkPriceHistoryEdit])) {
+      return;
+    }
     if (this.form.invalid || this.isSaving) {
       this.form.markAllAsTouched();
       return;

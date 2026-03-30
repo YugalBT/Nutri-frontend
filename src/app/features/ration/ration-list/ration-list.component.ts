@@ -67,8 +67,7 @@ export class RationListComponent {
 
   ngOnInit(): void {
     
-    if(!this.commonService.checkPermission(PERMISSIONS.RationAdd)
-      || !this.commonService.checkPermission(PERMISSIONS.RationView))
+    if(!this.commonService.checkPermission(PERMISSIONS.RationView, false))
         return;
     this.loadUserPermissions();
     this.loadRation(1, this.pageSize);
