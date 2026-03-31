@@ -197,12 +197,12 @@ export class RationListComponent {
   private setColumns(): void {
       this.columns = [
     this.translate.instant('ration.columns.rationName') ?? '',
-    this.translate.instant('ration.columns.farmName') ?? '',
+   // this.translate.instant('ration.columns.farmName') ?? '',
     this.translate.instant('ration.columns.totalRationItems') ?? '',
     this.translate.instant('ration.columns.animalGroup') ?? '',
     this.translate.instant('common.status') ?? ''
     ];
-    this.columnFields = ['rationName','farmName',  'totalItems','animalGroupNameEn', 'isActive'];
+    this.columnFields = ['rationName',  'totalItems','animalGroupNameEn', 'isActive'];
   }
 
   ngOnDestroy(): void {
