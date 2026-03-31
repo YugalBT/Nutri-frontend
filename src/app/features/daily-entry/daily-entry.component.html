@@ -9,6 +9,16 @@
       <div class="d-flex align-items-center gap-3 flex-wrap">
         <h3 class="page-title mb-0">{{ 'dailyEntry.title' | translate }}</h3>
 
+        <div *ngIf="isSuperAdmin && companies.length > 0" class="d-flex align-items-center gap-2">
+          <label class="form-label mb-0 text-muted" style="white-space:nowrap;">{{ 'dailyEntry.filters.company' | translate }}</label>
+          <select class="form-select form-select-sm" style="width:200px;"
+            [(ngModel)]="selectedCompanyId"
+            [ngModelOptions]="{ standalone: true }"
+            (change)="onCompanyChange()">
+            <option *ngFor="let c of companies" [value]="c.id">{{ c.name }}</option>
+          </select>
+        </div>
+
         <div class="d-flex align-items-center gap-2">
           <label class="form-label mb-0 text-muted" style="white-space:nowrap;">{{ 'dailyEntry.filters.date' | translate }}</label>
           <input

@@ -75,6 +75,7 @@ export const API_ENDPOINTS = {
     UPDATE: '/Tenant/Update',
     DELETE: '/Tenant/Delete',
     ACTIVE_INACTIVE: '/Tenant/ActiveInActive',
+    GET_DROPDOWN: '/Tenant/GetDropdown',
   },
 
   FARM: {
@@ -218,6 +219,7 @@ export const API_ENDPOINTS = {
     EXPORT_AGGREGATED_REPORT_PDF: '/Dashboard/AggregatedReportExportPdf',
     EXPORT_AGGREGATED_REPORT_CSV: '/Dashboard/AggregatedReportExportCsv',
     UPDATE_COMPANY_ARCHIVE: '/Dashboard/CompanyArchiveUpdate',
+    GET_HEALTH_MONTHLY: '/Dashboard/HealthMonthly',
   },
 
   SUPPLIER: {

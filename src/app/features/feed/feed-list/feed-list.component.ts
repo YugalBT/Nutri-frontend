@@ -15,11 +15,13 @@ import { PERMISSIONS } from '../../../core/constants/permissions.constants';
 import { TranslatePipe } from '../../../i18n/translate.pipe';
 import { Store } from '@ngrx/store';
 import { selectUserRoles } from '../../../state/auth/auth.selectors';
+import { Constants } from '../../../shared/utils/constants/constants';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-feed-list',
   standalone: true,
-  imports: [SharedModule, ReusableTableComponent, GlobalSearchComponent, FeedAddEditComponent, TranslatePipe],
+  imports: [SharedModule, ReusableTableComponent, GlobalSearchComponent, FeedAddEditComponent, TranslatePipe, FormsModule],
   templateUrl: './feed-list.component.html',
   styleUrls: ['./feed-list.component.css']
 })
@@ -41,6 +43,10 @@ export class FeedListComponent {
   deletePermission = PERMISSIONS.FeedDelete;
   userRoles: string[] = [];
 
+  isSuperAdmin = false;
+  companies: { id: string; name: string }[] = [];
+  selectedCompanyId = '';
+
   subs: Subscription[] = [];
   langSub!: Subscription;
   @ViewChild(FeedAddEditComponent) feedModalRef!: FeedAddEditComponent;
@@ -59,10 +65,21 @@ export class FeedListComponent {
 
   ngOnInit(): void {
     this.loadUserPermissions();
+    this.isSuperAdmin = localStorage.getItem(Constants.IsSuperAdmin) === 'true';
 
     if (!this.commonService.checkPermission(PERMISSIONS.FeedView, false))
       return;
-    this.loadFeeds(1, this.pageSize);
+
+    if (this.isSuperAdmin) {
+      const sub = this.commonService.getCompanyDropdown().subscribe(res => {
+        this.companies = res?.data ?? [];
+        if (this.companies.length > 0) this.selectedCompanyId = this.companies[0].id;
+        this.loadFeeds(1, this.pageSize);
+      });
+      this.subs.push(sub);
+    } else {
+      this.loadFeeds(1, this.pageSize);
+    }
 
     const sub = this.feedService.feedsChanged$.subscribe(() => {
       this.loadFeeds(this.pageIndex + 1, this.pageSize);
@@ -78,12 +95,18 @@ export class FeedListComponent {
     this.subs.push(subRoles);
   }
 
+  onCompanyChange(): void {
+    this.pageIndex = 0;
+    this.loadFeeds(1, this.pageSize);
+  }
+
   private loadFeeds(pageNo: number, recordPerPage: number): void {
-    const payload = {
+    const payload: any = {
       pageNo,
       recordPerPage,
       searchValue: this.searchValue ?? '',
-      status: this.filterStatus
+      status: this.filterStatus,
+      ...(this.isSuperAdmin && this.selectedCompanyId ? { tenantId: this.selectedCompanyId } : {})
     };
 
     const sub = this.feedService.getFeedDetails(payload).subscribe({
