@@ -25,6 +25,7 @@ export class FarmAddEditComponent implements OnInit, OnDestroy {
   form!: FormGroup;
   modalInstance: any;
   isEdit = false;
+  canSave = false;
   currentFarmId: string | null = null;
   subs: Subscription[] = [];
   @Output() onFarmSaved = new EventEmitter<void>()
@@ -38,11 +39,6 @@ export class FarmAddEditComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
-
-    if(!this.commonService.checkPermission(PERMISSIONS.FarmAdd)
-      || !this.commonService.checkPermission(PERMISSIONS.FarmEdit))
-        return;
-     this.afterSuccess();
     this.initializeForm();
   }
 
@@ -106,6 +102,15 @@ export class FarmAddEditComponent implements OnInit, OnDestroy {
 
   openModal(edit = false, data?: any) {
     this.isEdit = edit;
+    this.canSave = edit
+      ? this.commonService.checkPermission(PERMISSIONS.FarmEdit, false)
+      : this.commonService.checkPermission(PERMISSIONS.FarmAdd, false);
+
+    if (!this.canSave) {
+      this.toast.error(this.transalate.instant('common.noPermission') || 'No permission');
+      return;
+    }
+
     this.form.reset({ isActive: true });
 
     if (edit && data) {
@@ -135,9 +140,11 @@ export class FarmAddEditComponent implements OnInit, OnDestroy {
   }
 
   saveFarm() {
-    if(!this.commonService.checkPermission(PERMISSIONS.FarmAdd)
-      || !this.commonService.checkPermission(PERMISSIONS.FarmEdit))
-        return;
+    const hasPermission = this.isEdit
+      ? this.commonService.checkPermission(PERMISSIONS.FarmEdit)
+      : this.commonService.checkPermission(PERMISSIONS.FarmAdd);
+
+    if(!hasPermission) return;
     if (!this.form.valid) {
       
       this.toast.warning(this.transalate.instant('common.formInvalid') || 'Please fill all required fields');
@@ -175,6 +182,5 @@ export class FarmAddEditComponent implements OnInit, OnDestroy {
 
   private afterSuccess() {
     this.farmService.notifyfarmsChanged();
-    this.closeModal();
   }
 }

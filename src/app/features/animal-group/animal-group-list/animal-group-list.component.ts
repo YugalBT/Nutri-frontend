@@ -1,4 +1,5 @@
 // animal-group-list.component.ts
+import { CommonModule } from '@angular/common';
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { AnimalGroupService } from '../../../core/services/animal-group/animal-group.service';
@@ -19,6 +20,7 @@ import { TranslateService } from '../../../i18n/translate.service';
   selector: 'app-animal-group-list',
   standalone: true,
   imports: [
+    CommonModule,
     AnimalGroupAddEditComponent,
     GlobalSearchComponent,
     ReusableTableComponent,

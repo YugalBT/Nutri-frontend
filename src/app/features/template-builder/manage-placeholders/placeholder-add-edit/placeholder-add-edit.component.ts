@@ -5,6 +5,8 @@ import { ManagePlaceholderService } from '../../../../core/services/template-bui
 import { TemplatePlaceholderList } from '../../../../core/models/template-builder/template-placeholder-list';
 import { SharedModule } from '../../../../shared/shared.module';
 import { TranslatePipe } from '../../../../i18n/translate.pipe';
+import { CommonService } from '../../../../shared/services/common.service';
+import { PERMISSIONS } from '../../../../core/constants/permissions.constants';
 
 declare var bootstrap: any;
 
@@ -22,12 +24,14 @@ export class TemplatePlaceholderAddEditComponent {
   form!: FormGroup;
   modal: any;
   isEdit = false;
+  canSave = false;
   currentId: string | null = null;
 
   constructor(
     private fb: FormBuilder,
     private toast: ToastService,
-    private placeholderService: ManagePlaceholderService
+    private placeholderService: ManagePlaceholderService,
+    private commonService: CommonService
   ) {}
 
   ngOnInit() {
@@ -40,6 +44,13 @@ export class TemplatePlaceholderAddEditComponent {
 
   openModal(edit = false, data?: TemplatePlaceholderList) {
     this.isEdit = edit;
+    this.canSave = edit
+      ? this.commonService.checkPermission(PERMISSIONS.PlaceholderEdit, false)
+      : this.commonService.checkPermission(PERMISSIONS.PlaceholderAdd, false);
+    if (!this.canSave) {
+      this.toast.error('No permission');
+      return;
+    }
     this.form.reset();
     this.currentId = null;
 
@@ -58,6 +69,10 @@ export class TemplatePlaceholderAddEditComponent {
   }
 
   save() {
+    const hasPermission = this.isEdit
+      ? this.commonService.checkPermission(PERMISSIONS.PlaceholderEdit)
+      : this.commonService.checkPermission(PERMISSIONS.PlaceholderAdd);
+    if (!hasPermission) return;
     if (this.form.invalid) {
       this.form.markAllAsTouched();
       this.toast.warning('Please enter placeholder value');

@@ -6,6 +6,8 @@ import { ToastService } from '../../../shared/services/toast.service';
 import { ApiResponse } from '../../../core/models/api-response';
 import { TranslatePipe } from '../../../i18n/translate.pipe';
 import { TranslateService } from '../../../i18n/translate.service';
+import { CommonService } from '../../../shared/services/common.service';
+import { PERMISSIONS } from '../../../core/constants/permissions.constants';
 
 
 declare var bootstrap: any;
@@ -23,6 +25,7 @@ export class LanguageAddEditComponent implements OnInit {
 
   form!: FormGroup;
   isEdit = false;
+  canSave = false;
   isSubmitted = false;
   modalInstance: any;
 
@@ -30,7 +33,8 @@ export class LanguageAddEditComponent implements OnInit {
     private fb: FormBuilder,
     private languageService: LanguageService,
     private toast: ToastService,
-    private transalateservice : TranslateService
+    private transalateservice : TranslateService,
+    private commonService: CommonService
   ) {}
 
   // --------------------------------------------------
@@ -58,6 +62,13 @@ export class LanguageAddEditComponent implements OnInit {
   // --------------------------------------------------
   openModal(edit = false, data?: any): void {
     this.isEdit = edit;
+    this.canSave = edit
+      ? this.commonService.checkPermission(PERMISSIONS.LanguageEdit, false)
+      : this.commonService.checkPermission(PERMISSIONS.LanguageAdd, false);
+    if (!this.canSave) {
+      this.toast.error(this.transalateservice.instant('common.noPermission') || 'No permission');
+      return;
+    }
     this.isSubmitted = false;
 
     if (edit && data) {
@@ -81,6 +92,10 @@ export class LanguageAddEditComponent implements OnInit {
   // SAVE
   // --------------------------------------------------
   save(): void {
+    const hasPermission = this.isEdit
+      ? this.commonService.checkPermission(PERMISSIONS.LanguageEdit)
+      : this.commonService.checkPermission(PERMISSIONS.LanguageAdd);
+    if (!hasPermission) return;
     this.isSubmitted = true;
     this.form.markAllAsTouched();
 

@@ -291,9 +291,9 @@
           <i class="bi bi-x-circle"></i>
           {{ 'common.cancel' | translate }}
         </button>
-        <button type="button" class="pb-btn-primary" [disabled]="getTotalPercentage() !== 100" (click)="save()">
+        <button *ngIf="canSave" type="button" class="pb-btn-primary" [disabled]="getTotalPercentage() !== 100" (click)="save()">
           <i class="bi" [ngClass]="isEdit ? 'bi-pencil-fill' : 'bi-plus-circle-fill'"></i>
-          {{ 'common.save' | translate }}
+          {{ (isEdit ? 'common.update' : 'common.save') | translate }}
         </button>
       </div>
 

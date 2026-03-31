@@ -103,8 +103,8 @@
         </button>
 
 
-        <button class="btn add-btn"
-                (click)="saveProduct()">
+        <button *ngIf="canSave" class="btn add-btn"
+                (click)="saveProduct()" [disabled]="form.invalid">
 
           {{ isEdit ? ('common.update' | translate) : ('common.save' | translate) }}
 

@@ -3,7 +3,7 @@
 
   <div class="page-header d-flex justify-content-between align-items-center mb-3">
     <h3 class="page-title">{{ 'animalGroup.Heading' | translate }}</h3>
-    <button class="btn add-btn" (click)="openAddModal()" [disabled]="!canAdd">
+    <button *ngIf="canAddAnimalGroup" class="btn add-btn" (click)="openAddModal()">
       <i class="bi bi-plus-lg me-2"></i> {{ 'animalGroup.addAnimalGroup' | translate }}
     </button>
   </div>
@@ -28,6 +28,9 @@
       [totalRecords]="totalRecords"
       [pageSize]="pageSize"
       [pageIndex]="pageIndex"
+      [viewPermission]="viewPermission"
+      [editPermission]="editPermission"
+      [deletePermission]="deletePermission"
       (pageChange)="onPageChange($event)"
       (toggleActive)="onToggleActive($event)"
       (deleteRow)="onDelete($event)"

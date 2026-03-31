@@ -4,7 +4,7 @@
       <h3 class="page-title">{{ 'placeholder.heading' | translate }}</h3>
     </div>
 
-    <button class="btn add-btn" (click)="placeholderModal.openModal()">
+    <button *ngIf="canAddPlaceholder" class="btn add-btn" (click)="placeholderModal.openModal()">
       <i class="bi bi-plus-lg me-2"></i>
       {{ 'placeholder.add' | translate }}
     </button>
@@ -27,6 +27,9 @@
     [totalRecords]="totalRecords"
     [pageSize]="pageSize"
     [pageIndex]="pageIndex"
+    [viewPermission]="viewPermission"
+    [editPermission]="editPermission"
+    [deletePermission]="deletePermission"
     (pageChange)="onPageChange($event)"
     [showActions]="true"
     (toggleActive)="onToggleActive($event)"

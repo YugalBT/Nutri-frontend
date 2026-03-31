@@ -13,8 +13,8 @@
         <option value="Annual">Annual</option>
       </select>
 
-      <button class="btn add-btn" (click)="exportCurrentView()">Export Report</button>
-      <button *ngIf="isAdmin" class="btn add-btn" (click)="exportAdminPdf()">Export PDF</button>
+      <button *ngIf="canExportReports" class="btn add-btn" (click)="exportCurrentView()">Export Report</button>
+      <button *ngIf="isAdmin && canExportReports" class="btn add-btn" (click)="exportAdminPdf()">Export PDF</button>
     </div>
   </div>
 
@@ -62,7 +62,7 @@
               <th>Ration</th>
               <th>Animals</th>
               <th>Avg Milk/Day</th>
-              <th *ngIf="!isAdmin">Actions</th>
+              <th *ngIf="!isAdmin && canSaveArchive">Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -70,18 +70,18 @@
               <td>{{ row.createdAt | date: 'shortDate' }}</td>
               <td>{{ row.companyName }}</td>
               <td>
-                <span *ngIf="isAdmin">{{ row.rationName }}</span>
-                <input *ngIf="!isAdmin" class="form-control form-control-sm" [(ngModel)]="editableArchive[row.reportDetailId].rationName" />
+                <span *ngIf="isAdmin || !canSaveArchive">{{ row.rationName }}</span>
+                <input *ngIf="!isAdmin && canSaveArchive" class="form-control form-control-sm" [(ngModel)]="editableArchive[row.reportDetailId].rationName" />
               </td>
               <td>
-                <span *ngIf="isAdmin">{{ row.animalCount }}</span>
-                <input *ngIf="!isAdmin" class="form-control form-control-sm" type="number" [(ngModel)]="editableArchive[row.reportDetailId].animalCount" />
+                <span *ngIf="isAdmin || !canSaveArchive">{{ row.animalCount }}</span>
+                <input *ngIf="!isAdmin && canSaveArchive" class="form-control form-control-sm" type="number" [(ngModel)]="editableArchive[row.reportDetailId].animalCount" />
               </td>
               <td>
-                <span *ngIf="isAdmin">{{ row.avgMilkPerDay | number: '1.2-2' }}</span>
-                <input *ngIf="!isAdmin" class="form-control form-control-sm" type="number" step="0.01" [(ngModel)]="editableArchive[row.reportDetailId].avgMilkPerDay" />
+                <span *ngIf="isAdmin || !canSaveArchive">{{ row.avgMilkPerDay | number: '1.2-2' }}</span>
+                <input *ngIf="!isAdmin && canSaveArchive" class="form-control form-control-sm" type="number" step="0.01" [(ngModel)]="editableArchive[row.reportDetailId].avgMilkPerDay" />
               </td>
-              <td *ngIf="!isAdmin">
+              <td *ngIf="!isAdmin && canSaveArchive">
                 <button class="btn btn-sm add-btn" (click)="saveArchiveRow(row)">Save</button>
               </td>
             </tr>

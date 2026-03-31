@@ -82,7 +82,7 @@
 
       <!-- Submit -->
       <div class="text-end">
-        <button class="btn add-btn px-4" type="submit" [disabled]="emailForm.invalid">
+        <button *ngIf="canSave" class="btn add-btn px-4" type="submit" [disabled]="emailForm.invalid">
           {{'configuration.saveConfiguration' | translate }}
         </button>
       </div>

@@ -14,7 +14,7 @@
         </div>
       </div>
 
-      <button class="btn pb-btn-primary" (click)="modal.openModal()" title="{{ 'productBuild.add' | translate }}">
+      <button *ngIf="canAddProductBuild" class="btn pb-btn-primary" (click)="modal.openModal()" title="{{ 'productBuild.add' | translate }}">
         <i class="bi bi-plus-lg"></i>
         <span>{{ 'productBuild.add' | translate }}</span>
       </button>
@@ -63,6 +63,9 @@
           [totalRecords]="totalRecords"
           [pageSize]="pageSize"
           [pageIndex]="pageIndex"
+          [viewPermission]="viewPermission"
+          [editPermission]="editPermission"
+          [deletePermission]="deletePermission"
           (pageChange)="onPageChange($event)"
           (toggleActive)="onToggleActive($event)"
           (viewRow)="onView($event)"

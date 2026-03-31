@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common';
 import { Component, ViewChild } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { selectUserRoles } from '../../../state/auth/auth.selectors';
@@ -20,7 +21,7 @@ import { TranslatePipe } from '../../../i18n/translate.pipe';
 @Component({
   selector: 'app-ration-list',
   standalone: true,
-  imports: [RationAddEditComponent, GlobalSearchComponent, ReusableTableComponent, TranslatePipe],
+  imports: [CommonModule, RationAddEditComponent, GlobalSearchComponent, ReusableTableComponent, TranslatePipe],
   templateUrl: './ration-list.component.html',
   styleUrls: ['./ration-list.component.css']
 })
@@ -66,8 +67,7 @@ export class RationListComponent {
 
   ngOnInit(): void {
     
-    if(!this.commonService.checkPermission(PERMISSIONS.RationAdd)
-      || !this.commonService.checkPermission(PERMISSIONS.RationView))
+    if(!this.commonService.checkPermission(PERMISSIONS.RationView, false))
         return;
     this.loadUserPermissions();
     this.loadRation(1, this.pageSize);

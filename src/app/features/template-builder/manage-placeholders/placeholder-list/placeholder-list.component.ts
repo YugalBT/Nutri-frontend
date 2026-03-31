@@ -11,6 +11,8 @@ import { ReusableTableComponent } from '../../../../shared/components/reusable-t
 import { GlobalSearchComponent } from '../../../../shared/components/global-search/global-search.component';
 import { TranslatePipe } from '../../../../i18n/translate.pipe';
 import { TemplatePlaceholderAddEditComponent } from '../placeholder-add-edit/placeholder-add-edit.component';
+import { CommonService } from '../../../../shared/services/common.service';
+import { PERMISSIONS } from '../../../../core/constants/permissions.constants';
 
 @Component({
   selector: 'app-template-placeholder-list',
@@ -36,6 +38,10 @@ export class TemplatePlaceholderListComponent {
   pageIndex = 0;
   searchValue = '';
   filterStatus: number | null = 2;
+  canAddPlaceholder = false;
+  viewPermission = PERMISSIONS.PlaceholderView;
+  editPermission = PERMISSIONS.PlaceholderEdit;
+  deletePermission = PERMISSIONS.PlaceholderDelete;
 
   subs: Subscription[] = [];
 
@@ -43,12 +49,17 @@ export class TemplatePlaceholderListComponent {
     private translate: TranslateService,
     private toast: ToastService,
     private confirm: ConfirmDialogService,
-    private placeholderService: ManagePlaceholderService
+    private placeholderService: ManagePlaceholderService,
+    private commonService: CommonService
   ) {
     this.setColumns();
   }
 
   ngOnInit(): void {
+    this.canAddPlaceholder = this.commonService.checkPermission(PERMISSIONS.PlaceholderAdd, false);
+    if (!this.commonService.checkPermission(PERMISSIONS.PlaceholderView, false)) {
+      return;
+    }
     this.loadPlaceholders(1, this.pageSize);
 
     this.subs.push(
@@ -106,6 +117,9 @@ export class TemplatePlaceholderListComponent {
   }
 
   onToggleActive(event: any) {
+    if (!this.commonService.checkPermission(PERMISSIONS.PlaceholderEdit)) {
+      return;
+    }
     const row = event.row;
     const previous = row.isActive;
 
@@ -127,6 +141,9 @@ export class TemplatePlaceholderListComponent {
   }
 
   onDelete(row: TemplatePlaceholderList) {
+    if (!this.commonService.checkPermission(PERMISSIONS.PlaceholderDelete)) {
+      return;
+    }
     this.confirm.confirm('Are you sure you want to delete this placeholder?')
       .subscribe(confirmed => {
         if (!confirmed) return;

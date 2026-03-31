@@ -250,6 +250,7 @@
           <!-- disable save button until validation is successful -->
 
           <button
+            *ngIf="canSave"
             class="btn add-btn"
           [disabled]="!isvalidated"
     (click)="validateExpression()"

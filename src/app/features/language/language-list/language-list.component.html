@@ -3,7 +3,7 @@
      <div class="page-header">
       <h3 class="page-title">{{ 'language.heading' | translate }}</h3>
    
-    <button class="btn add-btn"
+    <button *ngIf="canAddLanguage" class="btn add-btn"
             (click)="languageAddEdit.openModal()">
       <i class="bi bi-plus-lg me-2"></i>
       {{ 'language.addLanguage' | translate }}
@@ -34,6 +34,9 @@
       [totalRecords]="totalRecords"
       [pageSize]="pageSize"
       [pageIndex]="pageIndex"
+      [viewPermission]="viewPermission"
+      [editPermission]="editPermission"
+      [deletePermission]="deletePermission"
       (pageChange)="onPageChange($event)"
       (toggleActive)="toggleLanguageStatus($event)"
       (editRow)="languageAddEdit.openModal(true, $event)"

@@ -5,7 +5,9 @@ import { ReusableTableComponent } from '../../shared/components/reusable-table/r
 import { HttpService } from '../../shared/services/http.service';
 import { ToastService } from '../../shared/services/toast.service';
 import { ConfirmDialogService } from '../../shared/services/confirm-dialog.service';
+import { CommonService } from '../../shared/services/common.service';
 import { API_ENDPOINTS } from '../../core/constants/api-endpoints';
+import { PERMISSIONS } from '../../core/constants/permissions.constants';
 import { FertilitaAddEditComponent } from './fertilita-add-edit.component';
 import { TranslatePipe } from '../../i18n/translate.pipe';
 import { TranslateService } from '../../i18n/translate.service';
@@ -18,16 +20,19 @@ import { TranslateService } from '../../i18n/translate.service';
     <div class="pagecls">
       <div class="d-flex justify-content-between align-items-center mb-3">
         <h3 class="page-title mb-0">{{ 'fertilita.list.title' | translate }}</h3>
-        <button class="btn add-btn btn-sm" (click)="modal.openModal()">{{ 'fertilita.actions.addRecord' | translate }}</button>
+        <button *ngIf="canAddFertilita" class="btn add-btn btn-sm" (click)="modal.openModal()">{{ 'fertilita.actions.addRecord' | translate }}</button>
       </div>
       <div class="table-card">
         <app-reusable-table
           [columns]="columns"
           [columnFields]="columnFields"
           [data]="records"
+          [showActions]="true"
           [totalRecords]="totalRecords"
-          (onEdit)="modal.openModal(true, $event)"
-          (onDelete)="onDelete($event)">
+          [editPermission]="editPermission"
+          [deletePermission]="deletePermission"
+          (editRow)="modal.openModal(true, $event)"
+          (deleteRow)="onDelete($event)">
         </app-reusable-table>
       </div>
       <app-fertilita-add-edit #modal (saved)="load()"></app-fertilita-add-edit>
@@ -41,12 +46,16 @@ export class FertilitaListComponent implements OnInit, OnDestroy {
   totalRecords = 0;
   columns: string[] = [];
   columnFields = ['recordDate', 'cowId', 'cowName', 'eventType', 'result', 'bullCode', 'daysInMilk'];
+  canAddFertilita = false;
+  editPermission = PERMISSIONS.FertilitaEdit;
+  deletePermission = PERMISSIONS.FertilitaDelete;
   private langSub?: Subscription;
 
   constructor(
     private http: HttpService,
     private toast: ToastService,
     private confirm: ConfirmDialogService,
+    private commonService: CommonService,
     private translate: TranslateService
   ) {
     this.setColumns();
@@ -54,6 +63,10 @@ export class FertilitaListComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    this.canAddFertilita = this.commonService.checkPermission(PERMISSIONS.FertilitaAdd, false);
+    if (!this.commonService.checkPermission(PERMISSIONS.FertilitaView, false)) {
+      return;
+    }
     this.load();
   }
 
@@ -67,6 +80,9 @@ export class FertilitaListComponent implements OnInit, OnDestroy {
   }
 
   onDelete(row: any): void {
+    if (!this.commonService.checkPermission(PERMISSIONS.FertilitaDelete)) {
+      return;
+    }
     this.confirm.confirm(this.translate.instant('fertilita.messages.deleteConfirm')).subscribe(confirmed => {
       if (!confirmed) return;
       this.http.post<any>(

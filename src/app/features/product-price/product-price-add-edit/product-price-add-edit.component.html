@@ -157,7 +157,7 @@
 
         </button>
 
-        <button class="btn add-btn" (click)="save()">
+        <button *ngIf="canSave" class="btn add-btn" (click)="save()" [disabled]="form.invalid">
 
          {{ 'productPrice.savePrice' | translate }}
         </button>

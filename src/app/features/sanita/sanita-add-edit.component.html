@@ -55,7 +55,7 @@
       </div>
       <div class="modal-footer">
         <button class="btn" (click)="closeModal()">{{ 'common.cancel' | translate }}</button>
-        <button class="btn add-btn" [disabled]="isSaving" (click)="save()">
+        <button *ngIf="canSave" class="btn add-btn" [disabled]="isSaving" (click)="save()">
           {{ isSaving ? ('common.saving' | translate) : ((isEdit ? 'common.update' : 'common.save') | translate) }}
         </button>
       </div>

@@ -6,7 +6,7 @@
       <h3 class="page-title">{{ 'kpi.management' | translate }}</h3>
     </div>
 
-    <button class="btn add-btn" (click)="KpiModal.openModal()">
+    <button *ngIf="canAddKpi" class="btn add-btn" (click)="KpiModal.openModal()">
       <i class="bi bi-plus-lg me-2"></i>
       {{ 'kpi.addKpi' | translate }}
     </button>
@@ -35,6 +35,9 @@
       [totalRecords]="totalRecords"
       [pageSize]="pageSize"
       [pageIndex]="pageIndex"
+      [viewPermission]="viewPermission"
+      [editPermission]="editPermission"
+      [deletePermission]="deletePermission"
       (pageChange)="onPageChange($event)"
       (toggleActive)="onToggleActive($event)"
       (deleteRow)="onDelete($event)"

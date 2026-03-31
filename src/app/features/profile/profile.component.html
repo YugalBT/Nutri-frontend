@@ -145,7 +145,7 @@
       </div>
 
       <div class="d-flex justify-content-end mt-4">
-        <button class="btn add-btn px-4" type="submit">
+        <button *ngIf="canSave" class="btn add-btn px-4" type="submit">
           {{'profile.updateProfile' | translate}}  
         </button>
 

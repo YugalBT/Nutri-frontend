@@ -7,7 +7,7 @@
       <p class="page-subtitle">Manage your system modules</p>
     </div>
 
-    <button class="btn add-btn" (click)="openAdd()">
+    <button *ngIf="canAddModule" class="btn add-btn" (click)="openAdd()">
       <i class="bi bi-plus-lg me-2"></i>
       Add Module
     </button>
@@ -39,6 +39,9 @@
         [columnFields]="columnFields"
         [showActions]="true"
         [data]="modules"
+        [viewPermission]="viewPermission"
+        [editPermission]="editPermission"
+        [deletePermission]="deletePermission"
         (deleteRow)="onDeleteModule($event)"
         (editRow)="openEdit($event)"
         >

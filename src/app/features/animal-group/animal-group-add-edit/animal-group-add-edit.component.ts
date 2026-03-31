@@ -118,6 +118,10 @@ export class AnimalGroupAddEditComponent implements OnInit, OnDestroy {
       ? this.commonService.checkPermission(PERMISSIONS.AnimalGroupEdit)
       : this.commonService.checkPermission(PERMISSIONS.AnimalGroupAdd);
 
+    if (!this.isAddEditPermission) {
+      return;
+    }
+
     const join$ = forkJoin({
       types: this.loadAnimalTypeList(false),
       lactations: this.loadLactationList(false)

@@ -8,7 +8,7 @@
       </h3>
     </div>
 
-    <button class="btn add-btn" (click)="templateModal.openModal()">
+    <button *ngIf="canAddTemplate" class="btn add-btn" (click)="templateModal.openModal()">
       <i class="bi bi-plus-lg me-2"></i>
       {{ 'templates.add' | translate }}
     </button>
@@ -39,6 +39,9 @@
       [totalRecords]="totalRecords"
       [pageSize]="pageSize"
       [pageIndex]="pageIndex"
+      [viewPermission]="viewPermission"
+      [editPermission]="editPermission"
+      [deletePermission]="deletePermission"
       (pageChange)="onPageChange($event)"
       (toggleActive)="onToggleActive($event)"
       (deleteRow)="onDelete($event)"

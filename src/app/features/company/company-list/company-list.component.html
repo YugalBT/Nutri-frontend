@@ -8,7 +8,7 @@
       <!-- <p class="page-subtitle">{{ 'company.manageDesc' | translate }}</p> -->
     </div>
 
-    <button class="btn add-btn" (click)="companyAddEdit.openModal()">
+    <button *ngIf="canAddCompany" class="btn add-btn" (click)="companyAddEdit.openModal()">
       <i class="bi bi-plus-lg me-2"></i>
       {{ 'company.addCompany' | translate }}
     </button>
@@ -39,6 +39,9 @@
       [totalRecords]="totalRecords"
       [pageSize]="pageSize"
       [pageIndex]="pageIndex"
+      [viewPermission]="viewPermission"
+      [editPermission]="editPermission"
+      [deletePermission]="deletePermission"
       (pageChange)="onPageChange($event)"
       (toggleActive)="toggleCompanyStatus($event)"
       (editRow)="companyAddEdit.openModal(true, $event)"

@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { TranslateService } from '../../../i18n/translate.service';
@@ -20,7 +21,7 @@ import { selectUserRoles } from '../../../state/auth/auth.selectors';
 @Component({
   selector: 'app-farm-list',
   standalone: true,
-  imports: [ReusableTableComponent, FarmAddEditComponent, TranslatePipe, GlobalSearchComponent],
+  imports: [CommonModule, ReusableTableComponent, FarmAddEditComponent, TranslatePipe, GlobalSearchComponent],
   templateUrl: './farm-list.component.html',
   styleUrls: ['./farm-list.component.css']
 })
@@ -65,8 +66,7 @@ export class FarmListComponent {
   ngOnInit(): void {
     this.loadUserPermissions();
 
-    if (!this.commonService.checkPermission(PERMISSIONS.FarmView)
-      || !this.commonService.checkPermission(PERMISSIONS.FarmDelete))
+    if (!this.commonService.checkPermission(PERMISSIONS.FarmView, false))
       return;
     this.loadFarms(1, this.pageSize);
     const sub = this.farmService.farmsChanged$.subscribe(() => {

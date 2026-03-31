@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common';
 import { Component, ViewChild } from '@angular/core';
 import { ReusableTableComponent } from '../../../shared/components/reusable-table/reusable-table.component';
 import { SupplierAddEditComponent } from '../supplier-add-edit/supplier-add-edit.component';
@@ -15,6 +16,7 @@ import { TranslatePipe } from '../../../i18n/translate.pipe';
   selector: 'app-supplier-list',
   standalone: true,
   imports: [
+    CommonModule,
     ReusableTableComponent,
     SupplierAddEditComponent,
     GlobalSearchComponent,
@@ -61,6 +63,10 @@ private setColumns(): void {
   pageIndex = 0;
   searchValue = '';
   filterStatus: number | null = 2;
+  canAddSupplier = false;
+  viewPermission = PERMISSIONS.SuppliersView;
+  editPermission = PERMISSIONS.SuppliersEdit;
+  deletePermission = PERMISSIONS.SuppliersDelete;
 
   private subs: Subscription[] = [];
 
@@ -79,9 +85,9 @@ private setColumns(): void {
 }
 
   ngOnInit(): void {
-
-    // if (!this.commonService.checkPermission(PERMISSIONS.SupplierView))
-    //   return;
+    this.canAddSupplier = this.commonService.checkPermission(PERMISSIONS.SuppliersAdd, false);
+    if (!this.commonService.checkPermission(PERMISSIONS.SuppliersView, false))
+      return;
 
     this.loadSuppliers(1, this.pageSize);
 
@@ -140,6 +146,9 @@ private setColumns(): void {
   }
 
   onToggleActive(event: { row: any; isActive: boolean }): void {
+    if (!this.commonService.checkPermission(PERMISSIONS.SuppliersEdit)) {
+      return;
+    }
 
     if (!event?.row?.supplierId) {
       this.toast.error("Invalid Supplier Id");
@@ -163,9 +172,8 @@ private setColumns(): void {
   }
 
   onDelete(row: any): void {
-
-    // if (!this.commonService.checkPermission(PERMISSIONS.SupplierDelete))
-    //   return;
+    if (!this.commonService.checkPermission(PERMISSIONS.SuppliersDelete))
+      return;
 
     if (!row?.supplierId) {
       this.toast.error("Invalid Supplier Id");

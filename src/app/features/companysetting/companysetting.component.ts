@@ -24,6 +24,7 @@ export class CompanysettingComponent implements OnInit {
   companyForm!: FormGroup;
   imagePreview: string | null = null;
   logoFile!: File;
+  canSave = false;
   @ViewChild('fileInput') fileInput!: ElementRef<HTMLInputElement>;
 
   constructor(
@@ -36,8 +37,9 @@ export class CompanysettingComponent implements OnInit {
 
   ngOnInit(): void {
 
-    if (!this.commonService.checkPermission(PERMISSIONS.SettingEdit) || !this.commonService.checkPermission(PERMISSIONS.SettingView))
+    if (!this.commonService.checkPermission(PERMISSIONS.SettingView, false))
       return;
+    this.canSave = this.commonService.checkPermission(PERMISSIONS.SettingEdit, false);
     this.setupForm();
     this.companyService.companyDetails().pipe(take(1)).subscribe((res: any) => {
       if (res.isSuccess && res.data) {
@@ -109,7 +111,7 @@ export class CompanysettingComponent implements OnInit {
   }
 
   onSubmit() {
-    if (!this.commonService.checkPermission(PERMISSIONS.SettingEdit) || !this.commonService.checkPermission(PERMISSIONS.SettingView))
+    if (!this.commonService.checkPermission(PERMISSIONS.SettingEdit))
       return;
     if (this.companyForm.invalid) {
       this.companyForm.markAllAsTouched();

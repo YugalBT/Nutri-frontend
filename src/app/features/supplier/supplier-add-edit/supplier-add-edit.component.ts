@@ -16,6 +16,7 @@ import { TranslatePipe } from '../../../i18n/translate.pipe';
 import { CommonService } from '../../../shared/services/common.service';
 import { RoleList } from '../../../core/models/rolelist';
 import { TranslateService } from '../../../i18n/translate.service';
+import { PERMISSIONS } from '../../../core/constants/permissions.constants';
 
 declare var bootstrap: any;
 
@@ -33,6 +34,7 @@ export class SupplierAddEditComponent implements OnInit, OnDestroy {
   form!: FormGroup;
   modalInstance: any;
   isEdit = false;
+  canSave = false;
   currentId: string | null = null;
   subs: Subscription[] = [];
   showCurrent = false;
@@ -155,8 +157,14 @@ private listenToFirstNameChange() {
   }
 
   openModal(edit = false, data?: any) {
-
     this.isEdit = edit;
+    this.canSave = edit
+      ? this.commonService.checkPermission(PERMISSIONS.SuppliersEdit, false)
+      : this.commonService.checkPermission(PERMISSIONS.SuppliersAdd, false);
+    if (!this.canSave) {
+      this.toast.error('No permission');
+      return;
+    }
     this.form.reset();
 
     if (edit && data) {
@@ -172,6 +180,10 @@ private listenToFirstNameChange() {
   }
 
   saveSupplier() {
+    const hasPermission = this.isEdit
+      ? this.commonService.checkPermission(PERMISSIONS.SuppliersEdit)
+      : this.commonService.checkPermission(PERMISSIONS.SuppliersAdd);
+    if (!hasPermission) return;
 
     if (!this.form.valid) {
       this.form.markAllAsTouched();

@@ -62,8 +62,7 @@ export class FeedListComponent {
   ngOnInit(): void {
     this.loadUserPermissions();
 
-    if (!this.commonService.checkPermission(PERMISSIONS.FeedView)
-      || !this.commonService.checkPermission(PERMISSIONS.FeedDelete))
+    if (!this.commonService.checkPermission(PERMISSIONS.FeedView, false))
       return;
     this.loadFeeds(1, this.pageSize);
 

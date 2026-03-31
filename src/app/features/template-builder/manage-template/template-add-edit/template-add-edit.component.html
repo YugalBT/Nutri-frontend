@@ -112,7 +112,7 @@
         <button class="btn btn-outline-secondary" (click)="closeModal()">
           {{ 'common.cancel' | translate }}
         </button>
-        <button class="btn add-btn" (click)="save()">
+        <button *ngIf="canSave" class="btn add-btn" (click)="save()">
           {{ 'common.submit' | translate }}
         </button>
       </div>

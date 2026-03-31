@@ -50,7 +50,7 @@
         <!-- <button class="btn add-btn" [disabled]="!isAddEditPermission" (click)="save()">
           {{ isEdit ? ('common.update' |  translate) : ('common.save' | translate) }}
         </button> -->
-         <button class="btn add-btn" (click)="save()">
+         <button *ngIf="isAddEditPermission" class="btn add-btn" (click)="save()" [disabled]="form.invalid">
           {{ isEdit ? ('common.update' |  translate) : ('common.save' | translate) }}
         </button>
         

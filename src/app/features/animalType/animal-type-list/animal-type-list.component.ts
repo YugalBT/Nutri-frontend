@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { finalize } from 'rxjs/operators';
@@ -17,14 +18,12 @@ import { PERMISSIONS } from '../../../core/constants/permissions.constants';
 import { PermissionService } from '../../../shared/services/permission.service';
 import { Store } from '@ngrx/store';
 import { selectUserRoles } from '../../../state/auth/auth.selectors';
-import { PermissionService } from '../../../shared/services/permission.service';
-import { Store } from '@ngrx/store';
-import { selectUserRoles } from '../../../state/auth/auth.selectors';
 
 @Component({
   selector: 'app-animal-type-list',
   standalone: true,
   imports: [
+    CommonModule,
     AnimalTypeAddEditComponent,
     ReusableTableComponent,
     GlobalSearchComponent,
