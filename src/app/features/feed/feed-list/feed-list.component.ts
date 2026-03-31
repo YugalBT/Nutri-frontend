@@ -13,7 +13,6 @@ import { FeedAddEditComponent } from '../feed-add-edit/feed-add-edit.component';
 import { CommonService } from '../../../shared/services/common.service';
 import { PERMISSIONS } from '../../../core/constants/permissions.constants';
 import { TranslatePipe } from '../../../i18n/translate.pipe';
-import { PermissionService } from '../../../shared/services/permission.service';
 import { Store } from '@ngrx/store';
 import { selectUserRoles } from '../../../state/auth/auth.selectors';
 
@@ -52,7 +51,6 @@ export class FeedListComponent {
     private toast: ToastService,
     private confirm: ConfirmDialogService,
     private commonService: CommonService,
-    private permissionService: PermissionService,
     private store: Store
   ) {
     this.setColumns();
@@ -127,11 +125,16 @@ export class FeedListComponent {
   }
 
   onToggleActive(event: { row: any; isActive: boolean }): void {
+    if (!this.commonService.checkPermission(PERMISSIONS.FeedEdit)) {
+      return;
+    }
+
     event.row.isToggling = true;
 
     const id = event?.row?.feedId;
     if (!id) {
       this.toast.error('Invalid feed id');
+      event.row.isToggling = false;
       return;
     }
 

@@ -6,7 +6,7 @@
       <h3 class="page-title">{{ 'feed.Heading' | translate  }}</h3>
     </div>
 
-    <button class="btn add-btn" (click)="openAddFeedModal()">
+    <button *ngIf="canAddFeed" class="btn add-btn" (click)="openAddFeedModal()">
       <i class="bi bi-plus-lg me-2"></i>
       {{ 'feed.addFeed' | translate  }}
     </button>
@@ -34,10 +34,11 @@
       [pageable]="true"
       [totalRecords]="totalRecords"
       [pageSize]="pageSize"
-      [pageIndex]="pageIndex"      [viewPermission]="viewPermission"
+      [pageIndex]="pageIndex"
+      [viewPermission]="viewPermission"
       [editPermission]="editPermission"
       [deletePermission]="deletePermission"
-      [showView]="true"      (pageChange)="onPageChange($event)"
+      (pageChange)="onPageChange($event)"
       (toggleActive)="onToggleActive($event)"
       (deleteRow)="onDelete($event)"
       (editRow)="feedModal.openModal(true, $event)">

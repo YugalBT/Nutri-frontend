@@ -6,7 +6,7 @@
       <h3 class="page-title">{{ 'operator.heading' | translate }}</h3>
     </div>
 
-    <button class="btn add-btn" (click)="operatorModal.openModal()">
+    <button *ngIf="canAddOperator" class="btn add-btn" (click)="operatorModal.openModal()">
       {{ 'operator.addOperator' | translate }}
     </button>
   </div>
@@ -28,10 +28,13 @@
     [totalRecords]="totalRecords"
     [pageSize]="pageSize"
     [pageIndex]="pageIndex"
+    [viewPermission]="viewPermission"
+    [editPermission]="editPermission"
+    [deletePermission]="deletePermission"
     (pageChange)="onPageChange($event)"
     (toggleActive)="onToggleActive($event)"
     (editRow)="operatorModal.openModal(true, $event)"
-     [showActions]="true" 
+    [showActions]="true"
     (deleteRow)="onDelete($event)"
     >
   </app-reusable-table>

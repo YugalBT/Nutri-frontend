@@ -107,12 +107,12 @@
                 <button class="btn" (click)="closeModal()">
                     {{ 'formula.cancel' | translate }}
                 </button>
-                <button class="btn add-btn" (click)="onValidate()">
+                <button *ngIf="canSave" class="btn add-btn" (click)="onValidate()">
                     {{ 'formula.validate' | translate }}
                 </button>
                 <!-- disable save button until validation is successful -->
                  
-                <button class="btn add-btn" [disabled]="!isvalidated" (click)="validateExpression()">
+                <button *ngIf="canSave" class="btn add-btn" [disabled]="!isvalidated" (click)="validateExpression()">
                     {{ 'formula.save' | translate }}
                 </button>
             </div>

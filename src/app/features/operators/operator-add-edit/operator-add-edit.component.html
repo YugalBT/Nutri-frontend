@@ -65,7 +65,7 @@
           {{ 'common.cancel' | translate }}
         </button>
 
-        <button class="btn add-btn" (click)="save()">
+        <button *ngIf="canSave" class="btn add-btn" (click)="save()">
           {{ isEdit ? ('common.update' | translate) : ('common.save' | translate) }}
         </button>
       </div>

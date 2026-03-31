@@ -1,4 +1,5 @@
 import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { Subscription } from 'rxjs';
 
 import { CalfbarnService } from '../../../core/services/calfbarn/calfbarn.service';
@@ -11,11 +12,14 @@ import { CalfbarnAddEditComponent } from '../calfbarn-add-edit/calfbarn-add-edit
 
 import { TranslateService } from '../../../i18n/translate.service';
 import { TranslatePipe } from '../../../i18n/translate.pipe';
+import { CommonService } from '../../../shared/services/common.service';
+import { PERMISSIONS } from '../../../core/constants/permissions.constants';
 
 @Component({
   selector: 'app-calfbarn-list',
   standalone: true,
   imports: [
+    CommonModule,
     GlobalSearchComponent,
     ReusableTableComponent,
     CalfbarnAddEditComponent,
@@ -38,6 +42,10 @@ export class CalfbarnListComponent implements OnInit, OnDestroy {
   filterStatus: number | null = 2;
 
   columns: string[] = [];
+  canAddCalfBarn = false;
+  viewPermission = PERMISSIONS.CalfBarnView;
+  editPermission = PERMISSIONS.CalfBarnEdit;
+  deletePermission = PERMISSIONS.CalfBarnDelete;
 
   columnFields: string[] = [
     'animalGroup',
@@ -54,7 +62,8 @@ export class CalfbarnListComponent implements OnInit, OnDestroy {
     private calfBarnService: CalfbarnService,
     private toast: ToastService,
     private confirm: ConfirmDialogService,
-    private translate: TranslateService
+    private translate: TranslateService,
+    private commonService: CommonService
   ) {
 
     this.setColumns();
@@ -79,6 +88,10 @@ export class CalfbarnListComponent implements OnInit, OnDestroy {
   }
 
  ngOnInit(): void {
+  this.canAddCalfBarn = this.commonService.checkPermission(PERMISSIONS.CalfBarnAdd, false);
+  if (!this.commonService.checkPermission(PERMISSIONS.CalfBarnView, false)) {
+    return;
+  }
 
   this.loadData(1, this.pageSize);
 
@@ -156,6 +169,9 @@ export class CalfbarnListComponent implements OnInit, OnDestroy {
   }
 
   onToggleActive(event: { row: any; isActive: boolean }): void {
+    if (!this.commonService.checkPermission(PERMISSIONS.CalfBarnEdit)) {
+      return;
+    }
 
     if (!event?.row?.calfBarnId) {
       this.toast.error("Invalid CalfBarn Id");
@@ -186,6 +202,9 @@ export class CalfbarnListComponent implements OnInit, OnDestroy {
   }
 
   onDelete(row: any): void {
+    if (!this.commonService.checkPermission(PERMISSIONS.CalfBarnDelete)) {
+      return;
+    }
 
     if (!row?.calfBarnId) {
       this.toast.error("Invalid CalfBarn Id");
