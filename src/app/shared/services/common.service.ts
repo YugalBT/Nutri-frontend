@@ -103,8 +103,15 @@ export class CommonService {
   getFeedList(): Observable<ApiResponse<FeedList>> {
     return this.http.get<FeedList>(API_ENDPOINTS.COMMON_API.GET_ALL_FEED);
   }
-  getDayList(): Observable<ApiResponse<KpiList>> {
-    return this.http.get<KpiList>(API_ENDPOINTS.COMMON_API.GET_ALL_Days);
+  getDayList(companyId?: string): Observable<ApiResponse<KpiList>> {
+    const url = companyId
+      ? `${API_ENDPOINTS.COMMON_API.GET_ALL_Days}?companyId=${companyId}`
+      : API_ENDPOINTS.COMMON_API.GET_ALL_Days;
+    return this.http.get<KpiList>(url);
+  }
+
+  getCompanyDropdown(): Observable<ApiResponse<{ id: string; name: string }[]>> {
+    return this.http.get<{ id: string; name: string }[]>(API_ENDPOINTS.Tenant.GET_DROPDOWN);
   }
   getAnimalTypeList(): Observable<ApiResponse<any>> {
     return this.http.get<FarmList>(API_ENDPOINTS.COMMON_API.GET_ALL_ANIMALTYPE);
@@ -115,9 +122,11 @@ export class CommonService {
     );
   }
 
-  getAnimalGroupsList(): Observable<ApiResponse<AnimalGroupList>> {
+  getAnimalGroupsList(companyId?: string): Observable<ApiResponse<AnimalGroupList>> {
+    const base = API_ENDPOINTS.COMMON_API.GET_ALL_ANIMAL_GROUP;
+    const url = companyId ? `${base}?companyId=${companyId}` : base;
     return this.http.get<AnimalGroupList>(
-      API_ENDPOINTS.COMMON_API.GET_ALL_ANIMAL_GROUP,
+      url,
     );
   }
 
@@ -137,8 +146,11 @@ export class CommonService {
     );
   }
 
-  getGetAllRationList(): Observable<ApiResponse<RationList[]>> {
-    return this.http.get<RationList[]>(API_ENDPOINTS.COMMON_API.GET_RATION);
+  getGetAllRationList(companyId?: string): Observable<ApiResponse<RationList[]>> {
+    const url = companyId
+      ? `${API_ENDPOINTS.COMMON_API.GET_RATION}?companyId=${companyId}`
+      : API_ENDPOINTS.COMMON_API.GET_RATION;
+    return this.http.get<RationList[]>(url);
   }
 
   getGetAllOperatorList(): Observable<ApiResponse<OperatorList[]>> {

@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, ViewChild } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { Store } from '@ngrx/store';
 import { selectUserRoles } from '../../../state/auth/auth.selectors';
 import { PERMISSIONS } from '../../../core/constants/permissions.constants';
@@ -17,11 +18,12 @@ import { CommonService } from '../../../shared/services/common.service';
 import { Router } from '@angular/router';
 import { ROUTE_CONST } from '../../../core/constants/route.constants';
 import { TranslatePipe } from '../../../i18n/translate.pipe';
+import { Constants } from '../../../shared/utils/constants/constants';
 
 @Component({
   selector: 'app-ration-list',
   standalone: true,
-  imports: [CommonModule, RationAddEditComponent, GlobalSearchComponent, ReusableTableComponent, TranslatePipe],
+  imports: [CommonModule, FormsModule, RationAddEditComponent, GlobalSearchComponent, ReusableTableComponent, TranslatePipe],
   templateUrl: './ration-list.component.html',
   styleUrls: ['./ration-list.component.css']
 })
@@ -42,6 +44,10 @@ export class RationListComponent {
   // permissions
   userRoles: string[] = [];
   canAddRation = false;
+
+  isSuperAdmin = false;
+  companies: { id: string; name: string }[] = [];
+  selectedCompanyId = '';
   
   // Permission properties for table
   viewPermission = PERMISSIONS.RationView;
@@ -66,11 +72,21 @@ export class RationListComponent {
   }
 
   ngOnInit(): void {
-    
     if(!this.commonService.checkPermission(PERMISSIONS.RationView, false))
         return;
     this.loadUserPermissions();
-    this.loadRation(1, this.pageSize);
+    this.isSuperAdmin = localStorage.getItem(Constants.IsSuperAdmin) === 'true';
+
+    if (this.isSuperAdmin) {
+      const sub = this.commonService.getCompanyDropdown().subscribe(res => {
+        this.companies = res?.data ?? [];
+        if (this.companies.length > 0) this.selectedCompanyId = this.companies[0].id;
+        this.loadRation(1, this.pageSize);
+      });
+      this.subs.push(sub);
+    } else {
+      this.loadRation(1, this.pageSize);
+    }
     const sub = this.rationService.rationChanged$.subscribe(() => {
       this.loadRation(this.pageIndex + 1, this.pageSize);
     });
@@ -85,12 +101,19 @@ export class RationListComponent {
     this.subs.push(sub);
   }
 
+  onCompanyChange(): void {
+    this.pageIndex = 0;
+    this.ration = [];
+    this.loadRation(1, this.pageSize);
+  }
+
   private loadRation(pageNo: number, recordPerPage: number): void {
     const payload: any = {
       pageNo,
       recordPerPage,
       searchValue: this.searchValue || '',
-      status: this.filterStatus
+      status: this.filterStatus,
+      ...(this.isSuperAdmin && this.selectedCompanyId ? { tenantId: this.selectedCompanyId } : {})
     };
 
     const sub = this.rationService.getrationDetails(payload)

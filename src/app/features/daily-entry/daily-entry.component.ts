@@ -3,6 +3,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Subscription, forkJoin } from 'rxjs';
 import { API_ENDPOINTS } from '../../core/constants/api-endpoints';
+import { Constants } from '../../shared/utils/constants/constants';
 import { PERMISSIONS } from '../../core/constants/permissions.constants';
 import { TranslatePipe } from '../../i18n/translate.pipe';
 import { TranslateService } from '../../i18n/translate.service';
@@ -32,6 +33,10 @@ export class DailyEntryComponent implements OnInit, OnDestroy {
   isInitializing = true;
   canSave = false;
 
+  isSuperAdmin = false;
+  companies: { id: string; name: string }[] = [];
+  selectedCompanyId = '';
+
   priceTypes = [
     { value: 0, labelKey: 'dailyEntry.priceType.company' },
     { value: 1, labelKey: 'dailyEntry.priceType.market' },
@@ -49,6 +54,7 @@ export class DailyEntryComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.initForm();
+    this.isSuperAdmin = localStorage.getItem(Constants.IsSuperAdmin) === 'true';
     this.canSave = this.common.hasAnyPermission(
       [PERMISSIONS.DailyEntryAdd, PERMISSIONS.DailyEntryEdit],
       false
@@ -58,11 +64,40 @@ export class DailyEntryComponent implements OnInit, OnDestroy {
       return;
     }
     this.selectedDate = new Date().toISOString().split('T')[0];
+    if (this.isSuperAdmin) {
+      this.loadCompanies();
+    } else {
+      this.loadDaysAndResolve();
+    }
+  }
+
+  private loadCompanies(): void {
+    const sub = this.common.getCompanyDropdown().subscribe({
+      next: (res) => {
+        this.companies = res?.data ?? [];
+        if (this.companies.length > 0) {
+          this.selectedCompanyId = this.companies[0].id;
+        }
+        this.loadDaysAndResolve();
+        this.isInitializing = false;
+      },
+      error: () => {
+        this.isInitializing = false;
+        this.loadDaysAndResolve();
+      }
+    });
+    this.subs.push(sub);
+  }
+
+  onCompanyChange(): void {
+    this.dayId = '';
+    this.farmId = '';
     this.loadDaysAndResolve();
   }
 
   private loadDaysAndResolve(): void {
-    const sub = this.common.getDayList().subscribe({
+    const cid = this.isSuperAdmin && this.selectedCompanyId ? this.selectedCompanyId : undefined;
+    const sub = this.common.getDayList(cid).subscribe({
       next: (days) => {
         this.days = Array.isArray(days?.data) ? days.data : [];
         this.resolveDayAndLoad();
@@ -99,10 +134,11 @@ export class DailyEntryComponent implements OnInit, OnDestroy {
 
   private loadDependenciesAndBuild(dayId: string | null): void {
     this.isLoading = true;
+    const cid = this.isSuperAdmin && this.selectedCompanyId ? this.selectedCompanyId : undefined;
 
     const requests: any = {
-      groups: this.common.getAnimalGroupsList(),
-      rations: this.common.getGetAllRationList(),
+      groups: this.common.getAnimalGroupsList(cid),
+      rations: this.common.getGetAllRationList(cid),
     };
 
     if (dayId) {
@@ -253,11 +289,11 @@ export class DailyEntryComponent implements OnInit, OnDestroy {
   private createDayAndSave(): void {
     this.isSaving = true;
 
-    const sub = this.http.post<any>(API_ENDPOINTS.DAY.CREATE, {
-      date: this.selectedDate,
-      isClosed: false,
-      farmId: null,
-    }).subscribe({
+    const payload: any = { date: this.selectedDate, isClosed: false, farmId: null };
+    if (this.isSuperAdmin && this.selectedCompanyId) {
+      payload['companyId'] = this.selectedCompanyId;
+    }
+    const sub = this.http.post<any>(API_ENDPOINTS.DAY.CREATE, payload).subscribe({
       next: (res) => {
         if (!res?.isSuccess) {
           this.toast.error(res?.message ?? this.translate.instant('dailyEntry.messages.saveError'));
@@ -277,7 +313,8 @@ export class DailyEntryComponent implements OnInit, OnDestroy {
   }
 
   private refreshDayIdForSelectedDateAndSave(): void {
-    const sub = this.common.getDayList().subscribe({
+    const cid = this.isSuperAdmin && this.selectedCompanyId ? this.selectedCompanyId : undefined;
+    const sub = this.common.getDayList(cid).subscribe({
       next: (days) => {
         this.days = Array.isArray(days?.data) ? days.data : [];
         const matched = this.days.find((d: any) => this.isMatchingSelectedDate(d));
