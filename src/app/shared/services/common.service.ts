@@ -178,8 +178,11 @@ export class CommonService {
       `${API_ENDPOINTS.COMMON_API.GET_ANIMALGROUPS_BY_FARM_ID}${query}`,
     );
   }
-  getFeedByFarmID(FarmId?: string): Observable<ApiResponse<FeedList[]>> {
-    const query = FarmId ? `?FarmId=${FarmId}` : '';
+  getFeedByFarmID(FarmId?: string, companyId?: string): Observable<ApiResponse<FeedList[]>> {
+    const params: string[] = [];
+    if (FarmId) params.push(`FarmId=${FarmId}`);
+    if (companyId) params.push(`companyId=${companyId}`);
+    const query = params.length ? `?${params.join('&')}` : '';
     return this.http.get<FeedList[]>(
       `${API_ENDPOINTS.COMMON_API.GET_FEEDS_BY_FARM_ID}${query}`,
     );

@@ -10,6 +10,7 @@ import { API_ENDPOINTS } from '../../core/constants/api-endpoints';
 import { PERMISSIONS } from '../../core/constants/permissions.constants';
 import { TranslatePipe } from '../../i18n/translate.pipe';
 import { TranslateService } from '../../i18n/translate.service';
+import { Constants } from '../../shared/utils/constants/constants';
 
 
 @Component({
@@ -21,6 +22,12 @@ import { TranslateService } from '../../i18n/translate.service';
       <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
         <h3 class="page-title mb-0">{{ 'fertilita.list.title' | translate }}</h3>
         <div class="d-flex align-items-center gap-2">
+          <ng-container *ngIf="isSuperAdmin && companies.length > 0">
+            <label class="form-label mb-0 text-muted">{{ 'dailyEntry.filters.company' | translate }}</label>
+            <select class="form-select form-select-sm" style="width:220px" [(ngModel)]="selectedCompanyId" (change)="onCompanyChange()">
+              <option *ngFor="let c of companies" [value]="c.id">{{ c.name }}</option>
+            </select>
+          </ng-container>
           <label class="form-label mb-0 text-muted">{{ 'common.year' | translate }}</label>
           <select class="form-select form-select-sm" style="width:100px" [(ngModel)]="year" (change)="load()">
             <option *ngFor="let y of years" [value]="y">{{ y }}</option>
@@ -81,6 +88,10 @@ export class FertilitaListComponent implements OnInit, OnDestroy {
   rows: { monthNumber: number; abortions: number; calvingsCount: number }[] = [];
   isLoading = false;
   chartOption: EChartsOption = {};
+  isSuperAdmin = false;
+  companies: { id: string; name: string }[] = [];
+  selectedCompanyId = '';
+  private subs: Subscription[] = [];
   private langSub?: Subscription;
 
   constructor(
@@ -94,7 +105,24 @@ export class FertilitaListComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     if (!this.commonService.checkPermission(PERMISSIONS.FertilitaView, false)) return;
+    this.isSuperAdmin = localStorage.getItem(Constants.IsSuperAdmin) === 'true';
     this.langSub = this.translate.lang$.subscribe(() => this.buildChart());
+
+    if (this.isSuperAdmin) {
+      const sub = this.commonService.getCompanyDropdown().subscribe({
+        next: (res) => {
+          this.companies = res?.data ?? [];
+          if (this.companies.length > 0) {
+            this.selectedCompanyId = this.companies[0].id;
+          }
+          this.load();
+        },
+        error: () => this.load()
+      });
+      this.subs.push(sub);
+      return;
+    }
+
     this.load();
   }
 
@@ -106,9 +134,16 @@ export class FertilitaListComponent implements OnInit, OnDestroy {
       .format(new Date(2000, m - 1, 1));
   }
 
+  onCompanyChange(): void {
+    this.load();
+  }
+
   load(): void {
     this.isLoading = true;
-    this.http.get<any>(`${API_ENDPOINTS.DASHBOARD.GET_HEALTH_MONTHLY}?year=${this.year}`)
+    const companyQuery = this.isSuperAdmin && this.selectedCompanyId
+      ? `&companyId=${this.selectedCompanyId}`
+      : '';
+    this.http.get<any>(`${API_ENDPOINTS.DASHBOARD.GET_HEALTH_MONTHLY}?year=${this.year}${companyQuery}`)
       .subscribe({
         next: (res) => {
           const data: any[] = res?.data ?? [];
@@ -158,5 +193,6 @@ export class FertilitaListComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.langSub?.unsubscribe();
+    this.subs.forEach(s => s.unsubscribe());
   }
 }

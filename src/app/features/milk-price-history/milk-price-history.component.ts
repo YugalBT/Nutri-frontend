@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { API_ENDPOINTS } from '../../core/constants/api-endpoints';
 import { PERMISSIONS } from '../../core/constants/permissions.constants';
@@ -9,11 +9,12 @@ import { TranslateService } from '../../i18n/translate.service';
 import { CommonService } from '../../shared/services/common.service';
 import { HttpService } from '../../shared/services/http.service';
 import { ToastService } from '../../shared/services/toast.service';
+import { Constants } from '../../shared/utils/constants/constants';
 
 @Component({
   selector: 'app-milk-price-history',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, TranslatePipe],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, TranslatePipe],
   templateUrl: './milk-price-history.component.html'
 })
 export class MilkPriceHistoryComponent implements OnInit, OnDestroy {
@@ -22,6 +23,9 @@ export class MilkPriceHistoryComponent implements OnInit, OnDestroy {
   isLoading = false;
   isSaving = false;
   canSave = false;
+  isSuperAdmin = false;
+  companies: { id: string; name: string }[] = [];
+  selectedCompanyId = '';
   private subs: Subscription[] = [];
 
   constructor(
@@ -40,7 +44,24 @@ export class MilkPriceHistoryComponent implements OnInit, OnDestroy {
     if (!this.commonService.checkPermission(PERMISSIONS.MilkPriceHistoryView, false)) {
       return;
     }
+    this.isSuperAdmin = localStorage.getItem(Constants.IsSuperAdmin) === 'true';
     this.initForm();
+
+    if (this.isSuperAdmin) {
+      const sub = this.commonService.getCompanyDropdown().subscribe({
+        next: (res) => {
+          this.companies = res?.data ?? [];
+          if (this.companies.length > 0) {
+            this.selectedCompanyId = this.companies[0].id;
+          }
+          this.load();
+        },
+        error: () => this.load()
+      });
+      this.subs.push(sub);
+      return;
+    }
+
     this.load();
   }
 
@@ -57,9 +78,16 @@ export class MilkPriceHistoryComponent implements OnInit, OnDestroy {
     });
   }
 
+  onCompanyChange(): void {
+    this.load();
+  }
+
   load(): void {
     this.isLoading = true;
-    const sub = this.http.get<any>(API_ENDPOINTS.MILK_PRICE_HISTORY.GET_BY_FARM)
+    const companyQuery = this.isSuperAdmin && this.selectedCompanyId
+      ? `?companyId=${this.selectedCompanyId}`
+      : '';
+    const sub = this.http.get<any>(`${API_ENDPOINTS.MILK_PRICE_HISTORY.GET_BY_FARM}${companyQuery}`)
       .subscribe({
         next: (res) => {
           this.history = res?.data ?? [];
@@ -94,7 +122,10 @@ export class MilkPriceHistoryComponent implements OnInit, OnDestroy {
     }
 
     this.isSaving = true;
-    const payload = { ...this.form.value };
+    const payload = {
+      ...this.form.value,
+      ...(this.isSuperAdmin && this.selectedCompanyId ? { companyId: this.selectedCompanyId } : {})
+    };
 
     const sub = this.http.post<any>(API_ENDPOINTS.MILK_PRICE_HISTORY.SAVE, payload).subscribe({
       next: (res) => {

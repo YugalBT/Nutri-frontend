@@ -230,6 +230,10 @@ export class FeedListComponent {
   }
 
   openAddFeedModal(): void {
-    this.feedModalRef.openModal(false);
+    this.feedModalRef.openModal(false, undefined, this.selectedCompanyId);
+  }
+
+  openEditFeedModal(row: any): void {
+    this.feedModalRef.openModal(true, row, this.selectedCompanyId);
   }
 }

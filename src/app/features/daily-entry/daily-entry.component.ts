@@ -63,7 +63,8 @@ export class DailyEntryComponent implements OnInit, OnDestroy {
       this.isInitializing = false;
       return;
     }
-    this.selectedDate = new Date().toISOString().split('T')[0];
+    const today = new Date();
+    this.selectedDate = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
     if (this.isSuperAdmin) {
       this.loadCompanies();
     } else {
@@ -319,20 +320,13 @@ export class DailyEntryComponent implements OnInit, OnDestroy {
         this.days = Array.isArray(days?.data) ? days.data : [];
         const matched = this.days.find((d: any) => this.isMatchingSelectedDate(d));
         const resolvedDayId = matched ? this.extractDayId(matched) : '';
-        const resolvedFarmId = matched ? this.extractFarmId(matched) : '';
         if (!this.isValidGuid(resolvedDayId)) {
-          this.toast.error(this.translate.instant('dailyEntry.messages.saveError'));
-          this.isSaving = false;
-          return;
-        }
-        if (!this.isValidGuid(resolvedFarmId)) {
           this.toast.error(this.translate.instant('dailyEntry.messages.saveError'));
           this.isSaving = false;
           return;
         }
 
         this.dayId = resolvedDayId;
-        this.farmId = resolvedFarmId;
         this.persistDayData(this.dayId);
       },
       error: () => {
@@ -346,17 +340,13 @@ export class DailyEntryComponent implements OnInit, OnDestroy {
 
   private persistDayData(dayId: string): void {
     this.isSaving = true;
-    if (!this.isValidGuid(this.farmId)) {
-      this.toast.error(this.translate.instant('dailyEntry.messages.saveError'));
-      this.isSaving = false;
-      return;
-    }
 
     const v = this.form.value;
-    const payload = {
+    const payload: any = {
       dayId,
-      farmId: this.farmId,
+      farmId: this.farmId || '00000000-0000-0000-0000-000000000000',
       date: this.selectedDate,
+      ...(this.isSuperAdmin && this.selectedCompanyId ? { tenantId: this.selectedCompanyId } : {}),
       ...v,
       groupData: v.groupData.map((g: any) => ({
         animalGroupId: g.animalGroupId,
@@ -418,6 +408,7 @@ export class DailyEntryComponent implements OnInit, OnDestroy {
     }
 
     const text = String(value).trim();
+    // Already ISO yyyy-MM-dd — use directly (no timezone conversion needed)
     if (/^\d{4}-\d{2}-\d{2}/.test(text)) {
       return text.slice(0, 10);
     }
@@ -427,12 +418,17 @@ export class DailyEntryComponent implements OnInit, OnDestroy {
       return '';
     }
 
-    return parsed.toISOString().slice(0, 10);
+    // Use LOCAL date components to avoid UTC offset shifting the date
+    const y = parsed.getFullYear();
+    const m = String(parsed.getMonth() + 1).padStart(2, '0');
+    const d = String(parsed.getDate()).padStart(2, '0');
+    return `${y}-${m}-${d}`;
   }
 
   get selectedDateLabel(): string {
     if (!this.selectedDate) return '';
-    const d = new Date(this.selectedDate);
+    // Parse as local date by adding T00:00:00 to avoid UTC shift
+    const d = new Date(`${this.selectedDate}T00:00:00`);
     return d.toLocaleDateString('it-IT', { weekday: 'long', day: '2-digit', month: 'long', year: 'numeric' });
   }
 

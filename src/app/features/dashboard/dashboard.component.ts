@@ -96,6 +96,10 @@ export class DashboardComponent implements OnInit {
     return role === 'ADMIN' && this.user?.isSuperAdmin === true;
   }
 
+  private get currentCompanyId(): string | null {
+    return this.user?.parentTenantId || this.user?.tenantId || null;
+  }
+
   onYearChange(year: number): void {
     this.selectedYear = Number(year);
     this.loadDashboard();
@@ -128,7 +132,7 @@ export class DashboardComponent implements OnInit {
   }
 
   private loadCompanyDashboard(): void {
-    this.commonService.getCompanyDashboardData(this.selectedYear).subscribe({
+    this.commonService.getCompanyDashboardData(this.selectedYear, this.currentCompanyId ?? undefined).subscribe({
       next: (res) => {
 
         this.companyDashboard = res?.isSuccess ? res.data : null;

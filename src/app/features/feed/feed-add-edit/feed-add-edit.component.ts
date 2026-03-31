@@ -27,6 +27,7 @@ export class FeedAddEditComponent implements OnInit, OnDestroy {
   isEdit = false;
   canSave = false;
   currentFeedId: string | null = null;
+  selectedCompanyId = '';
 
   categoryOptions = ['Foraggi', 'Concentrati', 'Robot', 'Minerali'];
   priceUnitOptions = [
@@ -88,8 +89,9 @@ export class FeedAddEditComponent implements OnInit, OnDestroy {
     this.form.patchValue({ pricePerKg: perKg }, { emitEvent: false });
   }
 
-  openModal(edit = false, data?: any) {
+  openModal(edit = false, data?: any, companyId = '') {
     this.isEdit = edit;
+    this.selectedCompanyId = companyId;
     this.canSave = edit
       ? this.commonService.checkPermission(PERMISSIONS.FeedEdit, false)
       : this.commonService.checkPermission(PERMISSIONS.FeedAdd, false);
@@ -147,7 +149,11 @@ export class FeedAddEditComponent implements OnInit, OnDestroy {
     }
 
     this.syncPricePerKg();
-    const payload: any = { ...this.form.getRawValue(), feedId: this.currentFeedId ?? undefined };
+    const payload: any = {
+      ...this.form.getRawValue(),
+      feedId: this.currentFeedId ?? undefined,
+      ...(this.selectedCompanyId ? { tenantId: this.selectedCompanyId } : {})
+    };
 
     const api$ = this.isEdit
       ? this.feedService.updateFeeds(payload)

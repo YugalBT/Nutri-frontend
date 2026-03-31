@@ -41,6 +41,7 @@ export class RationAddEditComponent implements OnInit, OnDestroy {
 
   animalGroups: AnimalGroupList[] = [];
   feeds: FeedList[] = [];
+  selectedCompanyId = '';
   
   // Permission properties
   canSave = false;
@@ -113,8 +114,11 @@ export class RationAddEditComponent implements OnInit, OnDestroy {
 
   private loadAnimalGroups(): Observable<AnimalGroupList[]> {
     this.animalGroupsLoading = true;
-    return this.commonService.getAnimalGroupByFarmID().pipe(
-      map((res: ApiResponse<AnimalGroupList[]>) => res.data ?? []),
+    const obs$: Observable<ApiResponse<any>> = this.selectedCompanyId
+      ? this.commonService.getAnimalGroupsList(this.selectedCompanyId)
+      : this.commonService.getAnimalGroupByFarmID();
+    return obs$.pipe(
+      map((res: ApiResponse<any>) => (res.data as AnimalGroupList[]) ?? []),
       tap((data: AnimalGroupList[]) => {
         this.animalGroups = data.map(d => ({ ...d, animalGroupId: String(d.animalGroupId) }));
       }),
@@ -128,7 +132,7 @@ export class RationAddEditComponent implements OnInit, OnDestroy {
 
   private loadFeeds(): Observable<FeedList[]> {
     this.feedsLoading = true;
-    return this.commonService.getFeedByFarmID().pipe(
+    return this.commonService.getFeedByFarmID(undefined, this.selectedCompanyId || undefined).pipe(
       map((res: ApiResponse<FeedList[]>) => res.data ?? []),
       tap((data: FeedList[]) => { this.feeds = data; }),
       finalize(() => { this.feedsLoading = false; }),
@@ -139,8 +143,9 @@ export class RationAddEditComponent implements OnInit, OnDestroy {
     );
   }
 
-  openModal(edit = false, data?: any) {
+  openModal(edit = false, data?: any, companyId = '') {
     this.isEdit = edit;
+    this.selectedCompanyId = companyId;
     this.currentRationId = null;
     this.animalGroups = [];
     this.feeds = [];
@@ -200,7 +205,11 @@ export class RationAddEditComponent implements OnInit, OnDestroy {
       return;
     }
 
-    const payload = { ...this.form.getRawValue(), rationId: this.currentRationId ?? undefined };
+    const payload = {
+      ...this.form.getRawValue(),
+      rationId: this.currentRationId ?? undefined,
+      ...(this.selectedCompanyId ? { tenantId: this.selectedCompanyId } : {})
+    };
     const api$ = this.isEdit ? this.rationService.updateration(payload) : this.rationService.createration(payload);
 
     const sub = api$.subscribe(res => {

@@ -4,6 +4,15 @@
     <small class="text-muted">{{ 'milkPriceHistory.subtitle' | translate }}</small>
   </div>
 
+  <div *ngIf="isSuperAdmin && companies.length > 0" class="px-3 pt-3">
+    <div class="d-flex align-items-center gap-2 flex-wrap">
+      <label class="form-label mb-0 text-muted" style="white-space:nowrap;">{{ 'dailyEntry.filters.company' | translate }}</label>
+      <select class="form-select form-select-sm" style="width:220px" [(ngModel)]="selectedCompanyId" (change)="onCompanyChange()">
+        <option *ngFor="let c of companies" [value]="c.id">{{ c.name }}</option>
+      </select>
+    </div>
+  </div>
+
   <div class="row g-0">
     <div class="col-md-5 border-end p-3">
       <p class="text-muted mb-3" style="font-size:12px;">

@@ -234,7 +234,11 @@ export class RationListComponent {
   }
 
   openAddRationModal(): void {
-    this.rationModalRef.openModal(false);
+    this.rationModalRef.openModal(false, undefined, this.selectedCompanyId);
+  }
+
+  openEditRationModal(row: any): void {
+    this.rationModalRef.openModal(true, row, this.selectedCompanyId);
   }
 
 
