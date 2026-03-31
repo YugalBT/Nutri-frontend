@@ -11,6 +11,7 @@ import { TranslatePipe } from '../../../i18n/translate.pipe';
 import { CommonService } from '../../../shared/services/common.service';
 import { AnimalGroupList } from '../../../core/models/animal-group-list';
 import { FeedList } from '../../../core/models/feed-list';
+import { PERMISSIONS } from '../../../core/constants/permissions.constants';
 
 declare var bootstrap: any;
 
@@ -30,6 +31,7 @@ export class CalfbarnAddEditComponent implements OnInit, OnDestroy {
   modalInstance: any;
 
   isEdit = false;
+  canSave = false;
   currentId: string | null = null;
 
   subs: Subscription[] = [];
@@ -81,6 +83,14 @@ export class CalfbarnAddEditComponent implements OnInit, OnDestroy {
 
   openModal(edit: boolean = false, data?: any): void {
     this.isEdit = edit;
+    this.canSave = edit
+      ? this.commonService.checkPermission(PERMISSIONS.CalfBarnEdit, false)
+      : this.commonService.checkPermission(PERMISSIONS.CalfBarnAdd, false);
+    if (!this.canSave) {
+      this.toast.warning('No permission');
+      return;
+    }
+
     this.form.reset();
 
     if (edit && data) {
@@ -102,6 +112,11 @@ export class CalfbarnAddEditComponent implements OnInit, OnDestroy {
   }
 
   saveCalfBarn(): void {
+    const hasPermission = this.isEdit
+      ? this.commonService.checkPermission(PERMISSIONS.CalfBarnEdit)
+      : this.commonService.checkPermission(PERMISSIONS.CalfBarnAdd);
+    if (!hasPermission) return;
+
     if (!this.form.valid) {
       this.form.markAllAsTouched();
       return;

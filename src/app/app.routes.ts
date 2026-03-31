@@ -420,6 +420,15 @@ export const routes: Routes = [
       },
       {
         path: 'operators',
+        canActivate: [permissionGuard],
+        data: {
+          requiredPermissions: [
+            PERMISSIONS.OperatorView,
+            PERMISSIONS.OperatorEdit,
+            PERMISSIONS.OperatorAdd,
+            PERMISSIONS.OperatorDelete,
+          ],
+        },
         loadComponent: () =>
           import('./features/operators/operator-list/operator-list.component').then(
             (m) => m.OperatorListComponent,
@@ -544,6 +553,15 @@ export const routes: Routes = [
       },
       {
         path: 'calfbarn',
+        canActivate: [permissionGuard],
+        data: {
+          requiredPermissions: [
+            PERMISSIONS.CalfBarnView,
+            PERMISSIONS.CalfBarnEdit,
+            PERMISSIONS.CalfBarnAdd,
+            PERMISSIONS.CalfBarnDelete,
+          ],
+        },
         loadComponent: () =>
           import('./features/calfbarn/calfbarn-list/calfbarn-list.component').then(
             (m) => m.CalfbarnListComponent,

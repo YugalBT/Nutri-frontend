@@ -6,6 +6,8 @@ import { TranslatePipe } from '../../../i18n/translate.pipe';
 import { ToastService } from '../../../shared/services/toast.service';
 import { OperatorServiceService } from '../../../core/services/operators/operator-service.service';
 import { OperatorList } from '../../../core/models/operator-list';
+import { CommonService } from '../../../shared/services/common.service';
+import { PERMISSIONS } from '../../../core/constants/permissions.constants';
 
 
 declare var bootstrap: any;
@@ -24,13 +26,15 @@ export class OperatorAddEditComponent {
   form!: FormGroup;
   modalInstance: any;
   isEdit = false;
+  canSave = false;
   currentOperatorId: string | null = null;
   subs: Subscription[] = [];
 
   constructor(
     private fb: FormBuilder,
     private toast: ToastService,
-    private operatorService: OperatorServiceService
+    private operatorService: OperatorServiceService,
+    private commonService: CommonService
   ) {}
 
   ngOnInit(): void {
@@ -46,6 +50,14 @@ export class OperatorAddEditComponent {
 
   openModal(edit = false, data?: OperatorList) {
     this.isEdit = edit;
+    this.canSave = edit
+      ? this.commonService.checkPermission(PERMISSIONS.OperatorEdit, false)
+      : this.commonService.checkPermission(PERMISSIONS.OperatorAdd, false);
+    if (!this.canSave) {
+      this.toast.warning('No permission');
+      return;
+    }
+
     this.form.reset();
     this.currentOperatorId = null;
 
@@ -62,6 +74,11 @@ export class OperatorAddEditComponent {
   }
 
   save() {
+    const hasPermission = this.isEdit
+      ? this.commonService.checkPermission(PERMISSIONS.OperatorEdit)
+      : this.commonService.checkPermission(PERMISSIONS.OperatorAdd);
+    if (!hasPermission) return;
+
     if (this.form.invalid) {
       this.form.markAllAsTouched();
       this.toast.warning('Please fill all required fields');

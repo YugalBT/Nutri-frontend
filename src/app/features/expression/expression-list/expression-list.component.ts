@@ -9,6 +9,8 @@ import { ToastService } from '../../../shared/services/toast.service';
 import { ConfirmDialogService } from '../../../shared/services/confirm-dialog.service';
 import { TranslatePipe } from '../../../i18n/translate.pipe';
 import { TranslateService } from '../../../i18n/translate.service';
+import { CommonService } from '../../../shared/services/common.service';
+import { PERMISSIONS } from '../../../core/constants/permissions.constants';
 
 @Component({
   selector: 'app-expression-list',
@@ -38,6 +40,10 @@ export class ExpressionListComponent implements OnInit, OnDestroy {
 
   searchValue = '';
   filterStatus: number | null = 2;
+  canAddFormula = false;
+  viewPermission = PERMISSIONS.formulasView;
+  editPermission = PERMISSIONS.formulasEdit;
+  deletePermission = PERMISSIONS.formulasDelete;
 
   private subs: Subscription[] = [];
 
@@ -49,12 +55,18 @@ export class ExpressionListComponent implements OnInit, OnDestroy {
     private formulaService: FormulaService,
     private toast: ToastService,
     private confirm: ConfirmDialogService,
-    private translate: TranslateService
+    private translate: TranslateService,
+    private commonService: CommonService
   ) { this.setColumns(),
     this.langSub = this.translate.lang$.subscribe(() => this.setColumns());
    }
 
   ngOnInit(): void {
+    this.canAddFormula = this.commonService.checkPermission(PERMISSIONS.FormulaAdd, false);
+    if (!this.commonService.checkPermission(PERMISSIONS.formulasView, false)) {
+      return;
+    }
+
     this.loadExpressions(1, this.pageSize);
 
     const sub = this.formulaService.formulasChanged$
@@ -134,12 +146,20 @@ export class ExpressionListComponent implements OnInit, OnDestroy {
   /* ================= EDIT ================= */
 
   onEdit(row: any): void {
+    if (!this.commonService.checkPermission(PERMISSIONS.formulasEdit)) {
+      return;
+    }
+
     this.expressionModal.openModal(true, row);
   }
 
   /* ================= ACTIVE / INACTIVE ================= */
 
   onToggleActive(event: { row: any; isActive: boolean }): void {
+    if (!this.commonService.checkPermission(PERMISSIONS.formulasEdit)) {
+      return;
+    }
+
     event.row.isToggling = true;
 
     const id = event?.row?.formulaId;
@@ -168,6 +188,10 @@ export class ExpressionListComponent implements OnInit, OnDestroy {
   /* ================= DELETE ================= */
 
   onDelete(row: any): void {
+    if (!this.commonService.checkPermission(PERMISSIONS.formulasDelete)) {
+      return;
+    }
+
     const id = row?.formulaId;
     if (!id) {
       this.toast.error('Invalid formula id');

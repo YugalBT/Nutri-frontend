@@ -5,6 +5,8 @@ import { FeedService } from '../../../core/services/feed/feed.service';
 import { ToastService } from '../../../shared/services/toast.service';
 import { SharedModule } from '../../../shared/shared.module';
 import { TranslatePipe } from '../../../i18n/translate.pipe';
+import { CommonService } from '../../../shared/services/common.service';
+import { PERMISSIONS } from '../../../core/constants/permissions.constants';
 
 declare var bootstrap: any;
 
@@ -23,6 +25,7 @@ export class FeedAddEditComponent implements OnInit, OnDestroy {
   modalInstance: any;
 
   isEdit = false;
+  canSave = false;
   currentFeedId: string | null = null;
 
   categoryOptions = ['Foraggi', 'Concentrati', 'Robot', 'Minerali'];
@@ -38,6 +41,7 @@ export class FeedAddEditComponent implements OnInit, OnDestroy {
     private fb: FormBuilder,
     private toast: ToastService,
     private feedService: FeedService,
+    private commonService: CommonService,
   ) {}
 
   ngOnInit() {
@@ -86,6 +90,14 @@ export class FeedAddEditComponent implements OnInit, OnDestroy {
 
   openModal(edit = false, data?: any) {
     this.isEdit = edit;
+    this.canSave = edit
+      ? this.commonService.checkPermission(PERMISSIONS.FeedEdit, false)
+      : this.commonService.checkPermission(PERMISSIONS.FeedAdd, false);
+    if (!this.canSave) {
+      this.toast.warning('No permission');
+      return;
+    }
+
     this.currentFeedId = null;
     this.form.reset({ vatApplicable: false, priceUnit: 'ton' });
 
@@ -123,6 +135,11 @@ export class FeedAddEditComponent implements OnInit, OnDestroy {
   }
 
   saveFeed() {
+    const hasPermission = this.isEdit
+      ? this.commonService.checkPermission(PERMISSIONS.FeedEdit)
+      : this.commonService.checkPermission(PERMISSIONS.FeedAdd);
+    if (!hasPermission) return;
+
     if (!this.form.valid) {
       this.form.markAllAsTouched();
       this.toast.warning('Please fill all required fields');

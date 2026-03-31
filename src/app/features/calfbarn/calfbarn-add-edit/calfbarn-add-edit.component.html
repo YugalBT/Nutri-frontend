@@ -191,7 +191,7 @@
           {{ "common.cancel" | translate }}
         </button>
 
-        <button class="btn add-btn" (click)="saveCalfBarn()">
+        <button *ngIf="canSave" class="btn add-btn" (click)="saveCalfBarn()">
           {{
             isEdit ? ("common.update" | translate) : ("common.save" | translate)
           }}

@@ -72,7 +72,7 @@
         <button class="btn btn-outline-secondary" (click)="closeModal()">
           {{ 'common.cancel' | translate }}
         </button>
-        <button class="btn add-btn" (click)="saveFeed()">
+        <button *ngIf="canSave" class="btn add-btn" (click)="saveFeed()">
           {{ isEdit ? ('common.update' | translate) : ('common.save' | translate) }}
         </button>
       </div>

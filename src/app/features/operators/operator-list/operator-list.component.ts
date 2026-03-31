@@ -11,6 +11,8 @@ import { ConfirmDialogService } from '../../../shared/services/confirm-dialog.se
 import { ApiResponse } from '../../../core/models/api-response';
 import { ReusableTableComponent } from '../../../shared/components/reusable-table/reusable-table.component';
 import { GlobalSearchComponent } from '../../../shared/components/global-search/global-search.component';
+import { CommonService } from '../../../shared/services/common.service';
+import { PERMISSIONS } from '../../../core/constants/permissions.constants';
 
 @Component({
   selector: 'app-operator-list',
@@ -30,16 +32,26 @@ export class OperatorListComponent {
   pageIndex = 0;
   searchValue = '';
   filterStatus: number | null = 2;
+  canAddOperator = false;
+  viewPermission = PERMISSIONS.OperatorView;
+  editPermission = PERMISSIONS.OperatorEdit;
+  deletePermission = PERMISSIONS.OperatorDelete;
 
   subs: Subscription[] = [];
 
   constructor(
     private operatorService: OperatorServiceService,
     private toast: ToastService,
-    private confirm: ConfirmDialogService
+    private confirm: ConfirmDialogService,
+    private commonService: CommonService
   ) { }
 
   ngOnInit(): void {
+    this.canAddOperator = this.commonService.checkPermission(PERMISSIONS.OperatorAdd, false);
+    if (!this.commonService.checkPermission(PERMISSIONS.OperatorView, false)) {
+      return;
+    }
+
     this.loadOperators(1, this.pageSize);
 
     this.subs.push(
@@ -66,6 +78,10 @@ export class OperatorListComponent {
   }
 
   onToggleActive(event: any) {
+    if (!this.commonService.checkPermission(PERMISSIONS.OperatorEdit)) {
+      return;
+    }
+
     const row = event.row;
     const prev = row.isActive;
     row.isToggling = true;
@@ -81,6 +97,10 @@ export class OperatorListComponent {
   }
 
   onDelete(row: OperatorList) {
+    if (!this.commonService.checkPermission(PERMISSIONS.OperatorDelete)) {
+      return;
+    }
+
     this.confirm.confirm('Are you sure?').subscribe(confirmed => {
       if (!confirmed) return;
 
