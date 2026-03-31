@@ -2,6 +2,13 @@
   <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
     <h3 class="page-title mb-0">{{ 'archive.heading.historicalRecords' | translate }}</h3>
     <div class="d-flex gap-2 flex-wrap align-items-end">
+      <div *ngIf="isSuperAdmin && companies.length > 0">
+        <label class="form-label form-label-sm mb-1">{{ 'dailyEntry.filters.company' | translate }}</label>
+        <select class="form-select form-select-sm" [(ngModel)]="selectedCompanyId" (change)="onCompanyChange()">
+          <option value="">{{ 'common.all' | translate }}</option>
+          <option *ngFor="let c of companies" [value]="c.id">{{ c.name }}</option>
+        </select>
+      </div>
       <div>
         <label class="form-label form-label-sm mb-1">{{ 'archive.filters.from' | translate }}</label>
         <input type="date" class="form-control form-control-sm" [(ngModel)]="fromDate" (change)="loadArchive()" />
@@ -27,10 +34,23 @@
 
   <div class="table-card" *ngIf="!isLoading">
     <div class="table-responsive">
-      <table class="table table-sm table-hover mb-0" style="min-width:1400px;">
-        <thead class="table-light">
-          <tr>
-            <th>{{ 'archive.table.date' | translate }}</th>
+      <table class="table table-sm table-hover mb-0 archive-table">
+        <thead>
+          <tr class="group-row">
+            <th *ngIf="isSuperAdmin" class="sticky-company company-col" colspan="1">{{ 'dashboard.company' | translate }}</th>
+            <th *ngIf="isSuperAdmin" class="sticky-date-with-company date-col" colspan="1">{{ 'archive.table.date' | translate }}</th>
+            <th *ngIf="!isSuperAdmin" class="sticky-date date-col" colspan="1">{{ 'archive.table.date' | translate }}</th>
+            <th colspan="7">{{ 'dashboard.herd' | translate }}</th>
+            <th colspan="8">{{ 'dashboard.production' | translate }}</th>
+            <th colspan="4">{{ 'dashboard.feeding' | translate }}</th>
+            <th colspan="4">{{ 'dailyEntry.sections.health' | translate }}</th>
+            <th colspan="1">{{ 'archive.table.priceType' | translate }}</th>
+            <th colspan="1">{{ 'common.actions' | translate }}</th>
+          </tr>
+          <tr class="label-row">
+            <th *ngIf="isSuperAdmin" class="sticky-company company-col">{{ 'dashboard.company' | translate }}</th>
+            <th *ngIf="isSuperAdmin" class="sticky-date-with-company date-col">{{ 'archive.table.date' | translate }}</th>
+            <th *ngIf="!isSuperAdmin" class="sticky-date date-col">{{ 'archive.table.date' | translate }}</th>
             <th>{{ 'archive.table.gim' | translate }}</th>
             <th>{{ 'archive.table.totalCapi' | translate }}</th>
             <th>{{ 'archive.table.animalsInLactation' | translate }}</th>
@@ -55,12 +75,14 @@
             <th>{{ 'archive.table.abortions' | translate }}</th>
             <th>{{ 'archive.table.calvingsCount' | translate }}</th>
             <th>{{ 'archive.table.priceType' | translate }}</th>
-            <th></th>
+            <th class="action-col">{{ 'common.actions' | translate }}</th>
           </tr>
         </thead>
         <tbody>
           <tr *ngFor="let r of records">
-            <td class="fw-500" style="white-space:nowrap;">{{ r.date }}</td>
+            <td *ngIf="isSuperAdmin" class="fw-500 text-start sticky-company company-col">{{ r.companyName || '-' }}</td>
+            <td *ngIf="isSuperAdmin" class="fw-500 sticky-date-with-company date-col" style="white-space:nowrap;">{{ r.date }}</td>
+            <td *ngIf="!isSuperAdmin" class="fw-500 sticky-date date-col" style="white-space:nowrap;">{{ r.date }}</td>
             <td>{{ r.gim ?? '-' }}</td>
             <td>{{ r.totalCapi ?? '-' }}</td>
             <td>{{ r.animalsInLactation ?? '-' }}</td>
@@ -91,14 +113,14 @@
                 {{ r.priceType === 1 ? ('archive.priceType.market' | translate) : ('archive.priceType.company' | translate) }}
               </span>
             </td>
-            <td>
+            <td class="action-col">
               <button class="btn btn-sm btn-outline-primary" (click)="loadRecord(r)">
                 {{ 'archive.actions.load' | translate }}
               </button>
             </td>
           </tr>
           <tr *ngIf="records.length === 0">
-            <td colspan="26" class="text-center text-muted py-3">
+            <td [attr.colspan]="isSuperAdmin ? 27 : 26" class="text-center text-muted py-3">
               {{ 'archive.messages.noRecords' | translate }}
             </td>
           </tr>

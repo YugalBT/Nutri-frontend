@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
 import { Subscription, forkJoin } from 'rxjs';
 import { API_ENDPOINTS } from '../../core/constants/api-endpoints';
 import { Constants } from '../../shared/utils/constants/constants';
@@ -36,6 +37,8 @@ export class DailyEntryComponent implements OnInit, OnDestroy {
   isSuperAdmin = false;
   companies: { id: string; name: string }[] = [];
   selectedCompanyId = '';
+  private pendingRouteDayId = '';
+  private pendingRouteDate = '';
 
   priceTypes = [
     { value: 0, labelKey: 'dailyEntry.priceType.company' },
@@ -46,6 +49,7 @@ export class DailyEntryComponent implements OnInit, OnDestroy {
 
   constructor(
     private fb: FormBuilder,
+    private route: ActivatedRoute,
     private http: HttpService,
     private toast: ToastService,
     private common: CommonService,
@@ -63,8 +67,8 @@ export class DailyEntryComponent implements OnInit, OnDestroy {
       this.isInitializing = false;
       return;
     }
-    const today = new Date();
-    this.selectedDate = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
+    this.selectedDate = this.getTodayString();
+    this.initializeRouteSelection();
     if (this.isSuperAdmin) {
       this.loadCompanies();
     } else {
@@ -113,24 +117,40 @@ export class DailyEntryComponent implements OnInit, OnDestroy {
   }
 
   private resolveDayAndLoad(): void {
+    const routeDayId = this.pendingRouteDayId;
+    const routeDate = this.pendingRouteDate;
+    this.pendingRouteDayId = '';
+    this.pendingRouteDate = '';
+
+    if (routeDate) {
+      this.selectedDate = routeDate;
+    }
+
     if (!this.days.length) {
       this.dayId = '';
       this.farmId = '';
-      this.loadDependenciesAndBuild(null);
+      this.loadDependenciesAndBuild(this.isValidGuid(routeDayId) ? routeDayId : null);
       return;
     }
 
-    const matched = this.days.find((d: any) => this.isMatchingSelectedDate(d));
+    const matchedByRouteDayId = this.isValidGuid(routeDayId)
+      ? this.days.find((d: any) => this.extractDayId(d) === routeDayId)
+      : null;
+    const matched = matchedByRouteDayId ?? this.days.find((d: any) => this.isMatchingSelectedDate(d));
 
     if (matched) {
       this.dayId = this.extractDayId(matched);
       this.farmId = this.extractFarmId(matched);
+      const matchedDate = this.extractDayDate(matched);
+      if (matchedDate) {
+        this.selectedDate = matchedDate;
+      }
     } else {
       this.dayId = '';
       this.farmId = '';
     }
 
-    this.loadDependenciesAndBuild(this.dayId || null);
+    this.loadDependenciesAndBuild(this.dayId || (this.isValidGuid(routeDayId) ? routeDayId : null));
   }
 
   private loadDependenciesAndBuild(dayId: string | null): void {
@@ -152,6 +172,11 @@ export class DailyEntryComponent implements OnInit, OnDestroy {
         this.rations = res.rations?.data ?? [];
         this.buildGroupRows();
         if (res.existing?.data) {
+          this.farmId = this.farmId || this.extractFarmId(res.existing.data);
+          const existingDate = this.extractDayDate(res.existing.data);
+          if (existingDate) {
+            this.selectedDate = existingDate;
+          }
           this.patchForm(res.existing.data);
         }
         this.isLoading = false;
@@ -392,6 +417,10 @@ export class DailyEntryComponent implements OnInit, OnDestroy {
     return String(day?.farmId ?? day?.FarmId ?? '');
   }
 
+  private extractDayDate(day: any): string {
+    return this.normalizeDateString(day?.date ?? day?.Date ?? day?.dayDate ?? day?.DayDate ?? day?.dataGiorno ?? '');
+  }
+
   private isMatchingSelectedDate(day: any): boolean {
     const rawDate = day?.date ?? day?.Date ?? day?.dayDate ?? day?.DayDate ?? day?.dataGiorno ?? '';
     if (!rawDate) {
@@ -423,6 +452,20 @@ export class DailyEntryComponent implements OnInit, OnDestroy {
     const m = String(parsed.getMonth() + 1).padStart(2, '0');
     const d = String(parsed.getDate()).padStart(2, '0');
     return `${y}-${m}-${d}`;
+  }
+
+  private initializeRouteSelection(): void {
+    this.pendingRouteDayId = this.route.snapshot.queryParamMap.get('dayId')?.trim() ?? '';
+    this.pendingRouteDate = this.normalizeDateString(this.route.snapshot.queryParamMap.get('date') ?? '');
+
+    if (this.pendingRouteDate) {
+      this.selectedDate = this.pendingRouteDate;
+    }
+  }
+
+  private getTodayString(): string {
+    const today = new Date();
+    return `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
   }
 
   get selectedDateLabel(): string {

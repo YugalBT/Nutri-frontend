@@ -1,0 +1,106 @@
+.archive-table {
+  min-width: 1800px;
+  --archive-company-width: 190px;
+  --archive-date-width: 120px;
+  --archive-group-top: 0px;
+  --archive-label-top: 40px;
+}
+
+.archive-table thead th {
+  white-space: normal;
+  vertical-align: middle;
+}
+
+.archive-table .group-row th {
+  position: sticky;
+  top: var(--archive-group-top);
+  z-index: 30;
+  background: #eef3f8;
+  color: #4d6478;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  text-align: center;
+  border-bottom: 0;
+  padding: 0.65rem 0.5rem;
+}
+
+.archive-table .label-row th {
+  position: sticky;
+  top: var(--archive-label-top);
+  z-index: 25;
+  background: #f8fafc;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: #23384d;
+  line-height: 1.2;
+  text-align: center;
+  padding: 0.7rem 0.45rem;
+  min-width: 88px;
+}
+
+.archive-table .sticky-company {
+  position: sticky;
+  left: 0;
+  z-index: 45;
+  background: #fff;
+}
+
+.archive-table .sticky-date-with-company {
+  position: sticky;
+  left: var(--archive-company-width);
+  z-index: 44;
+  background: #fff;
+}
+
+.archive-table .sticky-date {
+  position: sticky;
+  left: 0;
+  z-index: 44;
+  background: #fff;
+}
+
+.archive-table thead .label-row .sticky-company,
+.archive-table thead .label-row .sticky-date-with-company,
+.archive-table thead .label-row .sticky-date {
+  background: #f8fafc;
+}
+
+.archive-table thead .group-row .sticky-company,
+.archive-table thead .group-row .sticky-date-with-company,
+.archive-table thead .group-row .sticky-date {
+  background: #eef3f8;
+  z-index: 50;
+}
+
+.archive-table .company-col {
+  min-width: var(--archive-company-width);
+  width: var(--archive-company-width);
+  max-width: var(--archive-company-width);
+}
+
+.archive-table .date-col {
+  min-width: var(--archive-date-width);
+  width: var(--archive-date-width);
+  max-width: var(--archive-date-width);
+}
+
+.archive-table tbody td {
+  vertical-align: middle;
+  text-align: center;
+}
+
+.archive-table tbody td.text-start {
+  text-align: left;
+}
+
+.archive-table tbody tr:nth-child(even) td.sticky-company,
+.archive-table tbody tr:nth-child(even) td.sticky-date-with-company,
+.archive-table tbody tr:nth-child(even) td.sticky-date {
+  background: #fbfdff;
+}
+
+.archive-table .action-col {
+  min-width: 92px;
+}

@@ -5,6 +5,7 @@ import { Router, RouterModule } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { API_ENDPOINTS } from '../../core/constants/api-endpoints';
 import { PERMISSIONS } from '../../core/constants/permissions.constants';
+import { Constants } from '../../shared/utils/constants/constants';
 import { TranslatePipe } from '../../i18n/translate.pipe';
 import { TranslateService } from '../../i18n/translate.service';
 import { ConfirmDialogService } from '../../shared/services/confirm-dialog.service';
@@ -17,6 +18,7 @@ import { ToastService } from '../../shared/services/toast.service';
   standalone: true,
   imports: [CommonModule, FormsModule, RouterModule, TranslatePipe],
   templateUrl: './archive.component.html',
+  styleUrl: './archive.component.css',
 })
 export class ArchiveComponent implements OnInit, OnDestroy {
   records: any[] = [];
@@ -24,9 +26,12 @@ export class ArchiveComponent implements OnInit, OnDestroy {
   isLoading = false;
   isRecalculating = false;
   canRecalculate = false;
+  isSuperAdmin = false;
+  companies: { id: string; name: string }[] = [];
+  selectedCompanyId = '';
 
   fromDate: string = this.getMonthStart();
-  toDate: string = new Date().toISOString().split('T')[0];
+  toDate: string = this.getToday();
   pageNo = 1;
   pageSize = 30;
 
@@ -42,16 +47,33 @@ export class ArchiveComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
+    this.isSuperAdmin = localStorage.getItem(Constants.IsSuperAdmin) === 'true';
     this.canRecalculate = this.common.checkPermission(PERMISSIONS.ArchiveEdit, false);
     if (!this.common.checkPermission(PERMISSIONS.ArchiveView, false)) {
       return;
     }
+
+    if (this.isSuperAdmin) {
+      const sub = this.common.getCompanyDropdown().subscribe({
+        next: (res) => {
+          this.companies = res?.data ?? [];
+          this.loadArchive();
+        },
+        error: () => this.loadArchive(),
+      });
+      this.subs.push(sub);
+      return;
+    }
+
     this.loadArchive();
   }
 
   loadArchive(): void {
     this.isLoading = true;
-    const url = `${API_ENDPOINTS.DAY_DATA.ARCHIVE}?fromDate=${this.fromDate}&toDate=${this.toDate}&pageNo=${this.pageNo}&pageSize=${this.pageSize}`;
+    const companyQuery = this.isSuperAdmin && this.selectedCompanyId
+      ? `&companyId=${this.selectedCompanyId}`
+      : '';
+    const url = `${API_ENDPOINTS.DAY_DATA.ARCHIVE}?fromDate=${this.fromDate}&toDate=${this.toDate}&pageNo=${this.pageNo}&pageSize=${this.pageSize}${companyQuery}`;
     const sub = this.http.get<any>(url).subscribe({
       next: (res) => {
         this.records = res?.data ?? [];
@@ -67,7 +89,10 @@ export class ArchiveComponent implements OnInit, OnDestroy {
 
   loadRecord(record: any): void {
     this.router.navigate(['/daily-entry'], {
-      queryParams: { dayId: record.dayId },
+      queryParams: {
+        dayId: record.dayId,
+        date: this.normalizeDateString(record?.date ?? record?.Date ?? ''),
+      },
     });
   }
 
@@ -118,9 +143,37 @@ export class ArchiveComponent implements OnInit, OnDestroy {
     this.loadArchive();
   }
 
+  onCompanyChange(): void {
+    this.pageNo = 1;
+    this.loadArchive();
+  }
+
   private getMonthStart(): string {
     const d = new Date();
     return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-01`;
+  }
+
+  private getToday(): string {
+    const d = new Date();
+    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+  }
+
+  private normalizeDateString(value: unknown): string {
+    if (!value) {
+      return '';
+    }
+
+    const text = String(value).trim();
+    if (/^\d{4}-\d{2}-\d{2}/.test(text)) {
+      return text.slice(0, 10);
+    }
+
+    const parsed = new Date(text);
+    if (Number.isNaN(parsed.getTime())) {
+      return '';
+    }
+
+    return `${parsed.getFullYear()}-${String(parsed.getMonth() + 1).padStart(2, '0')}-${String(parsed.getDate()).padStart(2, '0')}`;
   }
 
   ngOnDestroy(): void {
