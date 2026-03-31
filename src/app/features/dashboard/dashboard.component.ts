@@ -97,7 +97,7 @@ export class DashboardComponent implements OnInit {
   }
 
   private get currentCompanyId(): string | null {
-    return this.user?.parentTenantId || this.user?.tenantId || null;
+    return this.user?.tenantId || this.user?.parentTenantId || null;
   }
 
   onYearChange(year: number): void {

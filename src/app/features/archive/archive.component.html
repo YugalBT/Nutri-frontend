@@ -42,8 +42,9 @@
             <th *ngIf="!isSuperAdmin" class="sticky-date date-col" colspan="1">{{ 'archive.table.date' | translate }}</th>
             <th colspan="7">{{ 'dashboard.herd' | translate }}</th>
             <th colspan="8">{{ 'dashboard.production' | translate }}</th>
+            <th colspan="5">{{ 'dailyEntry.sections.robot' | translate }}</th>
             <th colspan="4">{{ 'dashboard.feeding' | translate }}</th>
-            <th colspan="4">{{ 'dailyEntry.sections.health' | translate }}</th>
+            <th colspan="5">{{ 'dailyEntry.sections.health' | translate }}</th>
             <th colspan="1">{{ 'archive.table.priceType' | translate }}</th>
             <th colspan="1">{{ 'common.actions' | translate }}</th>
           </tr>
@@ -66,6 +67,11 @@
             <th>{{ 'archive.table.ureaMgDl' | translate }}</th>
             <th>{{ 'archive.table.somaticA1000' | translate }}</th>
             <th>{{ 'archive.table.qualityBonusEur' | translate }}</th>
+            <th>{{ 'dailyEntry.fields.robotCows' | translate }}</th>
+            <th>{{ 'dailyEntry.fields.robotMilkKg' | translate }}</th>
+            <th>{{ 'dailyEntry.fields.robotMilkings' | translate }}</th>
+            <th>{{ 'dailyEntry.fields.robotRefusals' | translate }}</th>
+            <th>{{ 'dailyEntry.fields.robotFreeTimeMin' | translate }}</th>
             <th>{{ 'archive.table.milkPriceEurLitre' | translate }}</th>
             <th>{{ 'archive.table.feedCostEur' | translate }}</th>
             <th>{{ 'archive.table.milkRevenueEur' | translate }}</th>
@@ -74,6 +80,7 @@
             <th>{{ 'archive.table.retentions' | translate }}</th>
             <th>{{ 'archive.table.abortions' | translate }}</th>
             <th>{{ 'archive.table.calvingsCount' | translate }}</th>
+            <th>{{ 'dailyEntry.fields.healthNotes' | translate }}</th>
             <th>{{ 'archive.table.priceType' | translate }}</th>
             <th class="action-col">{{ 'common.actions' | translate }}</th>
           </tr>
@@ -98,6 +105,11 @@
             <td>{{ r.ureaMgDl != null ? (r.ureaMgDl | number:'1.1-1') : '-' }}</td>
             <td>{{ r.somaticCellsThousands ?? '-' }}</td>
             <td>{{ r.qualityBonusEur != null ? (r.qualityBonusEur | number:'1.3-3') : '-' }}</td>
+            <td>{{ r.robotCows ?? '-' }}</td>
+            <td>{{ r.robotMilkKg != null ? (r.robotMilkKg | number:'1.1-1') : '-' }}</td>
+            <td>{{ r.robotMilkings ?? '-' }}</td>
+            <td>{{ r.robotRefusals ?? '-' }}</td>
+            <td>{{ r.robotFreeTimeMin ?? '-' }}</td>
             <td>{{ r.milkPriceEurLitre != null ? (r.milkPriceEurLitre | number:'1.3-3') : '-' }}</td>
             <td>{{ r.totalFeedCostEur != null ? (r.totalFeedCostEur | number:'1.2-2') : '-' }}</td>
             <td>{{ r.milkRevenueEur != null ? (r.milkRevenueEur | number:'1.2-2') : '-' }}</td>
@@ -108,6 +120,7 @@
             <td>{{ r.retentions ?? '-' }}</td>
             <td>{{ r.abortions ?? '-' }}</td>
             <td>{{ r.calvingsCount ?? '-' }}</td>
+            <td class="text-start">{{ r.healthNotes || '-' }}</td>
             <td>
               <span class="badge" [ngClass]="r.priceType === 1 ? 'bg-info' : 'bg-secondary'">
                 {{ r.priceType === 1 ? ('archive.priceType.market' | translate) : ('archive.priceType.company' | translate) }}
@@ -120,7 +133,7 @@
             </td>
           </tr>
           <tr *ngIf="records.length === 0">
-            <td [attr.colspan]="isSuperAdmin ? 27 : 26" class="text-center text-muted py-3">
+            <td [attr.colspan]="isSuperAdmin ? 33 : 32" class="text-center text-muted py-3">
               {{ 'archive.messages.noRecords' | translate }}
             </td>
           </tr>
