@@ -17,6 +17,7 @@ import { ToastService } from '../../shared/services/toast.service';
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, FormsModule, TranslatePipe],
   templateUrl: './daily-entry.component.html',
+  styleUrl: './daily-entry.component.css',
 })
 export class DailyEntryComponent implements OnInit, OnDestroy {
   form!: FormGroup;
