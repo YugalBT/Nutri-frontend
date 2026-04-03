@@ -69,7 +69,7 @@ export class DashboardComponent implements OnInit {
   constructor(
     private store: Store,
     private commonService: CommonService,
-    private translate: TranslateService, // ✅ added,
+    private translate: TranslateService, 
     private tokenservice: TokenService
   ) {
     this.user$ = this.store.select(selectAuthUser);
@@ -81,12 +81,10 @@ export class DashboardComponent implements OnInit {
       this.loadDashboard();
     });
 
-    // ✅ language change support (optional but recommended)
     this.translate.lang$.subscribe(() => {
       this.loadDashboard();
     });
     
-    // ✅ check if user is supplier
     const supplierData = this.tokenservice.getSupplierData();
     this.isSupplier = !!supplierData;
   }
@@ -105,7 +103,6 @@ export class DashboardComponent implements OnInit {
     this.loadDashboard();
   }
 
-  // ✅ helper for translation
   private t(key: string): string {
     return this.translate.instant(key);
   }
@@ -141,7 +138,6 @@ export class DashboardComponent implements OnInit {
 
           const d = this.companyDashboard;
 
-          // ✅ ONLY label translated (logic untouched)
           this.deaGauge = this.createGauge(this.t('dashboard.dea'), d.deaMilk ?? 0, 0.9, 1.5);
           this.milkGauge = this.createGauge(this.t('dashboard.avgMilk'), d.avgMilkPerDay ?? 0, 30, 55);
           this.feedGauge = this.createGauge(this.t('dashboard.feedEfficiency'), d.feedEfficiency ?? 0, 1, 2.4);
@@ -192,7 +188,6 @@ export class DashboardComponent implements OnInit {
     });
   }
 
-  // ✅ ORIGINAL FUNCTION (UNCHANGED)
   createGauge(title: string, value: number, min: number, max: number): EChartsOption {
     return {
       title: {

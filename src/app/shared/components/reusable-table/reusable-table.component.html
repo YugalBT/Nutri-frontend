@@ -38,11 +38,21 @@
                   </div>
                 </ng-container>
 
-                <!-- SWITCH/TOGGLE CELL - ONLY RENDER AS BOOLEAN BADGE, NOT SWITCH -->
+                <!-- SWITCH/TOGGLE CELL -->
                 <ng-container *ngIf="cell.type === 'switch'">
-                  <span class="rt-badge" [class.rt-active]="cell.value" [class.rt-inactive]="!cell.value">
-                    {{ cell.value ? 'Active' : 'Inactive' }}
-                  </span>
+                  <div class="rt-switch-cell">
+                    <label class="rt-switch">
+                      <input
+                        type="checkbox"
+                        [checked]="cell.value"
+                        [disabled]="row['isToggling'] || !hasPermission(editPermission)"
+                        (change)="onToggle(row, $event)" />
+                      <span class="rt-slider"></span>
+                    </label>
+                    <span class="rt-badge" [class.rt-active]="cell.value" [class.rt-inactive]="!cell.value">
+                      {{ cell.value ? 'Active' : 'Inactive' }}
+                    </span>
+                  </div>
                 </ng-container>
 
                 <!-- BOOLEAN BADGE CELL -->
