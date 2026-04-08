@@ -56,6 +56,10 @@ export class ReusableTableComponent implements OnChanges, OnInit, OnDestroy {
   @Input() editPermission?: string;
   @Input() deletePermission?: string;
 
+  @Input() sortableColumns: string[] = [];
+  @Input() currentSortColumn: string = '';
+  @Input() currentSortDirection: 'asc' | 'desc' = 'asc';
+
   @Output() pageChange = new EventEmitter<{
     pageIndex: number;
     pageSize: number;
@@ -64,6 +68,7 @@ export class ReusableTableComponent implements OnChanges, OnInit, OnDestroy {
   @Output() editRow = new EventEmitter<any>();
   @Output() deleteRow = new EventEmitter<any>();
   @Output() toggleActive = new EventEmitter<{ row: any; isActive: boolean }>();
+  @Output() sortChange = new EventEmitter<{ column: string; direction: 'asc' | 'desc' }>();
 
   @Input() clickableField?: string;
   @Output() cellClick = new EventEmitter<{ field: string; row: any }>();
@@ -169,5 +174,28 @@ export class ReusableTableComponent implements OnChanges, OnInit, OnDestroy {
       pageIndex: event.pageIndex,
       pageSize: event.pageSize,
     });
+  }
+
+  onSort(columnField: string): void {
+    if (!this.sortableColumns.includes(columnField)) return;
+
+    let newDirection: 'asc' | 'desc' = 'asc';
+    if (this.currentSortColumn === columnField && this.currentSortDirection === 'asc') {
+      newDirection = 'desc';
+    }
+
+    this.sortChange.emit({
+      column: columnField,
+      direction: newDirection,
+    });
+  }
+
+  getSortIndicator(columnField: string): string {
+    if (this.currentSortColumn !== columnField) return '';
+    return this.currentSortDirection === 'asc' ? ' ↑' : ' ↓';
+  }
+
+  isSortable(columnField: string): boolean {
+    return this.sortableColumns.includes(columnField);
   }
 }

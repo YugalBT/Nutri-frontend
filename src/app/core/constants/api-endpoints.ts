@@ -341,4 +341,9 @@ export const API_ENDPOINTS = {
     DELETE: '/FertilityRecord/Delete',
     GET_ALL: '/FertilityRecord/GetAll',
   },
+
+  DRAG_AND_DROP: {
+    SAVE: '/DayData/SaveLayout',
+    GET: '/DayData/GetLayout',
+  },
 };

@@ -12,7 +12,7 @@
       <div class="modal-body">
         <form [formGroup]="form">
           <div class="row g-3">
-            <div class="col-md-6">
+            <div class="col-md-4">
               <label class="form-label" for="animalTypeId">{{'animalGroup.animalType' | translate}} <sup class="text-danger">*</sup></label>
               <select class="form-select" id="animalTypeId" formControlName="animalTypeId" [disabled]="typesLoading">
                 <option [ngValue]="null">{{ 'animalGroup.selectAnimalType' | translate }}</option>
@@ -24,7 +24,7 @@
               </div>
             </div>
 
-            <div class="col-md-6">
+            <div class="col-md-4">
               <label class="form-label" for="animalLactationId">{{'animalGroup.lactationStage' | translate}} <sup class="text-danger">*</sup></label>
               <select class="form-select" id="animalLactationId" formControlName="animalLactationId">
                 <option [ngValue]="null">{{ 'animalGroup.selectLactationStage' | translate }}</option>
@@ -34,6 +34,13 @@
               <div *ngIf="form.get('animalLactationId')?.touched && form.get('animalLactationId')?.invalid" class="text-danger">
                 {{'animalGroup.lactationStageRequired' | translate}}
               </div>
+            </div>
+            <div class="col-md-4">
+              <label class="form-label" for="animalLactationId">{{'animalGroup.lactationStage' | translate}} <sup class="text-danger">*</sup></label>
+              <select class="form-select" id="animalLactationId" formControlName="animalLactationId">
+                <option [ngValue]="null">{{ 'animalGroup.categoryCode' | translate }}</option>
+                <option *ngFor="let g of animalCategories" [value]="g">{{ g }}</option>
+              </select>
             </div>
 
             <div class="col-md-4">

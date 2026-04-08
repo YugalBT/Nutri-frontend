@@ -40,6 +40,16 @@ export class AnimalGroupAddEditComponent implements OnInit, OnDestroy {
   subs: Subscription[] = [];
   isAddEditPermission = false;
 
+  // dropdown animal category
+  animalCategories: any[] = [
+    "VL",
+    "AS",
+    "MA",
+    "MZ",
+    "VI"
+  ];
+
+
   constructor(
     private fb: FormBuilder,
     private animalGroupService: AnimalGroupService,
@@ -66,6 +76,7 @@ export class AnimalGroupAddEditComponent implements OnInit, OnDestroy {
       animalGroupNameIt: ['', [Validators.minLength(2), Validators.maxLength(50)]],
       numberOfAnimal: ['', [Validators.required, CustomValidators.maxDigits(20)]],
       avgMilkPerDay: ['', [Validators.required, CustomValidators.maxDigits(20)]],
+      animalCategoryCode: ['', Validators.required]
     });
   }
 
@@ -137,6 +148,7 @@ export class AnimalGroupAddEditComponent implements OnInit, OnDestroy {
             animalGroupNameIt: data?.animalGroupNameIt,
             numberOfAnimal: data?.numberOfAnimal,
             avgMilkPerDay: data?.avgMilkPerDay,
+            animalCategoryCode: data?.animalCategoryCode
           });
         }
         this.modalInstance.show();

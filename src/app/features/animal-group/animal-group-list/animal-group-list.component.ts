@@ -41,6 +41,16 @@ export class AnimalGroupListComponent implements OnInit, OnDestroy {
   pageIndex = 0;
   searchValue = '';
   filterStatus: number | null = 2;
+  sortColumn = '';
+  sortDirection: 'asc' | 'desc' = 'asc';
+  sortableColumns: string[] = [
+    'animalGroupNameEn',
+    'typeNameEn',
+    'lactationNameEn',
+    'numberOfAnimal',
+    'avgMilkPerDay',
+    'animalCategoryCode',
+  ];
 
   private subs: Subscription[] = [];
 
@@ -89,6 +99,7 @@ export class AnimalGroupListComponent implements OnInit, OnDestroy {
         ' ',
       this.translateService.instant('animalGroup.columns.noOfAnimals') ?? ' ',
       this.translateService.instant('animalGroup.columns.avgMilkPerDay') ?? ' ',
+      this.translateService.instant('animalGroup.columns.categoryCode') ?? ' ',
       this.translateService.instant('common.status') ?? ' ',
     ];
 
@@ -98,6 +109,7 @@ export class AnimalGroupListComponent implements OnInit, OnDestroy {
       'lactationNameEn',
       'numberOfAnimal',
       'avgMilkPerDay',
+      'animalCategoryCode',
       'isActive',
     ];
   }
@@ -116,6 +128,8 @@ export class AnimalGroupListComponent implements OnInit, OnDestroy {
       recordPerPage,
       searchValue: this.searchValue || '',
       status: this.filterStatus,
+      sortColumn: this.sortColumn || '',
+      sortDirection: this.sortDirection,
     };
 
     const s = this.animalGroupService.getAnimalGroupDetails(payload).subscribe({
@@ -133,12 +147,16 @@ export class AnimalGroupListComponent implements OnInit, OnDestroy {
   onSearch(value: string): void {
     this.searchValue = value;
     this.pageIndex = 0;
+    this.sortColumn = '';
+    this.sortDirection = 'asc';
     this.loadAnimalGroups(1, this.pageSize);
   }
 
   onStatusChange(status: number | null): void {
     this.filterStatus = status === null ? 2 : status;
     this.pageIndex = 0;
+    this.sortColumn = '';
+    this.sortDirection = 'asc';
     this.loadAnimalGroups(1, this.pageSize);
   }
 
@@ -146,6 +164,13 @@ export class AnimalGroupListComponent implements OnInit, OnDestroy {
     this.pageIndex = event.pageIndex;
     this.pageSize = event.pageSize;
     this.loadAnimalGroups(this.pageIndex + 1, this.pageSize);
+  }
+
+  onSortChange(event: { column: string; direction: 'asc' | 'desc' }): void {
+    this.sortColumn = event.column;
+    this.sortDirection = event.direction;
+    this.pageIndex = 0;
+    this.loadAnimalGroups(1, this.pageSize);
   }
 
   onToggleActive(event: { row: any; isActive: boolean }): void {

@@ -122,12 +122,21 @@ export class CommonService {
     );
   }
 
-  getAnimalGroupsList(companyId?: string): Observable<ApiResponse<AnimalGroupList>> {
+  getAnimalGroupsList(companyId?: string, paginationParams?: any): Observable<ApiResponse<AnimalGroupList>> {
     const base = API_ENDPOINTS.COMMON_API.GET_ALL_ANIMAL_GROUP;
+    
+    // If pagination params provided, use POST with pagination
+    if (paginationParams && (paginationParams.pageNo || paginationParams.sortColumn)) {
+      const payload = {
+        companyId: companyId || '',
+        ...paginationParams,
+      };
+      return this.http.post<AnimalGroupList>(base, payload);
+    }
+    
+    // Otherwise use GET for backward compatibility
     const url = companyId ? `${base}?companyId=${companyId}` : base;
-    return this.http.get<AnimalGroupList>(
-      url,
-    );
+    return this.http.get<AnimalGroupList>(url);
   }
 
   getAlltemplateCategoryList(): Observable<
@@ -371,4 +380,16 @@ export class CommonService {
     const url = `${API_ENDPOINTS.COMMON_API.GET_ALL_FORMULA_BY_SUPPLIER_ID}?SupplierId=${supplierId}`;
     return this.http.get<ApiResponse<any>>(url);
   }
+
+  // Save Layout
+saveUserLayout(payload: { pageName: string; layoutJson: string }): Observable<any> {
+  return this.http.post<any>(API_ENDPOINTS.DRAG_AND_DROP.SAVE, payload);
+}
+
+// Get Layout
+getUserLayout(pageName: string): Observable<any> {
+  return this.http.get<any>(
+    `${API_ENDPOINTS.DRAG_AND_DROP.GET}?pageName=${pageName}`
+  );
+}
 }

@@ -1,7 +1,16 @@
 <div class="pagecls">
-  <div *ngIf="isInitializing" class="spinner-container">
-    <div class="spinner-border text-primary"></div>
-    <p class="mt-3 text-muted">{{ 'dailyEntry.messages.initializing' | translate }}</p>
+  <!-- Initial Loading State -->
+  <div *ngIf="isInitializing" class="spinner-container enhanced-loading">
+    <div class="loading-box">
+      <div class="spinner-border text-primary spinner-lg" role="status"></div>
+      <div class="mt-4 text-center">
+        <p class="loading-title mb-2">Loading Daily Entry...</p>
+        <p class="loading-subtitle text-muted small">Preparing your form</p>
+        <div class="loading-dots mt-3">
+          <span></span><span></span><span></span>
+        </div>
+      </div>
+    </div>
   </div>
 
   <form *ngIf="!isInitializing && form" [formGroup]="form">
@@ -13,24 +22,16 @@
       <div class="filter-group">
         <div *ngIf="isSuperAdmin && companies.length > 0" style="display: flex; gap: 0.75rem; align-items: center;">
           <label class="text-muted">{{ 'dailyEntry.filters.company' | translate }}</label>
-          <select class="form-select"
-            [(ngModel)]="selectedCompanyId"
-            [ngModelOptions]="{ standalone: true }"
-            (change)="onCompanyChange()"
-            style="width: 220px;">
+          <select class="form-select" [(ngModel)]="selectedCompanyId" [ngModelOptions]="{ standalone: true }"
+            (change)="onCompanyChange()" style="width: 220px;">
             <option *ngFor="let c of companies" [value]="c.id">{{ c.name }}</option>
           </select>
         </div>
 
         <div style="display: flex; gap: 0.75rem; align-items: center;">
           <label class="text-muted">{{ 'dailyEntry.filters.date' | translate }}</label>
-          <input
-            type="date"
-            class="form-control"
-            style="width: 180px;"
-            [(ngModel)]="selectedDate"
-            [ngModelOptions]="{ standalone: true }"
-            (change)="onDateChange()">
+          <input type="date" class="form-control" style="width: 180px;" [(ngModel)]="selectedDate"
+            [ngModelOptions]="{ standalone: true }" (change)="onDateChange()">
           <small class="text-muted d-none d-md-inline">{{ selectedDateLabel }}</small>
         </div>
 
@@ -40,206 +41,474 @@
               {{ pt.labelKey | translate }}
             </option>
           </select>
-          <button *ngIf="canSave" type="button" class="btn add-btn" [disabled]="isSaving || isLoading" (click)="save()">
-            {{ isSaving ? ('dailyEntry.actions.saving' | translate) : ('dailyEntry.actions.saveAndArchive' | translate) }}
+          <button *ngIf="canSave" type="button" class="btn add-btn save-button" [disabled]="isSaving || isLoading" (click)="save()">
+            <span *ngIf="!isSaving" class="d-flex align-items-center gap-2">
+              <i class="bi bi-check-lg"></i>
+              {{ 'dailyEntry.actions.saveAndArchive' | translate }}
+            </span>
+            <span *ngIf="isSaving" class="d-flex align-items-center gap-2">
+              <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+              {{ 'dailyEntry.actions.saving' | translate }}
+            </span>
           </button>
         </div>
       </div>
     </div>
 
-    <div *ngIf="isLoading" class="loading-overlay">
-      <div class="text-center">
-        <div class="spinner-border text-primary"></div>
-        <p class="mt-3 text-muted">{{ 'dailyEntry.messages.loadingData' | translate }}</p>
+    <!-- Data Loading State with Skeleton -->
+    <div *ngIf="isLoading" class="loading-overlay enhanced-overlay">
+      <div class="loading-container">
+        <div class="spinner-border text-primary" role="status"></div>
+        <div class="mt-4 text-center flex-grow-1">
+          <p class="loading-title">Loading Data...</p>
+          <p class="loading-subtitle text-muted small mt-2">Fetching your records</p>
+          <div class="progress mt-3" style="height: 3px;">
+            <div class="progress-bar progress-bar-animated" role="progressbar" style="width: 75%"></div>
+          </div>
+        </div>
       </div>
     </div>
 
-    <div *ngIf="!isLoading">
-      <div class="table-card">
-        <div class="table-card-header">
-          {{ 'dailyEntry.sections.feedingEconomic' | translate }}
+    <!-- Skeleton Loader for Cards when loading -->
+    <div *ngIf="isLoading" class="skeleton-cards mt-4">
+      <div class="skeleton-card">
+        <div class="skeleton-header"></div>
+        <div class="skeleton-lines">
+          <div class="skeleton-line"></div>
+          <div class="skeleton-line short"></div>
         </div>
-        <div class="table-responsive">
-          <table class="table mb-0">
-            <thead>
-              <tr>
-                <th>{{ 'dailyEntry.table.animalGroup' | translate }}</th>
-                <th>{{ 'dailyEntry.table.numberOfHeads' | translate }}</th>
-                <th>{{ 'dailyEntry.table.ration' | translate }}</th>
-                <th>{{ 'dailyEntry.table.scaricatoKg' | translate }}</th>
-                <th>{{ 'dailyEntry.table.avanzoKg' | translate }}</th>
-                <th>{{ 'dailyEntry.table.averageProductionKg' | translate }}</th>
-              </tr>
-            </thead>
-            <tbody formArrayName="groupData">
-              <tr *ngFor="let group of groupData.controls; let i = index" [formGroupName]="i">
-                <td class="fw-500">{{ group.value.animalGroupName }}</td>
-                <td><input type="number" min="0" class="form-control" formControlName="headCount" [placeholder]="'dailyEntry.placeholders.zero' | translate"></td>
-                <td>
-                  <select class="form-select" formControlName="rationId">
-                    <option [ngValue]="null">{{ 'dailyEntry.placeholders.notAvailable' | translate }}</option>
-                    <option *ngFor="let r of rations" [value]="r.rationId">{{ r.rationName }}</option>
+      </div>
+      <div class="skeleton-card mt-4">
+        <div class="skeleton-header"></div>
+        <div class="skeleton-lines">
+          <div class="skeleton-line"></div>
+          <div class="skeleton-line"></div>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="!isLoading" cdkDropList (cdkDropListDropped)="drop($event)">
+      <div *ngFor="let section of sections" cdkDrag>
+
+        <ng-container [ngSwitch]="section.id">
+          <div *ngSwitchCase="'feeding'" class="table-card">
+            <div class="table-card-header d-flex justify-content-between align-items-center">
+              <span>{{ 'dailyEntry.sections.feedingEconomic' | translate }}</span>
+              <span *ngIf="hasActiveFilters()" class="filter-badge">
+                <i class="bi bi-funnel-fill"></i> {{ 'common.filtered' | translate }}
+                <button class="btn-clear-filter" (click)="clearFilters()" title="Clear all filters">
+                  <i class="bi bi-x"></i>
+                </button>
+              </span>
+            </div>
+            <div class="table-responsive">
+              <table class="table mb-0">
+                <thead>
+                  <tr>
+                    <th class="sortable-header" [class.active]="sortColumn === 'animalGroupNameEn'"
+                      (click)="onSortChange({ column: 'animalGroupNameEn', direction: sortColumn === 'animalGroupNameEn' && sortDirection === 'asc' ? 'desc' : 'asc' })">
+                      {{ 'dailyEntry.table.animalGroup' | translate }}
+                      <span *ngIf="sortColumn === 'animalGroupNameEn'" class="sort-indicator">{{
+                        getSortIndicator('animalGroupNameEn') }}</span>
+                    </th>
+                    <th class="sortable-header" [class.active]="sortColumn === 'animalCategoryCode'"
+                      (click)="onSortChange({ column: 'animalCategoryCode', direction: sortColumn === 'animalCategoryCode' && sortDirection === 'asc' ? 'desc' : 'asc' })">
+                      {{ 'animalGroup.columns.categoryCode' | translate }}
+                      <span *ngIf="sortColumn === 'animalCategoryCode'" class="sort-indicator">{{
+                        getSortIndicator('animalCategoryCode') }}</span>
+                    </th>
+                    <th>{{ 'dailyEntry.table.numberOfHeads' | translate }}</th>
+                    <th>{{ 'dailyEntry.table.ration' | translate }}</th>
+                    <th>{{ 'dailyEntry.table.scaricatoKg' | translate }}</th>
+                    <th>{{ 'dailyEntry.table.avanzoKg' | translate }}</th>
+                    <th>{{ 'dailyEntry.table.averageProductionKg' | translate }}</th>
+                  </tr>
+                  <!-- Filter Row -->
+                  <tr class="filter-row">
+                    <th>
+                      <div class="filter-input-group">
+                        <i class="bi bi-search"></i>
+                        <input type="text" class="filter-input" placeholder="Search..."
+                          [ngModel]="columnFilters['animalGroupNameEn']"
+                          (ngModelChange)="onFilterChange('animalGroupNameEn', $event)"
+                          [ngModelOptions]="{standalone: true}"
+                          [attr.aria-label]="'Filter ' + ('dailyEntry.table.animalGroup' | translate)">
+                      </div>
+                    </th>
+                    <th></th>
+                    <th></th>
+                    <th>
+                      <div class="filter-input-group">
+                        <i class="bi bi-search"></i>
+                        <input type="text" class="filter-input" placeholder="Search ration..."
+                          [ngModel]="rationFilter"
+                          (ngModelChange)="onRationFilterChange($event)"
+                          [ngModelOptions]="{standalone: true}"
+                          [attr.aria-label]="'Filter ration'">
+                      </div>
+                    </th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody formArrayName="groupData">
+                  <tr *ngFor="let group of groupData.controls; let i = index" [formGroupName]="i" [ngClass]="{
+      'highlight-lactation': group.value.animalCategoryCode === 'VL'
+    }">
+                    <td class="fw-500">{{ group.value.animalGroupName }}</td>
+                    <td class="fw-500"
+                      [title]="categoryMap[group.value.animalCategoryCode]?.en + ' / ' + categoryMap[group.value.animalCategoryCode]?.it">
+                      <span class="badge" [ngClass]="{
+  'bg-success': group.value.animalCategoryCode === 'VL',
+  'bg-secondary': group.value.animalCategoryCode === 'AS'
+}">
+                        {{ group.value.animalCategoryCode }}
+                      </span>
+                    </td>
+                    <td><input type="number" min="0" class="form-control" formControlName="headCount"
+                        [placeholder]="'dailyEntry.placeholders.zero' | translate"></td>
+
+                    <td>
+                      <div class="searchable-dropdown-wrapper">
+                        <div class="searchable-dropdown-header" (click)="toggleRationDropdown(i)">
+                          <span class="selected-text">
+                            {{ getSelectedRationName(group.get('rationId')?.value) }}
+                          </span>
+                          <i class="bi bi-chevron-down"></i>
+                        </div>
+                        
+                        <div class="searchable-dropdown-menu" *ngIf="openRationDropdownIndex === i">
+                          <div class="dropdown-search">
+                            <i class="bi bi-search"></i>
+                            <input type="text" 
+                              class="dropdown-search-input" 
+                              placeholder="Search ration..."
+                              (keyup)="updateRationFilter($event, i)"
+                              (click)="$event.stopPropagation()">
+                          </div>
+                          <div class="dropdown-options">
+                            <div class="dropdown-option" (click)="selectRation(null, i)">
+                              {{ 'dailyEntry.placeholders.notAvailable' | translate }}
+                            </div>
+                            <div class="dropdown-option" 
+                              *ngFor="let r of filteredRations" 
+                              (click)="selectRation(r, i)"
+                              [class.active]="group.get('rationId')?.value === r.rationId">
+                              {{ r.rationName }}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </td>
+                    <td><input type="number" min="0" step="0.1" class="form-control" formControlName="scaricatoKg"
+                        [placeholder]="'dailyEntry.placeholders.kg' | translate"></td>
+                    <td><input type="number" min="0" step="0.1" class="form-control" formControlName="avanzoKg"
+                        [placeholder]="'dailyEntry.placeholders.kg' | translate"></td>
+                    <td><input type="number" min="0" step="0.01" class="form-control" formControlName="avgProductionKg"
+                        [placeholder]="'dailyEntry.placeholders.kgPerHead' | translate"></td>
+                  </tr>
+                  <tr *ngIf="groupData.length === 0">
+                    <td colspan="7" class="empty-state text-center py-4">
+                      {{ 'dailyEntry.messages.noAnimalGroups' | translate }}
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <!-- Mat-Paginator - Shows only when > 5 records -->
+            <mat-paginator *ngIf="totalAnimalGroupRecords > pageSize" class="daily-paginator"
+              [length]="totalAnimalGroupRecords" [pageSize]="pageSize" [pageIndex]="pageIndex"
+              [pageSizeOptions]="[5, 10, 25]" (page)="onPageChange($event)">
+            </mat-paginator>
+          </div>
+
+          <div *ngSwitchCase="'herdComposition'" class="table-card">
+            <div class="table-card-header">{{ 'dailyEntry.sections.herdComposition' | translate }}</div>
+            <div class="form-section">
+              <div class="row g-3 herd-composition-row">
+                <div class="col form-group-item">
+                  <label>{{ 'dailyEntry.fields.totalCapi' | translate }}</label>
+                  <input type="number" min="0" class="form-control" formControlName="totalCapi"
+                    [placeholder]="'dailyEntry.placeholders.count' | translate">
+                </div>
+                <div class="col form-group-item">
+                  <label>{{ 'dailyEntry.fields.animalsInLactation' | translate }}</label>
+                  <input type="number" min="0" class="form-control" formControlName="animalsInLactation"
+                    [placeholder]="'dailyEntry.placeholders.count' | translate">
+                </div>
+                <div class="col form-group-item">
+                  <label>{{ 'dailyEntry.fields.dryAnimals' | translate }}</label>
+                  <input type="number" min="0" class="form-control" formControlName="dryAnimals"
+                    [placeholder]="'dailyEntry.placeholders.count' | translate">
+                </div>
+                <div class="col form-group-item">
+                  <label>{{ 'dailyEntry.fields.firstCalving' | translate }}</label>
+                  <input type="number" min="0" class="form-control" formControlName="firstCalving"
+                    [placeholder]="'dailyEntry.placeholders.count' | translate">
+                </div>
+                <div class="col form-group-item">
+                  <label>{{ 'dailyEntry.fields.secondCalving' | translate }}</label>
+                  <input type="number" min="0" class="form-control" formControlName="secondCalving"
+                    [placeholder]="'dailyEntry.placeholders.count' | translate">
+                </div>
+                <div class="col form-group-item">
+                  <label>{{ 'dailyEntry.fields.multiparous' | translate }}</label>
+                  <input type="number" min="0" class="form-control" formControlName="multiparous"
+                    [placeholder]="'dailyEntry.placeholders.count' | translate">
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div *ngSwitchCase="'milk'" class="table-card">
+            <div class="table-card-header">{{ 'dailyEntry.sections.milk' | translate }}</div>
+            <div class="form-section">
+              <div class="row g-3 herd-composition-row">
+                <div class="col form-group-item">
+                  <label>{{ 'dailyEntry.fields.gim' | translate }}</label>
+                  <input type="number" min="0" class="form-control" formControlName="gim"
+                    [placeholder]="'dailyEntry.placeholders.daysInMilk' | translate">
+                </div>
+                <div class="col form-group-item">
+                  <label>{{ 'dailyEntry.fields.nonMilkingCows' | translate }}</label>
+                  <input type="number" min="0" class="form-control" formControlName="nonMungitura"
+                    [placeholder]="'dailyEntry.placeholders.count' | translate">
+                </div>
+                <div class="col form-group-item">
+                  <label>{{ 'dailyEntry.fields.milkDelivered' | translate }}</label>
+                  <input type="number" step="0.1" class="form-control" formControlName="milkDeliveredKg"
+                    [placeholder]="'dailyEntry.placeholders.litres' | translate">
+                </div>
+                <div class="col form-group-item">
+                  <label>{{ 'dailyEntry.fields.milkProduced' | translate }}</label>
+                  <input type="number" step="0.1" class="form-control" formControlName="milkProducedKg"
+                    [placeholder]="'dailyEntry.placeholders.litres' | translate">
+                </div>
+                <div class="col form-group-item">
+                  <label>{{ 'dailyEntry.fields.milkPrice' | translate }}</label>
+                  <input type="number" step="0.001" class="form-control" formControlName="milkPriceEurLitre"
+                    placeholder="0.550">
+                </div>
+                <div class="col form-group-item">
+                  <label>{{ 'dailyEntry.fields.qualityBonus' | translate }}</label>
+                  <input type="number" step="0.001" class="form-control" formControlName="qualityBonusEur"
+                    placeholder="0.015">
+                </div>
+              </div>
+              <div class="row g-3 mt-2 herd-composition-row">
+                <div class="col form-group-item">
+                  <label>{{ 'dailyEntry.fields.fatPercent' | translate }}</label>
+                  <input type="number" step="0.01" class="form-control" formControlName="fatPercent">
+                </div>
+                <div class="col form-group-item">
+                  <label>{{ 'dailyEntry.fields.proteinPercent' | translate }}</label>
+                  <input type="number" step="0.01" class="form-control" formControlName="proteinPercent">
+                </div>
+                <div class="col form-group-item">
+                  <label>{{ 'dailyEntry.fields.lactose' | translate }}</label>
+                  <input type="number" step="0.01" class="form-control" formControlName="lactose">
+                </div>
+                <div class="col form-group-item">
+                  <label>{{ 'dailyEntry.fields.caseinPercent' | translate }}</label>
+                  <input type="number" step="0.01" class="form-control" formControlName="caseinPercent">
+                </div>
+                <div class="col form-group-item">
+                  <label>{{ 'dailyEntry.fields.ureaMgDl' | translate }}</label>
+                  <input type="number" step="0.1" class="form-control" formControlName="ureaMgDl">
+                </div>
+                <div class="col form-group-item">
+                  <label>{{ 'dailyEntry.fields.somaticCells' | translate }}</label>
+                  <input type="number" class="form-control" formControlName="somaticCellsThousands">
+                </div>
+                
+              </div>
+            </div>
+          </div>
+
+          <div *ngSwitchCase="'robot'" class="table-card">
+            <div class="table-card-header">{{ 'dailyEntry.sections.robot' | translate }}</div>
+            <div class="form-section">
+              <div class="row g-3 herd-composition-row">
+                <div class="col form-group-item">
+                  <label>{{ 'dailyEntry.fields.robotCows' | translate }}</label>
+                  <input type="number" class="form-control" formControlName="robotCows">
+                </div>
+                <div class="col form-group-item">
+                  <label>{{ 'dailyEntry.fields.robotMilkKg' | translate }}</label>
+                  <input type="number" step="0.1" class="form-control" formControlName="robotMilkKg">
+                </div>
+                <div class="col form-group-item">
+                  <label>{{ 'dailyEntry.fields.robotMilkings' | translate }}</label>
+                  <input type="number" class="form-control" formControlName="robotMilkings">
+                </div>
+                <div class="col form-group-item">
+                  <label>{{ 'dailyEntry.fields.robotRefusals' | translate }}</label>
+                  <input type="number" class="form-control" formControlName="robotRefusals">
+                </div>
+                <div class="col form-group-item">
+                  <label>{{ 'dailyEntry.fields.avgFeed' | translate }}</label>
+                  <input type="number" class="form-control" formControlName="avgFeed">
+                </div>
+
+                <div class="col form-group-item">
+                  <label>{{ 'dailyEntry.fields.robotFreeTimeMin' | translate }}</label>
+                  <input type="number" class="form-control" formControlName="robotFreeTimeMin">
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div *ngSwitchCase="'health'" class="table-card">
+            <div class="table-card-header">{{ 'dailyEntry.sections.health' | translate }}</div>
+            <div class="form-section">
+              <div class="row g-3 herd-composition-row">
+                <div class="col form-group-item">
+                  <label>{{ 'dailyEntry.fields.mastitis' | translate }}</label>
+                  <input type="number" min="0" class="form-control" formControlName="mastitis">
+                </div>
+                <div class="col form-group-item">
+                  <label>{{ 'dailyEntry.fields.retentions' | translate }}</label>
+                  <input type="number" min="0" class="form-control" formControlName="retentions">
+                </div>
+                <div class="col form-group-item">
+                  <label>{{ 'dailyEntry.fields.abortions' | translate }}</label>
+                  <input type="number" min="0" class="form-control" formControlName="abortions">
+                </div>
+                <div class="col form-group-item">
+                  <label>{{ 'dailyEntry.fields.calvings' | translate }}</label>
+                  <input type="number" min="0" class="form-control" formControlName="calvingsCount">
+                </div>
+                <div class="col form-group-item">
+                  <label>{{ 'dailyEntry.fields.healthNotes' | translate }}</label>
+                  <input type="text" class="form-control" formControlName="healthNotes"
+                    [placeholder]="'dailyEntry.placeholders.optionalNotes' | translate">
+                </div>
+              </div>
+            </div>
+          </div>
+          <div *ngSwitchCase="'herd'" class="table-card">
+            <div class="table-card-header">{{ 'dailyEntry.sections.herd' | translate }}</div>
+
+            <div class="form-section">
+              <div class="row g-3">
+
+                <!-- Category Code -->
+                <div class="col form-group-item">
+                  <label>{{ 'dailyEntry.fields.categoryCode' | translate }}</label>
+                  <select class="form-control" formControlName="categoryCode">
+                    <option value="VL">VL</option>
+                    <option value="AS">AS</option>
+                    <option value="MA">MA</option>
+                    <option value="MZ">MZ</option>
+                    <option value="VI">VI</option>
                   </select>
-                </td>
-                <td><input type="number" min="0" step="0.1" class="form-control" formControlName="scaricatoKg" [placeholder]="'dailyEntry.placeholders.kg' | translate"></td>
-                <td><input type="number" min="0" step="0.1" class="form-control" formControlName="avanzoKg" [placeholder]="'dailyEntry.placeholders.kg' | translate"></td>
-                <td><input type="number" min="0" step="0.01" class="form-control" formControlName="avgProductionKg" [placeholder]="'dailyEntry.placeholders.kgPerHead' | translate"></td>
-              </tr>
-              <tr *ngIf="groupData.length === 0">
-                <td colspan="6" class="empty-state">
-                  {{ 'dailyEntry.messages.noAnimalGroups' | translate }}
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
+                </div>
 
-      <div class="table-card">
-        <div class="table-card-header">{{ 'dailyEntry.sections.herdComposition' | translate }}</div>
-        <div class="form-section">
-          <div class="row g-3">
-            <div class="col-md-2 form-group-item">
-              <label>{{ 'dailyEntry.fields.totalCapi' | translate }}</label>
-              <input type="number" min="0" class="form-control" formControlName="totalCapi" [placeholder]="'dailyEntry.placeholders.count' | translate">
-            </div>
-            <div class="col-md-2 form-group-item">
-              <label>{{ 'dailyEntry.fields.animalsInLactation' | translate }}</label>
-              <input type="number" min="0" class="form-control" formControlName="animalsInLactation" [placeholder]="'dailyEntry.placeholders.count' | translate">
-            </div>
-            <div class="col-md-2 form-group-item">
-              <label>{{ 'dailyEntry.fields.dryAnimals' | translate }}</label>
-              <input type="number" min="0" class="form-control" formControlName="dryAnimals" [placeholder]="'dailyEntry.placeholders.count' | translate">
-            </div>
-            <div class="col-md-2 form-group-item">
-              <label>{{ 'dailyEntry.fields.firstCalving' | translate }}</label>
-              <input type="number" min="0" class="form-control" formControlName="firstCalving" [placeholder]="'dailyEntry.placeholders.count' | translate">
-            </div>
-            <div class="col-md-2 form-group-item">
-              <label>{{ 'dailyEntry.fields.secondCalving' | translate }}</label>
-              <input type="number" min="0" class="form-control" formControlName="secondCalving" [placeholder]="'dailyEntry.placeholders.count' | translate">
-            </div>
-            <div class="col-md-2 form-group-item">
-              <label>{{ 'dailyEntry.fields.multiparous' | translate }}</label>
-              <input type="number" min="0" class="form-control" formControlName="multiparous" [placeholder]="'dailyEntry.placeholders.count' | translate">
+                <div class="col form-group-item">
+                  <label>{{ 'dailyEntry.fields.totalHeads' | translate }}</label>
+                  <input type="number" class="form-control" formControlName="totalHeads">
+                </div>
+
+                <div class="col form-group-item">
+                  <label>{{ 'dailyEntry.fields.inLactation' | translate }}</label>
+                  <input type="number" class="form-control" formControlName="inLactation">
+                </div>
+
+                <div class="col form-group-item">
+                  <label>{{ 'dailyEntry.fields.dryAnimals' | translate }}</label>
+                  <input type="number" class="form-control" formControlName="dryAnimals">
+                </div>
+
+                <div class="col form-group-item">
+                  <label>{{ 'dailyEntry.fields.firstCalving' | translate }}</label>
+                  <input type="number" class="form-control" formControlName="firstCalving">
+                </div>
+
+                <div class="col form-group-item">
+                  <label>{{ 'dailyEntry.fields.secondCalving' | translate }}</label>
+                  <input type="number" class="form-control" formControlName="secondCalving">
+                </div>
+
+                <div class="col form-group-item">
+                  <label>{{ 'dailyEntry.fields.multiparous' | translate }}</label>
+                  <input type="number" class="form-control" formControlName="multiparous">
+                </div>
+
+              </div>
             </div>
           </div>
-        </div>
-      </div>
 
-      <div class="table-card">
-        <div class="table-card-header">{{ 'dailyEntry.sections.milk' | translate }}</div>
-        <div class="form-section">
-          <div class="row g-3">
-            <div class="col-md-2 form-group-item">
-              <label>{{ 'dailyEntry.fields.gim' | translate }}</label>
-              <input type="number" min="0" class="form-control" formControlName="gim" [placeholder]="'dailyEntry.placeholders.daysInMilk' | translate">
-            </div>
-            <div class="col-md-2 form-group-item">
-              <label>{{ 'dailyEntry.fields.nonMilkingCows' | translate }}</label>
-              <input type="number" min="0" class="form-control" formControlName="nonMungitura" [placeholder]="'dailyEntry.placeholders.count' | translate">
-            </div>
-            <div class="col-md-2 form-group-item">
-              <label>{{ 'dailyEntry.fields.milkDelivered' | translate }}</label>
-              <input type="number" step="0.1" class="form-control" formControlName="milkDeliveredKg" [placeholder]="'dailyEntry.placeholders.litres' | translate">
-            </div>
-            <div class="col-md-2 form-group-item">
-              <label>{{ 'dailyEntry.fields.milkProduced' | translate }}</label>
-              <input type="number" step="0.1" class="form-control" formControlName="milkProducedKg" [placeholder]="'dailyEntry.placeholders.litres' | translate">
-            </div>
-            <div class="col-md-2 form-group-item">
-              <label>{{ 'dailyEntry.fields.milkPrice' | translate }}</label>
-              <input type="number" step="0.001" class="form-control" formControlName="milkPriceEurLitre" placeholder="0.550">
-            </div>
-            <div class="col-md-2 form-group-item">
-              <label>{{ 'dailyEntry.fields.qualityBonus' | translate }}</label>
-              <input type="number" step="0.001" class="form-control" formControlName="qualityBonusEur" placeholder="0.015">
+          <div *ngSwitchCase="'calves'" class="table-card">
+            <div class="table-card-header">{{ 'dailyEntry.sections.calves' | translate }}</div>
+
+            <div class="form-section">
+              <div class="row g-3">
+                <!-- Individual -->
+                <div class="col-12">
+                  <h6>{{ 'dailyEntry.subsections.individual' | translate }}</h6>
+                </div>
+
+                <div class="col form-group-item">
+                  <label>{{ 'dailyEntry.fields.numberOfAnimals' | translate }}</label>
+                  <input type="number" class="form-control" formControlName="indAnimals">
+                </div>
+
+                <div class="col form-group-item">
+                  <label>{{ 'dailyEntry.fields.avgMilk' | translate }}</label>
+                  <input type="number" class="form-control" formControlName="indAvgMilk">
+                </div>
+
+                <div class="col form-group-item">
+                  <label>{{ 'dailyEntry.fields.powderPercentage' | translate }}</label>
+                  <input type="number" class="form-control" formControlName="indPowder">
+                </div>
+
+                <div class="col form-group-item">
+                  <label>{{ 'dailyEntry.fields.avgFeed' | translate }}</label>
+                  <input type="number" class="form-control" formControlName="indAvgFeed">
+                </div>
+
+                <!-- Group -->
+                <div class="col-12 mt-3">
+                  <h6>{{ 'dailyEntry.subsections.group' | translate }}</h6>
+                </div>
+
+                <div class="col form-group-item">
+                  <label>{{ 'dailyEntry.fields.numberOfAnimals' | translate }}</label>
+                  <input type="number" class="form-control" formControlName="grpAnimals">
+                </div>
+
+                <div class="col form-group-item">
+                  <label>{{ 'dailyEntry.fields.avgMilk' | translate }}</label>
+                  <input type="number" class="form-control" formControlName="grpAvgMilk">
+                </div>
+
+                <div class="col form-group-item">
+                  <label>{{ 'dailyEntry.fields.powderPercentage' | translate }}</label>
+                  <input type="number" class="form-control" formControlName="grpPowder">
+                </div>
+
+                <div class="col form-group-item">
+                  <label>{{ 'dailyEntry.fields.avgFeed' | translate }}</label>
+                  <input type="number" class="form-control" formControlName="grpAvgFeed">
+                </div>
+
+              </div>
             </div>
           </div>
-          <div class="row g-3 mt-2">
-            <div class="col-md-2 form-group-item">
-              <label>{{ 'dailyEntry.fields.fatPercent' | translate }}</label>
-              <input type="number" step="0.01" class="form-control" formControlName="fatPercent">
-            </div>
-            <div class="col-md-2 form-group-item">
-              <label>{{ 'dailyEntry.fields.proteinPercent' | translate }}</label>
-              <input type="number" step="0.01" class="form-control" formControlName="proteinPercent">
-            </div>
-            <div class="col-md-2 form-group-item">
-              <label>{{ 'dailyEntry.fields.caseinPercent' | translate }}</label>
-              <input type="number" step="0.01" class="form-control" formControlName="caseinPercent">
-            </div>
-            <div class="col-md-2 form-group-item">
-              <label>{{ 'dailyEntry.fields.ureaMgDl' | translate }}</label>
-              <input type="number" step="0.1" class="form-control" formControlName="ureaMgDl">
-            </div>
-            <div class="col-md-2 form-group-item">
-              <label>{{ 'dailyEntry.fields.somaticCells' | translate }}</label>
-              <input type="number" class="form-control" formControlName="somaticCellsThousands">
-            </div>
-          </div>
-        </div>
+        </ng-container>
       </div>
-
-      <div class="table-card">
-        <div class="table-card-header">{{ 'dailyEntry.sections.robot' | translate }}</div>
-        <div class="form-section">
-          <div class="row g-3">
-            <div class="col-md-2 form-group-item">
-              <label>{{ 'dailyEntry.fields.robotCows' | translate }}</label>
-              <input type="number" class="form-control" formControlName="robotCows">
-            </div>
-            <div class="col-md-2 form-group-item">
-              <label>{{ 'dailyEntry.fields.robotMilkKg' | translate }}</label>
-              <input type="number" step="0.1" class="form-control" formControlName="robotMilkKg">
-            </div>
-            <div class="col-md-2 form-group-item">
-              <label>{{ 'dailyEntry.fields.robotMilkings' | translate }}</label>
-              <input type="number" class="form-control" formControlName="robotMilkings">
-            </div>
-            <div class="col-md-2 form-group-item">
-              <label>{{ 'dailyEntry.fields.robotRefusals' | translate }}</label>
-              <input type="number" class="form-control" formControlName="robotRefusals">
-            </div>
-            <div class="col-md-2 form-group-item">
-              <label>{{ 'dailyEntry.fields.robotFreeTimeMin' | translate }}</label>
-              <input type="number" class="form-control" formControlName="robotFreeTimeMin">
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="table-card">
-        <div class="table-card-header">{{ 'dailyEntry.sections.health' | translate }}</div>
-        <div class="form-section">
-          <div class="row g-3">
-            <div class="col-md-2 form-group-item">
-              <label>{{ 'dailyEntry.fields.mastitis' | translate }}</label>
-              <input type="number" min="0" class="form-control" formControlName="mastitis">
-            </div>
-            <div class="col-md-2 form-group-item">
-              <label>{{ 'dailyEntry.fields.retentions' | translate }}</label>
-              <input type="number" min="0" class="form-control" formControlName="retentions">
-            </div>
-            <div class="col-md-2 form-group-item">
-              <label>{{ 'dailyEntry.fields.abortions' | translate }}</label>
-              <input type="number" min="0" class="form-control" formControlName="abortions">
-            </div>
-            <div class="col-md-2 form-group-item">
-              <label>{{ 'dailyEntry.fields.calvings' | translate }}</label>
-              <input type="number" min="0" class="form-control" formControlName="calvingsCount">
-            </div>
-            <div class="col-md-4 form-group-item">
-              <label>{{ 'dailyEntry.fields.healthNotes' | translate }}</label>
-              <input type="text" class="form-control" formControlName="healthNotes" [placeholder]="'dailyEntry.placeholders.optionalNotes' | translate">
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="d-flex justify-content-end gap-2 mt-2 mb-4">
-        <button *ngIf="canSave" type="button" class="btn add-btn" [disabled]="isSaving" (click)="save()">
-          {{ isSaving ? ('dailyEntry.actions.saving' | translate) : ('dailyEntry.actions.saveAndArchive' | translate) }}
+      <div class="d-flex justify-content-end gap-2 mt-6 mb-4 save-button-group">
+        <button *ngIf="canSave" type="button" class="btn add-btn save-button" [disabled]="isSaving" (click)="save()" [attr.aria-busy]="isSaving">
+          <span *ngIf="!isSaving" class="d-flex align-items-center gap-2">
+            <i class="bi bi-check-lg"></i>
+            {{ 'dailyEntry.actions.saveAndArchive' | translate }}
+          </span>
+          <span *ngIf="isSaving" class="d-flex align-items-center gap-2">
+            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+            {{ 'dailyEntry.actions.saving' | translate }}
+          </span>
         </button>
       </div>
     </div>

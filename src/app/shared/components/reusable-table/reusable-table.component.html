@@ -5,8 +5,16 @@
         <!-- TABLE HEADER -->
         <thead class="rt-thead">
           <tr class="rt-header-row">
-            <th *ngFor="let col of columns" class="rt-header-cell">
-              {{ col }}
+            <th *ngFor="let col of columns; let i = index" class="rt-header-cell"
+              [class.sortable]="isSortable(columnFields?.[i] || col.toLowerCase())"
+              (click)="onSort(columnFields?.[i] || col.toLowerCase())">
+              <span class="header-content">
+                {{ col }}
+                <span *ngIf="isSortable(columnFields?.[i] || col.toLowerCase())" 
+                  class="sort-indicator">
+                  {{ getSortIndicator(columnFields?.[i] || col.toLowerCase()) }}
+                </span>
+              </span>
             </th>
             <th *ngIf="showActions" class="rt-header-cell rt-actions-header">
               {{ 'common.actions' | translate }}

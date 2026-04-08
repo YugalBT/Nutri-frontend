@@ -31,7 +31,11 @@
       [viewPermission]="viewPermission"
       [editPermission]="editPermission"
       [deletePermission]="deletePermission"
+      [sortableColumns]="sortableColumns"
+      [currentSortColumn]="sortColumn"
+      [currentSortDirection]="sortDirection"
       (pageChange)="onPageChange($event)"
+      (sortChange)="onSortChange($event)"
       (toggleActive)="onToggleActive($event)"
       (deleteRow)="onDelete($event)"
       (editRow)="animalGroupModalRef.openModal(true, $event)">
