@@ -6,6 +6,7 @@ import { ToastService } from '../../../shared/services/toast.service';
 import { SharedModule } from '../../../shared/shared.module';
 import { TranslatePipe } from '../../../i18n/translate.pipe';
 import { ActivatedRoute } from '@angular/router';
+import { BrandingService } from '../../../shared/services/branding.service';
 
 
 @Component({
@@ -29,7 +30,8 @@ export class ForgotPasswordComponent implements OnInit {
     private forgotService: ForgotPasswordService,
     private router: Router,
     private toast: ToastService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private brandingService: BrandingService,
   ) {}
 
   ngOnInit(): void {
@@ -68,6 +70,10 @@ passwordMatch(group: FormGroup) {
   const confirm = group.get('confirmPassWord')?.value;
 
   return password === confirm ? null : { passwordMismatch: true };
+}
+
+get loginRoute(): string {
+  return this.brandingService.getAuthRoute('login');
 }
 
 
@@ -116,7 +122,7 @@ resetPassword() {
   this.forgotService.verifyForgotPassword(payload).subscribe({
     next: (res) => {
       this.toast.success(res?.message);
-      this.router.navigate(['/login']);
+      this.router.navigate([this.loginRoute]);
     },
     error: (err) => {
       this.toast.error(err?.message || 'Invalid or expired link');

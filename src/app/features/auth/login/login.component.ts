@@ -7,6 +7,7 @@ import { LocalizationService } from '../../../core/services/localization/localiz
 import { LanguageList } from '../../../core/models/language-list';
 import { selectAuthLoading } from '../../../state/auth/auth.selectors';
 import * as AuthActions from '../../../state/auth/auth.actions';
+import { BrandingService } from '../../../shared/services/branding.service';
 
 import { TranslatePipe } from '../../../i18n/translate.pipe';
 import { SharedModule } from '../../../shared/shared.module';
@@ -31,7 +32,8 @@ export class LoginComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private store: Store,
-    private localizationService: LocalizationService
+    private localizationService: LocalizationService,
+    private brandingService: BrandingService,
   ) {}
 
   ngOnInit(): void {
@@ -67,6 +69,10 @@ get currentLanguageName(): string {
 
   return lang?.languageName || 'Select Language';
 }
+
+  get forgotPasswordRoute(): string {
+    return this.brandingService.getAuthRoute('forgot-password');
+  }
 
   //  Change language
   changeLanguage(lang: string): void {

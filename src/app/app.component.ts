@@ -12,6 +12,8 @@ import { User } from './state/auth/auth.models';
 import { TokenService } from './shared/services/token.service';
 import { NgxSpinnerModule, NgxSpinnerService } from 'ngx-spinner';
 import { LocalizationService } from './core/services/localization/localization.service';
+import { selectAuthUser } from './state/auth/auth.selectors';
+import { BrandingService } from './shared/services/branding.service';
 @Component({
   selector: 'app-root',
   standalone: true,
@@ -27,16 +29,23 @@ export class AppComponent implements OnInit {
     private store: Store<{ auth: AuthState }>,
     private tokenService: TokenService,
     private spinner: NgxSpinnerService,
-    private localizationService: LocalizationService
+    private localizationService: LocalizationService,
+    private brandingService: BrandingService
   ) { }
 
   ngOnInit() {
+    this.brandingService.initialize();
+
     const token = this.tokenService.getToken();
         const user: User | null = JSON.parse(this.tokenService.getUserData() || 'null');
 
         if (token && user && !this.tokenService.isTokenExpired()) {
           this.store.dispatch(AuthActions.loginSuccess({ user, token, silent: true }));
         } 
+
+    this.store.select(selectAuthUser).subscribe((authUser) => {
+      this.brandingService.updateBranding(authUser);
+    });
   // this.router.events.subscribe(event => {
   //   if (event instanceof NavigationEnd) {
   //     const url = event.url;

@@ -14,6 +14,18 @@ export const routes: Routes = [
       ),
   },
   {
+    path: 'supplier',
+    redirectTo: 'supplier/login',
+    pathMatch: 'full',
+  },
+  {
+    path: 'supplier/login',
+    loadComponent: () =>
+      import('./features/auth/login/login.component').then(
+        (m) => m.LoginComponent,
+      ),
+  },
+  {
     path: 'forgot-password',
     loadComponent: () =>
       import('./features/auth/forgot-password/forgot-password.component').then(
@@ -21,7 +33,22 @@ export const routes: Routes = [
       ),
   },
   {
+    path: 'supplier/forgot-password',
+    loadComponent: () =>
+      import('./features/auth/forgot-password/forgot-password.component').then(
+        (m) => m.ForgotPasswordComponent,
+      ),
+  },
+  {
     path: 'reset-password',
+    canActivate: [authGuard, firstLoginGuard],
+    loadComponent: () =>
+      import('./features/auth/reset-password/reset-password.component').then(
+        (m) => m.ResetPasswordComponent,
+      ),
+  },
+  {
+    path: 'supplier/reset-password',
     canActivate: [authGuard, firstLoginGuard],
     loadComponent: () =>
       import('./features/auth/reset-password/reset-password.component').then(
