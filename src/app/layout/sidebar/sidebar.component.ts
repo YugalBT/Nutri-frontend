@@ -112,6 +112,16 @@ export class SidebarComponent implements OnInit {
     return this.lang;
   }
 
+  getTranslatedKey(name?: string): string {
+  if (!name) return '';
+
+  const map: any = {
+    'Companies': 'sidebarmenu.companies',
+    'Daily Entry': 'sidebarmenu.dailyEntry'
+  };
+
+  return map[name] || name;
+}
   // private buildCompanyMenu(companyMenu: string[]): void {
   //   const items: MenuItem[] = companyMenu
   //     .map((label) => ({

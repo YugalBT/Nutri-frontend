@@ -304,9 +304,11 @@ loadLayout() {
           this.patchForm(res.existing.data);
         }
         this.isLoading = false;
+        this.isSaving = false;
       },
       error: () => {
         this.isLoading = false;
+        this.isSaving = false;
         this.buildGroupRows();
       },
     });

@@ -20,21 +20,21 @@
 
                                 </span>{{ 'sidebarmenu.dashboard' | translate }}</a>
                         </div>
-                        <!-- ✅ TOP MENUS -->
-<div class="side-menus mt-2" *ngFor="let item of topMenus">
-    <div class="side-menu-item">
-        <a [routerLink]="item.url" routerLinkActive="active"
-           [routerLinkActiveOptions]="{ exact: true }">
-
-            <span class="side-item-icon" [innerHTML]="item.safeIcon"></span>
-            {{ item.roleDisplayName }}
-        </a>
-    </div>
-</div>
+                       
+                        
                     </div>
                 </div>
                 <div class="menu-scrollable">
+                    <div class="side-menus mt-2" *ngFor="let item of topMenus">
+                            <div class="side-menu-item">
+                                <a [routerLink]="item.url" routerLinkActive="active"
+                                    [routerLinkActiveOptions]="{ exact: true }">
 
+                                    <span class="side-item-icon" [innerHTML]="item.safeIcon"></span>
+                                    {{ getTranslatedKey(item?.roleDisplayName ?? '') | translate }}
+                                </a>
+                            </div>
+                        </div>
                     <ng-container *ngFor="let group of groupedMenus; let i = index">
 
                         <div class="side-menus">
