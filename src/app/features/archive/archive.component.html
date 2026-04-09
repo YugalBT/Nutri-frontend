@@ -17,8 +17,10 @@
         <label class="form-label form-label-sm mb-1">{{ 'archive.filters.to' | translate }}</label>
         <input type="date" class="form-control form-control-sm" [(ngModel)]="toDate" (change)="loadArchive()" />
       </div>
-      <button *ngIf="canRecalculate" class="btn btn-sm btn-warning" [disabled]="isRecalculating" (click)="bulkRecalculate()">
-        {{ isRecalculating ? ('archive.actions.recalculating' | translate) : ('archive.actions.bulkRecalculate' | translate) }}
+      <button *ngIf="canRecalculate" class="btn btn-sm btn-warning" [disabled]="isRecalculating"
+        (click)="bulkRecalculate()">
+        {{ isRecalculating ? ('archive.actions.recalculating' | translate) : ('archive.actions.bulkRecalculate' |
+        translate) }}
       </button>
     </div>
   </div>
@@ -37,20 +39,25 @@
       <table class="table table-sm table-hover mb-0 archive-table">
         <thead>
           <tr class="group-row">
-            <th *ngIf="isSuperAdmin" class="sticky-company company-col" colspan="1">{{ 'dashboard.company' | translate }}</th>
-            <th *ngIf="isSuperAdmin" class="sticky-date-with-company date-col" colspan="1">{{ 'archive.table.date' | translate }}</th>
-            <th *ngIf="!isSuperAdmin" class="sticky-date date-col" colspan="1">{{ 'archive.table.date' | translate }}</th>
-            <th colspan="7">{{ 'dashboard.herd' | translate }}</th>
-            <th colspan="8">{{ 'dashboard.production' | translate }}</th>
+            <th *ngIf="isSuperAdmin" class="sticky-company company-col" colspan="1">{{ 'dashboard.company' | translate
+              }}</th>
+            <th *ngIf="isSuperAdmin" class="sticky-date-with-company date-col" colspan="1">{{ 'archive.table.date' |
+              translate }}</th>
+            <th *ngIf="!isSuperAdmin" class="sticky-date date-col" colspan="1">{{ 'archive.table.date' | translate }}
+            </th>
+            <th colspan="10">{{ 'dashboard.herd' | translate }}</th>
+            <th colspan="8">{{ 'dailyEntry.sections.calves' | translate }}</th>
+            <th colspan="9">{{ 'dashboard.production' | translate }}</th>
             <th colspan="5">{{ 'dailyEntry.sections.robot' | translate }}</th>
-            <th colspan="4">{{ 'dashboard.feeding' | translate }}</th>
+            <th colspan="5">{{ 'dashboard.feeding' | translate }}</th>
             <th colspan="5">{{ 'dailyEntry.sections.health' | translate }}</th>
             <th colspan="1">{{ 'archive.table.priceType' | translate }}</th>
             <th colspan="1">{{ 'common.actions' | translate }}</th>
           </tr>
           <tr class="label-row">
             <th *ngIf="isSuperAdmin" class="sticky-company company-col">{{ 'dashboard.company' | translate }}</th>
-            <th *ngIf="isSuperAdmin" class="sticky-date-with-company date-col">{{ 'archive.table.date' | translate }}</th>
+            <th *ngIf="isSuperAdmin" class="sticky-date-with-company date-col">{{ 'archive.table.date' | translate }}
+            </th>
             <th *ngIf="!isSuperAdmin" class="sticky-date date-col">{{ 'archive.table.date' | translate }}</th>
             <th>{{ 'archive.table.gim' | translate }}</th>
             <th>{{ 'archive.table.totalCapi' | translate }}</th>
@@ -59,10 +66,46 @@
             <th>{{ 'archive.table.firstCalving' | translate }}</th>
             <th>{{ 'archive.table.secondCalving' | translate }}</th>
             <th>{{ 'archive.table.multiparous' | translate }}</th>
+            <th>{{ 'dailyEntry.fields.categoryCode' | translate }}</th>
+            <th>{{ 'dailyEntry.fields.totalHeads' | translate }}</th>
+            <th>{{ 'dailyEntry.fields.inLactation' | translate }}</th>
+            <th class="calf-col">
+              <span class="archive-subhead">{{ 'dailyEntry.subsections.individual' | translate }}</span>
+              <span>{{ 'dailyEntry.fields.numberOfAnimals' | translate }}</span>
+            </th>
+            <th class="calf-col">
+              <span class="archive-subhead">{{ 'dailyEntry.subsections.individual' | translate }}</span>
+              <span>{{ 'dailyEntry.fields.avgMilk' | translate }}</span>
+            </th>
+            <th class="calf-col">
+              <span class="archive-subhead">{{ 'dailyEntry.subsections.individual' | translate }}</span>
+              <span>{{ 'dailyEntry.fields.powderPercentage' | translate }}</span>
+            </th>
+            <th class="calf-col">
+              <span class="archive-subhead">{{ 'dailyEntry.subsections.individual' | translate }}</span>
+              <span>{{ 'dailyEntry.fields.avgFeed' | translate }}</span>
+            </th>
+            <th class="calf-col">
+              <span class="archive-subhead">{{ 'dailyEntry.subsections.group' | translate }}</span>
+              <span>{{ 'dailyEntry.fields.numberOfAnimals' | translate }}</span>
+            </th>
+            <th class="calf-col">
+              <span class="archive-subhead">{{ 'dailyEntry.subsections.group' | translate }}</span>
+              <span>{{ 'dailyEntry.fields.avgMilk' | translate }}</span>
+            </th>
+            <th class="calf-col">
+              <span class="archive-subhead">{{ 'dailyEntry.subsections.group' | translate }}</span>
+              <span>{{ 'dailyEntry.fields.powderPercentage' | translate }}</span>
+            </th>
+            <th class="calf-col">
+              <span class="archive-subhead">{{ 'dailyEntry.subsections.group' | translate }}</span>
+              <span>{{ 'dailyEntry.fields.avgFeed' | translate }}</span>
+            </th>
             <th>{{ 'archive.table.milkDeliveredKg' | translate }}</th>
             <th>{{ 'archive.table.milkProducedKg' | translate }}</th>
             <th>{{ 'archive.table.fatPercent' | translate }}</th>
             <th>{{ 'archive.table.proteinPercent' | translate }}</th>
+            <th>{{ 'dailyEntry.fields.lactose' | translate }}</th>
             <th>{{ 'archive.table.caseinPercent' | translate }}</th>
             <th>{{ 'archive.table.ureaMgDl' | translate }}</th>
             <th>{{ 'archive.table.somaticA1000' | translate }}</th>
@@ -72,6 +115,7 @@
             <th>{{ 'dailyEntry.fields.robotMilkings' | translate }}</th>
             <th>{{ 'dailyEntry.fields.robotRefusals' | translate }}</th>
             <th>{{ 'dailyEntry.fields.robotFreeTimeMin' | translate }}</th>
+            <th>{{ 'archive.columns.avgFeed' | translate }}</th>
             <th>{{ 'archive.table.milkPriceEurLitre' | translate }}</th>
             <th>{{ 'archive.table.feedCostEur' | translate }}</th>
             <th>{{ 'archive.table.milkRevenueEur' | translate }}</th>
@@ -87,9 +131,20 @@
         </thead>
         <tbody>
           <tr *ngFor="let r of records">
-            <td *ngIf="isSuperAdmin" class="fw-500 text-start sticky-company company-col">{{ r.companyName || '-' }}</td>
-            <td *ngIf="isSuperAdmin" class="fw-500 sticky-date-with-company date-col" style="white-space:nowrap;">{{ r.date }}</td>
-            <td *ngIf="!isSuperAdmin" class="fw-500 sticky-date date-col" style="white-space:nowrap;">{{ r.date }}</td>
+
+            <td *ngIf="isSuperAdmin" class="fw-500 text-start sticky-company company-col">
+              {{ r.companyName || '-' }}
+            </td>
+
+            <td *ngIf="isSuperAdmin" class="fw-500 sticky-date-with-company date-col">
+              {{ r.date }}
+            </td>
+
+            <td *ngIf="!isSuperAdmin" class="fw-500 sticky-date date-col">
+              {{ r.date }}
+            </td>
+
+            <!-- Herd -->
             <td>{{ r.gim ?? '-' }}</td>
             <td>{{ r.totalCapi ?? '-' }}</td>
             <td>{{ r.animalsInLactation ?? '-' }}</td>
@@ -97,43 +152,84 @@
             <td>{{ r.firstCalving ?? '-' }}</td>
             <td>{{ r.secondCalving ?? '-' }}</td>
             <td>{{ r.multiparous ?? '-' }}</td>
+            <td [title]="
+              r.categoryCode === 'VL' ? 'Lactating Cows / Vacche in lattazione' :
+              r.categoryCode === 'AS' ? 'Dry Cows / Vacche asciutte' :
+              r.categoryCode === 'MA' ? 'Heifers / Manze' :
+              r.categoryCode === 'MZ' ? 'Young Cattle / Manzette' :
+              r.categoryCode === 'VI' ? 'Calves / Vitelli' : ''
+            ">
+              <span class="badge bg-primary">
+                {{ r.categoryCode ?? '-' }}
+              </span>
+            </td>
+            <td>{{ r.totalHeads ?? '-' }}</td>
+            <td>{{ r.inLactation ?? '-' }}</td>
+            <td>{{ r.indAnimals ?? '-' }}</td>
+            <td>{{ r.indAvgMilk != null ? (r.indAvgMilk | number:'1.1-1') : '-' }}</td>
+            <td>{{ r.indPowder != null ? (r.indPowder | number:'1.2-2') : '-' }}</td>
+            <td>{{ r.indAvgFeed != null ? (r.indAvgFeed | number:'1.1-1') : '-' }}</td>
+            <td>{{ r.grpAnimals ?? '-' }}</td>
+            <td>{{ r.grpAvgMilk != null ? (r.grpAvgMilk | number:'1.1-1') : '-' }}</td>
+            <td>{{ r.grpPowder != null ? (r.grpPowder | number:'1.2-2') : '-' }}</td>
+            <td>{{ r.grpAvgFeed != null ? (r.grpAvgFeed | number:'1.1-1') : '-' }}</td>
+
+            <!-- Production -->
             <td>{{ r.milkDeliveredKg != null ? (r.milkDeliveredKg | number:'1.1-1') : '-' }}</td>
             <td>{{ r.milkProducedKg != null ? (r.milkProducedKg | number:'1.1-1') : '-' }}</td>
             <td>{{ r.fatPercent != null ? (r.fatPercent | number:'1.2-2') + '%' : '-' }}</td>
             <td>{{ r.proteinPercent != null ? (r.proteinPercent | number:'1.2-2') + '%' : '-' }}</td>
+            <td>{{ r.lactose != null ? (r.lactose | number:'1.2-2') + '%' : '-' }}</td>
             <td>{{ r.caseinPercent != null ? (r.caseinPercent | number:'1.2-2') + '%' : '-' }}</td>
             <td>{{ r.ureaMgDl != null ? (r.ureaMgDl | number:'1.1-1') : '-' }}</td>
             <td>{{ r.somaticCellsThousands ?? '-' }}</td>
             <td>{{ r.qualityBonusEur != null ? (r.qualityBonusEur | number:'1.3-3') : '-' }}</td>
+
+            <!-- Robot -->
             <td>{{ r.robotCows ?? '-' }}</td>
             <td>{{ r.robotMilkKg != null ? (r.robotMilkKg | number:'1.1-1') : '-' }}</td>
             <td>{{ r.robotMilkings ?? '-' }}</td>
             <td>{{ r.robotRefusals ?? '-' }}</td>
             <td>{{ r.robotFreeTimeMin ?? '-' }}</td>
+
+            <!-- Feeding -->
+            <td>{{ r.avgFeed != null ? (r.avgFeed | number:'1.1-1') : '-' }}</td>
             <td>{{ r.milkPriceEurLitre != null ? (r.milkPriceEurLitre | number:'1.3-3') : '-' }}</td>
             <td>{{ r.totalFeedCostEur != null ? (r.totalFeedCostEur | number:'1.2-2') : '-' }}</td>
             <td>{{ r.milkRevenueEur != null ? (r.milkRevenueEur | number:'1.2-2') : '-' }}</td>
+
             <td [class.text-success]="r.iofcPerCow > 4" [class.text-danger]="r.iofcPerCow < 2">
               {{ r.iofcPerCow != null ? (r.iofcPerCow | number:'1.2-2') : '-' }}
             </td>
+
+            <!-- Health -->
             <td>{{ r.mastitis ?? '-' }}</td>
             <td>{{ r.retentions ?? '-' }}</td>
             <td>{{ r.abortions ?? '-' }}</td>
             <td>{{ r.calvingsCount ?? '-' }}</td>
             <td class="text-start">{{ r.healthNotes || '-' }}</td>
+
+            <!-- Price Type -->
             <td>
               <span class="badge" [ngClass]="r.priceType === 1 ? 'bg-info' : 'bg-secondary'">
-                {{ r.priceType === 1 ? ('archive.priceType.market' | translate) : ('archive.priceType.company' | translate) }}
+                {{ r.priceType === 1
+                ? ('archive.priceType.market' | translate)
+                : ('archive.priceType.company' | translate) }}
               </span>
             </td>
+
+            <!-- Action -->
             <td class="action-col">
               <button class="btn btn-sm btn-outline-primary" (click)="loadRecord(r)">
                 {{ 'archive.actions.load' | translate }}
               </button>
             </td>
+
           </tr>
+
+          <!-- Empty -->
           <tr *ngIf="records.length === 0">
-            <td [attr.colspan]="isSuperAdmin ? 33 : 32" class="text-center text-muted py-3">
+            <td [attr.colspan]="isSuperAdmin ? 46 : 45" class="text-center text-muted py-3">
               {{ 'archive.messages.noRecords' | translate }}
             </td>
           </tr>
@@ -148,11 +244,8 @@
           {{ 'archive.pagination.prev' | translate }}
         </button>
         <span class="btn btn-sm btn-outline-secondary disabled">{{ pageNo }}</span>
-        <button
-          class="btn btn-sm btn-outline-secondary"
-          [disabled]="pageNo * pageSize >= totalRecords"
-          (click)="onPageChange(pageNo + 1)"
-        >
+        <button class="btn btn-sm btn-outline-secondary" [disabled]="pageNo * pageSize >= totalRecords"
+          (click)="onPageChange(pageNo + 1)">
           {{ 'archive.pagination.next' | translate }}
         </button>
       </div>

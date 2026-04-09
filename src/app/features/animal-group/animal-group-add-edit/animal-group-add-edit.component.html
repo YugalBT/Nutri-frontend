@@ -13,7 +13,8 @@
         <form [formGroup]="form">
           <div class="row g-3">
             <div class="col-md-4">
-              <label class="form-label" for="animalTypeId">{{'animalGroup.animalType' | translate}} <sup class="text-danger">*</sup></label>
+              <label class="form-label" for="animalTypeId">{{'animalGroup.animalType' | translate}} <sup
+                  class="text-danger">*</sup></label>
               <select class="form-select" id="animalTypeId" formControlName="animalTypeId" [disabled]="typesLoading">
                 <option [ngValue]="null">{{ 'animalGroup.selectAnimalType' | translate }}</option>
                 <option *ngFor="let t of animalTypes" [ngValue]="t.animalTypeId">{{ t.typeNameEn }}</option>
@@ -25,49 +26,65 @@
             </div>
 
             <div class="col-md-4">
-              <label class="form-label" for="animalLactationId">{{'animalGroup.lactationStage' | translate}} <sup class="text-danger">*</sup></label>
+              <label class="form-label" for="animalLactationId">{{'animalGroup.lactationStage' | translate}} <sup
+                  class="text-danger">*</sup></label>
               <select class="form-select" id="animalLactationId" formControlName="animalLactationId">
                 <option [ngValue]="null">{{ 'animalGroup.selectLactationStage' | translate }}</option>
                 <option *ngFor="let l of lactations" [value]="l.animalLactationId">{{ l.lactationNameEn }}</option>
               </select>
               <span *ngIf="lactationsLoading" class="select-spinner spinner-border spinner-border-sm"></span>
-              <div *ngIf="form.get('animalLactationId')?.touched && form.get('animalLactationId')?.invalid" class="text-danger">
+              <div *ngIf="form.get('animalLactationId')?.touched && form.get('animalLactationId')?.invalid"
+                class="text-danger">
                 {{'animalGroup.lactationStageRequired' | translate}}
               </div>
             </div>
             <div class="col-md-4">
-              <label class="form-label" for="animalLactationId">{{'animalGroup.lactationStage' | translate}} <sup class="text-danger">*</sup></label>
-              <select class="form-select" id="animalLactationId" formControlName="animalLactationId">
-                <option [ngValue]="null">{{ 'animalGroup.categoryCode' | translate }}</option>
+              <label class="form-label" for="animalCategoryCode">{{'dailyEntry.fields.categoryCode' | translate}} <sup
+                  class="text-danger">*</sup></label>
+              <select class="form-select" id="animalCategoryCode" formControlName="animalCategoryCode">
+                <option [ngValue]="null">{{ 'dailyEntry.fields.categoryCode' | translate }}</option>
                 <option *ngFor="let g of animalCategories" [value]="g">{{ g }}</option>
               </select>
             </div>
 
             <div class="col-md-4">
-              <label class="form-label">{{'animalGroup.animalGroupName' | translate}} <sup class="text-danger">*</sup></label>
+              <label class="form-label">{{'animalGroup.animalGroupName' | translate}} <sup
+                  class="text-danger">*</sup></label>
               <input type="text" class="form-control" formControlName="animalGroupNameEn"
                 placeholder="{{ 'animalGroup.animalGroupNamePlaceholder' | translate }}">
-              <div *ngIf="form.get('animalGroupNameEn')?.touched && form.get('animalGroupNameEn')?.invalid" class="text-danger">
-                <div *ngIf="form.get('animalGroupNameEn')?.errors?.['required']">{{'animalGroup.animalGroupNameRequired' | translate}}</div>
-                <div *ngIf="form.get('animalGroupNameEn')?.errors?.['pattern']">{{'validation.onlyAlphabetAndSpaces' | translate}}</div>
-                <div *ngIf="form.get('animalGroupNameEn')?.errors?.['minlength']">{{'validation.minLength' | translate}}</div>
-                <div *ngIf="form.get('animalGroupNameEn')?.errors?.['maxlength']">{{'validation.maxLength' | translate}}</div>
+              <div *ngIf="form.get('animalGroupNameEn')?.touched && form.get('animalGroupNameEn')?.invalid"
+                class="text-danger">
+                <div *ngIf="form.get('animalGroupNameEn')?.errors?.['required']">{{'animalGroup.animalGroupNameRequired'
+                  | translate}}</div>
+                <div *ngIf="form.get('animalGroupNameEn')?.errors?.['pattern']">{{'validation.onlyAlphabetAndSpaces' |
+                  translate}}</div>
+                <div *ngIf="form.get('animalGroupNameEn')?.errors?.['minlength']">{{'validation.minLength' | translate}}
+                </div>
+                <div *ngIf="form.get('animalGroupNameEn')?.errors?.['maxlength']">{{'validation.maxLength' | translate}}
+                </div>
               </div>
             </div>
 
             <div class="col-md-4">
-              <label for="numberOfAnimal" class="form-label">{{'animalGroup.noOfAnimals' | translate}} <sup class="text-danger">*</sup></label>
-              <input type="number" id="numberOfAnimal" min="0" class="form-control" formControlName="numberOfAnimal" placeholder="{{ 'animalGroup.noOfAnimalsPlaceholder' | translate }}">
-              <div *ngIf="form.get('numberOfAnimal')?.touched && form.get('numberOfAnimal')?.invalid" class="text-danger">
-                <div *ngIf="form.get('numberOfAnimal')?.errors?.['required']">{{'animalGroup.noOfAnimalsRequired' | translate}}</div>
+              <label for="numberOfAnimal" class="form-label">{{'animalGroup.noOfAnimals' | translate}} <sup
+                  class="text-danger">*</sup></label>
+              <input type="number" id="numberOfAnimal" min="0" class="form-control" formControlName="numberOfAnimal"
+                placeholder="{{ 'animalGroup.noOfAnimalsPlaceholder' | translate }}">
+              <div *ngIf="form.get('numberOfAnimal')?.touched && form.get('numberOfAnimal')?.invalid"
+                class="text-danger">
+                <div *ngIf="form.get('numberOfAnimal')?.errors?.['required']">{{'animalGroup.noOfAnimalsRequired' |
+                  translate}}</div>
               </div>
             </div>
 
             <div class="col-md-4">
-              <label for="avgMilkPerDay" class="form-label">{{'animalGroup.avgMilkPerDay' | translate}} <sup class="text-danger">*</sup></label>
-              <input type="number" id="avgMilkPerDay" min="0" class="form-control" formControlName="avgMilkPerDay" placeholder="{{ 'animalGroup.avgMilkPerDayPlaceholder' | translate }}">
+              <label for="avgMilkPerDay" class="form-label">{{'animalGroup.avgMilkPerDay' | translate}} <sup
+                  class="text-danger">*</sup></label>
+              <input type="number" id="avgMilkPerDay" min="0" class="form-control" formControlName="avgMilkPerDay"
+                placeholder="{{ 'animalGroup.avgMilkPerDayPlaceholder' | translate }}">
               <div *ngIf="form.get('avgMilkPerDay')?.touched && form.get('avgMilkPerDay')?.invalid" class="text-danger">
-                <div *ngIf="form.get('avgMilkPerDay')?.errors?.['required']">{{'animalGroup.avgMilkPerDayRequired' | translate}}</div>
+                <div *ngIf="form.get('avgMilkPerDay')?.errors?.['required']">{{'animalGroup.avgMilkPerDayRequired' |
+                  translate}}</div>
               </div>
             </div>
           </div>
