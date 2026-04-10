@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { Subscription, forkJoin, Subject } from 'rxjs';
+import { Subscription, forkJoin, Subject, merge } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { API_ENDPOINTS } from '../../core/constants/api-endpoints';
@@ -56,14 +56,13 @@ export class DailyEntryComponent implements OnInit, OnDestroy {
   ];
 
   sections: any[] = [
-  { id: 'feeding' },
-  { id: 'herdComposition' },
-  { id: 'milk' },
-  { id: 'robot' },
-  { id: 'health' },
-  { id: 'herd' },
-  { id: 'calves' }
-];
+    { id: 'feeding' },
+    { id: 'milk' },
+    { id: 'robot' },
+    { id: 'health' },
+    { id: 'herd' },
+    { id: 'calves' }
+  ];
 
 categoryMap: any = {
   VL: { en: 'Lactating Cows', it: 'Vacche in lattazione' },
@@ -119,8 +118,32 @@ categoryMap: any = {
     private translate: TranslateService,
   ) {}
 
+  t(key: string, fallback: string): string {
+    const translated = this.translate.instant(key);
+    return translated && translated !== key ? translated : fallback;
+  }
+
+  toggleManual(manualControlName: string, input?: HTMLInputElement | null): void {
+    const manualCtrl = this.form?.get(manualControlName);
+    if (!manualCtrl) {
+      return;
+    }
+
+    const next = !manualCtrl.value;
+    manualCtrl.setValue(next);
+
+    if (next) {
+      setTimeout(() => input?.focus(), 0);
+      return;
+    }
+
+    // When turning manual mode off, re-apply auto-calculated values.
+    this.recalculateDerivedFields();
+  }
+
   ngOnInit(): void {
     this.initForm();
+    this.setupDerivedFieldCalculations();
     this.isSuperAdmin = localStorage.getItem(Constants.IsSuperAdmin) === 'true';
     this.canSave = this.common.hasAnyPermission(
       [PERMISSIONS.DailyEntryAdd, PERMISSIONS.DailyEntryEdit],
@@ -351,11 +374,15 @@ loadLayout() {
   }
 
   getSelectedRationName(rationId: any): string {
+    const labelKey = 'dailyEntry.placeholders.selectRation';
+    const fallback = 'Select Ration';
+    const translated = this.translate.instant(labelKey);
+    const emptyLabel = translated && translated !== labelKey ? translated : fallback;
     if (!rationId) {
-      return 'Select Ration';
+      return emptyLabel;
     }
     const selected = this.rations.find(r => r.rationId === rationId);
-    return selected ? selected.rationName : 'Select Ration';
+    return selected ? selected.rationName : emptyLabel;
   }
 
   initForm(): void {
@@ -371,6 +398,13 @@ loadLayout() {
       firstCalving: [null],
       secondCalving: [null],
       multiparous: [null],
+      pregnantCows: [null],
+      firstCalvingPct: [null],
+      pregnantCowsPct: [null],
+      crep: [null],
+      firstCalvingPctManual: [false],
+      pregnantCowsPctManual: [false],
+      crepManual: [false],
       milkProducedKg: [null],
       milkDeliveredKg: [null],
       milkPriceEurLitre: [null],
@@ -413,7 +447,7 @@ loadLayout() {
       fa.push(this.fb.group({
         animalGroupId: [g.animalGroupId],
         animalGroupName: [g.animalGroupNameEn],
-        animalCategoryCode: [g.animalCategoryCode],
+        animalCategoryCode: [this.normalizeCategoryCode(g.animalCategoryCode)],
         rationId: [null],
         headCount: [null],
         scaricatoKg: [null],
@@ -435,6 +469,10 @@ loadLayout() {
       firstCalving: data.firstCalving,
       secondCalving: data.secondCalving,
       multiparous: data.multiparous,
+      pregnantCows: data.pregnantCows,
+      firstCalvingPct: data.firstCalvingPct,
+      pregnantCowsPct: data.pregnantCowsPct,
+      crep: data.crep,
       milkProducedKg: data.milkProducedKg,
       milkDeliveredKg: data.milkDeliveredKg,
       milkPriceEurLitre: data.milkPriceEurLitre,
@@ -474,13 +512,14 @@ loadLayout() {
           (g: any) => g.animalGroupId === ctrl.value.animalGroupId
         );
         if (match) {
+          const normalizedCategory = this.normalizeCategoryCode(match.categoryCode ?? match.animalCategoryCode);
           ctrl.patchValue({
             rationId: match.rationId,
             headCount: match.headCount,
             scaricatoKg: match.scaricatoKg,
             avanzoKg: match.avanzoKg,
             avgProductionKg: match.avgProductionKg,
-            animalCategoryCode: match.categoryCode || ctrl.value.animalCategoryCode,
+            animalCategoryCode: normalizedCategory ?? ctrl.value.animalCategoryCode,
           });
         }
       });
@@ -570,7 +609,7 @@ loadLayout() {
         scaricatoKg: g.scaricatoKg,
         avanzoKg: g.avanzoKg,
         avgProductionKg: g.avgProductionKg,
-        animalCategoryCode: g.animalCategoryCode || g.categoryCode, 
+        animalCategoryCode: this.normalizeCategoryCode(g.animalCategoryCode || g.categoryCode),
         displayOrder: index  
       })),
     };
@@ -646,6 +685,100 @@ loadLayout() {
     const m = String(parsed.getMonth() + 1).padStart(2, '0');
     const d = String(parsed.getDate()).padStart(2, '0');
     return `${y}-${m}-${d}`;
+  }
+
+  private normalizeCategoryCode(value: unknown): string | null {
+    const trimmed = String(value ?? '').trim().toUpperCase();
+    return trimmed.length ? trimmed : null;
+  }
+
+  private setupDerivedFieldCalculations(): void {
+    const controls = [
+      'gim',
+      'totalHeads',
+      'totalCapi',
+      'firstCalving',
+      'pregnantCows',
+      'firstCalvingPctManual',
+      'pregnantCowsPctManual',
+      'crepManual',
+      'firstCalvingPct',
+      'pregnantCowsPct',
+    ];
+
+    const streams = controls
+      .map((c) => this.form.get(c)?.valueChanges)
+      .filter(Boolean) as any[];
+
+    const sub = merge(...streams)
+      .pipe(debounceTime(50))
+      .subscribe(() => this.recalculateDerivedFields());
+    this.subs.push(sub);
+
+    // Initial calculation
+    this.recalculateDerivedFields();
+  }
+
+  private recalculateDerivedFields(): void {
+    if (!this.form) return;
+
+    const total = this.getTotalCowsPresent();
+    const firstCalving = this.toNumberOrNull(this.form.get('firstCalving')?.value);
+    const pregnantCows = this.toNumberOrNull(this.form.get('pregnantCows')?.value);
+    const gim = this.toNumberOrNull(this.form.get('gim')?.value);
+
+    const firstCalvingPctManual = !!this.form.get('firstCalvingPctManual')?.value;
+    const pregnantCowsPctManual = !!this.form.get('pregnantCowsPctManual')?.value;
+    const crepManual = !!this.form.get('crepManual')?.value;
+
+    const autoFirstCalvingPct =
+      total && firstCalving != null ? this.roundTo1((firstCalving / total) * 100) : null;
+    if (!firstCalvingPctManual) {
+      this.form.get('firstCalvingPct')?.setValue(autoFirstCalvingPct, { emitEvent: false });
+    }
+
+    const autoPregnantPct =
+      total && pregnantCows != null ? this.roundTo1((pregnantCows / total) * 100) : null;
+    if (!pregnantCowsPctManual) {
+      this.form.get('pregnantCowsPct')?.setValue(autoPregnantPct, { emitEvent: false });
+    }
+
+    // CREP: DIM / % pregnant cows (as requested)
+    // Uses current % value (manual or auto)
+    const pregnantPctValue = this.toNumberOrNull(this.form.get('pregnantCowsPct')?.value);
+    const autoCrep =
+      gim != null && pregnantPctValue != null && pregnantPctValue > 0
+        ? this.roundTo2(gim / pregnantPctValue)
+        : null;
+    if (!crepManual) {
+      this.form.get('crep')?.setValue(autoCrep, { emitEvent: false });
+    }
+  }
+
+  private getTotalCowsPresent(): number | null {
+    const totalHeads = this.toNumberOrNull(this.form.get('totalHeads')?.value);
+    if (totalHeads != null && totalHeads > 0) {
+      return totalHeads;
+    }
+    const totalCapi = this.toNumberOrNull(this.form.get('totalCapi')?.value);
+    if (totalCapi != null && totalCapi > 0) {
+      return totalCapi;
+    }
+    return null;
+  }
+
+  private toNumberOrNull(value: unknown): number | null {
+    if (value === null || value === undefined || value === '') return null;
+    const n = Number(value);
+    return Number.isFinite(n) ? n : null;
+  }
+
+  private roundTo1(value: number): number {
+    return Math.round(value * 10) / 10;
+  }
+
+  private roundTo2(value: number): number {
+    return Math.round(value * 100) / 100;
   }
 
   private initializeRouteSelection(): void {

@@ -45,7 +45,7 @@
               translate }}</th>
             <th *ngIf="!isSuperAdmin" class="sticky-date date-col" colspan="1">{{ 'archive.table.date' | translate }}
             </th>
-            <th colspan="10">{{ 'dashboard.herd' | translate }}</th>
+            <th colspan="11">{{ 'dashboard.herd' | translate }}</th>
             <th colspan="8">{{ 'dailyEntry.sections.calves' | translate }}</th>
             <th colspan="9">{{ 'dashboard.production' | translate }}</th>
             <th colspan="5">{{ 'dailyEntry.sections.robot' | translate }}</th>
@@ -64,6 +64,7 @@
             <th>{{ 'archive.table.animalsInLactation' | translate }}</th>
             <th>{{ 'archive.table.dryAnimals' | translate }}</th>
             <th>{{ 'archive.table.firstCalving' | translate }}</th>
+            <th>{{ t('archive.table.firstCalvingPct','% First-calving') }}</th>
             <th>{{ 'archive.table.secondCalving' | translate }}</th>
             <th>{{ 'archive.table.multiparous' | translate }}</th>
             <th>{{ 'dailyEntry.fields.categoryCode' | translate }}</th>
@@ -150,6 +151,12 @@
             <td>{{ r.animalsInLactation ?? '-' }}</td>
             <td>{{ r.dryAnimals ?? '-' }}</td>
             <td>{{ r.firstCalving ?? '-' }}</td>
+            <td>
+              <ng-container *ngIf="getFirstCalvingPercent(r) !== null; else fcPctDash">
+                {{ getFirstCalvingPercent(r) | number:'1.1-1' }}%
+              </ng-container>
+              <ng-template #fcPctDash>-</ng-template>
+            </td>
             <td>{{ r.secondCalving ?? '-' }}</td>
             <td>{{ r.multiparous ?? '-' }}</td>
             <td [title]="
@@ -229,7 +236,7 @@
 
           <!-- Empty -->
           <tr *ngIf="records.length === 0">
-            <td [attr.colspan]="isSuperAdmin ? 46 : 45" class="text-center text-muted py-3">
+            <td [attr.colspan]="isSuperAdmin ? 47 : 46" class="text-center text-muted py-3">
               {{ 'archive.messages.noRecords' | translate }}
             </td>
           </tr>

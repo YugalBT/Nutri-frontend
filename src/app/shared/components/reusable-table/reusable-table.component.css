@@ -134,10 +134,38 @@
 
 .rt-header-cell .sort-indicator {
   display: inline-block;
-  font-size: 10px;
+  font-size: 12px;
   font-weight: 600;
   color: var(--rt-primary);
   transition: var(--rt-transition);
+}
+
+.rt-sort-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  opacity: 0.45; /* always visible to hint sorting */
+  transform: translateY(-0.5px);
+  transition: var(--rt-transition);
+}
+
+.rt-header-cell.sortable:hover .rt-sort-icon {
+  opacity: 1;
+}
+
+.rt-header-cell.rt-sorted {
+  color: var(--rt-primary);
+  background: rgba(44, 162, 143, 0.10);
+}
+
+.dark-mode .rt-header-cell.rt-sorted {
+  background: rgba(44, 162, 143, 0.18);
+}
+
+.rt-header-cell.rt-sorted .rt-sort-icon {
+  opacity: 1;
 }
 
 .rt-actions-header {

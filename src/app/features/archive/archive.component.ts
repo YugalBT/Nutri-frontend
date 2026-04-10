@@ -46,6 +46,11 @@ export class ArchiveComponent implements OnInit, OnDestroy {
     private translate: TranslateService,
   ) {}
 
+  t(key: string, fallback: string): string {
+    const translated = this.translate.instant(key);
+    return translated && translated !== key ? translated : fallback;
+  }
+
   ngOnInit(): void {
     this.isSuperAdmin = localStorage.getItem(Constants.IsSuperAdmin) === 'true';
     this.canRecalculate = this.common.checkPermission(PERMISSIONS.ArchiveEdit, false);
@@ -146,6 +151,19 @@ export class ArchiveComponent implements OnInit, OnDestroy {
   onCompanyChange(): void {
     this.pageNo = 1;
     this.loadArchive();
+  }
+
+  getFirstCalvingPercent(record: any): number | null {
+    const firstCalving = Number(record?.firstCalving ?? 0);
+    const total = Number(record?.totalHeads ?? record?.totalCapi ?? 0);
+    if (!Number.isFinite(firstCalving) || !Number.isFinite(total) || total <= 0) {
+      return null;
+    }
+    const pct = (firstCalving / total) * 100;
+    if (!Number.isFinite(pct) || pct < 0) {
+      return null;
+    }
+    return pct;
   }
 
   private getMonthStart(): string {
