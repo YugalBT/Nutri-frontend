@@ -154,6 +154,11 @@ export class ArchiveComponent implements OnInit, OnDestroy {
   }
 
   getFirstCalvingPercent(record: any): number | null {
+    const existing = Number(record?.firstCalvingPct);
+    if (Number.isFinite(existing) && existing >= 0) {
+      return existing;
+    }
+
     const firstCalving = Number(record?.firstCalving ?? 0);
     const total = Number(record?.totalHeads ?? record?.totalCapi ?? 0);
     if (!Number.isFinite(firstCalving) || !Number.isFinite(total) || total <= 0) {

@@ -473,6 +473,9 @@ loadLayout() {
       firstCalvingPct: data.firstCalvingPct,
       pregnantCowsPct: data.pregnantCowsPct,
       crep: data.crep,
+      firstCalvingPctManual: data.isFirstCalvingManual ?? data.firstCalvingPctManual ?? false,
+      pregnantCowsPctManual: data.isPregnantManual ?? data.pregnantCowsPctManual ?? false,
+      crepManual: data.crepManual ?? false,
       milkProducedKg: data.milkProducedKg,
       milkDeliveredKg: data.milkDeliveredKg,
       milkPriceEurLitre: data.milkPriceEurLitre,
@@ -595,12 +598,33 @@ loadLayout() {
     this.isSaving = true;
 
     const v = this.form.value;
+    const {
+      firstCalvingPctManual,
+      pregnantCowsPctManual,
+      crepManual,
+      ...rest
+    } = v as any;
+
+    const manualFlags = {
+      // backend (System.Text.Json camelCase) expects: isFirstCalvingManual, isPregnantManual
+      isFirstCalvingManual: !!firstCalvingPctManual,
+      isPregnantManual: !!pregnantCowsPctManual,
+      // keep crep manual UI-only for now (backend may ignore)
+      crepManual: !!crepManual,
+    };
+
+    const normalizedTotals = {
+      totalHeads: rest.totalHeads ?? rest.totalCapi ?? null,
+      inLactation: rest.inLactation ?? rest.animalsInLactation ?? null,
+    };
     const payload: any = {
       dayId,
       farmId: this.farmId || '00000000-0000-0000-0000-000000000000',
       date: this.selectedDate,
       ...(this.isSuperAdmin && this.selectedCompanyId ? { tenantId: this.selectedCompanyId } : {}),
-      ...v,
+      ...rest,
+      ...normalizedTotals,
+      ...manualFlags,
       averageFeedKgPerHead: v.avgFeed,
       groupData: v.groupData.map((g: any,index: number) => ({
         animalGroupId: g.animalGroupId,
