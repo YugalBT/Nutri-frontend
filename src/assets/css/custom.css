@@ -1,12 +1,36 @@
 @import url('https://fonts.googleapis.com/css2?family=Archivo:ital,wght@0,100..900;1,100..900&display=swap');
 :root {
+    /* Primary Colors */
     --primary-color: #2CA28F;
     --primary-color-rgb: 44 162 143;
     --secondary-color: #F4F5F9;
     --app-body-bg: #F5FFFE;
-    --white:#fff;
+    
+    /* Text Colors */
+    --white: #fff;
     --font-dark: #000229;
     --font-gray: #555;
+    --text-primary: #333;
+    --text-secondary: #666;
+    --text-muted: #999;
+    
+    /* Background Colors */
+    --bg-surface-light: #f5f5f5;
+    --bg-surface-lighter: #f9f9f9;
+    --bg-light: #f8f9fa;
+    --bg-very-light: #fafbfc;
+    
+    /* Border & Neutral Colors */
+    --border-color: #F2EADE;
+    --border-gray: #e0e0e0;
+    --border-light: #DDDDDD;
+    
+    /* Status Colors */
+    --error-color: #DC2626;
+    --success-color: #059669;
+    --warning-color: #D97706;
+    
+    /* Font Sizes */
     --font-13: 13px;
     --font-14: 14px;
     --font-15: 15px;
@@ -15,28 +39,49 @@
     --font-20: 20px;
     --font-24: 24px;
     --font-30: 30px;
-    --border-color: #F2EADE;
-    --gradient-bg:linear-gradient(180deg, #C0EEFF 0%, #E2CA8F 100%);
-    --gradient-bg-blue:linear-gradient(180deg, #41D7CD 0%, #077972 100%);
+    
+    /* Font Weights */
     --font-500: 500;
     --font-600: 600;
     --font-700: 700;
+    
+    /* Gradients */
+    --gradient-bg:linear-gradient(180deg, #C0EEFF 0%, #E2CA8F 100%);
+    --gradient-bg-blue:linear-gradient(180deg, #41D7CD 0%, #077972 100%);
   }
 a{text-decoration: none;}
 
 :root.supplier-branding {
+  /* Primary Colors */
   --primary-color: #8f4a2b;
   --primary-color-rgb: 143 74 43;
   --secondary-color: #fff2e5;
   --app-body-bg: #fff8f2;
-  --border-color: #ead6c4;
-  --gradient-bg: linear-gradient(180deg, #ffd8bb 0%, #f4bf8f 100%);
-  --gradient-bg-blue: linear-gradient(180deg, #d68a5f 0%, #8f4a2b 100%);
-  --bg-header: #fff8f2;
-  --bg-surface: #fffdfb;
+  
+  /* Text Colors - Darker for brown theme */
   --text-primary: #2f2118;
   --text-secondary: #5f4a3b;
   --text-muted: #8a7567;
+  
+  /* Background Colors - Light browns */
+  --bg-surface-light: #faf7f3;
+  --bg-surface-lighter: #fbf9f7;
+  --bg-light: #f5f2ed;
+  --bg-very-light: #fffdf9;
+  
+  /* Border & Neutral Colors - Brown-tinted */
+  --border-color: #ead6c4;
+  --border-gray: #e5d8cc;
+  --border-light: #e8dfd5;
+  
+  /* Status Colors - Adjusted for brown theme */
+  --error-color: #DC2626;
+  --success-color: #a67c52;
+  --warning-color: #D97706;
+  
+  /* Gradients */
+  --gradient-bg: linear-gradient(180deg, #ffd8bb 0%, #f4bf8f 100%);
+  --gradient-bg-blue: linear-gradient(180deg, #d68a5f 0%, #8f4a2b 100%);
 }
 
 :root.supplier-branding body,
@@ -95,10 +140,9 @@ body.supplier-branding .sign_in {
 :root.supplier-branding .gradient_bg,
 body.supplier-branding .gradient_bg {
   background-image:
-    radial-gradient(circle at top right, rgba(255, 255, 255, 0.16), transparent 26%),
     linear-gradient(160deg, rgba(255, 214, 177, 0.16) 0%, rgba(143, 74, 43, 0.06) 100%),
     url('../image/login-graph.png');
-  background-position: top right, center, top center;
+  background-position: center, top center;
 }
 
 :root.supplier-branding .gradient_bg::before,
@@ -267,9 +311,9 @@ body.supplier-branding .login-right-content {
   max-width: 560px;
   padding: 34px 34px 30px;
   border-radius: 28px;
-  background: linear-gradient(180deg, rgba(56, 28, 16, 0.16) 0%, rgba(56, 28, 16, 0.28) 100%);
-  border: 1px solid rgba(255, 255, 255, 0.16);
-  box-shadow: 0 24px 54px rgba(56, 28, 16, 0.18);
+  background: linear-gradient(180deg, rgba(143, 74, 43, 0.65) 0%, rgba(143, 74, 43, 0.72) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 24px 54px rgba(143, 74, 43, 0.25);
   backdrop-filter: blur(10px);
 }
 
@@ -638,9 +682,9 @@ html.dark-mode, body.dark-mode, :root.dark-mode body {
 .dark-mode .form-select,
 .dark-mode .input-group .form-control,
 .dark-mode .sidebar,
-.dark-mode header {
+/* .dark-mode header {
   border: 1px solid rgba(255,255,255,0.06) !important;
-}
+} */
 
 /* Inputs/selects adjusted to show subtle light border */
 .dark-mode .form-control,

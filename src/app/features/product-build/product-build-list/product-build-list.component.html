@@ -4,9 +4,9 @@
   <div class="pb-list-header">
     <div class="pb-header-content">
       <div class="pb-header-title">
-        <div class="pb-header-icon">
+        <!-- <div class="pb-header-icon">
           <i class="bi bi-boxes"></i>
-        </div>
+        </div> -->
         <div>
           <h1 class="pb-page-title">
             {{ 'productBuild.heading' | translate }}
@@ -14,7 +14,7 @@
         </div>
       </div>
 
-      <button *ngIf="canAddProductBuild" class="btn pb-btn-primary" (click)="modal.openModal()" title="{{ 'productBuild.add' | translate }}">
+      <button *ngIf="canAddProductBuild" class="btn add-btn" (click)="modal.openModal()" title="{{ 'productBuild.add' | translate }}">
         <i class="bi bi-plus-lg"></i>
         <span>{{ 'productBuild.add' | translate }}</span>
       </button>

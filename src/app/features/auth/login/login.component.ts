@@ -9,6 +9,7 @@ import { LanguageList } from '../../../core/models/language-list';
 import { selectAuthLoading, selectAuthUser } from '../../../state/auth/auth.selectors';
 import * as AuthActions from '../../../state/auth/auth.actions';
 import { BrandingService } from '../../../shared/services/branding.service';
+import { TokenService } from '../../../shared/services/token.service';
 
 import { TranslatePipe } from '../../../i18n/translate.pipe';
 import { SharedModule } from '../../../shared/shared.module';
@@ -44,10 +45,16 @@ export class LoginComponent implements OnInit {
     private store: Store,
     private localizationService: LocalizationService,
     private brandingService: BrandingService,
-    private router: Router
+    private router: Router,
+    private tokenService: TokenService
   ) {
     // Initialize branding immediately (for URL-based detection)
     this.brandingService.initialize();
+    
+    // Store current login portal URL for logout redirect
+    const currentUrl = this.router.url.toLowerCase();
+    const loginPortalUrl = currentUrl.includes('/supplier/login') ? '/supplier/login' : '/login';
+    this.tokenService.setLoginPortalUrl(loginPortalUrl);
   }
 
   ngOnInit(): void {
@@ -132,7 +139,14 @@ get currentLanguageName(): string {
       return;
     }
 
-    this.store.dispatch(AuthActions.login(this.form.value));
+    // Add IsSupplierLogin flag based on current URL
+    const isSupplierLogin = this.router.url.toLowerCase().includes('/supplier/login');
+    const loginPayload = {
+      ...this.form.value,
+      IsSupplierLogin: isSupplierLogin
+    };
+
+    this.store.dispatch(AuthActions.login(loginPayload));
   }
 
   //  Toggle password visibility

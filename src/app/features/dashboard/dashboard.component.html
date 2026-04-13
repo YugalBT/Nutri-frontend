@@ -1,13 +1,14 @@
 <div class="body-content">
-
-  <div class="welcome-dashboard" *ngIf="user as u">
+<section *ngIf="!isSupplier" >
+  <div class="welcome-dashboard"  *ngIf="user as u">
     <h3 class="mb-2">
       <b>
         {{ "dashboard.welcome" | translate }}
-        <span class="link-text">{{ u.companyName }}</span>
+        <span class="link-text"> {{ u.companyName }}</span>
       </b>
     </h3>
   </div>
+  </section>
 <ng-container *ngIf="!isSupplier">
   <div class="d-flex align-items-center justify-content-between py-3">
     <h4 class="border-start border-4 ps-3">

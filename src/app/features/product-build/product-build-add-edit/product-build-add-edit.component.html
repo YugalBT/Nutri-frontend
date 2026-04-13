@@ -124,8 +124,8 @@
                       <i class="bi bi-check-circle"></i>
                       Status
                     </label>
-                    <input type="text" class="pb-form-input" 
-                      [value]="displayIsActive ? 'Active' : 'Inactive'" readonly disabled>
+                    <input type="text" class="pb-form-input" [value]="displayIsActive ? 'Active' : 'Inactive'" readonly
+                      disabled>
                   </div>
                 </div>
 
@@ -136,8 +136,8 @@
                       <i class="bi bi-currency-dollar"></i>
                       Previous Total Cost
                     </label>
-                    <input type="text" class="pb-form-input" 
-                      [value]="totalCostFromDb | number:'1.2-2'" readonly disabled>
+                    <input type="text" class="pb-form-input" [value]="totalCostFromDb | number:'1.2-2'" readonly
+                      disabled>
                   </div>
                 </div>
               </div>
@@ -194,13 +194,8 @@
                       </td>
                       <td class="pb-col-percentage">
                         <div class="pb-cell-input">
-                          <input type="number" 
-                            formControlName="percentage" 
-                            (input)="calculate(item)"
-                            class="pb-percentage-input" 
-                            placeholder="0" 
-                            min="0" 
-                            max="100">
+                          <input type="number" formControlName="percentage" (input)="calculate(item)"
+                            class="pb-percentage-input" placeholder="0" min="0" max="100">
                           <span class="pb-input-unit">%</span>
                           <span class="pb-display-value" *ngIf="isEdit && item.get('percentage')?.value > 0">
                             ({{ item.get('percentage')?.value }})
@@ -221,67 +216,65 @@
 
           <!-- SUMMARY SECTION -->
           <!-- SUMMARY SECTION -->
-<div class="pb-form-section pb-summary-section">
-  <div class="pb-summary-grid">
+          <div class="pb-form-section pb-summary-section">
+            <div class="pb-summary-grid">
 
-    <!-- TOTAL % -->
-    <div class="pb-summary-card pb-summary-percentage"
-         [class.pb-invalid]="getTotalPercentage() !== 100">
+              <!-- TOTAL % -->
+              <div class="pb-summary-card pb-summary-percentage" [class.pb-invalid]="getTotalPercentage() !== 100">
 
-      <div class="pb-summary-label">
-        <i class="bi bi-percent"></i>
-        {{ 'productBuild.totalPercentage' | translate }}
-      </div>
+                <div class="pb-summary-label">
+                  <i class="bi bi-percent"></i>
+                  {{ 'productBuild.totalPercentage' | translate }}
+                </div>
 
-      <div class="pb-summary-value"
-           [class.pb-error]="getTotalPercentage() !== 100">
-        {{ getTotalPercentage() }}%
-      </div>
+                <div class="pb-summary-value" [class.pb-error]="getTotalPercentage() !== 100">
+                  {{ getTotalPercentage() }}%
+                </div>
 
-      <div class="pb-summary-status" *ngIf="getTotalPercentage() !== 100">
-        <i class="bi bi-exclamation-circle"></i>
-        {{ 'productBuild.mustBe100' | translate }}
-      </div>
-    </div>
+                <div class="pb-summary-status" *ngIf="getTotalPercentage() !== 100">
+                  <i class="bi bi-exclamation-circle"></i>
+                  {{ 'productBuild.mustBe100' | translate }}
+                </div>
+              </div>
 
-    <!-- BASE COST (CALCULATED) -->
-    <div class="pb-summary-card pb-summary-price">
-      <div class="pb-summary-label">
-        <i class="bi bi-currency-dollar"></i>
-        {{ 'productBuild.totalPrice' | translate }}
-      </div>
+              <!-- BASE COST (CALCULATED) -->
+              <div class="pb-summary-card pb-summary-price">
+                <div class="pb-summary-label">
+                  <i class="bi bi-currency-dollar"></i>
+                  {{ 'productBuild.totalPrice' | translate }}
+                </div>
 
-      <div class="pb-summary-value">
-        {{ getTotalAmount() | number:'1.2-2' }}
-      </div>
-    </div>
+                <div class="pb-summary-value">
+                  {{ getTotalAmount() | number:'1.2-2' }}
+                </div>
+              </div>
 
-    <!-- FINAL COST (CALCULATED) -->
-    <div class="pb-summary-card pb-summary-price">
-      <div class="pb-summary-label">
-        <i class="bi bi-calculator"></i>
-        {{ 'productBuild.finalCost' | translate }}
-      </div>
+              <!-- FINAL COST (CALCULATED) -->
+              <div class="pb-summary-card pb-summary-price">
+                <div class="pb-summary-label">
+                  <i class="bi bi-calculator"></i>
+                  {{ 'productBuild.finalCost' | translate }}
+                </div>
 
-      <div class="pb-summary-value text-success fw-bold">
-        {{ finalCost | number:'1.2-2' }}
-      </div>
-    </div>
+                <div class="pb-summary-value text-success fw-bold">
+                  {{ finalCost | number:'1.2-2' }}
+                </div>
+              </div>
 
-    <!-- DATABASE TOTAL COST (EDIT MODE ONLY) -->
-    <div class="pb-summary-card pb-summary-price" *ngIf="isEdit && totalCostFromDb > 0">
-      <div class="pb-summary-label">
-        <i class="bi bi-database"></i>
-        Database Total Cost
-      </div>
+              <!-- DATABASE TOTAL COST (EDIT MODE ONLY) -->
+              <div class="pb-summary-card pb-summary-price" *ngIf="isEdit && totalCostFromDb > 0">
+                <div class="pb-summary-label">
+                  <i class="bi bi-database"></i>
+                  Database Total Cost
+                </div>
 
-      <div class="pb-summary-value text-info">
-        {{ totalCostFromDb | number:'1.2-2' }}
-      </div>
-    </div>
+                <div class="pb-summary-value text-info">
+                  {{ totalCostFromDb | number:'1.2-2' }}
+                </div>
+              </div>
 
-  </div>
-</div>
+            </div>
+          </div>
         </form>
       </div>
 
@@ -291,7 +284,8 @@
           <i class="bi bi-x-circle"></i>
           {{ 'common.cancel' | translate }}
         </button>
-        <button *ngIf="canSave" type="button" class="pb-btn-primary" [disabled]="getTotalPercentage() !== 100" (click)="save()">
+        <button *ngIf="canSave" type="button" class="pb-btn-primary" [disabled]="getTotalPercentage() !== 100"
+          (click)="save()">
           <i class="bi" [ngClass]="isEdit ? 'bi-pencil-fill' : 'bi-plus-circle-fill'"></i>
           {{ (isEdit ? 'common.update' : 'common.save') | translate }}
         </button>

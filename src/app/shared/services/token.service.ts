@@ -99,4 +99,16 @@ isSupplier(): boolean {
   return !!this.getSupplierData();
 }
 
+setLoginPortalUrl(url: string) {
+  localStorage.setItem('LOGIN_PORTAL_URL', url);
+}
+
+getLoginPortalUrl(): string {
+  return localStorage.getItem('LOGIN_PORTAL_URL') || '/login';
+}
+
+removeLoginPortalUrl() {
+  localStorage.removeItem('LOGIN_PORTAL_URL');
+}
+
 }

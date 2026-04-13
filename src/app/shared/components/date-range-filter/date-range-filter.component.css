@@ -16,13 +16,13 @@
   --drf-radius-sm: 6px;
   --drf-transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
-  --drf-text-dark: #000229;
+  /* --drf-text-dark: #000229;
   --drf-text-gray: #666;
   --drf-border: #E0E0E0;
   --drf-bg-light: #F8FAFB;
   --drf-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
   --drf-transition: all 0.2s ease;
-}
+} */
 
 .drf-container {
   background: transparent;
