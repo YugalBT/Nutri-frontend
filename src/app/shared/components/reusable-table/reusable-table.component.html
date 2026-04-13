@@ -7,12 +7,26 @@
           <tr class="rt-header-row">
             <th *ngFor="let col of columns; let i = index" class="rt-header-cell"
               [class.sortable]="isSortable(columnFields?.[i] || col.toLowerCase())"
+              [class.rt-sorted]="currentSortColumn === (columnFields?.[i] || col.toLowerCase())"
+              [attr.aria-sort]="
+                !isSortable(columnFields?.[i] || col.toLowerCase())
+                  ? null
+                  : (currentSortColumn === (columnFields?.[i] || col.toLowerCase())
+                    ? (currentSortDirection === 'asc' ? 'ascending' : 'descending')
+                    : 'none')
+              "
               (click)="onSort(columnFields?.[i] || col.toLowerCase())">
               <span class="header-content">
                 {{ col }}
-                <span *ngIf="isSortable(columnFields?.[i] || col.toLowerCase())" 
-                  class="sort-indicator">
-                  {{ getSortIndicator(columnFields?.[i] || col.toLowerCase()) }}
+                <span *ngIf="isSortable(columnFields?.[i] || col.toLowerCase())" class="sort-indicator" aria-hidden="true">
+                  <i
+                    class="rt-sort-icon bi"
+                    [ngClass]="{
+                      'bi-arrow-down-up': currentSortColumn !== (columnFields?.[i] || col.toLowerCase()),
+                      'bi-arrow-up': currentSortColumn === (columnFields?.[i] || col.toLowerCase()) && currentSortDirection === 'asc',
+                      'bi-arrow-down': currentSortColumn === (columnFields?.[i] || col.toLowerCase()) && currentSortDirection === 'desc'
+                    }"
+                  ></i>
                 </span>
               </span>
             </th>

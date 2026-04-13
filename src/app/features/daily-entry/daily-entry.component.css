@@ -200,6 +200,21 @@
   display: none;
 }
 
+.filter-select {
+  flex: 1;
+  border: none;
+  outline: none;
+  background: transparent;
+  font-size: 12px;
+  padding: 0.2rem 0;
+  color: #000229;
+  cursor: pointer;
+}
+
+.filter-select option {
+  color: #000229;
+}
+
 /* Sortable Headers */
 .table-card {
   background: white;
@@ -299,6 +314,64 @@
   margin-bottom: 0.3rem;
   font-size: 13px;
   display: block;
+}
+
+.field-label-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.readonly-field {
+  background-color: #F5FFFE;
+  border-color: #E8F5F3;
+}
+
+.kpi-card {
+  background: linear-gradient(135deg, rgba(44, 162, 143, 0.06) 0%, rgba(44, 162, 143, 0.02) 100%);
+  border: 1px solid #E8F5F3;
+  border-radius: 8px;
+  padding: 0.75rem;
+}
+
+.kpi-actions {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.kpi-edit-btn {
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
+  border: 1px solid #DDDDDD;
+  background: #ffffff;
+  color: #555;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.kpi-edit-btn:hover {
+  border-color: #2CA28F;
+  color: #2CA28F;
+  box-shadow: 0 2px 6px rgba(44, 162, 143, 0.15);
+}
+
+.kpi-edit-btn.active {
+  border-color: #2CA28F;
+  color: #2CA28F;
+  background: rgba(44, 162, 143, 0.08);
+}
+
+.kpi-card .input-group-text {
+  background: #ffffff;
+  border-color: #DDDDDD;
+  color: #555;
+  font-size: 12px;
 }
 
 .form-group-item input[type='text'],
