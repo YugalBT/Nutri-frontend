@@ -3,7 +3,7 @@
    ======================================== */
 
 :host {
-  --pb-primary: #2CA28F;
+  --pb-primary: var(--primary-color, #2CA28F);
   --pb-secondary: #F4F5F9;
   --pb-text-dark: #000229;
   --pb-text-gray: #555;

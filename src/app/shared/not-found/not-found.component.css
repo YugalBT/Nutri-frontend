@@ -39,5 +39,5 @@
 }
 
 .not-found .btn:hover {
-  background: #2CA28F;
+  background: var(--primary-color, #2CA28F);
 }

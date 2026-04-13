@@ -1,6 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Archivo:ital,wght@0,100..900;1,100..900&display=swap');
 :root {
     --primary-color: #2CA28F;
+    --primary-color-rgb: 44 162 143;
     --secondary-color: #F4F5F9;
     --app-body-bg: #F5FFFE;
     --white:#fff;
@@ -25,6 +26,7 @@ a{text-decoration: none;}
 
 :root.supplier-branding {
   --primary-color: #8f4a2b;
+  --primary-color-rgb: 143 74 43;
   --secondary-color: #fff2e5;
   --app-body-bg: #fff8f2;
   --border-color: #ead6c4;

@@ -14,6 +14,7 @@ import { ROUTE_CONST } from '../../../core/constants/route.constants';
 import { TranslatePipe } from '../../../i18n/translate.pipe';
 import { updateFirstLogin } from '../../../state/auth/auth.actions';
 import { Store } from '@ngrx/store';
+import { BrandingService } from '../../../shared/services/branding.service';
 
 @Component({
   selector: 'app-reset-password',
@@ -30,15 +31,30 @@ export class ResetPasswordComponent implements OnInit {
   isSubmitted = false;
   isLoading = false;
 
+  /** Supplier branding */
+  isSupplier = false;
+  rightHeadingKey = 'right.heading';
+  rightDescriptionKey = 'right.description';
+  rightPoint1Key = 'right.point1';
+  rightPoint2Key = 'right.point2';
+  rightPoint3Key = 'right.point3';
+
   constructor(
     private fb: FormBuilder,
     private router: Router,
     private toast: ToastrService,
     private passwordService: ChangePasswordService,
     private store: Store,
-  ) {}
+    private brandingService: BrandingService,
+  ) {
+    // Initialize branding immediately (for URL-based detection)
+    this.brandingService.initialize();
+  }
 
   ngOnInit(): void {
+    // Check if URL contains /supplier
+    this.checkIfSupplier();
+
     this.resetForm = this.fb.group(
       {
         passWord: [
@@ -57,6 +73,24 @@ export class ResetPasswordComponent implements OnInit {
       },
       { validators: this.passwordMatchValidator.bind(this) },
     );
+  }
+
+  /** Check if current URL is supplier */
+  private checkIfSupplier(): void {
+    const currentUrl = this.router.url.toLowerCase();
+    if (currentUrl.includes('/supplier/')) {
+      this.switchToSupplierKeys();
+    }
+  }
+
+  /** Switch to supplier translation keys */
+  private switchToSupplierKeys(): void {
+    this.isSupplier = true;
+    this.rightHeadingKey = 'supplier.right.heading';
+    this.rightDescriptionKey = 'supplier.right.description';
+    this.rightPoint1Key = 'supplier.right.point1';
+    this.rightPoint2Key = 'supplier.right.point2';
+    this.rightPoint3Key = 'supplier.right.point3';
   }
 
   passwordMatchValidator(form: FormGroup) {

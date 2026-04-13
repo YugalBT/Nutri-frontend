@@ -25,6 +25,14 @@ export class ForgotPasswordComponent implements OnInit {
   isResetMode = false;
   isSubmitted = false;
 
+  /** Supplier branding */
+  isSupplier = false;
+  rightHeadingKey = 'right.heading';
+  rightDescriptionKey = 'right.description';
+  rightPoint1Key = 'right.point1';
+  rightPoint2Key = 'right.point2';
+  rightPoint3Key = 'right.point3';
+
   constructor(
     private fb: FormBuilder,
     private forgotService: ForgotPasswordService,
@@ -32,15 +40,39 @@ export class ForgotPasswordComponent implements OnInit {
     private toast: ToastService,
     private route: ActivatedRoute,
     private brandingService: BrandingService,
-  ) {}
+  ) {
+    // Initialize branding immediately (for URL-based detection)
+    this.brandingService.initialize();
+  }
 
   ngOnInit(): void {
+
+    // Check if URL contains /supplier
+    this.checkIfSupplier();
 
     this.route.queryParamMap.subscribe(params => {
       this.token = params.get('token');
       this.isResetMode = !!this.token;
     });
      this.initForms();
+  }
+
+  /** Check if current URL is supplier */
+  private checkIfSupplier(): void {
+    const currentUrl = this.router.url.toLowerCase();
+    if (currentUrl.includes('/supplier/')) {
+      this.switchToSupplierKeys();
+    }
+  }
+
+  /** Switch to supplier translation keys */
+  private switchToSupplierKeys(): void {
+    this.isSupplier = true;
+    this.rightHeadingKey = 'supplier.right.heading';
+    this.rightDescriptionKey = 'supplier.right.description';
+    this.rightPoint1Key = 'supplier.right.point1';
+    this.rightPoint2Key = 'supplier.right.point2';
+    this.rightPoint3Key = 'supplier.right.point3';
   }
 
  initForms() {

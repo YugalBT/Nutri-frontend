@@ -4,7 +4,10 @@
 
 /* Variables */
 :host {
-  --pb-primary: #2CA28F;
+  --pb-primary: var(--primary-color, #2CA28F);
+  --pb-primary-light-4: rgba(var(--primary-color-rgb, 44 162 143), 0.04);
+  --pb-primary-light-8: rgba(var(--primary-color-rgb, 44 162 143), 0.08);
+  --pb-primary-light-2: rgba(var(--primary-color-rgb, 44 162 143), 0.02);
   --pb-secondary: #F4F5F9;
   --pb-text-dark: #000229;
   --pb-text-gray: #555;
@@ -190,7 +193,7 @@
   color: var(--pb-text-gray);
   font-weight: 500;
   padding: var(--pb-spacing-sm) var(--pb-spacing-lg);
-  background: rgba(44, 162, 143, 0.08);
+  background: rgba(var(--primary-color-rgb, 44 162 143), 0.08);
   border-radius: var(--pb-border-radius);
 }
 
@@ -249,11 +252,11 @@
 }
 
 .pb-table-wrapper .table tbody tr:hover {
-  background: linear-gradient(135deg, rgba(44, 162, 143, 0.04) 0%, rgba(44, 162, 143, 0.02) 100%);
+  background: linear-gradient(135deg, var(--pb-primary-light-4) 0%, var(--pb-primary-light-2) 100%);
 }
 
 .dark-mode .pb-table-wrapper .table tbody tr:hover {
-  background: rgba(44, 162, 143, 0.08);
+  background: rgba(var(--primary-color-rgb, 44 162 143), 0.08);
 }
 
 /* RESPONSIVE */

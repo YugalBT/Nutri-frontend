@@ -4,9 +4,10 @@
 
 /* ===== VARIABLES & DESIGN TOKENS ===== */
 :host {
-  --ml-primary: #2CA28F;
-  --ml-primary-dark: #1f8876;
-  --ml-primary-light: rgba(44, 162, 143, 0.08);
+  --ml-primary: var(--primary-color, #2CA28F);
+  --ml-primary-dark: var(--primary-color-dark, #1f8876);
+  --ml-primary-light: rgba(var(--primary-color-rgb, 44 162 143), 0.08);
+  --ml-primary-light-12: rgba(var(--primary-color-rgb, 44 162 143), 0.12);
   --ml-bg: #ffffff;
   --ml-surface: #f9fafb;
   --ml-border: #e5e7eb;
@@ -31,7 +32,7 @@
   --ml-text-primary: #e5e7eb;
   --ml-text-secondary: #9ca3af;
   --ml-text-muted: #6b7280;
-  --ml-primary-light: rgba(44, 162, 143, 0.12);
+  --ml-primary-light: var(--ml-primary-light-12);
 }
 
 /* ===== CONTAINER ===== */

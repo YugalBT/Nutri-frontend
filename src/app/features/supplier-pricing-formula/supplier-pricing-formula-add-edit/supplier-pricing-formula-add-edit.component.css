@@ -16,7 +16,7 @@
 .token {
   padding: 6px 10px;
   border-radius: 4px;
-  background: #2CA28F;
+  background: var(--primary-color, #2CA28F);
   color: #fff;
   font-size: 13px;
   cursor: pointer;

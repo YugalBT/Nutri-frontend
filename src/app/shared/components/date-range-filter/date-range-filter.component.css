@@ -1,6 +1,21 @@
 /* Date Range Filter Component Styles */
 :host {
-  --drf-primary: #2CA28F;
+  --drf-primary: var(--primary-color, #2CA28F);
+  --drf-primary-light-3: rgba(var(--primary-color-rgb, 44 162 143), 0.03);
+  --drf-primary-light-8: rgba(var(--primary-color-rgb, 44 162 143), 0.08);
+  --drf-primary-light-15: rgba(var(--primary-color-rgb, 44 162 143), 0.15);
+  --drf-primary-light-30: rgba(var(--primary-color-rgb, 44 162 143), 0.30);
+  --drf-bg: #ffffff;
+  --drf-surface: #f9fafb;
+  --drf-border: #e5e7eb;
+  --drf-text-primary: #111827;
+  --drf-text-secondary: #6b7280;
+  --drf-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --drf-shadow-md: 0 4px 6px rgba(0, 0, 0, 0.07);
+  --drf-shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.08);
+  --drf-radius-sm: 6px;
+  --drf-transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
   --drf-text-dark: #000229;
   --drf-text-gray: #666;
   --drf-border: #E0E0E0;
@@ -86,7 +101,7 @@
 .drf-input:focus {
   outline: none;
   border-color: var(--drf-primary);
-  box-shadow: 0 0 0 2px rgba(44, 162, 143, 0.08);
+  box-shadow: 0 0 0 2px var(--drf-primary-light-8);
   background: white;
 }
 
@@ -140,7 +155,7 @@
 
 .drf-btn-primary:hover:not(:disabled) {
   transform: translateY(-1px);
-  box-shadow: 0 2px 8px rgba(44, 162, 143, 0.3);
+  box-shadow: 0 2px 8px var(--drf-primary-light-30);
 }
 
 .drf-btn-primary:disabled {
@@ -178,6 +193,6 @@
 }
 
 :host(.dark-mode) .drf-btn-secondary:hover {
-  background: rgba(44, 162, 143, 0.15);
+  background: var(--drf-primary-light-15);
 }
 

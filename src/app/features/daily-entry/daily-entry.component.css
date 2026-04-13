@@ -51,8 +51,8 @@
 
 .form-control:focus,
 .form-select:focus {
-  border-color: #2CA28F;
-  box-shadow: 0 0 0 2px rgba(44, 162, 143, 0.1);
+  border-color: var(--primary-color, #2CA28F);
+  box-shadow: 0 0 0 2px rgba(var(--primary-color-rgb, 44 162 143), 0.1);
   outline: none;
 }
 
@@ -73,7 +73,7 @@
 }
 
 .add-btn {
-  background-color: #2CA28F;
+  background-color: var(--primary-color, #2CA28F);
   color: white;
   box-shadow: 0px 4px 6px 0px #83838C05;
 }
@@ -106,7 +106,7 @@
 
 /* Table Card Header with Filter Indicator */
 .table-card-header {
-  background-color: #2CA28F;
+  background-color: var(--primary-color, #2CA28F);
   color: white;
   padding: 0.75rem 1rem;
   font-size: 14px;
@@ -173,8 +173,8 @@
 }
 
 .filter-input-group:focus-within {
-  border-color: #2CA28F;
-  box-shadow: 0 0 0 3px rgba(44, 162, 143, 0.1);
+  border-color: var(--primary-color, #2CA28F);
+  box-shadow: 0 0 0 3px rgba(var(--primary-color-rgb, 44 162 143), 0.1);
 }
 
 .filter-input-group i {
@@ -418,8 +418,8 @@
 }
 
 .searchable-dropdown-header:hover {
-  border-color: #2CA28F;
-  box-shadow: 0 0 0 2px rgba(44, 162, 143, 0.1);
+  border-color: var(--primary-color, #2CA28F);
+  box-shadow: 0 0 0 2px rgba(var(--primary-color-rgb, 44 162 143), 0.1);
 }
 
 .searchable-dropdown-header i {
@@ -489,8 +489,8 @@
 }
 
 .dropdown-search-input:focus {
-  border-color: #2CA28F;
-  box-shadow: 0 0 0 2px rgba(44, 162, 143, 0.1);
+  border-color: var(--primary-color, #2CA28F);
+  box-shadow: 0 0 0 2px rgba(var(--primary-color-rgb, 44 162 143), 0.1);
 }
 
 .dropdown-options {
@@ -509,14 +509,14 @@
 
 .dropdown-option:hover {
   background-color: #E8F5F3;
-  color: #2CA28F;
+  color: var(--primary-color, #2CA28F);
 }
 
 .dropdown-option.active {
   background-color: #D0EFE9;
-  color: #2CA28F;
+  color: var(--primary-color, #2CA28F);
   font-weight: 500;
-  border-left: 3px solid #2CA28F;
+  border-left: 3px solid var(--primary-color, #2CA28F);
   padding-left: 0.45rem;
 }
 
@@ -539,7 +539,7 @@
 }
 
 .dropdown-options::-webkit-scrollbar-thumb:hover {
-  background: #2CA28F;
+  background: var(--primary-color, #2CA28F);
 }
 
 /* Loading State */
@@ -571,11 +571,11 @@
 
 .sortable-header:hover {
   background-color: #E8F5F3;
-  color: #2CA28F;
+  color: var(--primary-color, #2CA28F);
 }
 
 .sortable-header.active {
-  color: #2CA28F;
+  color: var(--primary-color, #2CA28F);
   font-weight: 700;
   background-color: #E8F5F3;
 }
@@ -585,7 +585,7 @@
   margin-left: 4px;
   font-size: 11px;
   font-weight: 600;
-  color: #2CA28F;
+  color: var(--primary-color, #2CA28F);
   vertical-align: middle;
 }
 
@@ -609,9 +609,9 @@
 }
 
 .pagination-controls .btn:hover:not(:disabled) {
-  background-color: #2CA28F;
+  background-color: var(--primary-color, #2CA28F);
   color: white;
-  border-color: #2CA28F;
+  border-color: var(--primary-color, #2CA28F);
 }
 
 .pagination-controls .btn:disabled {
@@ -713,7 +713,7 @@
   width: 8px;
   height: 8px;
   border-radius: 50%;
-  background-color: #2CA28F;
+  background-color: var(--primary-color, #2CA28F);
   animation: dotBounce 1.4s infinite;
 }
 
@@ -777,7 +777,7 @@
 }
 
 .progress-bar-animated {
-  background: linear-gradient(90deg, #2CA28F, #1a7469);
+  background: linear-gradient(90deg, var(--primary-color, #2CA28F), #1a7469);
   animation: progressSlide 2s ease-in-out infinite;
 }
 
@@ -856,16 +856,16 @@
 .save-button {
   position: relative;
   overflow: hidden;
-  background-color: #2CA28F;
+  background-color: var(--primary-color, #2CA28F);
   color: white;
   transition: all 0.3s ease;
-  border: 2px solid #2CA28F;
+  border: 2px solid var(--primary-color, #2CA28F);
 }
 
 .save-button:hover:not(:disabled) {
   background-color: #238974;
   border-color: #238974;
-  box-shadow: 0 8px 16px rgba(44, 162, 143, 0.3);
+  box-shadow: 0 8px 16px rgba(var(--primary-color-rgb, 44 162 143), 0.3);
   transform: translateY(-2px);
 }
 

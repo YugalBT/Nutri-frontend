@@ -4,9 +4,11 @@
 
 /* ===== VARIABLES & DESIGN TOKENS ===== */
 :host {
-  --sp-primary: #2CA28F;
-  --sp-primary-dark: #1f8876;
-  --sp-primary-light: rgba(44, 162, 143, 0.08);
+  --sp-primary: var(--primary-color, #2CA28F);
+  --sp-primary-dark: var(--primary-color-dark, #1f8876);
+  --sp-primary-light: rgba(var(--primary-color-rgb, 44 162 143), 0.08);
+  --sp-primary-light-12: rgba(var(--primary-color-rgb, 44 162 143), 0.12);
+  --sp-primary-light-10: rgba(var(--primary-color-rgb, 44 162 143), 0.10);
   --sp-bg: #ffffff;
   --sp-surface: #f9fafb;
   --sp-border: #e5e7eb;
@@ -33,7 +35,7 @@
   --sp-text-primary: #e5e7eb;
   --sp-text-secondary: #9ca3af;
   --sp-text-muted: #6b7280;
-  --sp-primary-light: rgba(44, 162, 143, 0.12);
+  --sp-primary-light: var(--sp-primary-light-12);
 }
 
 /* ===== CONTAINER ===== */
@@ -176,7 +178,7 @@
 .sp-select:focus {
   outline: none;
   border-color: var(--sp-primary);
-  box-shadow: 0 0 0 3px rgba(44, 162, 143, 0.1);
+  box-shadow: 0 0 0 3px rgba(var(--primary-color-rgb, 44 162 143), 0.1);
 }
 
 /* ===== FILTER SECTION ===== */
@@ -348,7 +350,7 @@
 
 .sp-input-group:focus-within {
   border-color: var(--sp-primary);
-  box-shadow: 0 0 0 3px rgba(44, 162, 143, 0.1);
+  box-shadow: 0 0 0 3px rgba(var(--primary-color-rgb, 44 162 143), 0.1);
 }
 
 .sp-input-group-readonly {
@@ -431,7 +433,7 @@
 .sp-input-month:focus {
   outline: none;
   border-color: var(--sp-primary);
-  box-shadow: 0 0 0 3px rgba(44, 162, 143, 0.1);
+  box-shadow: 0 0 0 3px rgba(var(--primary-color-rgb, 44 162 143), 0.1);
 }
 
 .sp-select-status {
@@ -465,7 +467,7 @@
 .sp-select-status:focus {
   outline: none;
   border-color: var(--sp-primary);
-  box-shadow: 0 0 0 3px rgba(44, 162, 143, 0.1);
+  box-shadow: 0 0 0 3px rgba(var(--primary-color-rgb, 44 162 143), 0.1);
 }
 
 /* ===== EMPTY STATE ===== */
