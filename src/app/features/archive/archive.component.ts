@@ -153,6 +153,23 @@ export class ArchiveComponent implements OnInit, OnDestroy {
     this.loadArchive();
   }
 
+  getPregnantPercent(record: any): number | null {
+  const existing = Number(record?.pregnantCowsPct);
+
+  if (Number.isFinite(existing) && existing >= 0) {
+    return existing;
+  }
+
+  const cows = Number(record?.pregnantCows ?? 0);
+  const total = Number(record?.totalHeads ?? 0);
+
+  if (!Number.isFinite(cows) || !Number.isFinite(total) || total <= 0) {
+    return null;
+  }
+
+  return (cows / total) * 100;
+}
+
   getFirstCalvingPercent(record: any): number | null {
     const existing = Number(record?.firstCalvingPct);
     if (Number.isFinite(existing) && existing >= 0) {

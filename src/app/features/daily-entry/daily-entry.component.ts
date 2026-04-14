@@ -18,7 +18,7 @@ import { CdkDragDrop, DragDropModule, moveItemInArray } from '@angular/cdk/drag-
 @Component({
   selector: 'app-daily-entry',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, FormsModule, TranslatePipe, MatPaginatorModule,DragDropModule],
+  imports: [CommonModule, ReactiveFormsModule, FormsModule, TranslatePipe, MatPaginatorModule, DragDropModule],
   templateUrl: './daily-entry.component.html',
   styleUrl: './daily-entry.component.css',
 })
@@ -61,28 +61,29 @@ export class DailyEntryComponent implements OnInit, OnDestroy {
     { id: 'robot' },
     { id: 'health' },
     { id: 'herd' },
-    { id: 'calves' }
+    { id: 'calves' },
+    { id: 'fertility' }
   ];
 
-categoryMap: any = {
-  VL: { en: 'Lactating Cows', it: 'Vacche in lattazione' },
-  AS: { en: 'Dry Cows', it: 'Vacche asciutte' },
-  MA: { en: 'Heifers', it: 'Manze' },
-  MZ: { en: 'Young Cattle', it: 'Manzette' },
-  VI: { en: 'Calves', it: 'Vitelli' }
-};
-  
+  categoryMap: any = {
+    VL: { en: 'Lactating Cows', it: 'Vacche in lattazione' },
+    AS: { en: 'Dry Cows', it: 'Vacche asciutte' },
+    MA: { en: 'Heifers', it: 'Manze' },
+    MZ: { en: 'Young Cattle', it: 'Manzette' },
+    VI: { en: 'Calves', it: 'Vitelli' }
+  };
+
   // Column Filters
   columnFilters: { [key: string]: string } = {
     animalGroupNameEn: '',
     animalCategoryCode: '',
   };
-  
+
   // Ration search filter
   rationFilter = '';
   filteredRations: any[] = [];
   openRationDropdownIndex: number | null = null;
-  
+
   // Debounce filter subject
   private filterSubject = new Subject<{ column: string; value: string }>();
 
@@ -116,7 +117,7 @@ categoryMap: any = {
     private toast: ToastService,
     private common: CommonService,
     private translate: TranslateService,
-  ) {}
+  ) { }
 
   t(key: string, fallback: string): string {
     const translated = this.translate.instant(key);
@@ -153,7 +154,7 @@ categoryMap: any = {
       this.isInitializing = false;
       return;
     }
-    
+
     // Setup filter debouncing
     const filterSub = this.filterSubject
       .pipe(debounceTime(500))
@@ -163,7 +164,7 @@ categoryMap: any = {
         this.loadDependenciesAndBuild(this.dayId || null);
       });
     this.subs.push(filterSub);
-    
+
     this.selectedDate = this.getTodayString();
     this.initializeRouteSelection();
     if (this.isSuperAdmin) {
@@ -172,40 +173,51 @@ categoryMap: any = {
       this.loadDaysAndResolve();
     }
 
-     this.loadLayout();
+    this.loadLayout();
+    this.groupData.valueChanges.subscribe(() => {
+      this.calculateInLactation();
+      this.calculateTotalHeads();
+    });
+    this.setupPregnantCalculation();
+
+    this.form.get('dryAnimals')?.valueChanges.subscribe(() => {
+      this.calculateTotalHeads();
+    });
+    this.setupFertilityCalculation();
+    this.setupFertilityValidation();
   }
- 
+
 
   drop(event: CdkDragDrop<any[]>) {
     moveItemInArray(this.sections, event.previousIndex, event.currentIndex);
     this.saveLayout();
   }
 
- saveLayout() {
-  const layout = this.sections.map(s => s.id);
+  saveLayout() {
+    const layout = this.sections.map(s => s.id);
 
-  this.common.saveUserLayout({
-    pageName: 'DailyEntry',
-    layoutJson: JSON.stringify(layout)
-  }).subscribe();
-}
+    this.common.saveUserLayout({
+      pageName: 'DailyEntry',
+      layoutJson: JSON.stringify(layout)
+    }).subscribe();
+  }
 
-loadLayout() {
-  this.common.getUserLayout('DailyEntry')
-    .subscribe((res: any) => {
+  loadLayout() {
+    this.common.getUserLayout('DailyEntry')
+      .subscribe((res: any) => {
 
-      if (res?.data) {
-        const saved = JSON.parse(res.data);
+        if (res?.data) {
+          const saved = JSON.parse(res.data);
 
-        this.sections.sort((a, b) => {
-          const indexA = saved.indexOf(a.id);
-          const indexB = saved.indexOf(b.id);
+          this.sections.sort((a, b) => {
+            const indexA = saved.indexOf(a.id);
+            const indexB = saved.indexOf(b.id);
 
-          return (indexA === -1 ? 999 : indexA) - (indexB === -1 ? 999 : indexB);
-        });
-      }
-    });
-}
+            return (indexA === -1 ? 999 : indexA) - (indexB === -1 ? 999 : indexB);
+          });
+        }
+      });
+  }
 
 
 
@@ -325,6 +337,10 @@ loadLayout() {
             this.selectedDate = existingDate;
           }
           this.patchForm(res.existing.data);
+          setTimeout(() => {
+            this.calculateInLactation();
+            this.calculateTotalHeads();
+          }, 0);
         }
         this.isLoading = false;
         this.isSaving = false;
@@ -436,6 +452,15 @@ loadLayout() {
       abortions: [0],
       calvingsCount: [0],
       healthNotes: [null],
+      cowDiagnoses: [null],
+      positiveCows: [null],
+      heiferDiagnoses: [null],
+      positiveHeifers: [null],
+      conceptionAtCalving: [null],
+      calvingInterval: [null],
+      ageAtCalving: [null],
+      cowDiagnosesPct: [null],
+      heiferDiagnosesPct: [null],
     });
   }
 
@@ -507,6 +532,13 @@ loadLayout() {
       abortions: data.abortions ?? 0,
       calvingsCount: data.calvingsCount ?? 0,
       healthNotes: data.healthNotes,
+      cowDiagnoses: data.cowDiagnoses,
+      positiveCows: data.positiveCows,
+      heiferDiagnoses: data.heiferDiagnoses,
+      positiveHeifers: data.positiveHeifers,
+      conceptionAtCalving: data.conceptionAtCalving,
+      calvingInterval: data.calvingInterval,
+      ageAtCalving: data.ageAtCalving,
     });
 
     if (data.groupData?.length) {
@@ -548,7 +580,7 @@ loadLayout() {
     const payload: any = { date: this.selectedDate, isClosed: false, farmId: null };
     if (this.isSuperAdmin && this.selectedCompanyId) {
       payload['companyId'] = this.selectedCompanyId;
-      
+
     }
     const sub = this.http.post<any>(API_ENDPOINTS.DAY.CREATE, payload).subscribe({
       next: (res) => {
@@ -567,6 +599,129 @@ loadLayout() {
     });
 
     this.subs.push(sub);
+  }
+
+  private setupFertilityCalculation(): void {
+    const cowDiag = this.form.get('cowDiagnoses');
+    const posCows = this.form.get('positiveCows');
+
+    const heiferDiag = this.form.get('heiferDiagnoses');
+    const posHeifers = this.form.get('positiveHeifers');
+
+    // cows % calculation
+    cowDiag?.valueChanges.subscribe(() => {
+      this.calculateFertility();
+    });
+
+    posCows?.valueChanges.subscribe(() => {
+      this.calculateFertility();
+    });
+
+    heiferDiag?.valueChanges.subscribe(() => {
+      this.calculateFertility();
+    });
+
+
+    posHeifers?.valueChanges.subscribe(() => {
+      this.calculateFertility();
+    });
+    
+  }
+
+  private setupFertilityValidation(): void {
+  const posCows = this.form.get('positiveCows');
+  const cowDiag = this.form.get('cowDiagnoses');
+
+  const posHeifers = this.form.get('positiveHeifers');
+  const heiferDiag = this.form.get('heiferDiagnoses');
+
+  posCows?.valueChanges.subscribe(val => {
+    if (val > (cowDiag?.value || 0)) {
+      posCows.setErrors({ invalid: true });
+    } else {
+      posCows.setErrors(null);
+    }
+  });
+
+  posHeifers?.valueChanges.subscribe(val => {
+    if (val > (heiferDiag?.value || 0)) {
+      posHeifers.setErrors({ invalid: true });
+    } else {
+      posHeifers.setErrors(null);
+    }
+  });
+}
+private calculateFertility(): void {
+  const cowDiag = this.form.get('cowDiagnoses')?.value || 0;
+  const posCows = this.form.get('positiveCows')?.value || 0;
+
+  const heiferDiag = this.form.get('heiferDiagnoses')?.value || 0;
+  const posHeifers = this.form.get('positiveHeifers')?.value || 0;
+
+  const cowPct = cowDiag > 0 ? (posCows / cowDiag) * 100 : 0;
+  const heiferPct = heiferDiag > 0 ? (posHeifers / heiferDiag) * 100 : 0;
+
+  this.form.get('cowDiagnosesPct')?.setValue(+cowPct.toFixed(2), { emitEvent: false });
+  this.form.get('heiferDiagnosesPct')?.setValue(+heiferPct.toFixed(2), { emitEvent: false });
+}
+
+
+
+
+
+  private setupPregnantCalculation(): void {
+    const cowsCtrl = this.form.get('pregnantCows');
+    const pctCtrl = this.form.get('pregnantCowsPct');
+    const totalCtrl = this.form.get('totalHeads');
+
+    // cows → %
+    cowsCtrl?.valueChanges.subscribe(val => {
+      if (this.form.get('pregnantCowsPctManual')?.value) return;
+
+      const total = totalCtrl?.value || 0;
+      if (total > 0) {
+        pctCtrl?.setValue(+((val / total) * 100).toFixed(2), { emitEvent: false });
+      }
+    });
+
+    // % → cows
+    pctCtrl?.valueChanges.subscribe(val => {
+      if (!this.form.get('pregnantCowsPctManual')?.value) return;
+
+      const total = totalCtrl?.value || 0;
+      if (total > 0) {
+        cowsCtrl?.setValue(Math.round((val * total) / 100), { emitEvent: false });
+      }
+    });
+
+    // totalHeads change → recalc
+    totalCtrl?.valueChanges.subscribe(() => {
+      const total = totalCtrl.value || 0;
+      const cows = cowsCtrl?.value || 0;
+      const pct = pctCtrl?.value || 0;
+
+      if (!this.form.get('pregnantCowsPctManual')?.value && total > 0) {
+        pctCtrl?.setValue(+((cows / total) * 100).toFixed(2), { emitEvent: false });
+      }
+
+      if (this.form.get('pregnantCowsPctManual')?.value && total > 0) {
+        cowsCtrl?.setValue(Math.round((pct * total) / 100), { emitEvent: false });
+      }
+    });
+  }
+
+  private calculateInLactation(): void {
+    const totalVL = this.groupData.value
+      .filter((g: any) => g.animalCategoryCode === 'VL')
+      .reduce((sum: number, g: any) => sum + (g.headCount || 0), 0);
+
+    this.form.get('inLactation')?.setValue(totalVL, { emitEvent: false });
+  }
+  private calculateTotalHeads(): void {
+    const inLactation = this.form.get('inLactation')?.value || 0;
+    const dry = this.form.get('dryAnimals')?.value || 0;
+
+    this.form.get('totalHeads')?.setValue(inLactation + dry, { emitEvent: false });
   }
 
   private refreshDayIdForSelectedDateAndSave(): void {
@@ -626,7 +781,7 @@ loadLayout() {
       ...normalizedTotals,
       ...manualFlags,
       averageFeedKgPerHead: v.avgFeed,
-      groupData: v.groupData.map((g: any,index: number) => ({
+      groupData: v.groupData.map((g: any, index: number) => ({
         animalGroupId: g.animalGroupId,
         rationId: g.rationId || null,
         headCount: g.headCount,
@@ -634,7 +789,7 @@ loadLayout() {
         avanzoKg: g.avanzoKg,
         avgProductionKg: g.avgProductionKg,
         animalCategoryCode: this.normalizeCategoryCode(g.animalCategoryCode || g.categoryCode),
-        displayOrder: index  
+        displayOrder: index
       })),
     };
 
