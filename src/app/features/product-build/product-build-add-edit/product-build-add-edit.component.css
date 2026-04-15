@@ -4,11 +4,16 @@
    ======================================== */
 
 /* MODAL CONTAINER */
-.pb-modal ::ng-deep .modal-dialog {
+/* .pb-modal ::ng-deep .modal-dialog {
   max-width: 800px;
   width: 90%;
+} */
+.pb-modal ::ng-deep .modal-dialog {
+  max-width: 100% !important;
+  width: 100% !important;
+  margin: 0;
+  height: 100vh;
 }
-
 /* MODAL CONTENT */
 .pb-modal-content {
   border: none;
@@ -479,7 +484,8 @@
 /* MODAL CONTENT */
 .pb-modal-content {
   border: none;
-  border-radius: 8px;
+  height: 100vh;
+  border-radius: 0;
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
 }
 
@@ -544,7 +550,7 @@
 /* MODAL BODY */
 .pb-modal-body {
   padding: 20px;
-  max-height: 70vh;
+  max-height: calc(100vh - 140px); /* header + footer adjust */
   overflow-y: auto;
 }
 
@@ -1018,6 +1024,8 @@
   align-items: center;
   justify-content: space-between;
   gap: var(--pb-spacing-xl);
+  background: linear-gradient(135deg, #b65f34, #8c3f1f);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
 }
 
 .pb-modal-title-group {
@@ -1117,7 +1125,10 @@
 /* FORM SECTIONS */
 .pb-form-section {
   margin-bottom: var(--pb-spacing-2xl);
-  animation: fadeInUp 0.4s ease-out;
+  animation: fadeInUp 0.4s ease-out; background: #ffffff;
+  padding: 16px;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
 }
 
 .pb-form-section:last-child {

@@ -14,7 +14,7 @@
         </div>
       </div>
 
-      <button *ngIf="canAddProductBuild" class="btn add-btn" (click)="modal.openModal()" title="{{ 'productBuild.add' | translate }}">
+      <button *ngIf="canAddProductBuild" class="btn add-btn" (click)="onAddClick()" title="{{ 'productBuild.add' | translate }}">
         <i class="bi bi-plus-lg"></i>
         <span>{{ 'productBuild.add' | translate }}</span>
       </button>
@@ -71,12 +71,10 @@
           (viewRow)="onView($event)"
           (deleteRow)="onDelete($event)"
           [showView]="true"
-          (editRow)="modal.openModal(true, $event)">
+          (editRow)="onEditClick($event)">
         </app-reusable-table>
       </div>
     </div>
   </div>
-
-  <app-product-build-add-edit #modal></app-product-build-add-edit>
 
 </div>

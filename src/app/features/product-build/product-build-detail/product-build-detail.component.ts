@@ -5,11 +5,12 @@ import { TokenService } from '../../../shared/services/token.service';
 import { ToastService } from '../../../shared/services/toast.service';
 import { CommonModule } from '@angular/common';
 import { Subscription } from 'rxjs';
+import { TranslatePipe } from '../../../i18n/translate.pipe';
 
 @Component({
   selector: 'app-product-build-detail',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule,TranslatePipe],
   templateUrl: './product-build-detail.component.html',
   styleUrls: ['./product-build-detail.component.css']
 })

@@ -1,7 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { Component, ViewChild, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ReusableTableComponent } from '../../../shared/components/reusable-table/reusable-table.component';
-import { ProductBuildAddEditComponent } from '../product-build-add-edit/product-build-add-edit.component';
 import { GlobalSearchComponent } from '../../../shared/components/global-search/global-search.component';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
@@ -19,7 +18,6 @@ import { TranslatePipe } from '../../../i18n/translate.pipe';
   imports: [
     CommonModule,
     ReusableTableComponent,
-    ProductBuildAddEditComponent,
     GlobalSearchComponent,
     TranslatePipe
   ],
@@ -27,8 +25,6 @@ import { TranslatePipe } from '../../../i18n/translate.pipe';
   styleUrls: ['./product-build-list.component.css']
 })
 export class ProductBuildListComponent implements OnInit, OnDestroy {
-
-  @ViewChild('modal') modal!: ProductBuildAddEditComponent;
 
   columns: string[] = [];
   columnFields: string[] = [
@@ -206,6 +202,26 @@ export class ProductBuildListComponent implements OnInit, OnDestroy {
 
       this.subs.push(sub);
     });
+  }
+
+  onAddClick(): void {
+    if (!this.commonService.checkPermission(PERMISSIONS.ProductBuildAdd, false)) {
+      this.toast.error('No permission');
+      return;
+    }
+    this.router.navigate(['/productbuild/add']);
+  }
+
+  onEditClick(row: any): void {
+    if (!this.commonService.checkPermission(PERMISSIONS.ProductBuildEdit, false)) {
+      this.toast.error('No permission');
+      return;
+    }
+    if (!row?.productBuildId) {
+      this.toast.error("Invalid Id");
+      return;
+    }
+    this.router.navigate(['/productbuild', row.productBuildId, 'edit']);
   }
 
   onView(row: any): void {

@@ -660,6 +660,20 @@ export const routes: Routes = [
               ),
           },
           {
+            path: 'add',
+            loadComponent: () =>
+              import('./features/product-build/product-build-form-page/product-build-form-page.component').then(
+                (m) => m.ProductBuildFormPageComponent,
+              ),
+          },
+          {
+            path: ':id/edit',
+            loadComponent: () =>
+              import('./features/product-build/product-build-form-page/product-build-form-page.component').then(
+                (m) => m.ProductBuildFormPageComponent,
+              ),
+          },
+          {
             path: ':id/detail',
             loadComponent: () =>
               import('./features/product-build/product-build-detail/product-build-detail.component').then(
