@@ -3,23 +3,77 @@
   height: 320px;
 }
 
-.overview-card {
-  border: 1px solid #e5e7eb;
-  border-radius: 12px;
-  padding: 14px;
-  background: #fff;
+.dashboard-card,
+.overview-card,
+.gauge-card,
+.dashboard-chart-card,
+.dashboard-summary-card {
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.06);
 }
 
-.overview-card span {
-  color: #6b7280;
+.dashboard-card {
+  background: linear-gradient(180deg, #ffffff 0%, #fbfdff 100%);
+  padding: 18px;
+  border-radius: 18px;
+  height: 100%;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.dashboard-card:hover,
+.overview-card:hover,
+.gauge-card:hover,
+.dashboard-chart-card:hover,
+.dashboard-summary-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 34px rgba(15, 23, 42, 0.1);
+}
+
+.card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.dashboard-card span,
+.overview-card span,
+.metric-label {
   font-size: 13px;
+  font-weight: 600;
+  color: #667085;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+.dashboard-card h3 {
+  font-size: 20px;
+  font-weight: 700;
+  margin: 0;
+  color: #101828;
+}
+
+.overview-card {
+  border-radius: 18px;
+  padding: 16px;
+  background: #fff;
+  height: 100%;
 }
 
 .overview-card h4,
 .overview-card h5 {
   margin: 6px 0 0;
+  color: #101828;
+  font-weight: 700;
 }
-/* ===== Gauge Dashboard Section ===== */
+
+.overview-card p {
+  margin-bottom: 8px;
+  color: #475467;
+}
 
 .dashboard-gauges {
   margin-top: 20px;
@@ -27,18 +81,11 @@
 
 .gauge-card {
   background: #ffffff;
-  border-radius: 10px;
+  border-radius: 18px;
   padding: 15px;
   text-align: center;
   height: 240px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
-}
-
-.gauge-title {
-  font-size: 15px;
-  font-weight: 600;
-  color: #374151;
-  margin-bottom: 8px;
+  overflow: hidden;
 }
 
 .gauge-box {
@@ -46,13 +93,297 @@
   height: 200px;
 }
 
-/* spacing between gauges */
 .dashboard-gauges .col-md-3 {
   margin-bottom: 15px;
 }
 
-/* responsive for tablets */
+.performance-bar {
+  height: 18px;
+  border-radius: 999px;
+  background: linear-gradient(
+    90deg,
+    #d92d20 0%,
+    #f79009 14%,
+    #fdbc17 28%,
+    #12b76a 50%,
+    #fdbc17 72%,
+    #f79009 86%,
+    #d92d20 100%
+  );
+  position: relative;
+  box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.25);
+}
+
+.performance-scale {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  margin-bottom: 8px;
+  color: #667085;
+}
+
+.cow-indicator {
+  position: absolute;
+  top: -18px;
+  transform: translateX(-50%);
+  transition: left 0.3s ease;
+}
+
+.cow-indicator-dot {
+  display: inline-block;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #101828;
+  border: 3px solid #fff;
+  box-shadow: 0 4px 12px rgba(16, 24, 40, 0.25);
+}
+
+.dea-value {
+  text-align: center;
+  margin-top: 10px;
+  font-weight: 700;
+  color: #101828;
+}
+
+.superadmin-dashboard {
+  padding: 6px 0 0;
+  background: #f3fbfb;
+}
+
+.superadmin-titlebar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 12px 20px 10px;
+  margin-bottom: 8px;
+  background: #fff;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+}
+
+.superadmin-title-copy h2 {
+  margin: 0;
+  font-size: 30px;
+  line-height: 1.08;
+  font-weight: 800;
+  color: #101828;
+}
+
+.superadmin-title-copy h2 span {
+  color: #2b9e9a;
+}
+
+.superadmin-title-copy p {
+  margin: 2px 0 0;
+  color: #475467;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.superadmin-title-brand {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.brand-logo-preview {
+  width: 142px;
+  height: 72px;
+  object-fit: contain;
+}
+
+.superadmin-legacy-metrics {
+  margin-bottom: 16px;
+}
+
+.super-metric-card {
+  min-height: 111px;
+  border-radius: 22px;
+  padding: 18px 20px 16px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  background: #fff;
+  border-color: rgba(15, 23, 42, 0.08);
+  box-shadow: 0 10px 22px rgba(15, 23, 42, 0.04);
+}
+
+.super-metric-card .card-top {
+  margin-bottom: 18px;
+}
+
+.super-metric-card h3 {
+  margin: 0;
+  font-size: 25px;
+  line-height: 1;
+  font-weight: 800;
+  color: #101828;
+}
+
+.super-metric-card .card-top span {
+  color: #475467;
+  font-size: 17px;
+  font-weight: 700;
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+.tone-soft-peach {
+  background: #f3dccd;
+}
+
+.tone-soft-sky {
+  background: #abd7ef;
+}
+
+.tone-soft-mint {
+  background: #c6ebb7;
+}
+
+.ppt-dashboard-panel {
+  margin: 6px 0 14px;
+}
+
+.ppt-overview-title {
+  font-size: 12px;
+  font-weight: 700;
+  color: #1f2937;
+  margin: 0 0 4px 2px;
+}
+
+.ppt-strip {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0;
+}
+
+.ppt-strip-card {
+  min-height: 116px;
+  padding: 10px 12px 12px;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  box-shadow: none;
+}
+
+.ppt-card-title {
+  margin: 0 0 6px;
+  font-size: 18px;
+  line-height: 1;
+  font-weight: 700;
+  color: #101828;
+}
+
+.ppt-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  font-size: 14px;
+  line-height: 1.35;
+  color: #101828;
+  margin-top: 1px;
+}
+
+.ppt-row span {
+  min-width: 0;
+  word-break: break-word;
+}
+
+.ppt-row strong {
+  white-space: nowrap;
+  font-weight: 800;
+}
+
+.tone-feed {
+  background: #c6eeb4;
+}
+
+.tone-herd {
+  background: #f4dfcf;
+}
+
+.tone-production {
+  background: #9fd4ef;
+}
+
+.tone-fertility {
+  background: #dc96d9;
+}
+
+.superadmin-chart-stack {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+}
+
+.dashboard-chart-card,
+.dashboard-summary-card {
+  background: #fff;
+  border-radius: 0;
+  overflow: hidden;
+  border: none;
+  box-shadow: none;
+}
+
+.dashboard-chart-head {
+  padding: 14px 14px 8px;
+}
+
+.dashboard-chart-head h3 {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 700;
+  color: #101828;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  text-align: center;
+}
+
+.dashboard-chart-body {
+  padding: 0 12px 12px;
+}
+
+.dashboard-chart-box {
+  width: 100%;
+  height: 300px;
+}
+
+.production-box {
+  height: 240px;
+}
+
+.dashboard-summary-card {
+  margin-top: 8px;
+}
+
+.dashboard-table thead th {
+  background: #f8fafc;
+  font-size: 13px;
+  color: #475467;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.dashboard-table tbody td {
+  font-size: 14px;
+}
+
+@media (max-width: 1199.98px) {
+  .superadmin-titlebar {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .ppt-strip {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
 @media (max-width: 992px) {
+  .chart-box {
+    height: 280px;
+  }
 
   .gauge-card {
     height: 220px;
@@ -62,11 +393,19 @@
     height: 180px;
   }
 
+  .dashboard-chart-box {
+    height: 250px;
+  }
+
+  .production-box {
+    height: 210px;
+  }
 }
 
-/* responsive for mobile */
-
 @media (max-width: 576px) {
+  .chart-box {
+    height: 240px;
+  }
 
   .gauge-card {
     height: auto;
@@ -77,179 +416,19 @@
     height: 160px;
   }
 
-}
-
-@media (max-width: 992px) {
-  .chart-box {
-    height: 280px;
+  .superadmin-titlebar {
+    padding: 16px;
   }
-}
 
-@media (max-width: 576px) {
-  .chart-box {
-    height: 240px;
+  .ppt-strip {
+    grid-template-columns: 1fr;
   }
-}
 
+  .dashboard-chart-box {
+    height: 230px;
+  }
 
-
-.performance-bar{
-height:18px;
-border-radius:10px;
-background:linear-gradient(
-to right,
-red,
-orange,
-yellow,
-green,
-yellow,
-orange,
-red
-);
-position:relative;
-}
-
-.performance-scale{
-display:flex;
-justify-content:space-between;
-font-size:12px;
-margin-bottom:5px;
-}
-
-.cow-indicator{
-position:absolute;
-top:-20px;
-transform: translateX(-50%);
-font-size:22px;
-transition:left .3s ease;
-}
-
-.dea-value{
-text-align:center;
-margin-top:10px;
-font-weight:600;
-}
-
-/* card css */
-
-.dashboard-card{
-  background:#fff;
-  padding:18px;
-  border-radius:10px;
-  box-shadow:0 2px 6px rgba(0,0,0,0.06);
-  height:100%;
-}
-
-.card-top{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  margin-bottom:10px;
-}
-
-.dashboard-card span{
-  font-size:14px;
-  color:#6b7280;
-}
-
-.dashboard-card h3{
-  font-size:26px;
-  font-weight:600;
-  margin:0;
-}
-
-.icon-box{
-  width:40px;
-  height:40px;
-  border-radius:10px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-}
-
-/* colors */
-
-.icon-box.blue{
-  background:#dbeafe;
-  color:#2563eb;
-}
-
-.icon-box.green{
-  background:#dcfce7;
-  color:#16a34a;
-}
-
-.icon-box.orange{
-  background:#fef3c7;
-  color:#d97706;
-}
-
-.icon-box.purple{
-  background:#ede9fe;
-  color:#7c3aed;
-}
-
-/* Company Level Dashboard Data */
-
-.dashboard-title{
-  font-weight:600;
-}
-
-.year-select{
-  width:120px;
-}
-
-.dashboard-card{
-  background:#fff;
-  padding:18px;
-  border-radius:10px;
-  box-shadow:0 2px 6px rgba(0,0,0,0.06);
-  height:100%;
-}
-
-.card-top{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  margin-bottom:10px;
-}
-
-.dashboard-card span{
-  font-size:14px;
-  color:#6b7280;
-}
-
-.dashboard-card h3{
-  font-size:26px;
-  font-weight:600;
-  margin:0;
-}
-
-.icon-box{
-  width:40px;
-  height:40px;
-  border-radius:10px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-}
-
-.icon-box.blue{
-  background:#dbeafe;
-  color:#2563eb;
-}
-
-.icon-box.orange{
-  background:#fef3c7;
-  color:#d97706;
-}
-
-.icon-box.green{
-  background:#dcfce7;
-  color:#16a34a;
-}
-
-.icon-box.purple{
-  background:#ede9fe;
-  color:#7c3aed;
+  .production-box {
+    height: 190px;
+  }
 }

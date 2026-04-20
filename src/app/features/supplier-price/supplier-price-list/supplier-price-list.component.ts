@@ -23,7 +23,7 @@ export class SupplierPriceListComponent implements OnInit, OnDestroy {
   materials: any[] = [];
   suppliers: any[] = [];
   selectedSupplierId: string | null = null;
-  selectedMonth: string | null = null;
+  //selectedMonth: string | null = null;
   filterStartDate: string | null = null;
   filterEndDate: string | null = null;
   private subs: Subscription[] = [];
@@ -45,7 +45,7 @@ export class SupplierPriceListComponent implements OnInit, OnDestroy {
     if (this.isSupplier) {
       this.supplierData = this.tokenservice.getSupplierData();
       this.selectedSupplierId = this.supplierData?.supplierId;
-      
+
       if (this.selectedSupplierId) {
         this.onSupplierChange();
       }
@@ -98,12 +98,11 @@ export class SupplierPriceListComponent implements OnInit, OnDestroy {
             materialName: m.materialName,
             materialCode: m.materialCode,
             price: m.price ?? 0,
-            discountPercent: m.discountPercent ?? 0,
+            logisticsCost: m.logisticsCost ?? 0,
             deliveredPrice: m.deliveredPrice ?? 0,
             supplierStatus: this.mapStatusToNumber(m.supplierStatus),
-            priceMonth: m.priceMonth
-              ? this.convertToMonthFormat(m.priceMonth)
-              : '',
+            startDate: m.startDate ?? '',
+            endDate: m.endDate ?? '',
             isChanged: false
 
           }))
@@ -140,9 +139,9 @@ export class SupplierPriceListComponent implements OnInit, OnDestroy {
   calculateDeliveredPrice(row: any) {
 
     const price = Number(row.price) || 0;
-    const discount = Number(row.discountPercent) || 0;
-    const discountValue = (price * discount) / 100;
-    row.deliveredPrice = price - discountValue;
+    const logistics = Number(row.logisticsCost) || 0;
+
+    row.deliveredPrice = price + logistics;
 
   }
 
@@ -157,16 +156,30 @@ export class SupplierPriceListComponent implements OnInit, OnDestroy {
       this.toast.error('Supplier is required');
       return;
     }
+    for (let row of rows) {
+      if (!row.startDate || !row.endDate) {
+        this.toast.error("Start Date and End Date are required");
+        return;
+      }
+
+      if (new Date(row.startDate) > new Date(row.endDate)) {
+        this.toast.error("Start Date cannot be greater than End Date");
+        return;
+      }
+    }
 
     const formattedPayload = {
       supplierId: this.selectedSupplierId,
       prices: rows.map(row => ({
         materialId: row.materialId,
-        priceMonth: new Date(row.priceMonth + '-01').toISOString(),
+        // priceMonth: new Date(row.priceMonth + '-01').toISOString(),
         price: Number(row.price),
-        discountPercent: Number(row.discountPercent),
+        //  discountPercent: Number(row.discountPercent),
         deliveredPrice: Number(row.deliveredPrice),
-        supplierStatus: row.supplierStatus
+        supplierStatus: row.supplierStatus,
+        startDate: row.startDate ? new Date(row.startDate).toISOString() : null,
+        endDate: row.endDate ? new Date(row.endDate).toISOString() : null,
+        logisticsCost: Number(row.logisticsCost),
       }))
     };
 
@@ -193,53 +206,53 @@ export class SupplierPriceListComponent implements OnInit, OnDestroy {
     this.subs.push(sub);
   }
 
-clearAll(): void {
+  clearAll(): void {
 
-  if (this.isSupplier) {
-    this.selectedSupplierId = this.supplierData?.supplierId;
-    this.onSupplierChange();
-  } else {
-    this.selectedSupplierId = null;
-    this.materials = [];
-  }
-}
-
-onDateFilterChange(filter: DateRangeFilter): void {
-  this.filterStartDate = filter.startDate;
-  this.filterEndDate = filter.endDate;
-  this.applyDateFilter();
-}
-
-onDateFilterApply(filter: DateRangeFilter): void {
-  this.filterStartDate = filter.startDate;
-  this.filterEndDate = filter.endDate;
-  this.applyDateFilter();
-}
-
-private applyDateFilter(): void {
-  if (!this.filterStartDate || !this.filterEndDate) {
-    this.onSupplierChange();
-    return;
+    if (this.isSupplier) {
+      this.selectedSupplierId = this.supplierData?.supplierId;
+      this.onSupplierChange();
+    } else {
+      this.selectedSupplierId = null;
+      this.materials = [];
+    }
   }
 
-  const startDate = new Date(this.filterStartDate);
-  const endDate = new Date(this.filterEndDate);
-
-  const filtered = this.materials.filter((m) => {
-    if (!m.priceMonth) return false;
-    const materialDate = new Date(m.priceMonth + '-01');
-    return materialDate >= startDate && materialDate <= endDate;
-  });
-
-  this.materials = filtered;
-}
-
-  private convertToMonthFormat(dateString: string): string {
-    const date = new Date(dateString);
-    const year = date.getFullYear();
-    const month = (date.getMonth() + 1).toString().padStart(2, '0');
-    return `${year}-${month}`;
+  onDateFilterChange(filter: DateRangeFilter): void {
+    this.filterStartDate = filter.startDate;
+    this.filterEndDate = filter.endDate;
+    this.applyDateFilter();
   }
+
+  onDateFilterApply(filter: DateRangeFilter): void {
+    this.filterStartDate = filter.startDate;
+    this.filterEndDate = filter.endDate;
+    this.applyDateFilter();
+  }
+
+  private applyDateFilter(): void {
+    if (!this.filterStartDate || !this.filterEndDate) {
+      this.onSupplierChange();
+      return;
+    }
+
+    const startDate = new Date(this.filterStartDate);
+    const endDate = new Date(this.filterEndDate);
+
+    const filtered = this.materials.filter((m) => {
+      const materialStart = new Date(m.startDate);
+      const materialEnd = new Date(m.endDate);
+      return materialStart >= startDate && materialEnd <= endDate;
+    });
+
+    this.materials = filtered;
+  }
+
+  // private convertToMonthFormat(dateString: string): string {
+  //   const date = new Date(dateString);
+  //   const year = date.getFullYear();
+  //   const month = (date.getMonth() + 1).toString().padStart(2, '0');
+  //   return `${year}-${month}`;
+  // }
   private mapStatusToNumber(status: string | number): number {
 
     if (typeof status === 'number') {

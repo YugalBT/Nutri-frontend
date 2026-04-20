@@ -8,7 +8,7 @@ import { FormsModule } from '@angular/forms';
 import { NgxEchartsModule } from 'ngx-echarts';
 import type { EChartsOption } from 'echarts';
 import { TranslatePipe } from '../../i18n/translate.pipe';
-import { TranslateService } from '../../i18n/translate.service'; // ✅ added
+import { TranslateService } from '../../i18n/translate.service';
 
 import {
   AggregatedAnalyticsData,
@@ -38,7 +38,7 @@ export class DashboardComponent implements OnInit {
 
   user$: Observable<User | null>;
   user: User | null = null;
-  isLoading = false;
+  isLoading = true;
 
   dashboardData: DashboardData = {
     totalCompanies: 0,
@@ -59,6 +59,7 @@ export class DashboardComponent implements OnInit {
   companyTrendChart: EChartsOption = {};
   adminTrendChart: EChartsOption = {};
   comparisonChart: EChartsOption = {};
+  productionChart: EChartsOption = {};
 
   deaGauge!: EChartsOption;
   milkGauge!: EChartsOption;
@@ -91,7 +92,7 @@ export class DashboardComponent implements OnInit {
 
   get isAdmin(): boolean {
     const role = (this.user?.roleType || '').toUpperCase();
-    return role === 'ADMIN' && this.user?.isSuperAdmin === true;
+    return this.user?.isSuperAdmin === true || ['SUPERADMIN', 'ADMIN', 'COLLABORATOR'].includes(role);
   }
 
   private get currentCompanyId(): string | null {
@@ -275,24 +276,164 @@ export class DashboardComponent implements OnInit {
         const comparison = this.aggregatedAnalytics?.companyComparison || [];
 
         this.comparisonChart = {
-          tooltip: { trigger: 'axis' },
+          color: ['#1d6b8f', '#f28c38'],
+          tooltip: {
+            trigger: 'axis',
+            backgroundColor: 'rgba(255, 255, 255, 0.98)',
+            borderColor: 'rgba(15, 23, 42, 0.12)',
+            borderWidth: 1,
+            textStyle: { color: '#101828' },
+            axisPointer: { type: 'shadow' },
+          },
+          grid: {
+            left: 42,
+            right: 18,
+            top: 30,
+            bottom: 84,
+            containLabel: false,
+          },
           legend: {
+            top: 0,
+            itemWidth: 14,
+            itemHeight: 10,
+            textStyle: { color: '#475467' },
             data: [
-              this.t('dashboard.iofc'),
               this.t('dashboard.deaMilk'),
-              this.t('dashboard.cost')
+              this.t('dashboard.cost'),
             ]
           },
           xAxis: {
             type: 'category',
             data: comparison.map((c) => c.companyName),
-            axisLabel: { interval: 0, rotate: 20 },
+            axisLabel: {
+              interval: 0,
+              rotate: 42,
+              color: '#475467',
+              fontSize: 10,
+              margin: 16,
+            },
+            axisLine: { lineStyle: { color: '#d0d5dd' } },
+            axisTick: { alignWithLabel: true },
           },
-          yAxis: { type: 'value' },
+          yAxis: {
+            type: 'value',
+            min: 0,
+            splitNumber: 5,
+            axisLabel: {
+              color: '#475467',
+              fontSize: 11,
+              margin: 8,
+              formatter: (value: number) => `${Math.round(value)}`,
+            },
+            splitLine: { lineStyle: { color: '#d9e3ea' } },
+            axisLine: { lineStyle: { color: '#d0d5dd' } },
+          },
           series: [
-            { name: this.t('dashboard.iofc'), type: 'bar', data: comparison.map((c) => c.iofc) },
-            { name: this.t('dashboard.deaMilk'), type: 'bar', data: comparison.map((c) => c.deaMilk) },
-            { name: this.t('dashboard.cost'), type: 'bar', data: comparison.map((c) => c.cost) },
+            {
+              name: this.t('dashboard.deaMilk'),
+              type: 'bar',
+              data: comparison.map((c) => c.deaMilk),
+              barWidth: 18,
+              itemStyle: {
+                borderRadius: [4, 4, 0, 0],
+                color: '#1d6b8f',
+              },
+            },
+            {
+              name: this.t('dashboard.cost'),
+              type: 'bar',
+              data: comparison.map((c) => c.cost),
+              barWidth: 18,
+              itemStyle: {
+                borderRadius: [4, 4, 0, 0],
+                color: '#f28c38',
+              },
+            },
+          ],
+        };
+
+        this.productionChart = {
+          color: ['#2aa39a'],
+          tooltip: {
+            trigger: 'axis',
+            formatter: (params: any) => {
+              const points = Array.isArray(params) ? params : [params];
+              const header = points[0]?.axisValueLabel || points[0]?.name || '';
+              const lines = points
+                .map((p) => {
+                  const rawValue = Number(p.value ?? 0);
+                  const value = Number.isFinite(rawValue) ? rawValue : 0;
+                  return `${p.marker}${p.seriesName}: <b>${value.toFixed(1).replace(/\.0$/, '')}</b>`;
+                })
+                .join('<br/>');
+              return `${header}<br/>${lines}`;
+            },
+            backgroundColor: 'rgba(255, 255, 255, 0.98)',
+            borderColor: 'rgba(15, 23, 42, 0.12)',
+            borderWidth: 1,
+            textStyle: { color: '#101828' },
+            axisPointer: { type: 'shadow' },
+          },
+          grid: {
+            left: 42,
+            right: 18,
+            top: 32,
+            bottom: 84,
+            containLabel: false,
+          },
+          xAxis: {
+            type: 'category',
+            data: comparison.map((c) => c.companyName),
+            axisLabel: {
+              interval: 0,
+              rotate: 42,
+              color: '#475467',
+              fontSize: 10,
+              margin: 16,
+            },
+            axisLine: { lineStyle: { color: '#d0d5dd' } },
+            axisTick: { alignWithLabel: true },
+          },
+          yAxis: {
+            type: 'value',
+            min: 0,
+            splitNumber: 5,
+            axisLabel: {
+              color: '#475467',
+              fontSize: 11,
+              margin: 8,
+              formatter: (value: number) => `${Math.round(value)}`,
+            },
+            splitLine: { lineStyle: { color: '#d9e3ea' } },
+            axisLine: { lineStyle: { color: '#d0d5dd' } },
+          },
+          series: [
+            {
+              name: this.t('dashboard.avgMilkPerDay'),
+              type: 'bar',
+              data: comparison.map((c) => c.avgMilkPerDay),
+              barWidth: 18,
+              barCategoryGap: '42%',
+              itemStyle: {
+                borderRadius: [4, 4, 0, 0],
+                color: '#2aa39a',
+              },
+              label: {
+                show: true,
+                position: 'top',
+                color: '#101828',
+                fontSize: 11,
+                fontWeight: 700,
+                formatter: ({ value }) => {
+                  const numericValue = Number(value ?? 0);
+                  if (!numericValue) {
+                    return '';
+                  }
+
+                  return numericValue.toFixed(1).replace(/\.0$/, '');
+                },
+              },
+            },
           ],
         };
 

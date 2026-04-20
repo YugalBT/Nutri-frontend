@@ -305,7 +305,7 @@
 .sp-col-material { width: 140px; }
 .sp-col-code { width: 100px; }
 .sp-col-price { width: 90px; }
-.sp-col-discount { width: 80px; }
+.sp-col-logistics { width: 80px; }
 .sp-col-delivered { width: 90px; }
 .sp-col-month { width: 100px; }
 .sp-col-status { width: 140px; }
@@ -573,7 +573,7 @@
   .sp-col-material { width: 140px; }
   .sp-col-code { width: 100px; }
   .sp-col-price { width: 110px; }
-  .sp-col-discount { width: 110px; }
+  .sp-col-logistics { width: 110px; }
   .sp-col-delivered { width: 120px; }
   .sp-col-month { width: 110px; }
   .sp-col-status { width: 120px; }
@@ -612,7 +612,7 @@
   .sp-col-material { width: auto; min-width: 100px; }
   .sp-col-code { width: 80px; }
   .sp-col-price { width: 100px; }
-  .sp-col-discount { width: 90px; }
+  .sp-col-logistics { width: 90px; }
   .sp-col-delivered { width: 100px; }
   .sp-col-month { width: 90px; }
   .sp-col-status { width: 90px; }

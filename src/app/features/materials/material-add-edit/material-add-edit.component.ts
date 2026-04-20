@@ -72,7 +72,7 @@ export class MaterialAddEditComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.initializeForm();
     this.loadSuppliers();
-    this.listenToMaterialNameChange();
+    //this.listenToMaterialNameChange();
 
     if (this.isSupplier && this.supplierData?.supplierId) {
       this.form.patchValue({
@@ -85,11 +85,11 @@ export class MaterialAddEditComponent implements OnInit, OnDestroy {
   private initializeForm() {
     this.form = this.fb.group({
       materialName: ['', [Validators.required, Validators.maxLength(200)]],
-      materialCode: [{ value: '', disabled: true }, [Validators.required, Validators.maxLength(200)]],
+     // materialCode: [{ value: '', disabled: true }, [Validators.required, Validators.maxLength(200)]],
       category: ['', [Validators.required, Validators.maxLength(100)]],
       supplierId: [this.isSupplier ? this.supplierData?.supplierId : '', Validators.required],
       unit: ['', Validators.required],
-      basePrice: ['', Validators.required]
+      //basePrice: ['', Validators.required]
 
       
     });
