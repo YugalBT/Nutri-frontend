@@ -8,6 +8,19 @@
     </div>
   </div>
 
+  <!-- <div class="pb-supplier-banner" *ngIf="isSupplier && supplierData">
+    <i class="bi bi-shield-lock"></i>
+    <div>
+      <strong>Supplier mode active</strong>
+      <span>
+        Only your supplier data is shown.
+        <ng-container *ngIf="supplierData?.supplierName || supplierData?.supplierCode">
+          {{ supplierData?.supplierName || supplierData?.supplierCode }}
+        </ng-container>
+      </span>
+    </div>
+  </div> -->
+
   <!-- FORM CARD -->
   <div class="card pb-form-card">
     <div class="card-body">
@@ -133,6 +146,22 @@
 
         <!-- MATERIALS SECTION -->
         <div class="pb-form-section">
+          <div class="pb-section-header pb-materials-header">
+            <div class="pb-section-icon">
+              <i class="bi bi-layers"></i>
+            </div>
+            <div class="pb-materials-copy">
+              <h4>{{ 'productBuild.materials' | translate }}</h4>
+              <p>Select only the materials you need.Use search to add them one by one.</p>
+            </div>
+            <div class="pb-materials-actions">
+              <button type="button" class="btn btn-outline-secondary" (click)="openMaterialSearch()">
+                <i class="bi bi-search me-1"></i>
+                Search Material
+              </button>
+            </div>
+          </div>
+
           <div class="pb-section-body">
             <div class="pb-table-container">
               <table class="pb-materials-table">
@@ -141,22 +170,31 @@
                     <th class="pb-col-material">
                       <span class="pb-col-header">
                         <i class="bi bi-card-list"></i>
-                        {{ 'productBuild.material' | translate }}
+                        Material
                       </span>
                     </th>
                     <th class="pb-col-amount">
                       <span class="pb-col-header">
                         <i class="bi bi-currency-dollar"></i>
-                        {{ 'productBuild.amount' | translate }}
+                        Price (€/ton)
                       </span>
                     </th>
                     <th class="pb-col-percentage">
-                      <span class="pb-col-header">%</span>
+                      <span class="pb-col-header">
+                        <i class="bi bi-percent"></i>
+                        Percentage (%)
+                      </span>
                     </th>
                     <th class="pb-col-calculated">
                       <span class="pb-col-header">
                         <i class="bi bi-calculator"></i>
-                        {{ 'productBuild.calculated' | translate }}
+                        Calculated Cost
+                      </span>
+                    </th>
+                    <th class="pb-col-action">
+                      <span class="pb-col-header">
+                        <i class="bi bi-trash3"></i>
+                        Action
                       </span>
                     </th>
                   </tr>
@@ -165,7 +203,10 @@
                   <tr *ngFor="let item of items.controls; let i=index" [formGroup]="item" class="pb-table-row">
                     <td class="pb-col-material">
                       <div class="pb-cell-content">
-                        <span class="pb-material-name">{{ item.value.materialName }}</span>
+                        <div>
+                          <span class="pb-material-name">{{ item.value.materialName }}</span>
+                          <small class="pb-material-code" *ngIf="item.value.materialCode">{{ item.value.materialCode }}</small>
+                        </div>
                       </div>
                     </td>
                     <td class="pb-col-amount">
@@ -188,9 +229,24 @@
                         <span class="pb-calculated-value">{{ item.value.calculatedAmount | number:'1.2-2' }}</span>
                       </div>
                     </td>
+                    <td class="pb-col-action">
+                      <button type="button" class="pb-row-action-btn" (click)="removeMaterial(i)" title="Remove material">
+                        <i class="bi bi-x-lg"></i>
+                      </button>
+                    </td>
                   </tr>
                 </tbody>
               </table>
+            </div>
+
+            <div class="pb-empty-materials" *ngIf="items.length === 0">
+              <i class="bi bi-inbox"></i>
+              <h5>No materials selected yet</h5>
+              <p>Click Search Material and add only the rows you need.</p>
+              <button type="button" class="btn add-btn" (click)="openMaterialSearch()">
+                <i class="bi bi-search me-1"></i>
+                Search Material
+              </button>
             </div>
           </div>
         </div>
@@ -271,6 +327,96 @@
       <i class="bi" [ngClass]="isEdit ? 'bi-pencil-fill' : 'bi-plus-circle-fill'"></i>
       {{ (isEdit ? 'common.update' : 'common.save') | translate }}
     </button>
+  </div>
+
+  <!-- MATERIAL SEARCH MODAL -->
+  <div #materialSearchModal class="modal fade pb-search-modal">
+    <div class="modal-dialog modal-xl modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <div>
+            <h5 class="modal-title">Search Materials</h5>
+          </div>
+          <button class="btn-close" type="button" (click)="closeMaterialSearch()"></button>
+        </div>
+
+        <div class="modal-body">
+          <div class="pb-search-bar">
+            <input
+              type="text"
+              class="form-control"
+              [(ngModel)]="materialSearchTerm"
+              [ngModelOptions]="{ standalone: true }"
+              placeholder="Search by material name or code"
+              (keyup.enter)="searchMaterials()"
+            />
+            <button type="button" class="btn add-btn" (click)="searchMaterials()">
+              <i class="bi bi-search me-1"></i>
+              Search
+            </button>
+            <button type="button" class="btn btn-outline-secondary" (click)="clearMaterialSearch()">
+              Clear
+            </button>
+          </div>
+
+          <!-- <div class="text-muted small mb-3" *ngIf="selectedSupplierId">
+            Supplier ID: {{ selectedSupplierId }}
+          </div> -->
+
+          <div class="text-center py-4" *ngIf="materialSearchLoading">
+            <div class="spinner-border text-secondary" role="status"></div>
+            <div class="mt-2">Loading materials...</div>
+          </div>
+
+          <div class="pb-search-empty" *ngIf="!materialSearchLoading && !materialSearchResults.length">
+            <i class="bi bi-search"></i>
+            <h5>{{ materialSearchMessage || 'No materials loaded yet' }}</h5>
+            <p>Enter a material name or code and press Search.</p>
+          </div>
+
+          <div class="pb-search-results" *ngIf="materialSearchResults.length">
+            <div class="pb-search-results-header">
+              <h6>Results</h6>
+              <span>{{ materialSearchResults.length }} materials</span>
+            </div>
+
+            <div class="table-responsive">
+              <table class="table table-hover align-middle">
+                <thead>
+                  <tr>
+                    <th>Material</th>
+                    <th>Code</th>
+                    <th>Price (€/ton)</th>
+                    <th class="text-end">Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let material of materialSearchResults">
+                    <td>
+                      <div class="fw-semibold">{{ material.materialName }}</div>
+                      <small class="text-muted">{{ material.category || '-' }}</small>
+                    </td>
+                    <td>{{ material.materialCode || '-' }}</td>
+                    <td>{{ (material.unitPrice || material.deliveredPrice || material.price || 0) | number:'1.2-2' }}</td>
+                    <td class="text-end">
+                      <button
+                        type="button"
+                        class="btn btn-sm btn-outline-primary"
+                        (click)="addMaterial(material)"
+                        [disabled]="isMaterialSelected(material.materialId)"
+                      >
+                        <i class="bi" [ngClass]="isMaterialSelected(material.materialId) ? 'bi-check2-circle' : 'bi-plus-circle'"></i>
+                        {{ isMaterialSelected(material.materialId) ? 'Added' : 'Add' }}
+                      </button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 
 </div>

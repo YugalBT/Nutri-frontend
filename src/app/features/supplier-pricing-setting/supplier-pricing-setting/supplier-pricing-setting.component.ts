@@ -61,14 +61,9 @@ export class SupplierPricingSettingComponent implements OnInit {
         [Validators.required, Validators.min(0)]
       ],
 
-      commissionPercent: [
-        null,
-        [Validators.required, Validators.min(0), Validators.max(100)]
-      ],
-
-      defaultMarginPercent: [
-        null,
-        [Validators.required, Validators.min(0), Validators.max(100)]
+      extraCosts: [
+        0,
+        [Validators.min(0)]
       ]
 
     });
@@ -85,7 +80,21 @@ export class SupplierPricingSettingComponent implements OnInit {
 
           if (res?.isSuccess && res?.data) {
 
-            this.pricingForm.patchValue(res.data);
+            const {
+              bulkProcessingCost,
+              bagProcessingCost,
+              bulkTransportCost,
+              sackTransportCost,
+              extraCosts
+            } = res.data;
+
+            this.pricingForm.patchValue({
+              bulkProcessingCost,
+              bagProcessingCost,
+              bulkTransportCost,
+              sackTransportCost,
+              extraCosts: extraCosts ?? 0
+            });
 
           } else {
 

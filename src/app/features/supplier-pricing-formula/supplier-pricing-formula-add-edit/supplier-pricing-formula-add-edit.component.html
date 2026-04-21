@@ -279,13 +279,27 @@
         </div>
 
         <div class="mb-2">
-          <label>Commission %</label>
-          <input type="number" [(ngModel)]="validateModel.commissionPercent" class="form-control">
+          <label>Bulk Processing Cost</label>
+          <input type="number" [(ngModel)]="validateModel.bulkProcessingCost" class="form-control">
         </div>
 
         <div class="mb-2">
-          <label>Bulk Processing</label>
-          <input type="number" [(ngModel)]="validateModel.bulkProcessingCost" class="form-control">
+          <label>Bag Processing Cost</label>
+          <input type="number" [(ngModel)]="validateModel.bagProcessingCost" class="form-control">
+        </div>
+
+        <div class="mb-2">
+          <label>Bulk Transport Cost</label>
+          <input type="number" [(ngModel)]="validateModel.bulkTransportCost" class="form-control">
+        </div>
+
+        <div class="mb-2">
+          <label>Sack Transport Cost</label>
+          <input type="number" [(ngModel)]="validateModel.sackTransportCost" class="form-control">
+        </div>
+
+        <div class="text-muted small">
+          Allowed variables: BaseCost, ps__BulkProcessingCost, ps__BagProcessingCost, ps__BulkTransportCost, ps__SackTransportCost
         </div>
 
         <div class="mt-3 text-success" *ngIf="validatedResult">

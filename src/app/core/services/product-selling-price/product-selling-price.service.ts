@@ -47,4 +47,13 @@ export class ProductSellingPriceService {
 
   }
 
+  getSuggestedPrice(productId: string): Observable<ApiResponse<any>> {
+
+    return this.http.get<any>(
+      API_ENDPOINTS.PRODUCTPRICING.GET_SUGGESTED_PRICE +
+      `?productId=${productId}`
+    );
+
+  }
+
 }

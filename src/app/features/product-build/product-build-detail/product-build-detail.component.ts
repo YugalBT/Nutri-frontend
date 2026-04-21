@@ -17,6 +17,7 @@ import { TranslatePipe } from '../../../i18n/translate.pipe';
 export class ProductBuildDetailComponent implements OnInit, OnDestroy {
 
   build: any = null;
+  appliedCharges: Array<{ key: string; label: string; value: any }> = [];
   loading = true;
   isSupplier = false;
   private subs: Subscription[] = [];
@@ -38,6 +39,7 @@ export class ProductBuildDetailComponent implements OnInit, OnDestroy {
   // Show quick data (optional)
   if (navData) {
     this.build = navData;
+    this.appliedCharges = this.normalizeAppliedCharges(navData?.costBreakdown?.appliedCharges);
   }
 
   // ✅ ALWAYS load full detail
@@ -54,6 +56,7 @@ export class ProductBuildDetailComponent implements OnInit, OnDestroy {
       next: (res: any) => {
         if (res.isSuccess && res.data) {
           this.build = res.data;
+          this.appliedCharges = this.normalizeAppliedCharges(res.data?.costBreakdown?.appliedCharges);
           this.loading = false;
         } else {
           this.toast.error(res.message || 'Failed to load product build details');
@@ -79,6 +82,58 @@ export class ProductBuildDetailComponent implements OnInit, OnDestroy {
     if (!this.build?.items) return 0;
     return this.build.items.reduce((sum: number, x: any) =>
       sum + (x.percentage || 0), 0);
+  }
+
+  getCostBreakdown(): any {
+    return this.build?.costBreakdown || {};
+  }
+
+  private normalizeAppliedCharges(charges: any): Array<{ key: string; label: string; value: any }> {
+
+    if (!charges) return [];
+
+    if (Array.isArray(charges)) {
+      return charges
+        .filter((item: any) => item)
+        .map((item: any) => ({
+          key: item.key ?? item.name ?? item.label ?? '',
+          label: item.label ?? item.name ?? item.key ?? 'Charge',
+          value: item.value ?? item.amount ?? item.cost ?? item
+        }));
+    }
+
+    if (typeof charges === 'object') {
+      return Object.entries(charges).map(([key, value]) => ({
+        key,
+        label: key,
+        value
+      }));
+    }
+
+    return [];
+  }
+
+  getFormulaName(): string {
+    return this.getCostBreakdown()?.formulaName || this.build?.formulaName || 'N/A';
+  }
+
+  getFormulaExpression(): string {
+    return this.getCostBreakdown()?.formulaExpression || this.build?.formulaExpression || '-';
+  }
+
+  getFinalCost(): number {
+    const breakdownFinal = this.getCostBreakdown()?.finalCost;
+    const buildFinal = this.build?.finalCost ?? this.build?.totalCost;
+    return Number(breakdownFinal ?? buildFinal ?? 0) || 0;
+  }
+
+  formatChargeValue(value: any): string {
+    if (value === null || value === undefined || value === '') return '-';
+    if (typeof value === 'number') return value.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    if (!Number.isNaN(Number(value))) {
+      return Number(value).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    }
+    return String(value);
   }
 
   goBack(): void {

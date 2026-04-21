@@ -59,16 +59,16 @@
             <div class="col-md-4">
 
               <label class="form-label">
-  {{ 'productPrice.month' | translate }}
-  <sup class="text-danger">*</sup>
-</label>
+                {{ 'productPrice.month' | translate }}
+                <sup class="text-danger">*</sup>
+              </label>
 
               <input type="month" class="form-control" formControlName="priceMonth"
                 [class.is-invalid]="form.get('priceMonth')?.invalid && form.get('priceMonth')?.touched" />
 
               <div class="invalid-feedback">
-  {{ 'productPrice.monthRequired' | translate }}
-</div>
+                {{ 'productPrice.monthRequired' | translate }}
+              </div>
 
             </div>
 
@@ -77,68 +77,124 @@
 
             <div class="col-md-4">
 
-<label class="form-label">
-  {{ 'productPrice.previousPrice' | translate }}
-</label>
+              <label class="form-label">
+                {{ 'productPrice.previousPrice' | translate }}
+              </label>
 
-              <input type="number" class="form-control" placeholder="{{ 'productPrice.previousPricePlaceholder' | translate }}"
-                formControlName="previousMonthPrice" />
+              <input type="number" class="form-control"
+                placeholder="{{ 'productPrice.previousPricePlaceholder' | translate }}"
+                formControlName="previousMonthPrice" readonly />
 
             </div>
 
 
-            <!-- Suggested Price -->
+            <!-- Category info banner (auto-suggested context) -->
+            <div *ngIf="categoryLabel" class="col-12">
+              <div class="alert alert-info py-2 mb-0 d-flex flex-wrap gap-3 small">
+                <span><strong>{{ 'productPrice.category' | translate }}:</strong> {{ categoryLabel }}</span>
+                <span><strong>{{ 'productPrice.formulaCost' | translate }}:</strong> {{ formulaCost | number:'1.2-2' }}</span>
+                <span><strong>{{ 'productPrice.targetMargin' | translate }}:</strong> {{ targetMarginPercent * 100 | number:'1.1-2' }}%</span>
+                <span *ngIf="isSpecialCategory" class="badge bg-warning text-dark">
+                  {{ 'productPrice.specialFormula' | translate }}
+                </span>
+              </div>
+            </div>
+
+
+            <!-- Suggested Price (auto-filled, but user may override) -->
 
             <div class="col-md-4">
 
-<label class="form-label">
-  {{ 'productPrice.suggestedPrice' | translate }}
-</label>
+              <label class="form-label">
+                {{ 'productPrice.suggestedPrice' | translate }}
+              </label>
 
-              <input type="number" class="form-control" placeholder="{{ 'productPrice.suggestedPricePlaceholder' | translate }}"
+              <input type="number" class="form-control"
+                placeholder="{{ 'productPrice.suggestedPricePlaceholder' | translate }}"
                 formControlName="suggestedPrice" />
 
             </div>
 
 
-            <!-- Customer Price -->
+            <!-- Customer Price (PRIMARY INPUT — user enters this, margin is derived) -->
 
             <div class="col-md-4">
 
               <label class="form-label">
-  {{ 'productPrice.customerPrice' | translate }}
-</label>
+                {{ 'productPrice.customerPrice' | translate }}
+                <sup class="text-danger">*</sup>
+              </label>
 
-              <input type="number" class="form-control" placeholder="{{ 'productPrice.customerPricePlaceholder' | translate }}"
-                formControlName="customerPrice" />
-
-            </div>
-
-
-            <!-- Commission -->
-
-            <div class="col-md-4">
-
-<label class="form-label">
-  {{ 'productPrice.commission' | translate }}
-</label>
-
-              <input type="number" class="form-control" placeholder="{{ 'productPrice.commissionPlaceholder' | translate }}"
-                formControlName="commissionPercent" />
+              <input type="number" class="form-control"
+                placeholder="{{ 'productPrice.customerPricePlaceholder' | translate }}"
+                formControlName="customerPrice"
+                [class.is-invalid]="form.get('customerPrice')?.touched && form.get('customerPrice')?.invalid" />
 
             </div>
 
 
-            <!-- Margin -->
+            <!-- Commission (READ-ONLY, auto from margin config) -->
 
             <div class="col-md-4">
 
-<label class="form-label">
-  {{ 'productPrice.margin' | translate }}
-</label>
+              <label class="form-label">
+                {{ 'productPrice.commission' | translate }}
+              </label>
 
-              <input type="number" class="form-control" placeholder="{{ 'productPrice.marginPlaceholder' | translate }}"
-                formControlName="marginPercent" />
+              <input type="number" class="form-control bg-light"
+                placeholder="{{ 'productPrice.commissionPlaceholder' | translate }}"
+                formControlName="commissionPercent" readonly />
+
+            </div>
+
+
+            <!-- Margin (READ-ONLY, computed; with color indicator) -->
+
+            <div class="col-md-12">
+
+              <label class="form-label">
+                {{ 'productPrice.margin' | translate }}
+              </label>
+
+              <div class="d-flex align-items-center gap-2">
+
+                <input type="text" class="form-control"
+                  [value]="(marginPercent * 100 | number:'1.2-2') + ' %'"
+                  readonly
+                  [ngStyle]="{
+                    'background-color':
+                      marginColor === 'green'  ? '#d1e7dd' :
+                      marginColor === 'yellow' ? '#fff3cd' :
+                      marginColor === 'red'    ? '#f8d7da' : '#f8f9fa',
+                    'border-color':
+                      marginColor === 'green'  ? '#198754' :
+                      marginColor === 'yellow' ? '#ffc107' :
+                      marginColor === 'red'    ? '#dc3545' : '#ced4da',
+                    'color':
+                      marginColor === 'green'  ? '#0f5132' :
+                      marginColor === 'yellow' ? '#664d03' :
+                      marginColor === 'red'    ? '#842029' : '#212529',
+                    'font-weight': '600'
+                  }" />
+
+                <span *ngIf="marginLevel === 3" class="badge bg-success">
+                  {{ 'productPrice.marginLevel.high' | translate }}
+                </span>
+                <span *ngIf="marginLevel === 2" class="badge bg-warning text-dark">
+                  {{ 'productPrice.marginLevel.mid' | translate }}
+                </span>
+                <span *ngIf="marginLevel === 1" class="badge bg-danger">
+                  {{ 'productPrice.marginLevel.low' | translate }}
+                </span>
+
+              </div>
+
+              <small class="text-muted" *ngIf="midThreshold || highThreshold">
+                {{ 'productPrice.thresholds' | translate }}:
+                &lt; {{ midThreshold * 100 | number:'1.0-1' }}% = low /
+                {{ midThreshold * 100 | number:'1.0-1' }}&ndash;{{ highThreshold * 100 | number:'1.0-1' }}% = mid /
+                &ge; {{ highThreshold * 100 | number:'1.0-1' }}% = high
+              </small>
 
             </div>
 

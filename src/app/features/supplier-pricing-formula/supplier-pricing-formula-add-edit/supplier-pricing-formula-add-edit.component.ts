@@ -49,8 +49,10 @@ export class SupplierPricingFormulaAddEditComponent {
 
   validateModel: any = {
     baseCost: 1000,
-    commissionPercent: 10,
-    bulkProcessingCost: 50
+    bulkProcessingCost: 50,
+    bagProcessingCost: 0,
+    bulkTransportCost: 0,
+    sackTransportCost: 0
   };
 
   selectedStatus: number = 1;
@@ -447,8 +449,10 @@ private mapFormulaeArrayToTokens(
     const payload = {
       formula: formula,
       baseCost: this.validateModel.baseCost,
-      commissionPercent: this.validateModel.commissionPercent,
-      bulkProcessingCost: this.validateModel.bulkProcessingCost
+      bulkProcessingCost: this.validateModel.bulkProcessingCost,
+      bagProcessingCost: this.validateModel.bagProcessingCost,
+      bulkTransportCost: this.validateModel.bulkTransportCost,
+      sackTransportCost: this.validateModel.sackTransportCost
     };
 
     this.supplierformulaService.validateformula(payload)

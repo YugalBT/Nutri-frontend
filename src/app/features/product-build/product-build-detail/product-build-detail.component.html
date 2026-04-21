@@ -42,7 +42,7 @@
       <!-- Formula -->
       <div class="pb-detail-card">
         <label class="pb-detail-label">{{ 'productBuild.formula' | translate }}</label>
-        <p class="pb-detail-value">{{ build.formulaName || 'N/A' }}</p>
+        <p class="pb-detail-value">{{ getFormulaName() }}</p>
       </div>
 
       <!-- Date -->
@@ -54,7 +54,7 @@
       <!-- Total Cost -->
       <div class="pb-detail-card">
         <label class="pb-detail-label">{{ 'productBuild.totalCost' | translate }}</label>
-        <p class="pb-detail-value pb-cost">{{ build.totalCost | number:'1.2-2' }}</p>
+        <p class="pb-detail-value pb-cost">{{ getFinalCost() | number:'1.2-2' }}</p>
       </div>
 
       <!-- Status -->
@@ -68,6 +68,8 @@
       </div>
     </div>
   </div>
+
+ 
 
   <!-- MATERIALS SECTION -->
   <div class="pb-detail-section">
@@ -103,29 +105,64 @@
 
   <!-- SUMMARY SECTION -->
   <div class="pb-summary-container">
-    <div class="pb-summary-right">
-      <div class="pb-summary-card">
-        <div class="pb-summary-row">
-          <span class="pb-summary-label">{{ 'productBuild.totalPercentage' | translate }}:</span>
-          <span class="pb-summary-val" [ngClass]="getTotalPercentage() === 100 ? 'success' : 'warning'">
-            {{ getTotalPercentage() | number:'1.0-0' }}%
+  <div class="pb-summary-right">
+    <div class="pb-summary-card">
+
+      <!-- Total Percentage -->
+      <div class="pb-summary-row">
+        <span class="pb-summary-label">
+          {{ 'productBuild.totalPercentage' | translate }}:
+        </span>
+        <span class="pb-summary-val" [ngClass]="getTotalPercentage() === 100 ? 'success' : 'warning'">
+          {{ getTotalPercentage() | number:'1.0-0' }}%
+        </span>
+      </div>
+
+      <!-- Total Material Cost -->
+      <div class="pb-summary-row">
+        <span class="pb-summary-label">
+          {{ 'productBuild.totalMaterialCost' | translate }}:
+        </span>
+        <span class="pb-summary-val">
+          {{ getTotalAmount() | number:'1.2-2' }}
+        </span>
+      </div>
+
+      <!-- Applied Charges -->
+      <div *ngIf="appliedCharges.length > 0">
+        <div class="pb-summary-divider"></div>
+
+        <div class="pb-summary-row pb-summary-subtitle">
+          <span class="pb-summary-label">
+            {{ 'productBuild.appliedCharges' | translate }}
           </span>
         </div>
 
-        <div class="pb-summary-row">
-          <span class="pb-summary-label">{{ 'productBuild.totalMaterialCost' | translate }}:</span>
-          <span class="pb-summary-val">{{ getTotalAmount() | number:'1.2-2' }}</span>
-        </div>
-
-        <div class="pb-summary-divider"></div>
-
-        <div class="pb-summary-row pb-summary-total">
-          <span class="pb-summary-label">{{ 'productBuild.finalCost' | translate }}:</span>
-          <span class="pb-summary-val pb-total">{{ build.totalCost | number:'1.2-2' }}</span>
+        <div class="pb-summary-row" *ngFor="let charge of appliedCharges">
+          <span class="pb-summary-label">
+            {{ charge.label | translate }}:
+          </span>
+          <span class="pb-summary-val">
+            {{ formatChargeValue(charge.value) }}
+          </span>
         </div>
       </div>
+
+      <div class="pb-summary-divider"></div>
+
+      <!-- Final Cost -->
+      <div class="pb-summary-row pb-summary-total">
+        <span class="pb-summary-label">
+          {{ 'productBuild.finalCost' | translate }}:
+        </span>
+        <span class="pb-summary-val pb-total">
+          {{ getFinalCost() | number:'1.2-2' }}
+        </span>
+      </div>
+
     </div>
   </div>
+</div>
 
   <!-- ACTION BUTTONS -->
   <div class="pb-detail-actions">

@@ -1,8 +1,8 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, ElementRef, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { SharedModule } from '../../../shared/shared.module';
 import { TranslatePipe } from '../../../i18n/translate.pipe';
-import { FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormArray, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ProductBuildService } from '../../../core/services/product-build-service/product-build-service';
 import { PERMISSIONS } from '../../../core/constants/permissions.constants';
 import { CommonService } from '../../../shared/services/common.service';
@@ -11,19 +11,24 @@ import { TokenService } from '../../../shared/services/token.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
 
+declare var bootstrap: any;
+
 @Component({
   selector: 'app-product-build-form-page',
   standalone: true,
-  imports: [SharedModule, ReactiveFormsModule, TranslatePipe, CommonModule],
+  imports: [SharedModule, ReactiveFormsModule, FormsModule, TranslatePipe, CommonModule],
   templateUrl: './product-build-form-page.component.html',
   styleUrls: ['./product-build-form-page.component.css']
 })
 export class ProductBuildFormPageComponent implements OnInit, OnDestroy {
+  @ViewChild('materialSearchModal', { static: true }) materialSearchModal!: ElementRef;
+
   form!: FormGroup;
+  materialSearchModalInstance: any;
 
   products: any[] = [];
   suppliers: any[] = [];
-  materials: any[] = [];
+  materialSearchResults: any[] = [];
   formulas: any[] = [];
   totalCostFromDb: number = 0;
   isEdit = false;
@@ -34,6 +39,9 @@ export class ProductBuildFormPageComponent implements OnInit, OnDestroy {
   finalCost: number = 0;
   isCalculating = false;
   canSave = false;
+  materialSearchTerm = '';
+  materialSearchLoading = false;
+  materialSearchMessage = '';
 
   // Display properties for viewing
   displaySupplierName: string = '';
@@ -65,7 +73,7 @@ export class ProductBuildFormPageComponent implements OnInit, OnDestroy {
         supplierId: supplierId
       });
       this.form.get('supplierId')?.disable();
-      this.onSupplierChange(supplierId);
+      this.applySupplierContext(supplierId);
     }
 
     this.loadSuppliers();
@@ -102,6 +110,70 @@ export class ProductBuildFormPageComponent implements OnInit, OnDestroy {
     this.subs.push(sub);
   }
 
+  private applySupplierContext(supplierId: string, row: any = null): void {
+    this.selectedSupplierId = supplierId || null;
+    this.materialSearchResults = [];
+    this.materialSearchTerm = '';
+    this.materialSearchMessage = '';
+    this.items.clear();
+
+    if (row?.items?.length) {
+      row.items.forEach((item: any) => {
+        this.items.push(this.buildMaterialItem(item, item));
+      });
+      this.form.markAsPristine();
+    }
+
+    if (supplierId) {
+      this.loadSupplierMetadata(supplierId);
+    }
+
+    this.calculateFinal();
+  }
+
+  private buildMaterialItem(source: any, saved?: any): FormGroup {
+    const amount = Number(
+      saved?.unitPrice ??
+      saved?.amount ??
+      source?.unitPrice ??
+      source?.deliveredPrice ??
+      source?.price ??
+      0
+    ) || 0;
+
+    return this.fb.group({
+      productBuildItemId: saved?.productBuildItemId ?? null,
+      materialId: source?.materialId ?? saved?.materialId ?? null,
+      materialName: source?.materialName ?? saved?.materialName ?? '',
+      materialCode: source?.materialCode ?? saved?.materialCode ?? '',
+      amount,
+      percentage: Number(saved?.percentage ?? 0),
+      calculatedAmount: Number(saved?.calculatedCost ?? saved?.calculatedAmount ?? 0),
+      isChanged: false
+    });
+  }
+
+  private loadSupplierMetadata(supplierId: string): void {
+    const sub2 = this.common
+      .GetAllProductBySupplierId(supplierId)
+      .subscribe(res => {
+        this.products = res?.data ?? [];
+      });
+
+    const sub3 = this.common
+      .GetAllFormulaBySupplierId(supplierId)
+      .subscribe(res => {
+        this.formulas = res?.data ?? [];
+
+        const formulaId = this.form.value.formulaId;
+        if (this.isEdit && formulaId) {
+          this.onFormulaChange(formulaId);
+        }
+      });
+
+    this.subs.push(sub2, sub3);
+  }
+
   loadDataForEdit(id: string) {
     const sub = this.service.getById(id).subscribe({
       next: (res: any) => {
@@ -119,10 +191,11 @@ export class ProductBuildFormPageComponent implements OnInit, OnDestroy {
           this.form.patchValue({
             supplierId: row.supplierId,
             productId: row.productId,
-            priceDate: row.priceDate?.substring(0, 10) || this.getTodayDate()
+            priceDate: row.priceDate?.substring(0, 10) || this.getTodayDate(),
+            formulaId: row.formulaId || ''
           });
 
-          this.onSupplierChange(row.supplierId, true, row);
+          this.applySupplierContext(row.supplierId, row);
           this.setCanSave();
         } else {
           this.toast.error('Failed to load data');
@@ -209,83 +282,106 @@ export class ProductBuildFormPageComponent implements OnInit, OnDestroy {
     return localDate.toISOString().split('T')[0];
   }
 
-  onSupplierChange(supplierId: string, isEdit = false, row: any = null) {
+  onSupplierChange(supplierId: string) {
     if (!supplierId) return;
 
-    const sub1 = this.common
-      .GetAllMaterialBySupplierId(supplierId, {})
-      .subscribe(res => {
-        this.materials = res?.data ?? [];
-        this.items.clear();
+    this.selectedSupplierId = supplierId;
+    this.materialSearchResults = [];
+    this.materialSearchTerm = '';
+    this.materialSearchMessage = '';
+    this.items.clear();
+    this.loadSupplierMetadata(supplierId);
+    this.calculateFinal();
+  }
 
-        this.materials.forEach((m: any) => {
-          this.items.push(this.fb.group({
-            productBuildItemId: null,
-            materialId: m.materialId,
-            materialName: m.materialName,
-            amount: m.unitPrice || m.deliveredPrice || 0,
-            percentage: 0,
-            calculatedAmount: 0,
-            isChanged: false
-          }));
-        });
+  isMaterialSelected(materialId: string): boolean {
+    return this.items.controls.some((ctrl: FormGroup) => ctrl.value.materialId === materialId);
+  }
 
-        if (isEdit && row) {
-          this.items.controls.forEach((item: FormGroup) => {
-            const match = row.items.find(
-              (x: any) => x.materialId === item.value.materialId
-            );
+  openMaterialSearch(): void {
+    const supplierId = this.form.getRawValue().supplierId || this.selectedSupplierId;
+    if (!supplierId) {
+      this.toast.warning('Please select a supplier first');
+      return;
+    }
 
-            if (match) {
-              item.patchValue({
-                percentage: match.percentage,
-                calculatedAmount: match.calculatedCost,
-                isChanged: true
-              });
+    if (!this.materialSearchModalInstance) {
+      this.materialSearchModalInstance = new bootstrap.Modal(
+        this.materialSearchModal.nativeElement,
+        { backdrop: 'static' }
+      );
+    }
 
-              item.get('percentage')?.setValue(match.percentage, { emitEvent: false });
-              item.get('calculatedAmount')?.setValue(match.calculatedCost, { emitEvent: false });
-              item.updateValueAndValidity({ emitEvent: false });
-            }
-          });
+    this.materialSearchModalInstance.show();
 
-          this.form.markAsPristine();
+    if (!this.materialSearchResults.length) {
+      this.searchMaterials();
+    }
+  }
 
-          setTimeout(() => {
-            this.calculateFinal();
-          }, 100);
+  closeMaterialSearch(): void {
+    this.materialSearchModalInstance?.hide();
+  }
+
+  searchMaterials(): void {
+    const supplierId = this.form.getRawValue().supplierId || this.selectedSupplierId;
+    if (!supplierId) {
+      this.toast.warning('Please select a supplier first');
+      return;
+    }
+
+    this.materialSearchLoading = true;
+    this.materialSearchMessage = '';
+
+    const payload = {
+      pageNo: 1,
+      recordPerPage: 20,
+      searchValue: this.materialSearchTerm?.trim() || '',
+      status: 2
+    };
+
+    const sub = this.common
+      .GetAllMaterialBySupplierId(supplierId, payload)
+      .subscribe({
+        next: (res) => {
+          this.materialSearchResults = res?.data ?? [];
+          this.materialSearchMessage = this.materialSearchResults.length
+            ? ''
+            : 'No materials found';
+          this.materialSearchLoading = false;
+        },
+        error: () => {
+          this.materialSearchResults = [];
+          this.materialSearchMessage = 'Failed to load materials';
+          this.materialSearchLoading = false;
         }
       });
 
-    const sub2 = this.common
-      .GetAllProductBySupplierId(supplierId)
-      .subscribe(res => {
-        this.products = res?.data ?? [];
+    this.subs.push(sub);
+  }
 
-        if (isEdit && row) {
-          this.form.patchValue({
-            productId: row.productId
-          });
-        }
-      });
+  clearMaterialSearch(): void {
+    this.materialSearchTerm = '';
+    this.materialSearchResults = [];
+    this.materialSearchMessage = '';
+  }
 
-    const sub3 = this.common
-      .GetAllFormulaBySupplierId(supplierId)
-      .subscribe(res => {
-        this.formulas = res?.data ?? [];
+  addMaterial(material: any): void {
+    if (!material?.materialId) return;
 
-        if (isEdit && row) {
-          this.form.patchValue({
-            formulaId: row.formulaId
-          });
+    if (this.isMaterialSelected(material.materialId)) {
+      this.toast.warning('Material already added');
+      return;
+    }
 
-          if (row.formulaId) {
-            this.onFormulaChange(row.formulaId);
-          }
-        }
-      });
+    this.items.push(this.buildMaterialItem(material));
+    this.calculateFinal();
+  }
 
-    this.subs.push(sub1, sub2, sub3);
+  removeMaterial(index: number): void {
+    if (index < 0 || index >= this.items.length) return;
+    this.items.removeAt(index);
+    this.calculateFinal();
   }
 
   calculate(item: FormGroup) {
@@ -302,6 +398,8 @@ export class ProductBuildFormPageComponent implements OnInit, OnDestroy {
       calculatedAmount: calculated,
       isChanged: true
     }, { emitEvent: false });
+
+    this.calculateFinal();
   }
 
   getTotalAmount() {

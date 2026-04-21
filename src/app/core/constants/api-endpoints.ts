@@ -294,6 +294,7 @@ export const API_ENDPOINTS = {
     ACTIVE_INACTIVE: '/ProductPricing/ActiveInActive',
     DELETE: '/ProductPricing/Delete',
     GET_PREVIOUS_PRICE: '/ProductPricing/GetPreviousPrice',
+    GET_SUGGESTED_PRICE: '/ProductPricing/GetSuggestedPrice',
   },
 
   PRODUCT_BUILD: {

@@ -41,6 +41,20 @@ export class ProductPriceAddEditComponent implements OnInit {
 
   currentId: any;
 
+  // State driven from GetSuggestedPrice
+  formulaCost = 0;
+  targetMarginPercent = 0;
+  minThreshold = 0;
+  midThreshold = 0;
+  highThreshold = 0;
+  isSpecialCategory = false;
+  categoryLabel = '';
+
+  // Computed live on the form — customer price is the input, margin is the result
+  marginPercent = 0;
+  marginLevel = 0;     // 1 = red, 2 = yellow, 3 = green
+  marginColor = '';
+
   constructor(
     private fb: FormBuilder,
     private priceService: ProductSellingPriceService,
@@ -68,13 +82,17 @@ export class ProductPriceAddEditComponent implements OnInit {
 
       previousMonthPrice: [0],
 
+      // Auto-filled from GetSuggestedPrice, but user may override
       suggestedPrice: [0, Validators.required],
 
-      customerPrice: [0],
+      // Customer price is the primary input now (margin is derived from it)
+      customerPrice: [0, Validators.required],
 
-      commissionPercent: [0],
+      // Read-only: auto-filled from margin config for the product's category
+      commissionPercent: [{ value: 0, disabled: true }],
 
-      marginPercent: [0]
+      // Read-only: computed as (customerPrice - formulaCost) / customerPrice
+      marginPercent: [{ value: 0, disabled: true }]
 
     });
 
@@ -82,18 +100,9 @@ export class ProductPriceAddEditComponent implements OnInit {
 
   listenPriceCalculation() {
 
-    this.form.get('suggestedPrice')?.valueChanges.subscribe(() => {
-      this.calculatePrice();
-    });
-
-    this.form.get('marginPercent')?.valueChanges.subscribe(() => {
-      this.calculatePrice();
-    });
-
-    this.form.get('commissionPercent')?.valueChanges.subscribe(() => {
-      this.calculatePrice();
-    });
+    // When product changes, fetch suggested price + category thresholds
     this.form.get('productId')?.valueChanges.subscribe(() => {
+      this.loadSuggestedPrice();
       this.loadPreviousPrice();
     });
 
@@ -101,8 +110,17 @@ export class ProductPriceAddEditComponent implements OnInit {
       this.loadPreviousPrice();
     });
 
+    // Margin re-computes whenever customer price or suggested price changes
+    this.form.get('customerPrice')?.valueChanges.subscribe(() => {
+      this.recomputeMargin();
+    });
+
+    this.form.get('suggestedPrice')?.valueChanges.subscribe(() => {
+      this.recomputeMargin();
+    });
 
   }
+
   loadPreviousPrice() {
 
     const productId = this.form.value.productId;
@@ -126,23 +144,69 @@ export class ProductPriceAddEditComponent implements OnInit {
 
   }
 
-  calculatePrice() {
+  loadSuggestedPrice() {
 
-    const suggested = Number(this.form.value.suggestedPrice) || 0;
+    const productId = this.form.value.productId;
 
-    const margin = Number(this.form.value.marginPercent) || 0;
+    if (!productId) return;
 
-    const commission = Number(this.form.value.commissionPercent) || 0;
+    this.priceService
+      .getSuggestedPrice(productId)
+      .subscribe((res: any) => {
 
-    const marginValue = (suggested * margin) / 100;
+        if (res?.isSuccess && res.data) {
 
-    const commissionValue = (suggested * commission) / 100;
+          const d = res.data;
+          this.formulaCost = Number(d.formulaCost) || 0;
+          this.targetMarginPercent = Number(d.targetMarginPercent) || 0;
+          this.minThreshold = Number(d.minThreshold) || 0;
+          this.midThreshold = Number(d.midThreshold) || 0;
+          this.highThreshold = Number(d.highThreshold) || 0;
+          this.isSpecialCategory = !!d.isSpecialCategory;
+          this.categoryLabel = d.category || '';
 
-    const customerPrice = suggested + marginValue + commissionValue;
+          this.form.patchValue({
+            suggestedPrice: d.suggestedPrice,
+            customerPrice: d.suggestedPrice,
+            commissionPercent: Number(d.commissionPercent) || 0
+          });
 
-    this.form.patchValue({
-      customerPrice: customerPrice
-    });
+          this.recomputeMargin();
+
+        }
+
+      });
+
+  }
+
+  recomputeMargin() {
+
+    const customer = Number(this.form.getRawValue().customerPrice) || 0;
+    const cost = this.formulaCost;
+
+    if (customer <= 0) {
+      this.marginPercent = 0;
+      this.marginLevel = 0;
+      this.marginColor = 'gray';
+      this.form.patchValue({ marginPercent: 0 }, { emitEvent: false });
+      return;
+    }
+
+    const margin = (customer - cost) / customer;
+    this.marginPercent = margin;
+
+    if (margin >= this.highThreshold) {
+      this.marginLevel = 3;
+      this.marginColor = 'green';
+    } else if (margin >= this.midThreshold) {
+      this.marginLevel = 2;
+      this.marginColor = 'yellow';
+    } else {
+      this.marginLevel = 1;
+      this.marginColor = 'red';
+    }
+
+    this.form.patchValue({ marginPercent: margin }, { emitEvent: false });
 
   }
 
@@ -174,6 +238,10 @@ export class ProductPriceAddEditComponent implements OnInit {
     }
 
     this.form.reset();
+    this.formulaCost = 0;
+    this.marginPercent = 0;
+    this.marginLevel = 0;
+    this.marginColor = '';
 
     if (isEdit && row) {
 
@@ -187,8 +255,11 @@ export class ProductPriceAddEditComponent implements OnInit {
         customerPrice: row.customerPrice,
         commissionPercent: row.commissionPercent,
         marginPercent: row.marginPercent
-
       });
+
+      this.marginPercent = Number(row.marginPercent) || 0;
+      this.marginLevel = Number(row.marginLevel) || 0;
+      this.marginColor = row.marginColor || 'gray';
 
     }
 
@@ -218,7 +289,8 @@ export class ProductPriceAddEditComponent implements OnInit {
 
     }
 
-    const payload = { ...this.form.value };
+    // getRawValue() includes disabled fields (commission, margin)
+    const payload = { ...this.form.getRawValue() };
 
     if (payload.priceMonth) {
 

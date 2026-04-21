@@ -16,4 +16,38 @@ export interface ProductSellingPriceVm {
 
   marginPercent: number;
 
+  marginLevel?: number;
+
+  marginColor?: string;
+
+  isSpecialCategory?: boolean;
+
+  formulaCost?: number;
+
+}
+
+export interface SuggestedPriceVm {
+
+  productId: string;
+
+  category?: string;
+
+  type?: string;
+
+  formulaCost: number;
+
+  suggestedPrice: number;
+
+  targetMarginPercent: number;
+
+  commissionPercent: number;
+
+  isSpecialCategory: boolean;
+
+  minThreshold: number;
+
+  midThreshold: number;
+
+  highThreshold: number;
+
 }

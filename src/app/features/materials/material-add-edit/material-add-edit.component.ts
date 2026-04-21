@@ -89,9 +89,6 @@ export class MaterialAddEditComponent implements OnInit, OnDestroy {
       category: ['', [Validators.required, Validators.maxLength(100)]],
       supplierId: [this.isSupplier ? this.supplierData?.supplierId : '', Validators.required],
       unit: ['', Validators.required],
-      //basePrice: ['', Validators.required]
-
-      
     });
   }
 

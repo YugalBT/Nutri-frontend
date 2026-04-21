@@ -39,7 +39,6 @@ export class MaterialListComponent implements OnInit, OnDestroy {
    // 'materialCode',
     // 'supplierName',
     'unit',
-    //'basePrice',
     'isActive'
   ];
 
@@ -82,12 +81,11 @@ export class MaterialListComponent implements OnInit, OnDestroy {
   }
 
   private setColumns(): void {
-    this.columns = [
+      this.columns = [
       this.translate.instant('material.name'),
       //this.translate.instant('material.code'),
       //this.translate.instant('material.supplier'),
       this.translate.instant('material.unit'),
-      //this.translate.instant('material.basePrice'),
       this.translate.instant('common.status')
     ];
   }
@@ -185,12 +183,12 @@ exportSampleCSV(): void {
 
       const link = document.createElement('a');
       link.href = url;
-      link.download = 'materials.csv';
+      link.download = 'materials-sample.csv';
       link.click();
 
       URL.revokeObjectURL(url);
 
-      this.toast.success('Materials exported successfully');
+      this.toast.success('Sample CSV downloaded successfully');
     });
 
   this.subs.push(sub);
@@ -260,7 +258,9 @@ importMaterials(event: any): void {
             this.toast.error(res.message);
           }
         },
-        error: (err) => this.toast.error(err?.error?.message)
+        error: (err) => this.toast.error(
+          err?.error?.message || err?.error || err?.message || 'Failed to update material status'
+        )
       });
 
     this.subs.push(sub);
@@ -289,7 +289,11 @@ importMaterials(event: any): void {
               this.toast.error(res.message);
             }
           },
-          error: (err) => this.toast.error(err?.error?.message)
+          error: (err) => this.toast.error(
+            typeof err?.error === 'string'
+              ? err.error
+              : err?.error?.message || err?.message || 'Failed to delete material'
+          )
         });
 
       this.subs.push(sub);
