@@ -36,7 +36,7 @@ declare var bootstrap: any;
 })
 export class ProductAddEditComponent implements OnInit, OnDestroy {
 
-  @ViewChild('productModal', { static: false })productModal!: ElementRef;
+  @ViewChild('productModal', { static: false }) productModal!: ElementRef;
 
   form!: FormGroup;
 
@@ -59,19 +59,19 @@ export class ProductAddEditComponent implements OnInit, OnDestroy {
     private productService: ProductService,
     private toast: ToastService,
     private commonService: CommonService
-  ) {}
+  ) { }
 
 
 
   ngOnInit() {
 
     this.form = this.fb.group({
-
       productName: ['', Validators.required],
-
       productCode: [{ value: '', disabled: true }],
-
-      effectiveDate: ['', Validators.required]
+      effectiveDate: ['', Validators.required],
+      format: [null, Validators.required],
+      category: [null, Validators.required],
+      type: [null, Validators.required]
 
     });
 
@@ -171,7 +171,7 @@ export class ProductAddEditComponent implements OnInit, OnDestroy {
     }
 
 
-       this.modalInstance = new bootstrap.Modal(this.productModal.nativeElement);
+    this.modalInstance = new bootstrap.Modal(this.productModal.nativeElement);
     this.modalInstance.show();
   }
 
@@ -216,7 +216,6 @@ export class ProductAddEditComponent implements OnInit, OnDestroy {
           }
 
         });
-
     }
 
     else {

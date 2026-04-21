@@ -260,6 +260,9 @@ export const API_ENDPOINTS = {
     GET_ALL: '/SupplierPrice/GetAll',
     GENERATE_SUPPLIER_CODE: '/SupplierPrice/GenerateSupplierCode',
     BULK_SAVE: '/SupplierPrice/BulkSave',
+    IMPORT: '/SupplierPrice/ImportSupplierPrices',
+    EXPORT: '/SupplierPrice/ExportSupplierPrices',
+    EXPORT_SAMPLE: '/SupplierPrice/DownloadSampleCSV',
   },
 
   SUPPLIER_PRICE_FORMULA: {

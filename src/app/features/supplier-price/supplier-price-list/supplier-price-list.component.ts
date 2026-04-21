@@ -269,6 +269,98 @@ export class SupplierPriceListComponent implements OnInit, OnDestroy {
     }
   }
 
+  importSupplierPrices(event: any): void {
+
+  const file = event.target.files[0];
+  if (!file) return;
+
+  if (!this.selectedSupplierId) {
+    this.toast.error('Please select supplier');
+    return;
+  }
+
+  const sub = this.supplierPriceService
+    .importSupplierPrices(file)
+    .subscribe((res: ApiResponse<any>) => {
+
+      if (res.isSuccess) {
+        this.toast.success(res.message);
+        this.onSupplierChange(); 
+      } else {
+        this.toast.error(res.message);
+      }
+
+    });
+
+  this.subs.push(sub);
+}
+exportSupplierPrices(): void {
+
+  if (!this.selectedSupplierId) {
+    this.toast.error('Please select supplier');
+    return;
+  }
+
+  const sub = this.supplierPriceService
+    .exportSupplierPrices()
+    .subscribe((res) => {
+      if (!res?.isSuccess || !res?.data) {
+        this.toast.error('Export failed');
+        return;
+      }
+
+      const blob = new Blob(
+        [Uint8Array.from(atob(res.data), c => c.charCodeAt(0))],
+        { type: 'text/csv;charset=utf-8;' }
+      );
+
+      const url = URL.createObjectURL(blob);
+
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = 'supplier-prices.csv';
+      link.click();
+
+      URL.revokeObjectURL(url);
+
+      this.toast.success('Export successful');
+    });
+
+  this.subs.push(sub);
+}
+
+downloadSampleCSV(): void {
+
+  const sub = this.supplierPriceService
+    .downloadSampleCSV()
+    .subscribe((res) => {
+
+      if (!res?.isSuccess || !res?.data) {
+
+        this.toast.error('Download failed');
+        return;
+      }
+
+      const blob = new Blob(
+        [Uint8Array.from(atob(res.data), c => c.charCodeAt(0))],
+        { type: 'text/csv;charset=utf-8;' }
+      );
+
+      const url = URL.createObjectURL(blob);
+
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = 'supplier-price-sample.csv';
+      link.click();
+
+      URL.revokeObjectURL(url);
+
+      this.toast.success('Sample downloaded');
+    });
+
+  this.subs.push(sub);
+}
+
   ngOnDestroy(): void {
     this.subs.forEach((s) => s.unsubscribe());
   }

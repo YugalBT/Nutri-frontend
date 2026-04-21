@@ -40,7 +40,31 @@
       [startDateLabel]="'Start Date'" [endDateLabel]="'End Date'" (apply)="onDateFilterApply($event)"
       (dateRangeChange)="onDateFilterChange($event)"></app-date-range-filter>
   </div>
+ <div class="d-flex gap-2 mt-3 justify-content-end">
 
+  <!-- SAMPLE CSV -->
+  <button class="btn add-btn"
+          (click)="downloadSampleCSV()">
+    <i class="bi bi-download me-2"></i>
+    Sample CSV
+  </button>
+
+  <!-- EXPORT -->
+  <button class="btn add-btn"
+          (click)="exportSupplierPrices()">
+    <i class="bi bi-download me-2"></i>
+    Export
+  </button>
+
+  <!-- IMPORT -->
+  <label class="btn add-btn mb-0">
+    <i class="bi bi-upload me-2"></i>
+    Import
+    <input type="file" hidden accept=".csv"
+           (change)="importSupplierPrices($event)">
+  </label>
+
+</div>
   <!-- MATERIALS TABLE SECTION -->
   <div class="sp-table-card">
     <div class="sp-table-header">
@@ -51,6 +75,7 @@
       <span class="sp-material-count" *ngIf="materials.length > 0">{{ materials.length }}</span>
     </div>
 
+   
     <!-- TABLE WRAPPER -->
     <div class="sp-table-wrapper">
       <table class="sp-table" *ngIf="materials.length > 0">
