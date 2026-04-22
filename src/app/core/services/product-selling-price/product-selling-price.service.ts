@@ -20,8 +20,12 @@ export class ProductSellingPriceService {
     this.priceChanged.next();
   }
 
-  savePrice(payload: ProductSellingPriceVm): Observable<ApiResponse<any>> {
+  createPrice(payload: ProductSellingPriceVm): Observable<ApiResponse<any>> {
     return this.http.post<any>(API_ENDPOINTS.PRODUCTPRICING.CREATE, payload);
+  }
+
+  updatePrice(payload: ProductSellingPriceVm): Observable<ApiResponse<any>> {
+    return this.http.post<any>(API_ENDPOINTS.PRODUCTPRICING.UPDATE, payload);
   }
 
   getAllPrice(payload: any): Observable<ApiResponse<ProductSellingPriceVm[]>> {
@@ -39,10 +43,13 @@ export class ProductSellingPriceService {
     return this.http.post<any>(url, {});
   }
   getPreviousPrice(productId: string, priceMonth: string) {
+    const normalizedMonth = /^\d{4}-\d{2}$/.test(priceMonth)
+      ? `${priceMonth}-01`
+      : priceMonth;
 
     return this.http.get<any>(
       API_ENDPOINTS.PRODUCTPRICING.GET_PREVIOUS_PRICE +
-      `?productId=${productId}&priceMonth=${priceMonth}`
+      `?productId=${productId}&priceMonth=${normalizedMonth}`
     );
 
   }

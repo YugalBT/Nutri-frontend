@@ -36,8 +36,8 @@ export class ProductPriceListComponent implements OnInit, OnDestroy {
     'previousMonthPrice',
     'suggestedPrice',
     'customerPrice',
-    'commissionPercent',
-    'marginPercent',
+    'commissionPercentDisplay',
+    'marginPercentDisplay',
     'isActive'
   ];
 
@@ -128,7 +128,11 @@ export class ProductPriceListComponent implements OnInit, OnDestroy {
         .getAllPrice(payload)
         .subscribe({
           next: (res) => {
-            this.prices = res?.data ?? [];
+            this.prices = (res?.data ?? []).map((row: any) => ({
+              ...row,
+              commissionPercentDisplay: this.formatPercent(row.commissionPercent),
+              marginPercentDisplay: this.formatPercent(row.marginPercent)
+            }));
             this.totalRecords = res?.totalRecords ?? 0;
           },
 
@@ -142,6 +146,11 @@ export class ProductPriceListComponent implements OnInit, OnDestroy {
 
     this.subs.push(sub);
 
+  }
+
+  private formatPercent(value: any): string {
+    const numericValue = Number(value) || 0;
+    return `${(numericValue * 100).toFixed(2).replace(/\.?0+$/, '')}%`;
   }
 
   onSearch(value: string) {

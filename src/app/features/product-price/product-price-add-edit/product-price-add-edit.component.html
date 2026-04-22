@@ -5,14 +5,11 @@
     <div class="modal-content">
 
       <div class="modal-header">
-
         <h5 class="modal-title">
           {{ isEdit ? ('productPrice.editPrice' | translate) : ('productPrice.addPrice' | translate) }}
         </h5>
-
         <button class="btn-close" (click)="modalInstance.hide()">
         </button>
-
       </div>
 
 
@@ -32,6 +29,7 @@
               </label>
 
               <select class="form-select" formControlName="productId"
+                [attr.aria-readonly]="isEdit"
                 [class.is-invalid]="form.get('productId')?.touched && form.get('productId')?.invalid">
 
                 <option value="" disabled selected>
@@ -64,6 +62,7 @@
               </label>
 
               <input type="month" class="form-control" formControlName="priceMonth"
+                [attr.readonly]="isEdit ? true : null"
                 [class.is-invalid]="form.get('priceMonth')?.invalid && form.get('priceMonth')?.touched" />
 
               <div class="invalid-feedback">
@@ -71,10 +70,7 @@
               </div>
 
             </div>
-
-
             <!-- Previous Price -->
-
             <div class="col-md-4">
 
               <label class="form-label">
@@ -84,10 +80,7 @@
               <input type="number" class="form-control"
                 placeholder="{{ 'productPrice.previousPricePlaceholder' | translate }}"
                 formControlName="previousMonthPrice" readonly />
-
             </div>
-
-
             <!-- Category info banner (auto-suggested context) -->
             <div *ngIf="categoryLabel" class="col-12">
               <div class="alert alert-info py-2 mb-0 d-flex flex-wrap gap-3 small">
@@ -97,6 +90,9 @@
                 <span *ngIf="isSpecialCategory" class="badge bg-warning text-dark">
                   {{ 'productPrice.specialFormula' | translate }}
                 </span>
+              </div>
+              <div *ngIf="formulaCost <= 0" class="text-warning small mt-2">
+                {{ 'productPrice.messages.zeroFormulaCostHint' | translate }}
               </div>
             </div>
 
@@ -129,6 +125,15 @@
                 placeholder="{{ 'productPrice.customerPricePlaceholder' | translate }}"
                 formControlName="customerPrice"
                 [class.is-invalid]="form.get('customerPrice')?.touched && form.get('customerPrice')?.invalid" />
+
+              <div class="invalid-feedback" *ngIf="form.get('customerPrice')?.touched && form.get('customerPrice')?.invalid">
+                <span *ngIf="form.get('customerPrice')?.errors?.['required']">
+                  {{ 'productPrice.validation.customerPriceRequired' | translate }}
+                </span>
+                <span *ngIf="form.get('customerPrice')?.errors?.['min']">
+                  {{ 'productPrice.validation.customerPriceMin' | translate }}
+                </span>
+              </div>
 
             </div>
 
@@ -213,7 +218,7 @@
 
         </button>
 
-        <button *ngIf="canSave" class="btn add-btn" (click)="save()" [disabled]="form.invalid">
+        <button *ngIf="canSave" class="btn add-btn" (click)="save()" [disabled]="form.invalid || (form.getRawValue().customerPrice || 0) <= 0">
 
          {{ 'productPrice.savePrice' | translate }}
         </button>

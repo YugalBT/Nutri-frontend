@@ -12,9 +12,7 @@ import { TranslatePipe } from '../../../i18n/translate.pipe';
 import { ApiResponse } from '../../../core/models/api-response';
 import { TokenService } from '../../../shared/services/token.service';
 import { PERMISSIONS } from '../../../core/constants/permissions.constants';
-import { PermissionService } from '../../../shared/services/permission.service';
-import { Store } from '@ngrx/store';
-import { selectUserRoles } from '../../../state/auth/auth.selectors';
+import { CommonService } from '../../../shared/services/common.service';
 
 @Component({
   selector: 'app-material-list',
@@ -56,7 +54,6 @@ export class MaterialListComponent implements OnInit, OnDestroy {
   viewPermission = PERMISSIONS.MaterialsView;
   editPermission = PERMISSIONS.MaterialsEdit;
   deletePermission = PERMISSIONS.MaterialsDelete;
-  userRoles: string[] = [];
 
   private subs: Subscription[] = [];
 
@@ -66,8 +63,7 @@ export class MaterialListComponent implements OnInit, OnDestroy {
     private confirm: ConfirmDialogService,
     private translate: TranslateService,
     private tokenservice: TokenService,
-    private permissionService: PermissionService,
-    private store: Store
+    private commonService: CommonService
   ) {
     this.setColumns();
 
@@ -104,11 +100,7 @@ export class MaterialListComponent implements OnInit, OnDestroy {
   }
 
   private loadUserPermissions(): void {
-    const subRoles = this.store.select(selectUserRoles).subscribe(roles => {
-      this.userRoles = roles || [];
-      this.canAddMaterials = this.userRoles.includes(PERMISSIONS.MaterialsAdd);
-    });
-    this.subs.push(subRoles);
+    this.canAddMaterials = this.commonService.checkPermission(PERMISSIONS.MaterialsAdd, false);
   }
 
   private loadMaterials(pageNo: number, recordPerPage: number): void {

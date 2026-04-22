@@ -205,7 +205,7 @@
                       <div class="pb-cell-content">
                         <div>
                           <span class="pb-material-name">{{ item.value.materialName }}</span>
-                          <small class="pb-material-code" *ngIf="item.value.materialCode">{{ item.value.materialCode }}</small>
+                          <small class="pb-material-code" *ngIf="item.value.category">{{ item.value.category }}</small>
                         </div>
                       </div>
                     </td>
@@ -347,7 +347,7 @@
               class="form-control"
               [(ngModel)]="materialSearchTerm"
               [ngModelOptions]="{ standalone: true }"
-              placeholder="Search by material name or code"
+              placeholder="Search by material name or category"
               (keyup.enter)="searchMaterials()"
             />
             <button type="button" class="btn add-btn" (click)="searchMaterials()">
@@ -371,7 +371,7 @@
           <div class="pb-search-empty" *ngIf="!materialSearchLoading && !materialSearchResults.length">
             <i class="bi bi-search"></i>
             <h5>{{ materialSearchMessage || 'No materials loaded yet' }}</h5>
-            <p>Enter a material name or code and press Search.</p>
+            <p>Enter a material name or category and press Search.</p>
           </div>
 
           <div class="pb-search-results" *ngIf="materialSearchResults.length">
@@ -385,7 +385,7 @@
                 <thead>
                   <tr>
                     <th>Material</th>
-                    <th>Code</th>
+                    <th>Category</th>
                     <th>Price (€/ton)</th>
                     <th class="text-end">Action</th>
                   </tr>
@@ -396,7 +396,7 @@
                       <div class="fw-semibold">{{ material.materialName }}</div>
                       <small class="text-muted">{{ material.category || '-' }}</small>
                     </td>
-                    <td>{{ material.materialCode || '-' }}</td>
+                    <td>{{ material.category || '-' }}</td>
                     <td>{{ (material.unitPrice || material.deliveredPrice || material.price || 0) | number:'1.2-2' }}</td>
                     <td class="text-end">
                       <button

@@ -146,6 +146,7 @@ export class ProductBuildFormPageComponent implements OnInit, OnDestroy {
       materialId: source?.materialId ?? saved?.materialId ?? null,
       materialName: source?.materialName ?? saved?.materialName ?? '',
       materialCode: source?.materialCode ?? saved?.materialCode ?? '',
+      category: source?.category ?? saved?.category ?? '',
       amount,
       percentage: Number(saved?.percentage ?? 0),
       calculatedAmount: Number(saved?.calculatedCost ?? saved?.calculatedAmount ?? 0),

@@ -10,21 +10,20 @@
 
     <div class="d-flex gap-2">
 
-       <!-- EXPORT -->
-      <button class="btn add-btn"
+       <!-- EXPORT — visible to anyone who can add/edit materials -->
+      <button *ngIf="canAddMaterials" class="btn add-btn"
               (click)="exportSampleCSV()">
         <i class="bi bi-download me-2"></i>
         Sample CSV
       </button>
-      <!-- EXPORT -->
-      <button class="btn add-btn"
+      <button *ngIf="canAddMaterials" class="btn add-btn"
               (click)="exportMaterials()">
         <i class="bi bi-download me-2"></i>
         Export
       </button>
 
-      <!-- IMPORT -->
-      <label class="btn add-btn mb-0">
+      <!-- IMPORT — visible to anyone who can add materials -->
+      <label *ngIf="canAddMaterials" class="btn add-btn mb-0">
         <i class="bi bi-upload me-2"></i>
         Import
         <input type="file"

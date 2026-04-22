@@ -14,6 +14,7 @@ import {
 import { ToastService } from '../../../shared/services/toast.service';
 import { SharedModule } from '../../../shared/shared.module';
 import { TranslatePipe } from '../../../i18n/translate.pipe';
+import { TranslateService } from '../../../i18n/translate.service';
 import { ProductSellingPriceService } from '../../../core/services/product-selling-price/product-selling-price.service';
 import { CommonService } from '../../../shared/services/common.service';
 import { PERMISSIONS } from '../../../core/constants/permissions.constants';
@@ -59,7 +60,8 @@ export class ProductPriceAddEditComponent implements OnInit {
     private fb: FormBuilder,
     private priceService: ProductSellingPriceService,
     private toast: ToastService,
-    private commonService: CommonService
+    private commonService: CommonService,
+    private translate: TranslateService
   ) { }
 
   ngOnInit() {
@@ -86,7 +88,7 @@ export class ProductPriceAddEditComponent implements OnInit {
       suggestedPrice: [0, Validators.required],
 
       // Customer price is the primary input now (margin is derived from it)
-      customerPrice: [0, Validators.required],
+      customerPrice: [0, [Validators.required, Validators.min(0.01)]],
 
       // Read-only: auto-filled from margin config for the product's category
       commissionPercent: [{ value: 0, disabled: true }],
@@ -96,6 +98,19 @@ export class ProductPriceAddEditComponent implements OnInit {
 
     });
 
+  }
+
+  private resetPricingContext() {
+    this.formulaCost = 0;
+    this.targetMarginPercent = 0;
+    this.minThreshold = 0;
+    this.midThreshold = 0;
+    this.highThreshold = 0;
+    this.isSpecialCategory = false;
+    this.categoryLabel = '';
+    this.marginPercent = 0;
+    this.marginLevel = 0;
+    this.marginColor = '';
   }
 
   listenPriceCalculation() {
@@ -123,8 +138,7 @@ export class ProductPriceAddEditComponent implements OnInit {
 
   loadPreviousPrice() {
 
-    const productId = this.form.value.productId;
-    const month = this.form.value.priceMonth;
+    const { productId, priceMonth: month } = this.form.getRawValue();
 
     if (!productId || !month) return;
 
@@ -138,43 +152,67 @@ export class ProductPriceAddEditComponent implements OnInit {
             previousMonthPrice: res.data
           });
 
+        } else {
+          this.form.patchValue({
+            previousMonthPrice: 0
+          });
         }
 
+      }, () => {
+        this.form.patchValue({
+          previousMonthPrice: 0
+        });
       });
 
   }
 
-  loadSuggestedPrice() {
+  loadSuggestedPrice(preserveCurrentPrices = false) {
 
-    const productId = this.form.value.productId;
+    const productId = this.form.getRawValue().productId;
 
     if (!productId) return;
 
     this.priceService
       .getSuggestedPrice(productId)
-      .subscribe((res: any) => {
+      .subscribe({
+        next: (res: any) => {
+          if (res?.isSuccess && res.data) {
+            const d = res.data;
+            this.formulaCost = Number(d.formulaCost) || 0;
+            this.targetMarginPercent = Number(d.targetMarginPercent) || 0;
+            this.minThreshold = Number(d.minThreshold) || 0;
+            this.midThreshold = Number(d.midThreshold) || 0;
+            this.highThreshold = Number(d.highThreshold) || 0;
+            this.isSpecialCategory = !!d.isSpecialCategory;
+            this.categoryLabel = d.category || '';
 
-        if (res?.isSuccess && res.data) {
+            const patch: Record<string, number> = {
+              commissionPercent: Number(d.commissionPercent) || 0
+            };
 
-          const d = res.data;
-          this.formulaCost = Number(d.formulaCost) || 0;
-          this.targetMarginPercent = Number(d.targetMarginPercent) || 0;
-          this.minThreshold = Number(d.minThreshold) || 0;
-          this.midThreshold = Number(d.midThreshold) || 0;
-          this.highThreshold = Number(d.highThreshold) || 0;
-          this.isSpecialCategory = !!d.isSpecialCategory;
-          this.categoryLabel = d.category || '';
+            if (!preserveCurrentPrices) {
+              patch['suggestedPrice'] = Number(d.suggestedPrice) || 0;
+              patch['customerPrice'] = Number(d.suggestedPrice) || 0;
+            }
 
+            this.form.patchValue(patch, { emitEvent: false });
+            this.recomputeMargin();
+
+            if (this.categoryLabel && this.formulaCost <= 0) {
+              this.toast.warning(
+                this.translate.instant('productPrice.messages.zeroFormulaCost') ||
+                'Formula cost is 0 for this product. Suggested price may be incomplete.'
+              );
+            }
+          }
+        },
+        error: () => {
+          this.resetPricingContext();
           this.form.patchValue({
-            suggestedPrice: d.suggestedPrice,
-            customerPrice: d.suggestedPrice,
-            commissionPercent: Number(d.commissionPercent) || 0
-          });
-
-          this.recomputeMargin();
-
+            commissionPercent: 0,
+            marginPercent: 0
+          }, { emitEvent: false });
         }
-
       });
 
   }
@@ -237,11 +275,25 @@ export class ProductPriceAddEditComponent implements OnInit {
       return;
     }
 
-    this.form.reset();
-    this.formulaCost = 0;
-    this.marginPercent = 0;
-    this.marginLevel = 0;
-    this.marginColor = '';
+    this.form.reset({
+      productId: '',
+      priceMonth: '',
+      previousMonthPrice: 0,
+      suggestedPrice: 0,
+      customerPrice: 0,
+      commissionPercent: 0,
+      marginPercent: 0
+    });
+    this.currentId = null;
+    this.resetPricingContext();
+
+    if (this.isEdit) {
+      this.form.get('productId')?.disable({ emitEvent: false });
+      this.form.get('priceMonth')?.disable({ emitEvent: false });
+    } else {
+      this.form.get('productId')?.enable({ emitEvent: false });
+      this.form.get('priceMonth')?.enable({ emitEvent: false });
+    }
 
     if (isEdit && row) {
 
@@ -255,11 +307,10 @@ export class ProductPriceAddEditComponent implements OnInit {
         customerPrice: row.customerPrice,
         commissionPercent: row.commissionPercent,
         marginPercent: row.marginPercent
-      });
+      }, { emitEvent: false });
 
-      this.marginPercent = Number(row.marginPercent) || 0;
-      this.marginLevel = Number(row.marginLevel) || 0;
-      this.marginColor = row.marginColor || 'gray';
+      this.loadSuggestedPrice(true);
+      this.loadPreviousPrice();
 
     }
 
@@ -289,6 +340,15 @@ export class ProductPriceAddEditComponent implements OnInit {
 
     }
 
+    if ((Number(this.form.getRawValue().customerPrice) || 0) <= 0) {
+      this.form.get('customerPrice')?.markAsTouched();
+      this.toast.error(
+        this.translate.instant('productPrice.validation.customerPriceMin') ||
+        'Customer price must be greater than 0'
+      );
+      return;
+    }
+
     // getRawValue() includes disabled fields (commission, margin)
     const payload = { ...this.form.getRawValue() };
 
@@ -304,25 +364,29 @@ export class ProductPriceAddEditComponent implements OnInit {
 
     }
 
-    this.priceService
-      .savePrice(payload)
-      .subscribe(res => {
+    const request$ = this.isEdit
+      ? this.priceService.updatePrice(payload)
+      : this.priceService.createPrice(payload);
 
-        if (res.isSuccess) {
-
-          this.toast.success(res.message);
-
-          this.priceService.notifyPriceChanged();
-
-          this.modalInstance.hide();
-
+    request$
+      .subscribe({
+        next: (res) => {
+          if (res.isSuccess) {
+            this.toast.success(res.message);
+            this.priceService.notifyPriceChanged();
+            this.modalInstance.hide();
+          }
+          else {
+            this.toast.error(res.message);
+          }
+        },
+        error: (err) => {
+          this.toast.error(
+            err?.error?.message ||
+            this.translate.instant('productPrice.messages.saveFailed') ||
+            'Failed to save product price'
+          );
         }
-        else {
-
-          this.toast.error(res.message);
-
-        }
-
       });
 
   }
