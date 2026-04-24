@@ -90,11 +90,16 @@ export class DashboardComponent implements OnInit {
     this.isSupplier = !!supplierData;
   }
 
+  // get isAdmin(): boolean {
+  //   const role = (this.user?.roleType || '').toUpperCase();
+  //   return this.user?.isSuperAdmin === true || ['SUPERADMIN', 'ADMIN', 'COLLABORATOR'].includes(role);
+  // }
   get isAdmin(): boolean {
-    const role = (this.user?.roleType || '').toUpperCase();
-    return this.user?.isSuperAdmin === true || ['SUPERADMIN', 'ADMIN', 'COLLABORATOR'].includes(role);
-  }
-
+  return this.user?.isSuperAdmin === true;
+}
+get isCompanyUser(): boolean {
+  return this.user?.isCompany === true && !this.user?.isSuperAdmin;
+}
   private get currentCompanyId(): string | null {
     return this.user?.tenantId || this.user?.parentTenantId || null;
   }

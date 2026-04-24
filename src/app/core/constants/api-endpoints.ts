@@ -317,6 +317,7 @@ export const API_ENDPOINTS = {
     SAVE: '/DayData/Save',
     GET_BY_DAY_ID: '/DayData/GetByDayId',
     ARCHIVE: '/DayData/Archive',
+    ECO_ARCHIVE: '/DayData/EcoArchive',
     BULK_RECALC: '/DayData/BulkRecalculate',
   },
 

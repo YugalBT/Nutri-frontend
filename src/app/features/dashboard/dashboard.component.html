@@ -1,15 +1,4 @@
-<div class="body-content">
-  <section *ngIf="!isSupplier && !isAdmin">
-    <div class="welcome-dashboard" *ngIf="user as u">
-      <h3 class="mb-2">
-        <b>
-          {{ "dashboard.welcome" | translate }}
-          <span class="link-text"> {{ u.companyName }}</span>
-        </b>
-      </h3>
-    </div>
-  </section>
-
+﻿<div class="body-content">
   <ng-container *ngIf="!isSupplier && user?.roleName !== 'Formulator'">
     <div *ngIf="isLoading" class="text-center py-3">
       {{ "dashboard.loading" | translate }}
@@ -20,8 +9,8 @@
         <section class="superadmin-dashboard">
         <div class="superadmin-titlebar">
           <div class="superadmin-title-copy">
-            <h2>Azienda <span>{{ user?.companyName || 'DEATECH srl' }}</span></h2>
-            <p>Panoramica del dashboard</p>
+            <h2>{{ 'dashboard.companyLabel' | translate }} <span>{{ user?.companyName || 'DEATECH srl' }}</span></h2>
+            <p>{{ 'dashboard.dashboardOverview' | translate }}</p>
           </div>
 
           <div class="superadmin-title-brand">
@@ -72,70 +61,70 @@
         </div>
 
         <section class="ppt-dashboard-panel">
-          <div class="ppt-overview-title">Panoramica del dashboard</div>
+          <div class="ppt-overview-title">{{ 'dashboard.dashboardOverview' | translate }}</div>
 
           <div class="ppt-strip">
             <article class="ppt-strip-card tone-feed">
-              <div class="ppt-card-title">Feeding</div>
+              <div class="ppt-card-title">{{ 'dashboard.feeding' | translate }}</div>
               <div class="ppt-row">
-                <span>Cost per dairy cow ration</span>
-                <strong>9,50 €</strong>
+                <span>{{ 'dashboard.costPerDairyCowRation' | translate }}</span>
+                <strong>{{ aggregatedAnalytics?.costPerDairyCowRation || 0 | number: "1.2-2" }} €</strong>
               </div>
               <div class="ppt-row">
-                <span>Cost per dry cow ration</span>
-                <strong>3,5 €</strong>
+                <span>{{ 'dashboard.costPerDryCowRation' | translate }}</span>
+                <strong>{{ aggregatedAnalytics?.costPerDryCowRation || 0 | number: "1.2-2" }} €</strong>
               </div>
               <div class="ppt-row">
-                <span>Heifer rearing cost</span>
-                <strong>200 €</strong>
+                <span>{{ 'dashboard.heiferRearingCost' | translate }}</span>
+                <strong>{{ aggregatedAnalytics?.heiferRearingCost || 0 | number: "1.2-2" }} €</strong>
               </div>
             </article>
 
             <article class="ppt-strip-card tone-herd">
-              <div class="ppt-card-title">Herd</div>
+              <div class="ppt-card-title">{{ 'dashboard.herd' | translate }}</div>
               <div class="ppt-row">
-                <span>Animals in lattazione</span>
-                <strong>100</strong>
+                <span>{{ 'dashboard.animalsInLactation' | translate }}</span>
+                <strong>{{ aggregatedAnalytics?.animalsInLactation || 0 }}</strong>
               </div>
               <div class="ppt-row">
-                <span>Animals in asciutta</span>
-                <strong>15</strong>
+                <span>{{ 'dashboard.dryAnimals' | translate }}</span>
+                <strong>{{ aggregatedAnalytics?.dryAnimals || 0 }}</strong>
               </div>
               <div class="ppt-row">
-                <span>% Heifers</span>
-                <strong>35 %</strong>
+                <span>{{ 'dashboard.heifersPercentage' | translate }}</span>
+                <strong>{{ aggregatedAnalytics?.heiferPercentage || 0 | number: "1.0-2" }} %</strong>
               </div>
             </article>
 
             <article class="ppt-strip-card tone-production">
-              <div class="ppt-card-title">Production</div>
+              <div class="ppt-card-title">{{ 'dashboard.production' | translate }}</div>
               <div class="ppt-row">
-                <span>Milk produced</span>
-                <strong>35 litri</strong>
+                <span>{{ 'dashboard.milkProduced' | translate }}</span>
+                <strong>{{ aggregatedAnalytics?.milkProduced || 0 | number: "1.2-2" }} {{ 'dashboard.litri' | translate }}</strong>
               </div>
               <div class="ppt-row">
-                <span>Fat</span>
-                <strong>4,1 %</strong>
+                <span>{{ 'dashboard.fat' | translate }}</span>
+                <strong>{{ aggregatedAnalytics?.fatPercent || 0 | number: "1.1-2" }} %</strong>
               </div>
               <div class="ppt-row">
-                <span>Protein</span>
-                <strong>3,5 %</strong>
+                <span>{{ 'dashboard.protein' | translate }}</span>
+                <strong>{{ aggregatedAnalytics?.proteinPercent || 0 | number: "1.1-2" }} %</strong>
               </div>
             </article>
 
             <article class="ppt-strip-card tone-fertility">
-              <div class="ppt-card-title">Fertility</div>
+              <div class="ppt-card-title">{{ 'dashboard.fertility' | translate }}</div>
               <div class="ppt-row">
-                <span>PIM (Peak Index of Milk)</span>
-                <strong>170</strong>
+                <span>{{ 'dashboard.pim' | translate }}</span>
+                <strong>{{ aggregatedAnalytics?.pim || 0 }}</strong>
               </div>
               <div class="ppt-row">
-                <span>CREP (Calving Rate per Estrous Period)</span>
-                <strong>3,15</strong>
+                <span>{{ 'dashboard.crep' | translate }}</span>
+                <strong>{{ aggregatedAnalytics?.crep || 0 | number: "1.2-2" }}</strong>
               </div>
               <div class="ppt-row">
-                <span>Age at first calving heifers</span>
-                <strong>25</strong>
+                <span>{{ 'dashboard.ageAtFirstCalvingHeifers' | translate }}</span>
+                <strong>{{ aggregatedAnalytics?.ageAtFirstCalvingHeifers || 0 | number: "1.0-2" }}</strong>
               </div>
             </article>
           </div>
@@ -144,7 +133,7 @@
         <section class="superadmin-chart-stack">
           <article class="dashboard-chart-card">
             <div class="dashboard-chart-head">
-              <h3>Panoramica dati aziende</h3>
+              <h3>{{ 'dashboard.companiesOverview' | translate }}</h3>
             </div>
             <div class="dashboard-chart-body">
               <div echarts [options]="comparisonChart" class="dashboard-chart-box"></div>
@@ -153,7 +142,7 @@
 
           <article class="dashboard-chart-card">
             <div class="dashboard-chart-head">
-              <h3>Produzione media</h3>
+              <h3>{{ 'dashboard.avgProductionChart' | translate }}</h3>
             </div>
             <div class="dashboard-chart-body">
               <div echarts [options]="productionChart" class="dashboard-chart-box production-box"></div>
@@ -165,12 +154,15 @@
     </ng-container>
 
     <ng-template #companyDashboardTpl>
-      <div class="d-flex align-items-center justify-content-between py-3">
-        <h4 class="border-start border-4 ps-3">
-          {{ "dashboard.title" | translate }}
-        </h4>
+      <section class="company-dashboard">
+        <div class="superadmin-titlebar">
+          <div class="superadmin-title-copy">
+            <h2>{{ 'dashboard.companyLabel' | translate }} <span>{{ companyDashboard?.companyName || user?.companyName || 'DEATECH srl' }}</span></h2>
+            <p>{{ "dashboard.overview" | translate }}</p>
+          </div>
 
-        <div class="d-flex align-items-center gap-2">
+          <div class="company-dashboard-actions">
+            <div class="d-flex align-items-center gap-2">
           <label class="mb-0">
             {{ "dashboard.year" | translate }}
           </label>
@@ -185,12 +177,20 @@
               {{ year }}
             </option>
           </select>
+            </div>
+
+            <img
+              [src]="user?.logo || '/assets/image/small-logo.png'"
+              alt="Brand logo"
+              class="brand-logo-preview"
+            />
+          </div>
         </div>
-      </div>
+
 
       <div class="row g-3">
         <div class="col-md-3">
-          <div class="dashboard-card">
+          <div class="dashboard-card super-metric-card">
             <div class="card-top">
               <span>{{ "dashboard.lastEntry" | translate }}</span>
             </div>
@@ -206,7 +206,7 @@
         </div>
 
         <div class="col-md-3">
-          <div class="dashboard-card">
+          <div class="dashboard-card super-metric-card tone-soft-peach">
             <div class="card-top">
               <span>{{ "dashboard.milkPrice" | translate }}</span>
             </div>
@@ -216,7 +216,7 @@
         </div>
 
         <div class="col-md-3">
-          <div class="dashboard-card">
+          <div class="dashboard-card super-metric-card tone-soft-sky">
             <div class="card-top">
               <span>{{ "dashboard.iofc" | translate }}</span>
             </div>
@@ -226,7 +226,7 @@
         </div>
 
         <div class="col-md-3">
-          <div class="dashboard-card">
+          <div class="dashboard-card super-metric-card tone-soft-mint">
             <div class="card-top">
               <span>{{ "dashboard.deaMilk" | translate }}</span>
             </div>
@@ -338,6 +338,7 @@
           <div echarts [options]="companyTrendChart" class="chart-box"></div>
         </div>
       </div>
+      </section>
     </ng-template>
   </ng-container>
 </div>

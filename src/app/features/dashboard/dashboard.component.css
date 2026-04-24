@@ -151,6 +151,10 @@
   background: #f3fbfb;
 }
 
+.company-dashboard {
+  padding: 6px 0 0;
+}
+
 .superadmin-titlebar {
   display: flex;
   align-items: center;
@@ -187,6 +191,14 @@
   display: flex;
   align-items: center;
   justify-content: flex-end;
+}
+
+.company-dashboard-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 18px;
+  flex-wrap: wrap;
 }
 
 .brand-logo-preview {

@@ -32,6 +32,17 @@ export interface CompanyDashboardData {
   totalCalves?:number;
   fiber?:number;
   milkFeed?:number;
+  costPerDairyCowRation?: number;
+  costPerDryCowRation?: number;
+  heiferRearingCost?: number;
+  animalsInLactation?: number;
+  dryAnimals?: number;
+  heiferPercentage?: number;
+  milkProduced?: number;
+  fatPercent?: number;
+  proteinPercent?: number;
+  pim?: number;
+  ageAtFirstCalvingHeifers?: number;
 
 }
 
@@ -59,6 +70,18 @@ export interface AggregatedAnalyticsData {
   companyComparison: CompanyComparisonData[];
   rankingByIofc: CompanyRankingData[];
   monthlyTrend: KpiTrendPoint[];
+  costPerDairyCowRation?: number;
+  costPerDryCowRation?: number;
+  heiferRearingCost?: number;
+  animalsInLactation?: number;
+  dryAnimals?: number;
+  heiferPercentage?: number;
+  milkProduced?: number;
+  fatPercent?: number;
+  proteinPercent?: number;
+  pim?: number;
+  crep?: number;
+  ageAtFirstCalvingHeifers?: number;
 }
 
 export interface AggregatedArchiveItem {

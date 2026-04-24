@@ -343,6 +343,22 @@ export const routes: Routes = [
           ),
       },
       {
+        path: 'archive-economic',
+        canActivate: [permissionGuard],
+        data: {
+          requiredPermissions: [
+            PERMISSIONS.ArchiveView,
+            PERMISSIONS.ArchiveAdd,
+            PERMISSIONS.ArchiveEdit,
+            PERMISSIONS.ArchiveDelete,
+          ],
+        },
+        loadComponent: () =>
+          import('./features/archive-economic/archive-economic.component').then(
+            (m) => m.ArchiveEconomicComponent,
+          ),
+      },
+      {
         path: 'parti',
         canActivate: [permissionGuard],
         data: {

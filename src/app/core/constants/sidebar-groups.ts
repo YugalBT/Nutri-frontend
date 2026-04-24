@@ -11,7 +11,7 @@ export const SIDEBAR_GROUPS = [
   {
     key: 'farm', title: 'sidebarmenu.feeding', icon: SIDEBAR_ICONS.FARM,
     items: ['Animal Group', 'Feed', 'CalfBarn', 'Ration', 'Animal Type',
-      'Animal Lactation Stage', 'Archive', 'Daily Entry']
+      'Animal Lactation Stage', 'Archive', 'Archive Economic', 'ECO Archive', 'Archive Eco', 'Daily Entry']
   },
   {
     key: 'consultation',
