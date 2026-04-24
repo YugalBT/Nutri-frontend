@@ -10,7 +10,7 @@
     </div>
   </section>
 
-  <ng-container *ngIf="!isSupplier">
+  <ng-container *ngIf="!isSupplier && user?.roleName !== 'Formulator'">
     <div *ngIf="isLoading" class="text-center py-3">
       {{ "dashboard.loading" | translate }}
     </div>

@@ -174,7 +174,8 @@ private loadModules(masterRoles: boolean = false): void {
         isEditable : roleData.isEditable || false,
         description: roleData.nameIt || ''
       });
-         this.loadModules(roleData.isShow);
+         
+        this.loadModules(true);
       // If modules are already loaded, populate permissions immediately from roleData
       if (this.modules && this.modules.length > 0) {
         this.populatePermissionsFromRole(roleData);
