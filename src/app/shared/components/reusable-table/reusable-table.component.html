@@ -7,26 +7,22 @@
           <tr class="rt-header-row">
             <th *ngFor="let col of columns; let i = index" class="rt-header-cell"
               [class.sortable]="isSortable(columnFields?.[i] || col.toLowerCase())"
-              [class.rt-sorted]="currentSortColumn === (columnFields?.[i] || col.toLowerCase())"
-              [attr.aria-sort]="
+              [class.rt-sorted]="currentSortColumn === (columnFields?.[i] || col.toLowerCase())" [attr.aria-sort]="
                 !isSortable(columnFields?.[i] || col.toLowerCase())
                   ? null
                   : (currentSortColumn === (columnFields?.[i] || col.toLowerCase())
                     ? (currentSortDirection === 'asc' ? 'ascending' : 'descending')
                     : 'none')
-              "
-              (click)="onSort(columnFields?.[i] || col.toLowerCase())">
+              " (click)="onSort(columnFields?.[i] || col.toLowerCase())">
               <span class="header-content">
                 {{ col }}
-                <span *ngIf="isSortable(columnFields?.[i] || col.toLowerCase())" class="sort-indicator" aria-hidden="true">
-                  <i
-                    class="rt-sort-icon bi"
-                    [ngClass]="{
+                <span *ngIf="isSortable(columnFields?.[i] || col.toLowerCase())" class="sort-indicator"
+                  aria-hidden="true">
+                  <i class="rt-sort-icon bi" [ngClass]="{
                       'bi-arrow-down-up': currentSortColumn !== (columnFields?.[i] || col.toLowerCase()),
                       'bi-arrow-up': currentSortColumn === (columnFields?.[i] || col.toLowerCase()) && currentSortDirection === 'asc',
                       'bi-arrow-down': currentSortColumn === (columnFields?.[i] || col.toLowerCase()) && currentSortDirection === 'desc'
-                    }"
-                  ></i>
+                    }"></i>
                 </span>
               </span>
             </th>
@@ -50,6 +46,11 @@
                 <ng-container *ngIf="cell.type === 'color'">
                   <span class="rt-color-swatch" [style.background]="cell.value"></span>
                 </ng-container>
+                <ng-container *ngIf="cell.type === 'dynamicColor'">
+                  <span class="rt-badge" [ngClass]="cell.class">
+                    {{ cell.value }}
+                  </span>
+                </ng-container>
 
                 <!-- IMAGES GRID CELL -->
                 <ng-container *ngIf="cell.type === 'images'">
@@ -64,9 +65,7 @@
                 <ng-container *ngIf="cell.type === 'switch'">
                   <div class="rt-switch-cell">
                     <label class="rt-switch">
-                      <input
-                        type="checkbox"
-                        [checked]="cell.value"
+                      <input type="checkbox" [checked]="cell.value"
                         [disabled]="row['isToggling'] || !hasPermission(editPermission)"
                         (change)="onToggle(row, $event)" />
                       <span class="rt-slider"></span>
@@ -85,12 +84,9 @@
                 </ng-container>
 
                 <!-- TEXT CELL -->
-                <ng-container  *ngIf="cell.type === 'text'">
-                  <a *ngIf="clickableField === (columnFields?.[i] || col.toLowerCase())"
-                    href="javascript:void(0)"
-                    class="rt-cell-link"
-                    matTooltip="{{ 'common.view' | translate }}"
-                    matTooltipPosition="above"
+                <ng-container *ngIf="cell.type === 'text'">
+                  <a *ngIf="clickableField === (columnFields?.[i] || col.toLowerCase())" href="javascript:void(0)"
+                    class="rt-cell-link" matTooltip="{{ 'common.view' | translate }}" matTooltipPosition="above"
                     (click)="onCellClick(columnFields?.[i] || col.toLowerCase(), row)">
                     {{ cell.value }}
                   </a>
@@ -106,49 +102,34 @@
               <div class="rt-actions-group">
                 <!-- VIEW BUTTON -->
                 <button *ngIf="showView && hasPermission(viewPermission)" class="rt-action-btn rt-view-btn"
-                  matTooltip="{{ 'common.view' | translate }}"
-                  matTooltipPosition="above"
-                  (click)="viewRow.emit(row)"
-                  type="button"
-                  [attr.aria-label]="'View row'">
+                  matTooltip="{{ 'common.view' | translate }}" matTooltipPosition="above" (click)="viewRow.emit(row)"
+                  type="button" [attr.aria-label]="'View row'">
                   <i class="bi bi-eye-fill"></i>
                 </button>
 
                 <!-- EDIT BUTTON - ONLY SHOW IF HAS EDIT PERMISSION -->
                 <button *ngIf="hasPermission(editPermission)" class="rt-action-btn rt-edit-btn"
-                  matTooltip="{{ 'common.edit' | translate }}"
-                  matTooltipPosition="above"
-                  (click)="editRow.emit(row)"
-                  type="button"
-                  [attr.aria-label]="'Edit row'">
+                  matTooltip="{{ 'common.edit' | translate }}" matTooltipPosition="above" (click)="editRow.emit(row)"
+                  type="button" [attr.aria-label]="'Edit row'">
                   <i class="bi bi-pencil-fill"></i>
                 </button>
 
                 <!-- DELETE BUTTON - ONLY SHOW IF HAS DELETE PERMISSION -->
                 <button *ngIf="hasPermission(deletePermission)" class="rt-action-btn rt-delete-btn"
-                  matTooltip="{{ 'common.delete' | translate }}"
-                  matTooltipPosition="above"
-                  (click)="deleteRow.emit(row)"
-                  type="button"
-                  [attr.aria-label]="'Delete row'">
+                  matTooltip="{{ 'common.delete' | translate }}" matTooltipPosition="above"
+                  (click)="deleteRow.emit(row)" type="button" [attr.aria-label]="'Delete row'">
                   <i class="bi bi-trash-fill"></i>
                 </button>
 
                 <!-- IMPORT BUTTON -->
-                <button *ngIf="showImportExport" class="rt-action-btn rt-import-btn"
-                  (click)="importRow.emit(row)"
-                  type="button"
-                  [attr.aria-label]="'Import row'"
-                  title="{{ 'common.import' | translate }}">
+                <button *ngIf="showImportExport" class="rt-action-btn rt-import-btn" (click)="importRow.emit(row)"
+                  type="button" [attr.aria-label]="'Import row'" title="{{ 'common.import' | translate }}">
                   <i class="bi bi-download"></i>
                 </button>
 
                 <!-- EXPORT BUTTON -->
-                <button *ngIf="showImportExport" class="rt-action-btn rt-export-btn"
-                  (click)="exportRow.emit(row)"
-                  type="button"
-                  [attr.aria-label]="'Export row'"
-                  title="{{ 'common.export' | translate }}">
+                <button *ngIf="showImportExport" class="rt-action-btn rt-export-btn" (click)="exportRow.emit(row)"
+                  type="button" [attr.aria-label]="'Export row'" title="{{ 'common.export' | translate }}">
                   <i class="bi bi-upload"></i>
                 </button>
               </div>
@@ -176,13 +157,8 @@
     </div>
 
     <!-- PAGINATION -->
-    <mat-paginator *ngIf="pageable && data && data.length > 0"
-      class="rt-paginator"
-      [length]="totalRecords"
-      [pageSize]="pageSize"
-      [pageIndex]="pageIndex"
-      [pageSizeOptions]="[10, 25, 50, 100]"
-      (page)="onPaginate($event)">
+    <mat-paginator *ngIf="pageable && data && data.length > 0" class="rt-paginator" [length]="totalRecords"
+      [pageSize]="pageSize" [pageIndex]="pageIndex" [pageSizeOptions]="[10, 25, 50, 100]" (page)="onPaginate($event)">
     </mat-paginator>
   </div>
 

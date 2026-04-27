@@ -202,6 +202,22 @@ export class FeedListComponent {
       });
   }
 
+  columnColorMap = {
+  category: (value: string) => {
+    switch (value) {
+      case 'Foraggi': return 'badge-green';
+      case 'Concentrati': return 'badge-blue';
+      case 'Robot': return 'badge-light-blue';
+      case 'Minerali': return 'badge-gray';
+      default: return 'badge-default';
+    }
+  },
+
+  vatApplicable: (value: boolean) => {
+    return value ? 'badge-green' : 'badge-gray';
+  }
+};
+
   // ── Mattia's 5 columns only (Req #4)
   // Removed: Protein, NDF, Energy, ADF, FatContent, Calcium, Phosphorus, Starch
   private setColumns(): void {

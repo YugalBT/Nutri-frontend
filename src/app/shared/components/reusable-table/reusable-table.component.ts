@@ -75,6 +75,7 @@ export class ReusableTableComponent implements OnChanges, OnInit, OnDestroy {
 
   userRoles: string[] = [];
   private rolesSub: Subscription | null = null;
+  @Input() columnColorMap: Record<string, (value: any, row?: any) => string> = {};
 
   constructor(private permissionService: PermissionService) {}
 
@@ -141,6 +142,13 @@ export class ReusableTableComponent implements OnChanges, OnInit, OnDestroy {
 
     if (typeof val === 'boolean') return { type: 'boolean', value: val };
 
+  if (this.columnColorMap[field]) {
+    return {
+      type: 'dynamicColor',
+      value: val,
+      class: this.columnColorMap[field](val, row)
+    };
+  }
     return { type: 'text', value: val ?? '' };
   }
 

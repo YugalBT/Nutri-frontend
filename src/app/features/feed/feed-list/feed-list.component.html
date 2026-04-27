@@ -52,6 +52,7 @@
       (pageChange)="onPageChange($event)"
       (toggleActive)="onToggleActive($event)"
       (deleteRow)="onDelete($event)"
+      [columnColorMap]="columnColorMap"
       (editRow)="openEditFeedModal($event)">
     </app-reusable-table>
   </div>
