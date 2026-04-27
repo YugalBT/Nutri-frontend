@@ -1,12 +1,12 @@
 ﻿<div class="body-content">
   <ng-container *ngIf="!isSupplier && user?.roleName !== 'Formulator'">
-    <div *ngIf="isLoading" class="text-center py-3">
+    <!-- <div *ngIf="isLoading" class="text-center py-3">
       {{ "dashboard.loading" | translate }}
-    </div>
+    </div> -->
 
-    <ng-container *ngIf="!isLoading">
-      <ng-container *ngIf="isAdmin; else companyDashboardTpl">
-        <section class="superadmin-dashboard">
+    <!-- <ng-container *ngIf="!isLoading"> -->
+    <ng-container *ngIf="isAdmin; else companyDashboardTpl">
+      <section class="superadmin-dashboard">
         <div class="superadmin-titlebar">
           <div class="superadmin-title-copy">
             <h2>{{ 'dashboard.companyLabel' | translate }} <span>{{ user?.companyName || 'DEATECH srl' }}</span></h2>
@@ -14,11 +14,7 @@
           </div>
 
           <div class="superadmin-title-brand">
-            <img
-              [src]="user?.logo || '/assets/image/small-logo.png'"
-              alt="Brand logo"
-              class="brand-logo-preview"
-            />
+            <img [src]="user?.logo || '/assets/image/small-logo.png'" alt="Brand logo" class="brand-logo-preview" />
           </div>
         </div>
 
@@ -46,6 +42,7 @@
               <div class="card-top">
                 <span>{{ "dashboard.totalUsers" | translate }}</span>
               </div>
+
               <h3>{{ dashboardData.totalUsers }}</h3>
             </div>
           </div>
@@ -53,9 +50,9 @@
           <div class="col-md-3">
             <div class="dashboard-card super-metric-card tone-soft-mint">
               <div class="card-top">
-                <span>{{ "dashboard.activeFarms" | translate }}</span>
+                <span>{{ "dashboard.Suppliers" | translate }}</span>
               </div>
-              <h3>{{ dashboardData.totalActiveFarms }}</h3>
+              <h3>{{ dashboardData.totalSuppliers }}</h3>
             </div>
           </div>
         </div>
@@ -100,7 +97,8 @@
               <div class="ppt-card-title">{{ 'dashboard.production' | translate }}</div>
               <div class="ppt-row">
                 <span>{{ 'dashboard.milkProduced' | translate }}</span>
-                <strong>{{ aggregatedAnalytics?.milkProduced || 0 | number: "1.2-2" }} {{ 'dashboard.litri' | translate }}</strong>
+                <strong>{{ aggregatedAnalytics?.milkProduced || 0 | number: "1.2-2" }} {{ 'dashboard.litri' | translate
+                  }}</strong>
               </div>
               <div class="ppt-row">
                 <span>{{ 'dashboard.fat' | translate }}</span>
@@ -149,195 +147,190 @@
             </div>
           </article>
         </section>
-        </section>
-      </ng-container>
+      </section>
     </ng-container>
+    <!-- </ng-container> -->
 
     <ng-template #companyDashboardTpl>
       <section class="company-dashboard">
         <div class="superadmin-titlebar">
           <div class="superadmin-title-copy">
-            <h2>{{ 'dashboard.companyLabel' | translate }} <span>{{ companyDashboard?.companyName || user?.companyName || 'DEATECH srl' }}</span></h2>
+            <h2>{{ 'dashboard.companyLabel' | translate }} <span>{{ companyDashboard?.companyName || user?.companyName
+                || 'DEATECH srl' }}</span></h2>
             <p>{{ "dashboard.overview" | translate }}</p>
           </div>
 
           <div class="company-dashboard-actions">
             <div class="d-flex align-items-center gap-2">
-          <label class="mb-0">
-            {{ "dashboard.year" | translate }}
-          </label>
+              <label class="mb-0">
+                {{ "dashboard.year" | translate }}
+              </label>
 
-          <select
-            class="form-select"
-            style="width: 120px"
-            [ngModel]="selectedYear"
-            (ngModelChange)="onYearChange($event)"
-          >
-            <option *ngFor="let year of yearOptions" [value]="year">
-              {{ year }}
-            </option>
-          </select>
+              <select class="form-select" style="width: 120px" [ngModel]="selectedYear"
+                (ngModelChange)="onYearChange($event)">
+                <option *ngFor="let year of yearOptions" [value]="year">
+                  {{ year }}
+                </option>
+              </select>
             </div>
 
-            <img
-              [src]="user?.logo || '/assets/image/small-logo.png'"
-              alt="Brand logo"
-              class="brand-logo-preview"
-            />
+            <img [src]="user?.logo || '/assets/image/small-logo.png'" alt="Brand logo" class="brand-logo-preview" />
           </div>
         </div>
 
 
-      <div class="row g-3">
-        <div class="col-md-3">
-          <div class="dashboard-card super-metric-card">
-            <div class="card-top">
-              <span>{{ "dashboard.lastEntry" | translate }}</span>
-            </div>
+        <div class="row g-3">
+          <div class="col-md-3">
+            <div class="dashboard-card super-metric-card">
+              <div class="card-top">
+                <span>{{ "dashboard.lastEntry" | translate }}</span>
+              </div>
 
-            <h3>
-              {{
+              <h3>
+                {{
                 companyDashboard?.lastEntryDate
-                  ? (companyDashboard?.lastEntryDate | date: "mediumDate")
-                  : "-"
-              }}
-            </h3>
-          </div>
-        </div>
-
-        <div class="col-md-3">
-          <div class="dashboard-card super-metric-card tone-soft-peach">
-            <div class="card-top">
-              <span>{{ "dashboard.milkPrice" | translate }}</span>
+                ? (companyDashboard?.lastEntryDate | date: "mediumDate")
+                : "-"
+                }}
+              </h3>
             </div>
-
-            <h3>{{ companyDashboard?.milkPrice || 0 | number: "1.2-2" }}</h3>
           </div>
-        </div>
 
-        <div class="col-md-3">
-          <div class="dashboard-card super-metric-card tone-soft-sky">
-            <div class="card-top">
-              <span>{{ "dashboard.iofc" | translate }}</span>
+          <div class="col-md-3">
+            <div class="dashboard-card super-metric-card tone-soft-peach">
+              <div class="card-top">
+                <span>{{ "dashboard.milkPrice" | translate }}</span>
+              </div>
+
+              <h3>{{ companyDashboard?.milkPrice || 0 | number: "1.2-2" }}</h3>
             </div>
-
-            <h3>{{ companyDashboard?.iofc || 0 | number: "1.2-2" }}</h3>
           </div>
-        </div>
 
-        <div class="col-md-3">
-          <div class="dashboard-card super-metric-card tone-soft-mint">
-            <div class="card-top">
-              <span>{{ "dashboard.deaMilk" | translate }}</span>
+          <div class="col-md-3">
+            <div class="dashboard-card super-metric-card tone-soft-sky">
+              <div class="card-top">
+                <span>{{ "dashboard.iofc" | translate }}</span>
+              </div>
+
+              <h3>{{ companyDashboard?.iofc || 0 | number: "1.2-2" }}</h3>
             </div>
-
-            <h3>{{ companyDashboard?.deaMilk || 0 | number: "1.2-2" }}</h3>
           </div>
-        </div>
-      </div>
 
-      <h5 class="border-start border-4 ps-3 mt-4">
-        {{ "dashboard.performanceIndicators" | translate }}
-      </h5>
+          <div class="col-md-3">
+            <div class="dashboard-card super-metric-card tone-soft-mint">
+              <div class="card-top">
+                <!-- <span>{{ "dashboard.deaMilk" | translate }}</span> -->
+                <span>{{ "dashboard.milkPrice" | translate }}</span>
+              </div>
 
-      <div class="row dashboard-gauges">
-        <div class="col-md-3">
-          <div class="gauge-card">
-            <div echarts [options]="deaGauge" class="gauge-box"></div>
-          </div>
-        </div>
-
-        <div class="col-md-3">
-          <div class="gauge-card">
-            <div echarts [options]="milkGauge" class="gauge-box"></div>
-          </div>
-        </div>
-
-        <div class="col-md-3">
-          <div class="gauge-card">
-            <div echarts [options]="feedGauge" class="gauge-box"></div>
-          </div>
-        </div>
-
-        <div class="col-md-3">
-          <div class="gauge-card">
-            <div echarts [options]="crepGauge" class="gauge-box"></div>
-          </div>
-        </div>
-      </div>
-
-      <div class="row mt-3">
-        <div class="col-12">
-          <div class="dea-performance-bar">
-            <div class="performance-scale">
-              <span>0.90</span>
-              <span>1.00</span>
-              <span>1.10</span>
-              <span>1.20</span>
-              <span>1.30</span>
-              <span>1.40</span>
-              <span>1.50</span>
+              <h3>{{ companyDashboard?.milkPrice || 0 | number: "1.2-2" }}</h3>
+              <small class="text-muted">
+                {{ "dashboard.euroPerLiterMilk" | translate }}
+              </small>
             </div>
+          </div>
 
-            <div class="performance-bar">
-              <div
-                class="cow-indicator"
-                [style.left.%]="getCowPosition(companyDashboard?.deaMilk ?? 0)"
-              >
-                <span class="cow-indicator-dot" aria-hidden="true"></span>
+        </div>
+
+        <h5 class="border-start border-4 ps-3 mt-4">
+          {{ "dashboard.performanceIndicators" | translate }}
+        </h5>
+
+        <div class="row dashboard-gauges">
+          <div class="col-md-3">
+            <div class="gauge-card">
+              <div echarts [options]="deaGauge" class="gauge-box"></div>
+            </div>
+          </div>
+
+          <div class="col-md-3">
+            <div class="gauge-card">
+              <div echarts [options]="milkGauge" class="gauge-box"></div>
+            </div>
+          </div>
+
+          <div class="col-md-3">
+            <div class="gauge-card">
+              <div echarts [options]="feedGauge" class="gauge-box"></div>
+            </div>
+          </div>
+
+          <div class="col-md-3">
+            <div class="gauge-card">
+              <div echarts [options]="crepGauge" class="gauge-box"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row mt-3">
+          <div class="col-12">
+            <div class="dea-performance-bar">
+              <div class="performance-scale">
+                <span>0.90</span>
+                <span>1.00</span>
+                <span>1.10</span>
+                <span>1.20</span>
+                <span>1.30</span>
+                <span>1.40</span>
+                <span>1.50</span>
+              </div>
+
+              <div class="performance-bar">
+                <div class="cow-indicator" [style.left.%]="getCowPosition(companyDashboard?.deaMilk ?? 0)">
+                  <span class="cow-indicator-dot" aria-hidden="true"></span>
+                </div>
+              </div>
+
+              <div class="dea-value">
+                {{ companyDashboard?.deaMilk }}
               </div>
             </div>
+          </div>
+        </div>
 
-            <div class="dea-value">
-              {{ companyDashboard?.deaMilk }}
+        <div class="row g-3 mt-1">
+          <div class="col-md-4">
+            <div class="overview-card">
+              <h5>{{ "dashboard.feeding" | translate }}</h5>
+              <p>
+                {{ "dashboard.cost" | translate }}:
+                <b>{{ companyDashboard?.cost || 0 | number: "1.2-2" }}</b>
+              </p>
+              <p>{{ "dashboard.trendYear" | translate }}</p>
+            </div>
+          </div>
+
+          <div class="col-md-4">
+            <div class="overview-card">
+              <h5>{{ "dashboard.herd" | translate }}</h5>
+              <p>
+                {{ "dashboard.herdSize" | translate }}:
+                <b>{{ companyDashboard?.herdSize || 0 }}</b>
+              </p>
+              <p>{{ "dashboard.currentHerd" | translate }}</p>
+            </div>
+          </div>
+
+          <div class="col-md-4">
+            <div class="overview-card">
+              <h5>{{ "dashboard.production" | translate }}</h5>
+              <p>
+                {{ "dashboard.avgMilkPerDay" | translate }}:
+                <b>{{ companyDashboard?.avgMilkPerDay || 0 | number: "1.2-2" }}</b>
+              </p>
+              <p>{{ "dashboard.avgOutput" | translate }}</p>
             </div>
           </div>
         </div>
-      </div>
 
-      <div class="row g-3 mt-1">
-        <div class="col-md-4">
-          <div class="overview-card">
-            <h5>{{ "dashboard.feeding" | translate }}</h5>
-            <p>
-              {{ "dashboard.cost" | translate }}:
-              <b>{{ companyDashboard?.cost || 0 | number: "1.2-2" }}</b>
-            </p>
-            <p>{{ "dashboard.trendYear" | translate }}</p>
+        <div class="card mt-3">
+          <div class="card-header">
+            {{ "dashboard.graphicalKpi" | translate }}
+          </div>
+          <div class="card-body">
+            <div echarts [options]="companyTrendChart" class="chart-box"></div>
           </div>
         </div>
-
-        <div class="col-md-4">
-          <div class="overview-card">
-            <h5>{{ "dashboard.herd" | translate }}</h5>
-            <p>
-              {{ "dashboard.herdSize" | translate }}:
-              <b>{{ companyDashboard?.herdSize || 0 }}</b>
-            </p>
-            <p>{{ "dashboard.currentHerd" | translate }}</p>
-          </div>
-        </div>
-
-        <div class="col-md-4">
-          <div class="overview-card">
-            <h5>{{ "dashboard.production" | translate }}</h5>
-            <p>
-              {{ "dashboard.avgMilkPerDay" | translate }}:
-              <b>{{ companyDashboard?.avgMilkPerDay || 0 | number: "1.2-2" }}</b>
-            </p>
-            <p>{{ "dashboard.avgOutput" | translate }}</p>
-          </div>
-        </div>
-      </div>
-
-      <div class="card mt-3">
-        <div class="card-header">
-          {{ "dashboard.graphicalKpi" | translate }}
-        </div>
-        <div class="card-body">
-          <div echarts [options]="companyTrendChart" class="chart-box"></div>
-        </div>
-      </div>
       </section>
     </ng-template>
   </ng-container>

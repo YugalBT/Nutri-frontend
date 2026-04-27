@@ -6,6 +6,7 @@ export interface DashboardData {
   totalFarms: number;
   totalRations: number;
   totalActiveFarms: number;
+  totalSuppliers: number;
 }
 
 export interface KpiTrendPoint {

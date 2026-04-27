@@ -19,6 +19,8 @@ import {
 import { CommonService } from '../../shared/services/common.service';
 import { ApiResponse } from '../../core/models/api-response';
 import { TokenService } from '../../shared/services/token.service';
+import { LoaderService } from '../../shared/services/loader.service';
+import { NgxSpinnerModule, NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'app-dashboard',
@@ -30,6 +32,7 @@ import { TokenService } from '../../shared/services/token.service';
     TranslatePipe,
     DatePipe,
     DecimalPipe,
+    NgxSpinnerModule
   ],
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.css'],
@@ -48,6 +51,7 @@ export class DashboardComponent implements OnInit {
     totalFarms: 0,
     totalRations: 0,
     totalActiveFarms: 0,
+    totalSuppliers: 0
   };
 
   companyDashboard: CompanyDashboardData | null = null;
@@ -71,7 +75,9 @@ export class DashboardComponent implements OnInit {
     private store: Store,
     private commonService: CommonService,
     private translate: TranslateService, 
-    private tokenservice: TokenService
+    private tokenservice: TokenService,
+    private loader: LoaderService,
+    private spinner: NgxSpinnerService,
   ) {
     this.user$ = this.store.select(selectAuthUser);
   }
@@ -114,8 +120,8 @@ get isCompanyUser(): boolean {
   }
 
   loadDashboard(): void {
-    this.isLoading = true;
 
+    this.spinner.show();
     this.commonService.getDashboardData().subscribe({
       next: (res: ApiResponse<DashboardData>) => {
         if (res?.isSuccess && res?.data) {
@@ -129,12 +135,13 @@ get isCompanyUser(): boolean {
         }
       },
       error: () => {
-        this.isLoading = false;
+        this.spinner.hide();
       },
     });
   }
 
   private loadCompanyDashboard(): void {
+    this.spinner.show();
     this.commonService.getCompanyDashboardData(this.selectedYear, this.currentCompanyId ?? undefined).subscribe({
       next: (res) => {
 
@@ -186,10 +193,10 @@ get isCompanyUser(): boolean {
           ],
         };
 
-        this.isLoading = false;
+        this.spinner.hide();
       },
       error: () => {
-        this.isLoading = false;
+       this.spinner.hide();
       },
     });
   }
@@ -253,6 +260,7 @@ get isCompanyUser(): boolean {
   }
 
   private loadAdminAnalytics(): void {
+    this.spinner.show();
     this.commonService.getAggregatedAnalytics(this.selectedYear).subscribe({
       next: (res) => {
 
@@ -442,10 +450,10 @@ get isCompanyUser(): boolean {
           ],
         };
 
-        this.isLoading = false;
+        this.spinner.hide();
       },
       error: () => {
-        this.isLoading = false;
+        this.spinner.hide();
       },
     });
   }
