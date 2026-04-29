@@ -64,6 +64,12 @@
                 <label class="form-check-label" for="vatToggle">IVA applicabile (VAT applicable)</label>
               </div>
             </div>
+
+            <div class="col-md-6" *ngIf="form.get('vatApplicable')?.value">
+              <label class="form-label">{{ 'feed.vatPct' | translate }} %</label>
+              <input type="number" step="0.01" min="0" max="100" formControlName="vatPct" class="form-control"
+                placeholder="e.g. 4">
+            </div>
           </div>
         </form>
       </div>

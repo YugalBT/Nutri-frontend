@@ -1,0 +1,107 @@
+<div class="pagecls calves-entry">
+  <div class="mb-4">
+    <h3 class="page-title">{{ 'calvesEntry.title' | translate }}</h3>
+    <p class="text-muted small">{{ 'calvesEntry.subtitle' | translate }}</p>
+  </div>
+
+  <!-- Filters -->
+  <div class="filters-section">
+    <div class="filter-group">
+      <div *ngIf="isSuperAdmin && companies.length > 0"
+        style="display: flex; gap: 0.75rem; align-items: center;">
+        <label class="text-muted">{{ 'dailyEntry.filters.company' | translate }}</label>
+        <select class="form-select" style="width: 220px;" [(ngModel)]="selectedCompanyId"
+          (change)="onCompanyChange()">
+          <option *ngFor="let c of companies" [value]="c.id">{{ c.name }}</option>
+        </select>
+      </div>
+
+      <div style="display: flex; gap: 0.75rem; align-items: center;">
+        <label class="text-muted">{{ 'dailyEntry.filters.date' | translate }}</label>
+        <input type="date" class="form-control" style="width: 180px;" [(ngModel)]="selectedDate"
+          (change)="onDateChange()">
+      </div>
+    </div>
+  </div>
+
+  <!-- Loading -->
+  <div *ngIf="isLoading" class="text-center py-5">
+    <div class="spinner-border text-primary"></div>
+  </div>
+
+  <!-- Form -->
+  <form *ngIf="!isLoading" [formGroup]="form">
+
+    <div class="table-card mt-3">
+      <div class="table-card-header">{{ 'calvesEntry.sections.individual' | translate }}</div>
+      <div class="form-section">
+        <div class="row g-3">
+          <div class="col-12 col-sm-6 col-md-4 col-lg-3 form-group-item">
+            <label>{{ 'dailyEntry.fields.numberOfAnimals' | translate }}</label>
+            <input type="number" min="0" class="form-control" formControlName="indAnimals"
+              [placeholder]="'dailyEntry.placeholders.count' | translate">
+          </div>
+          <div class="col-12 col-sm-6 col-md-4 col-lg-3 form-group-item">
+            <label>{{ 'dailyEntry.fields.avgMilk' | translate }}</label>
+            <input type="number" step="0.01" min="0" class="form-control" formControlName="indAvgMilk"
+              [placeholder]="'dailyEntry.placeholders.milkKg' | translate">
+          </div>
+          <div class="col-12 col-sm-6 col-md-4 col-lg-3 form-group-item">
+            <label>{{ 'dailyEntry.fields.powderPercentage' | translate }}</label>
+            <input type="number" step="0.01" min="0" max="100" class="form-control" formControlName="indPowder"
+              [placeholder]="'dailyEntry.placeholders.percentage' | translate">
+          </div>
+          <div class="col-12 col-sm-6 col-md-4 col-lg-3 form-group-item">
+            <label>{{ 'dailyEntry.fields.avgFeed' | translate }}</label>
+            <input type="number" step="0.01" min="0" class="form-control" formControlName="indAvgFeed"
+              [placeholder]="'dailyEntry.placeholders.feedKg' | translate">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="table-card mt-3">
+      <div class="table-card-header">{{ 'calvesEntry.sections.group' | translate }}</div>
+      <div class="form-section">
+        <div class="row g-3">
+          <div class="col-12 col-sm-6 col-md-4 col-lg-3 form-group-item">
+            <label>{{ 'dailyEntry.fields.numberOfAnimals' | translate }}</label>
+            <input type="number" min="0" class="form-control" formControlName="grpAnimals"
+              [placeholder]="'dailyEntry.placeholders.count' | translate">
+          </div>
+          <div class="col-12 col-sm-6 col-md-4 col-lg-3 form-group-item">
+            <label>{{ 'dailyEntry.fields.avgMilk' | translate }}</label>
+            <input type="number" step="0.01" min="0" class="form-control" formControlName="grpAvgMilk"
+              [placeholder]="'dailyEntry.placeholders.milkKg' | translate">
+          </div>
+          <div class="col-12 col-sm-6 col-md-4 col-lg-3 form-group-item">
+            <label>{{ 'dailyEntry.fields.powderPercentage' | translate }}</label>
+            <input type="number" step="0.01" min="0" max="100" class="form-control" formControlName="grpPowder"
+              [placeholder]="'dailyEntry.placeholders.percentage' | translate">
+          </div>
+          <div class="col-12 col-sm-6 col-md-4 col-lg-3 form-group-item">
+            <label>{{ 'dailyEntry.fields.avgFeed' | translate }}</label>
+            <input type="number" step="0.01" min="0" class="form-control" formControlName="grpAvgFeed"
+              [placeholder]="'dailyEntry.placeholders.feedKg' | translate">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Save button -->
+    <div class="d-flex justify-content-end mt-4 mb-4">
+      <button *ngIf="canSave" type="button" class="btn add-btn save-button"
+        [disabled]="isSaving" (click)="save()">
+        <span *ngIf="!isSaving" class="d-flex align-items-center gap-2">
+          <i class="bi bi-check-lg"></i>
+          {{ 'dailyEntry.actions.saveAndArchive' | translate }}
+        </span>
+        <span *ngIf="isSaving" class="d-flex align-items-center gap-2">
+          <span class="spinner-border spinner-border-sm"></span>
+          {{ 'dailyEntry.actions.saving' | translate }}
+        </span>
+      </button>
+    </div>
+
+  </form>
+</div>

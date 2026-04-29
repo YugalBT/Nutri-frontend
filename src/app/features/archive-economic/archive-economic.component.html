@@ -48,10 +48,10 @@
           <tr class="group-row">
             <th *ngIf="isSuperAdmin" colspan="1">{{ 'dashboard.company' | translate }}</th>
             <th colspan="2">{{ 'archiveEco.sections.identity' | translate }}</th>
-            <th colspan="5">{{ 'archiveEco.sections.revenue' | translate }}</th>
-            <th colspan="5">{{ 'archiveEco.sections.intakeCost' | translate }}</th>
+            <th colspan="12">{{ 'archiveEco.sections.revenue' | translate }}</th>
+            <th colspan="14">{{ 'archiveEco.sections.intakeCost' | translate }}</th>
             <th colspan="3">{{ 'archiveEco.sections.discharge' | translate }}</th>
-            <th colspan="4">{{ 'archiveEco.sections.margin' | translate }}</th>
+            <th colspan="6">{{ 'archiveEco.sections.margin' | translate }}</th>
             <th colspan="1">{{ 'common.actions' | translate }}</th>
           </tr>
           <tr class="label-row">
@@ -63,13 +63,31 @@
 
             <th>{{ 'archive.table.milkDeliveredKg' | translate }}</th>
             <th>{{ 'archive.table.milkProducedKg' | translate }}</th>
+            <th>{{ 'archiveEco.columns.avgMilkPerHead' | translate }}</th>
             <th>{{ 'archive.table.milkPriceEurLitre' | translate }}</th>
             <th>{{ 'archive.table.milkRevenueEur' | translate }}</th>
             <th>{{ 'dashboard.deaMilk' | translate }}</th>
+            <th>Normalized milk</th>
+            <th>Revenue / cow</th>
+            <th>Revenue / barn</th>
+            <th>Feed incidence</th>
+            <th>{{ 'archive.table.fatPercent' | translate }}</th>
+            <th>{{ 'archive.table.proteinPercent' | translate }}</th>
 
             <th>{{ 'archiveEco.columns.heads' | translate }}</th>
             <th>{{ 'archiveEco.columns.kgTq' | translate }}</th>
             <th>{{ 'archiveEco.columns.rationCost' | translate }}</th>
+            <th>Ingested cost/head</th>
+            <th>Average ration cost</th>
+            <th>Kg DM/head</th>
+            <th>Kg ration</th>
+            <th>Kg purchased feed</th>
+            <th>Purchased feed cost</th>
+            <th>Forages EUR</th>
+            <th>Concentrates EUR</th>
+            <th>Robot EUR</th>
+            <th>Supplement EUR</th>
+            <th>Avg DM ingested</th>
             <th>{{ 'archive.columns.avgFeed' | translate }}</th>
             <th>{{ 'dailyEntry.fields.priceType' | translate }}</th>
 
@@ -81,6 +99,8 @@
             <th>{{ 'archive.table.iofcEurPerCow' | translate }}</th>
             <th>{{ 'archiveEco.columns.costPerLiter' | translate }}</th>
             <th>{{ 'archiveEco.columns.feedEfficiency' | translate }}</th>
+            <th>Forages Kg DM</th>
+            <th>Concentrates Kg DM</th>
             <th>{{ 'common.actions' | translate }}</th>
           </tr>
         </thead>
@@ -95,13 +115,31 @@
 
             <td>{{ fmt(r.milkDeliveredKg) }}</td>
             <td>{{ fmt(r.milkProducedKg) }}</td>
+            <td>{{ fmt(r.avgMilkPerHead) }}</td>
             <td>{{ fmtMoney(r.milkPriceEurLitre, 3) }}</td>
             <td>{{ getMilkRevenue(r) == null ? '-' : (getMilkRevenue(r) | number:'1.2-2') + ' EUR' }}</td>
             <td>{{ fmt(r.deaMilk) }}</td>
+            <td>{{ fmt(r.normalizedMilk) }}</td>
+            <td>{{ fmtMoney(r.revenuePerCow) }}</td>
+            <td>{{ fmtMoney(r.revenuePerBarn) }}</td>
+            <td>{{ fmtPct(r.feedIncidencePct) }}</td>
+            <td>{{ r.fatPercent != null ? (r.fatPercent | number:'1.2-2') + ' %' : '-' }}</td>
+            <td>{{ r.proteinPercent != null ? (r.proteinPercent | number:'1.2-2') + ' %' : '-' }}</td>
 
             <td>{{ r.totalHeads ?? '-' }}</td>
             <td>{{ fmt(r.kgTq) }}</td>
             <td>{{ fmtMoney(r.rationCostEur) }}</td>
+            <td>{{ fmtMoney(r.ingestedRationCostPerHead) }}</td>
+            <td>{{ fmtMoney(r.averageRationCost) }}</td>
+            <td>{{ fmt(r.kgDmIngestedPerHead) }}</td>
+            <td>{{ fmt(r.kgRation) }}</td>
+            <td>{{ fmt(r.kgPurchasedFeed) }}</td>
+            <td>{{ fmtMoney(r.purchasedFeedCostEur) }}</td>
+            <td>{{ fmtMoney(r.foragesCostEur) }}</td>
+            <td>{{ fmtMoney(r.concentratesCostEur) }}</td>
+            <td>{{ fmtMoney(r.robotCostEur) }}</td>
+            <td>{{ fmtMoney(r.supplementCostEur) }}</td>
+            <td>{{ fmt(r.avgDmIngested) }}</td>
             <td>{{ fmt(r.averageFeedKgPerHead) }}</td>
             <td>{{ getPriceTypeLabel(r) }}</td>
 
@@ -113,6 +151,8 @@
             <td>{{ getIofc(r) == null ? '-' : (getIofc(r) | number:'1.2-2') + ' EUR' }}</td>
             <td>{{ getCostPerLiter(r) == null ? '-' : (getCostPerLiter(r) | number:'1.3-3') + ' EUR' }}</td>
             <td>{{ getFeedEfficiency(r) == null ? '-' : (getFeedEfficiency(r) | number:'1.2-2') }}</td>
+            <td>{{ fmt(r.foragesKgDm) }}</td>
+            <td>{{ fmt(r.concentratesKgDm) }}</td>
             <td>
               <button type="button" class="btn btn-sm btn-outline-primary" (click)="loadRecord(r)">
                 {{ 'archive.actions.load' | translate }}
@@ -121,7 +161,7 @@
           </tr>
 
           <tr *ngIf="records.length === 0">
-            <td [attr.colspan]="isSuperAdmin ? 22 : 21" class="empty-state">
+            <td [attr.colspan]="isSuperAdmin ? 43 : 42" class="empty-state">
               {{ 'archiveEco.empty' | translate }}
             </td>
           </tr>

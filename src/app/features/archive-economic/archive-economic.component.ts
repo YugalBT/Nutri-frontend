@@ -189,12 +189,14 @@ export class ArchiveEconomicComponent implements OnInit, OnDestroy {
   }
 
   getCostPerLiter(record: EcoArchiveRecord): number | null {
+    if (record.costPerLiterMilk != null) return record.costPerLiterMilk;
     const cost = this.getFeedCost(record);
     const milk = record.milkDeliveredKg ?? record.milkProducedKg ?? null;
     return cost != null && milk != null && milk > 0 ? cost / milk : null;
   }
 
   getFeedEfficiency(record: EcoArchiveRecord): number | null {
+    if (record.feedEfficiency != null) return record.feedEfficiency;
     const milk = record.milkProducedKg ?? record.milkDeliveredKg ?? null;
     const dm = record.kgTq ?? null;
     return milk != null && dm != null && dm > 0 ? milk / dm : null;

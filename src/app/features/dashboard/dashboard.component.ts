@@ -151,7 +151,7 @@ get isCompanyUser(): boolean {
 
           const d = this.companyDashboard;
 
-          this.deaGauge = this.createGauge(this.t('dashboard.dea'), d.deaMilk ?? 0, 0.9, 1.5);
+          this.deaGauge = this.createGauge(this.t('dashboard.fatPercent'), d.fatPercent ?? 0, 3.0, 5.0);
           this.milkGauge = this.createGauge(this.t('dashboard.avgMilk'), d.avgMilkPerDay ?? 0, 30, 55);
           this.feedGauge = this.createGauge(this.t('dashboard.feedEfficiency'), d.feedEfficiency ?? 0, 1, 2.4);
           this.crepGauge = this.createGauge(this.t('dashboard.crep'), d.crep ?? 0, 2, 5);
@@ -163,7 +163,10 @@ get isCompanyUser(): boolean {
             data: [
               this.t('dashboard.iofc'),
               this.t('dashboard.deaMilk'),
-              this.t('dashboard.cost')
+              this.t('dashboard.cost'),
+              this.t('dashboard.feedEfficiency'),
+              this.t('dashboard.crep'),
+              this.t('dashboard.avgMilk'),
             ]
           },
           xAxis: {
@@ -189,6 +192,24 @@ get isCompanyUser(): boolean {
               type: 'line',
               smooth: true,
               data: this.companyDashboard?.kpiTrend?.map((x) => x.cost) || [],
+            },
+            {
+              name: this.t('dashboard.feedEfficiency'),
+              type: 'line',
+              smooth: true,
+              data: this.companyDashboard?.kpiTrend?.map((x) => x.feedEfficiency ?? 0) || [],
+            },
+            {
+              name: this.t('dashboard.crep'),
+              type: 'line',
+              smooth: true,
+              data: this.companyDashboard?.kpiTrend?.map((x) => x.crep ?? 0) || [],
+            },
+            {
+              name: this.t('dashboard.avgMilk'),
+              type: 'line',
+              smooth: true,
+              data: this.companyDashboard?.kpiTrend?.map((x) => x.avgMilkPerDay ?? 0) || [],
             },
           ],
         };

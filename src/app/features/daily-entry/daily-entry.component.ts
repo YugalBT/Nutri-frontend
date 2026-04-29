@@ -2,8 +2,8 @@ import { CommonModule } from '@angular/common';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { Subscription, forkJoin, Subject, merge } from 'rxjs';
-import { debounceTime } from 'rxjs/operators';
+import { Subscription, forkJoin, merge } from 'rxjs';
+import { debounceTime, map } from 'rxjs/operators';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { API_ENDPOINTS } from '../../core/constants/api-endpoints';
 import { Constants } from '../../shared/utils/constants/constants';
@@ -30,9 +30,14 @@ export class DailyEntryComponent implements OnInit, OnDestroy {
   days: any[] = [];
   selectedDate = '';
 
-  animalGroups: any[] = [];
-  rations: any[] = [];
+  allGroups: any[] = [];            // full ordered list (all groups, no server paging)
+  savedGroupOrder: string[] = [];   // group IDs in user-preferred order
+  pagedGroupsWithIdx: { group: any; faIdx: number }[] = [];
   totalAnimalGroupRecords = 0;
+  isGroupLoading = false;
+  private groupValueCache = new Map<string, any>(); // groupId → last-known form values
+
+  rations: any[] = [];
 
   isLoading = false;
   isSaving = false;
@@ -83,9 +88,7 @@ export class DailyEntryComponent implements OnInit, OnDestroy {
   rationFilter = '';
   filteredRations: any[] = [];
   openRationDropdownIndex: number | null = null;
-
-  // Debounce filter subject
-  private filterSubject = new Subject<{ column: string; value: string }>();
+  private lastEditedMilkField: 'delivered' | 'produced' | 'avg' | null = null;
 
   get groupData(): FormArray {
     return this.form.get('groupData') as FormArray;
@@ -144,6 +147,7 @@ export class DailyEntryComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.initForm();
+    this.setupMilkTracking();
     this.setupDerivedFieldCalculations();
     this.isSuperAdmin = localStorage.getItem(Constants.IsSuperAdmin) === 'true';
     this.canSave = this.common.hasAnyPermission(
@@ -154,16 +158,6 @@ export class DailyEntryComponent implements OnInit, OnDestroy {
       this.isInitializing = false;
       return;
     }
-
-    // Setup filter debouncing
-    const filterSub = this.filterSubject
-      .pipe(debounceTime(500))
-      .subscribe((filterEvent) => {
-        this.columnFilters[filterEvent.column] = filterEvent.value.trim();
-        this.pageIndex = 0;
-        this.loadDependenciesAndBuild(this.dayId || null);
-      });
-    this.subs.push(filterSub);
 
     this.selectedDate = this.getTodayString();
     this.initializeRouteSelection();
@@ -193,6 +187,31 @@ export class DailyEntryComponent implements OnInit, OnDestroy {
     this.saveLayout();
   }
 
+  dropGroup(event: CdkDragDrop<any[]>): void {
+    if (event.previousIndex === event.currentIndex) return;
+
+    // Map visual (page-local) indices → global FormArray / allGroups indices
+    const page      = this.pagedGroupsWithIdx;
+    const globalPrev = page[event.previousIndex]?.faIdx;
+    const globalCurr = page[event.currentIndex]?.faIdx;
+    if (globalPrev == null || globalCurr == null) return;
+
+    // 1. Reorder the full list (drives future computePagedGroups + order persistence)
+    moveItemInArray(this.allGroups, globalPrev, globalCurr);
+
+    // 2. Reorder FormArray controls in sync (keeps all entered values intact)
+    const fa      = this.groupData;
+    const control = fa.at(globalPrev);
+    fa.removeAt(globalPrev);
+    fa.insert(globalCurr, control);
+
+    // 3. Recompute the visible page (indices shift after move)
+    this.computePagedGroups();
+
+    // 4. Persist the new order to the backend so it survives logout/reload
+    this.saveGroupOrder();
+  }
+
   saveLayout() {
     const layout = this.sections.map(s => s.id);
 
@@ -203,20 +222,22 @@ export class DailyEntryComponent implements OnInit, OnDestroy {
   }
 
   loadLayout() {
-    this.common.getUserLayout('DailyEntry')
-      .subscribe((res: any) => {
+    this.common.getUserLayout('DailyEntry').subscribe((res: any) => {
+      if (res?.data) {
+        const saved = JSON.parse(res.data);
+        this.sections.sort((a, b) => {
+          const ia = saved.indexOf(a.id);
+          const ib = saved.indexOf(b.id);
+          return (ia === -1 ? 999 : ia) - (ib === -1 ? 999 : ib);
+        });
+      }
+    });
 
-        if (res?.data) {
-          const saved = JSON.parse(res.data);
-
-          this.sections.sort((a, b) => {
-            const indexA = saved.indexOf(a.id);
-            const indexB = saved.indexOf(b.id);
-
-            return (indexA === -1 ? 999 : indexA) - (indexB === -1 ? 999 : indexB);
-          });
-        }
-      });
+    this.common.getUserLayout('DailyEntry-Groups').subscribe((res: any) => {
+      if (res?.data) {
+        try { this.savedGroupOrder = JSON.parse(res.data); } catch { this.savedGroupOrder = []; }
+      }
+    });
   }
 
 
@@ -302,18 +323,14 @@ export class DailyEntryComponent implements OnInit, OnDestroy {
     this.isLoading = true;
     const cid = this.isSuperAdmin && this.selectedCompanyId ? this.selectedCompanyId : undefined;
 
-    // Build column filters array
-    const columnFiltersArray = Object.entries(this.columnFilters)
-      .filter(([_, value]) => value !== '')
-      .map(([field, value]) => ({ field, value }));
-
+    // Load ALL groups without server-side pagination — order and filtering are done client-side
     const requests: any = {
       groups: this.common.getAnimalGroupsList(cid, {
-        pageNo: this.pageIndex + 1,
-        recordPerPage: this.pageSize,
-        sortColumn: this.sortColumn,
-        sortDirection: this.sortDirection,
-        columnFilters: columnFiltersArray,
+        pageNo: 1,
+        recordPerPage: 9999,
+        sortColumn: 'animalGroupNameEn',
+        sortDirection: 'asc',
+        columnFilters: [],
       }),
       rations: this.common.getGetAllRationList(cid),
     };
@@ -324,24 +341,26 @@ export class DailyEntryComponent implements OnInit, OnDestroy {
 
     const sub = forkJoin(requests).subscribe({
       next: (res: any) => {
-        this.animalGroups = res.groups?.data ?? [];
-        this.totalAnimalGroupRecords = res.groups?.totalRecords ?? 0;
+        const raw: any[] = res.groups?.data ?? [];
+        this.allGroups = this.applyGroupOrder(raw);
+        this.groupValueCache.clear();
         this.rations = res.rations?.data ?? [];
         this.filteredRations = [...this.rations];
         this.rationFilter = '';
         this.buildGroupRows();
+
         if (res.existing?.data) {
           this.farmId = this.farmId || this.extractFarmId(res.existing.data);
           const existingDate = this.extractDayDate(res.existing.data);
-          if (existingDate) {
-            this.selectedDate = existingDate;
-          }
+          if (existingDate) this.selectedDate = existingDate;
           this.patchForm(res.existing.data);
           setTimeout(() => {
             this.calculateInLactation();
             this.calculateTotalHeads();
           }, 0);
         }
+
+        this.computePagedGroups();
         this.isLoading = false;
         this.isSaving = false;
       },
@@ -349,10 +368,64 @@ export class DailyEntryComponent implements OnInit, OnDestroy {
         this.isLoading = false;
         this.isSaving = false;
         this.buildGroupRows();
+        this.computePagedGroups();
       },
     });
 
     this.subs.push(sub);
+  }
+
+  private applyGroupOrder(groups: any[]): any[] {
+    if (!this.savedGroupOrder.length) return groups;
+    const orderMap = new Map(this.savedGroupOrder.map((id, i) => [id, i]));
+    return [...groups].sort((a, b) =>
+      (orderMap.get(a.animalGroupId) ?? 9999) - (orderMap.get(b.animalGroupId) ?? 9999)
+    );
+  }
+
+  private computePagedGroups(): void {
+    let groups = this.allGroups;
+    const nameF = (this.columnFilters['animalGroupNameEn'] ?? '').toLowerCase();
+    const catF  = (this.columnFilters['animalCategoryCode'] ?? '');
+    if (nameF) groups = groups.filter(g => (g.animalGroupNameEn ?? '').toLowerCase().includes(nameF));
+    if (catF)  groups = groups.filter(g => g.animalCategoryCode === catF);
+
+    this.totalAnimalGroupRecords = groups.length;
+    const start = this.pageIndex * this.pageSize;
+    this.pagedGroupsWithIdx = groups
+      .slice(start, start + this.pageSize)
+      .map(g => ({ group: g, faIdx: this.allGroups.indexOf(g) }));
+  }
+
+  private syncGroupCache(): void {
+    this.allGroups.forEach((g, idx) => {
+      if (idx < this.groupData.length) {
+        const v = this.groupData.at(idx).value;
+        this.groupValueCache.set(g.animalGroupId, {
+          rationId: v.rationId,
+          headCount: v.headCount,
+          scaricatoKg: v.scaricatoKg,
+          avanzoKg: v.avanzoKg,
+          avgProductionKg: v.avgProductionKg,
+        });
+      }
+    });
+  }
+
+  private sortAllGroupsClientSide(): void {
+    this.allGroups.sort((a, b) => {
+      const va = ((a as any)[this.sortColumn] ?? '').toString().toLowerCase();
+      const vb = ((b as any)[this.sortColumn] ?? '').toString().toLowerCase();
+      return this.sortDirection === 'asc' ? va.localeCompare(vb) : vb.localeCompare(va);
+    });
+  }
+
+  private saveGroupOrder(): void {
+    const order = this.allGroups.map(g => g.animalGroupId);
+    this.common.saveUserLayout({
+      pageName: 'DailyEntry-Groups',
+      layoutJson: JSON.stringify(order),
+    }).subscribe();
   }
 
   onDateChange(): void {
@@ -423,6 +496,7 @@ export class DailyEntryComponent implements OnInit, OnDestroy {
       crepManual: [false],
       milkProducedKg: [null],
       milkDeliveredKg: [null],
+      avgMilkPerHead: [null],
       milkPriceEurLitre: [null],
       fatPercent: [null],
       proteinPercent: [null],
@@ -468,16 +542,17 @@ export class DailyEntryComponent implements OnInit, OnDestroy {
     const fa = this.groupData;
     while (fa.length) fa.removeAt(0);
 
-    this.animalGroups.forEach((g) => {
+    this.allGroups.forEach((g) => {
+      const cached = this.groupValueCache.get(g.animalGroupId) ?? {};
       fa.push(this.fb.group({
-        animalGroupId: [g.animalGroupId],
-        animalGroupName: [g.animalGroupNameEn],
+        animalGroupId:      [g.animalGroupId],
+        animalGroupName:    [g.animalGroupNameEn],
         animalCategoryCode: [this.normalizeCategoryCode(g.animalCategoryCode)],
-        rationId: [null],
-        headCount: [null],
-        scaricatoKg: [null],
-        avanzoKg: [null],
-        avgProductionKg: [null],
+        rationId:           [cached.rationId      ?? null],
+        headCount:          [cached.headCount      ?? null],
+        scaricatoKg:        [cached.scaricatoKg    ?? null],
+        avanzoKg:           [cached.avanzoKg       ?? null],
+        avgProductionKg:    [cached.avgProductionKg ?? null],
       }));
     });
   }
@@ -503,6 +578,7 @@ export class DailyEntryComponent implements OnInit, OnDestroy {
       crepManual: data.crepManual ?? false,
       milkProducedKg: data.milkProducedKg,
       milkDeliveredKg: data.milkDeliveredKg,
+      avgMilkPerHead: data.avgMilkPerHead,
       milkPriceEurLitre: data.milkPriceEurLitre,
       fatPercent: data.fatPercent,
       proteinPercent: data.proteinPercent,
@@ -542,6 +618,18 @@ export class DailyEntryComponent implements OnInit, OnDestroy {
     });
 
     if (data.groupData?.length) {
+      // Populate cache so buildGroupRows() (and rebuilds after sort) restore values
+      data.groupData.forEach((g: any) => {
+        this.groupValueCache.set(g.animalGroupId, {
+          rationId:       g.rationId,
+          headCount:      g.headCount,
+          scaricatoKg:    g.scaricatoKg,
+          avanzoKg:       g.avanzoKg,
+          avgProductionKg: g.avgProductionKg,
+        });
+      });
+
+      // Patch the live FormArray controls directly
       this.groupData.controls.forEach((ctrl: any) => {
         const match = data.groupData.find(
           (g: any) => g.animalGroupId === ctrl.value.animalGroupId
@@ -549,11 +637,11 @@ export class DailyEntryComponent implements OnInit, OnDestroy {
         if (match) {
           const normalizedCategory = this.normalizeCategoryCode(match.categoryCode ?? match.animalCategoryCode);
           ctrl.patchValue({
-            rationId: match.rationId,
-            headCount: match.headCount,
-            scaricatoKg: match.scaricatoKg,
-            avanzoKg: match.avanzoKg,
-            avgProductionKg: match.avgProductionKg,
+            rationId:          match.rationId,
+            headCount:         match.headCount,
+            scaricatoKg:       match.scaricatoKg,
+            avanzoKg:          match.avanzoKg,
+            avgProductionKg:   match.avgProductionKg,
             animalCategoryCode: normalizedCategory ?? ctrl.value.animalCategoryCode,
           });
         }
@@ -871,6 +959,32 @@ private calculateFertility(): void {
     return trimmed.length ? trimmed : null;
   }
 
+
+private setupMilkTracking(): void {
+  const delivered$ = this.form.get('milkDeliveredKg')!.valueChanges.pipe(
+    debounceTime(1000),
+    map(() => 'delivered' as const)
+  );
+
+  const produced$ = this.form.get('milkProducedKg')!.valueChanges.pipe(
+    debounceTime(1000),
+    map(() => 'produced' as const)
+  );
+
+  const avg$ = this.form.get('avgMilkPerHead')!.valueChanges.pipe(
+    debounceTime(1000),
+    map(() => 'avg' as const)
+  );
+
+  const sub = merge(delivered$, produced$, avg$)
+    .subscribe((field: 'delivered' | 'produced' | 'avg') => {
+      this.lastEditedMilkField = field;
+      this.recalculateDerivedFields();
+    });
+
+  this.subs.push(sub);
+}
+
   private setupDerivedFieldCalculations(): void {
     const controls = [
       'gim',
@@ -883,6 +997,9 @@ private calculateFertility(): void {
       'crepManual',
       'firstCalvingPct',
       'pregnantCowsPct',
+      //'milkDeliveredKg',
+      'inLactation',
+      'nonMungitura',
     ];
 
     const streams = controls
@@ -898,41 +1015,122 @@ private calculateFertility(): void {
     this.recalculateDerivedFields();
   }
 
-  private recalculateDerivedFields(): void {
-    if (!this.form) return;
+ private recalculateDerivedFields(): void {
+  if (!this.form) return;
 
-    const total = this.getTotalCowsPresent();
-    const firstCalving = this.toNumberOrNull(this.form.get('firstCalving')?.value);
-    const pregnantCows = this.toNumberOrNull(this.form.get('pregnantCows')?.value);
-    const gim = this.toNumberOrNull(this.form.get('gim')?.value);
+  // ===== EXISTING LOGIC (keep as is) =====
+  const total = this.getTotalCowsPresent();
+  const firstCalving = this.toNumberOrNull(this.form.get('firstCalving')?.value);
+  const pregnantCows = this.toNumberOrNull(this.form.get('pregnantCows')?.value);
+  const gim = this.toNumberOrNull(this.form.get('gim')?.value);
 
-    const firstCalvingPctManual = !!this.form.get('firstCalvingPctManual')?.value;
-    const pregnantCowsPctManual = !!this.form.get('pregnantCowsPctManual')?.value;
-    const crepManual = !!this.form.get('crepManual')?.value;
+  const firstCalvingPctManual = !!this.form.get('firstCalvingPctManual')?.value;
+  const pregnantCowsPctManual = !!this.form.get('pregnantCowsPctManual')?.value;
+  const crepManual = !!this.form.get('crepManual')?.value;
 
-    const autoFirstCalvingPct =
-      total && firstCalving != null ? this.roundTo1((firstCalving / total) * 100) : null;
-    if (!firstCalvingPctManual) {
-      this.form.get('firstCalvingPct')?.setValue(autoFirstCalvingPct, { emitEvent: false });
-    }
-
-    const autoPregnantPct =
-      total && pregnantCows != null ? this.roundTo1((pregnantCows / total) * 100) : null;
-    if (!pregnantCowsPctManual) {
-      this.form.get('pregnantCowsPct')?.setValue(autoPregnantPct, { emitEvent: false });
-    }
-
-    // CREP: DIM / % pregnant cows (as requested)
-    // Uses current % value (manual or auto)
-    const pregnantPctValue = this.toNumberOrNull(this.form.get('pregnantCowsPct')?.value);
-    const autoCrep =
-      gim != null && pregnantPctValue != null && pregnantPctValue > 0
-        ? this.roundTo2(gim / pregnantPctValue)
-        : null;
-    if (!crepManual) {
-      this.form.get('crep')?.setValue(autoCrep, { emitEvent: false });
-    }
+  const autoFirstCalvingPct =
+    total && firstCalving != null ? this.roundTo1((firstCalving / total) * 100) : null;
+  if (!firstCalvingPctManual) {
+    this.form.get('firstCalvingPct')?.setValue(autoFirstCalvingPct, { emitEvent: false });
   }
+
+  const autoPregnantPct =
+    total && pregnantCows != null ? this.roundTo1((pregnantCows / total) * 100) : null;
+  if (!pregnantCowsPctManual) {
+    this.form.get('pregnantCowsPct')?.setValue(autoPregnantPct, { emitEvent: false });
+  }
+
+  const pregnantPctValue = this.toNumberOrNull(this.form.get('pregnantCowsPct')?.value);
+  const autoCrep =
+    gim != null && pregnantPctValue != null && pregnantPctValue > 0
+      ? this.roundTo2(gim / pregnantPctValue)
+      : null;
+  if (!crepManual) {
+    this.form.get('crep')?.setValue(autoCrep, { emitEvent: false });
+  }
+
+  // ===== NEW MILK LOGIC =====
+
+  const milkDelivered = this.toNumberOrNull(this.form.get('milkDeliveredKg')?.value);
+  const milkProduced = this.toNumberOrNull(this.form.get('milkProducedKg')?.value);
+  const avgMilk = this.toNumberOrNull(this.form.get('avgMilkPerHead')?.value);
+
+  const animalsInLactation = this.toNumberOrNull(this.form.get('inLactation')?.value);
+  const nonMungitura = this.toNumberOrNull(this.form.get('nonMungitura')?.value) ?? 0;
+
+  const milkingCows = (animalsInLactation ?? 0) - nonMungitura;
+
+  if (milkingCows <= 0 || !animalsInLactation) return;
+
+
+  if (milkDelivered == null && milkProduced == null && avgMilk == null) {
+  this.form.patchValue({
+    avgMilkPerHead: null,
+    milkProducedKg: null,
+    milkDeliveredKg: null
+  }, { emitEvent: false });
+  return;
+}
+  switch (this.lastEditedMilkField) {
+
+    case 'delivered':
+      if (milkDelivered != null) {
+        const avg = milkDelivered / milkingCows;
+        const produced = avg * animalsInLactation;
+
+        this.form.patchValue({
+          avgMilkPerHead: this.roundTo2(avg),
+          milkProducedKg: this.roundTo2(produced)
+        }, { emitEvent: false });
+      }
+      break;
+
+    case 'produced':
+      if (milkProduced != null) {
+        const avg = milkProduced / animalsInLactation;
+        const delivered = avg * milkingCows;
+
+        this.form.patchValue({
+          avgMilkPerHead: this.roundTo2(avg),
+          milkDeliveredKg: this.roundTo2(delivered)
+        }, { emitEvent: false });
+      }
+      break;
+
+    case 'avg':
+      if (avgMilk != null) {
+        const delivered = avgMilk * milkingCows;
+        const produced = avgMilk * animalsInLactation;
+
+        this.form.patchValue({
+          milkDeliveredKg: this.roundTo2(delivered),
+          milkProducedKg: this.roundTo2(produced)
+        }, { emitEvent: false });
+      }
+      break;
+
+    default:
+  if (milkDelivered != null) {
+    const avg = milkDelivered / milkingCows;
+    const produced = avg * animalsInLactation;
+
+    this.form.patchValue({
+      avgMilkPerHead: this.roundTo2(avg),
+      milkProducedKg: this.roundTo2(produced)
+    }, { emitEvent: false });
+
+  } else if (milkProduced != null) {
+    const avg = milkProduced / animalsInLactation;
+    const delivered = avg * milkingCows;
+
+    this.form.patchValue({
+      avgMilkPerHead: this.roundTo2(avg),
+      milkDeliveredKg: this.roundTo2(delivered)
+    }, { emitEvent: false });
+  }
+  break;
+  }
+}
 
   private getTotalCowsPresent(): number | null {
     const totalHeads = this.toNumberOrNull(this.form.get('totalHeads')?.value);
@@ -970,28 +1168,33 @@ private calculateFertility(): void {
   }
 
   onSortChange(event: { column: string; direction: 'asc' | 'desc' }): void {
-    this.sortColumn = event.column;
+    this.sortColumn    = event.column;
     this.sortDirection = event.direction;
-    this.pageIndex = 0;
-    this.loadDependenciesAndBuild(this.dayId || null);
+    this.pageIndex     = 0;
+    // Save user-entered values, sort the full list client-side, rebuild FormArray
+    this.syncGroupCache();
+    this.sortAllGroupsClientSide();
+    this.buildGroupRows();
+    this.computePagedGroups();
   }
 
   onPageChange(event: PageEvent): void {
+    // All groups are already loaded — just slice a different page, no API call
     this.pageIndex = event.pageIndex;
-    this.pageSize = event.pageSize;
-    this.loadDependenciesAndBuild(this.dayId || null);
+    this.pageSize  = event.pageSize;
+    this.computePagedGroups();
   }
 
   onFilterChange(columnName: string, filterValue: string): void {
-    this.filterSubject.next({ column: columnName, value: filterValue });
+    this.columnFilters[columnName] = filterValue.trim();
+    this.pageIndex = 0;
+    this.computePagedGroups();   // instant client-side filter, no loader
   }
 
   clearFilters(): void {
-    Object.keys(this.columnFilters).forEach(key => {
-      this.columnFilters[key] = '';
-    });
+    Object.keys(this.columnFilters).forEach(key => { this.columnFilters[key] = ''; });
     this.pageIndex = 0;
-    this.loadDependenciesAndBuild(this.dayId || null);
+    this.computePagedGroups();
   }
 
   hasActiveFilters(): boolean {

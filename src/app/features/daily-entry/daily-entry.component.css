@@ -1,5 +1,44 @@
 /* Daily Entry Component - Project Theme */
 
+.drag-handle-col {
+  width: 32px;
+  padding: 0 6px !important;
+  text-align: center;
+  vertical-align: middle;
+}
+
+.group-drag-handle {
+  cursor: grab;
+  color: #b0bec5;
+  font-size: 16px;
+  transition: color 0.15s;
+}
+
+.group-drag-handle:active {
+  cursor: grabbing;
+}
+
+tr:hover .group-drag-handle {
+  color: #607d8b;
+}
+
+.cdk-drag-preview {
+  display: table;
+  background: #fff;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+  border-radius: 4px;
+  opacity: 0.95;
+}
+
+.cdk-drag-placeholder {
+  opacity: 0.3;
+  background: #e3f2fd;
+}
+
+.cdk-drag-animating {
+  transition: transform 200ms ease;
+}
+
 .pagecls {
   padding: 1.5rem 1rem;
   background-color: #F5FFFE;

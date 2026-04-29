@@ -37,6 +37,35 @@ export interface EcoArchiveRecord {
   totalFeedCostEur?: number;
   averageFeedKgPerHead?: number;
   priceType?: number;
+
+  // Milk quality
+  fatPercent?: number;
+  proteinPercent?: number;
+  avgMilkPerHead?: number;
+
+  rationId?: string;
+  normalizedMilk?: number;
+  revenuePerCow?: number;
+  revenuePerBarn?: number;
+  feedIncidencePct?: number;
+  costPerLiterMilk?: number;
+  feedEfficiency?: number;
+  ingestedRationCostPerHead?: number;
+  averageRationCost?: number;
+  kgDmIngestedPerHead?: number;
+  kgRation?: number;
+  kgPurchasedFeed?: number;
+  purchasedFeedCostEur?: number;
+  foragesCostEur?: number;
+  concentratesCostEur?: number;
+  robotCostEur?: number;
+  supplementCostEur?: number;
+  foragesKgDm?: number;
+  concentratesKgDm?: number;
+  robotKgDm?: number;
+  supplementKgDm?: number;
+  avgDmIngested?: number;
+  calvesTotalCostEur?: number;
 }
 
 export interface EcoArchiveParams {

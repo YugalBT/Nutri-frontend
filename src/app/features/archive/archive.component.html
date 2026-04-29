@@ -47,7 +47,7 @@
             <th colspan="8">{{ 'dailyEntry.sections.calves' | translate }}</th>
             <th colspan="9">{{ 'dashboard.production' | translate }}</th>
             <th colspan="5">{{ 'dailyEntry.sections.robot' | translate }}</th>
-            <th colspan="5">{{ 'dashboard.feeding' | translate }}</th>
+            <th colspan="2">{{ 'dashboard.feeding' | translate }}</th>
             <th colspan="5">{{ 'dailyEntry.sections.health' | translate }}</th>
             <th colspan="1">{{ 'archive.table.priceType' | translate }}</th>
             <th colspan="1">{{ 'common.actions' | translate }}</th>
@@ -104,12 +104,9 @@
             <th>{{ 'dailyEntry.fields.robotRefusals' | translate }}</th>
             <th>{{ 'dailyEntry.fields.robotFreeTimeMin' | translate }}</th>
 
-            <!-- Feeding -->
+            <!-- Feeding (input fields only; calculated results are in Eco Archive) -->
             <th>{{ 'archive.columns.avgFeed' | translate }}</th>
             <th>{{ 'archive.table.milkPriceEurLitre' | translate }}</th>
-            <th>{{ 'archive.table.feedCostEur' | translate }}</th>
-            <th>{{ 'archive.table.milkRevenueEur' | translate }}</th>
-            <th>{{ 'archive.table.iofcEurPerCow' | translate }}</th>
 
             <!-- Health -->
             <th>{{ 'archive.table.mastitis' | translate }}</th>
@@ -188,9 +185,6 @@
             <!-- Feeding -->
             <td>{{ r.avgFeed ?? '-' }}</td>
             <td>{{ r.milkPriceEurLitre ?? '-' }}</td>
-            <td>{{ r.totalFeedCostEur ?? '-' }}</td>
-            <td>{{ r.milkRevenueEur ?? '-' }}</td>
-            <td>{{ r.iofcPerCow ?? '-' }}</td>
 
             <!-- Health -->
             <td>{{ r.mastitis ?? '-' }}</td>

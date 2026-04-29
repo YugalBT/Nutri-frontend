@@ -9,7 +9,7 @@
       <section class="superadmin-dashboard">
         <div class="superadmin-titlebar">
           <div class="superadmin-title-copy">
-            <h2>{{ 'dashboard.companyLabel' | translate }} <span>{{ user?.companyName || 'DEATECH srl' }}</span></h2>
+            <h2>{{ 'dashboard.companyLabel' | translate }} <span>{{ user?.companyName }}</span></h2>
             <p>{{ 'dashboard.dashboardOverview' | translate }}</p>
           </div>
 
@@ -155,8 +155,7 @@
       <section class="company-dashboard">
         <div class="superadmin-titlebar">
           <div class="superadmin-title-copy">
-            <h2>{{ 'dashboard.companyLabel' | translate }} <span>{{ companyDashboard?.companyName || user?.companyName
-                || 'DEATECH srl' }}</span></h2>
+            <h2>{{ 'dashboard.companyLabel' | translate }} <span>{{ companyDashboard?.companyName || user?.companyName }}</span></h2>
             <p>{{ "dashboard.overview" | translate }}</p>
           </div>
 
@@ -199,10 +198,13 @@
           <div class="col-md-3">
             <div class="dashboard-card super-metric-card tone-soft-peach">
               <div class="card-top">
-                <span>{{ "dashboard.milkPrice" | translate }}</span>
+                <span>{{ "dashboard.totalMilkRevenue" | translate }}</span>
               </div>
 
-              <h3>{{ companyDashboard?.milkPrice || 0 | number: "1.2-2" }}</h3>
+              <h3>{{ (companyDashboard?.totalMilkRevenue ?? 0) | number: "1.2-2" }}</h3>
+              <small class="text-muted">
+                {{ "dashboard.euroTotal" | translate }}
+              </small>
             </div>
           </div>
 
@@ -219,7 +221,6 @@
           <div class="col-md-3">
             <div class="dashboard-card super-metric-card tone-soft-mint">
               <div class="card-top">
-                <!-- <span>{{ "dashboard.deaMilk" | translate }}</span> -->
                 <span>{{ "dashboard.milkPrice" | translate }}</span>
               </div>
 
@@ -282,7 +283,7 @@
               </div>
 
               <div class="dea-value">
-                {{ companyDashboard?.deaMilk }}
+                {{ companyDashboard?.deaMilk | number: "1.2-2" }}
               </div>
             </div>
           </div>
@@ -293,10 +294,21 @@
             <div class="overview-card">
               <h5>{{ "dashboard.feeding" | translate }}</h5>
               <p>
-                {{ "dashboard.cost" | translate }}:
-                <b>{{ companyDashboard?.cost || 0 | number: "1.2-2" }}</b>
+                {{ "dashboard.costPerLactatingCow" | translate }}:
+                <b>{{ companyDashboard?.costPerDairyCowRation || 0 | number: "1.2-2" }} €</b>
               </p>
-              <p>{{ "dashboard.trendYear" | translate }}</p>
+              <p>
+                {{ "dashboard.costPerDryCow" | translate }}:
+                <b>{{ companyDashboard?.costPerDryCowRation || 0 | number: "1.2-2" }} €</b>
+              </p>
+              <p>
+                {{ "dashboard.heiferRearingCost" | translate }}:
+                <b>{{ companyDashboard?.heiferRearingCost || 0 | number: "1.2-2" }} €</b>
+              </p>
+              <p>
+                {{ "dashboard.totalFeedCost" | translate }}:
+                <b>{{ companyDashboard?.cost || 0 | number: "1.2-2" }} €</b>
+              </p>
             </div>
           </div>
 
@@ -307,7 +319,22 @@
                 {{ "dashboard.herdSize" | translate }}:
                 <b>{{ companyDashboard?.herdSize || 0 }}</b>
               </p>
-              <p>{{ "dashboard.currentHerd" | translate }}</p>
+              <p>
+                {{ "dashboard.inLactation" | translate }}:
+                <b>{{ companyDashboard?.animalsInLactation || 0 }}</b>
+              </p>
+              <p>
+                {{ "dashboard.dryAnimals" | translate }}:
+                <b>{{ companyDashboard?.dryAnimals || 0 }}</b>
+              </p>
+              <p>
+                {{ "dashboard.heiferPercentage" | translate }}:
+                <b>{{ companyDashboard?.heiferPercentage || 0 | number: "1.1-1" }} %</b>
+              </p>
+              <p>
+                {{ "dashboard.totalCalves" | translate }}:
+                <b>{{ companyDashboard?.totalCalves || 0 }}</b>
+              </p>
             </div>
           </div>
 
@@ -316,9 +343,24 @@
               <h5>{{ "dashboard.production" | translate }}</h5>
               <p>
                 {{ "dashboard.avgMilkPerDay" | translate }}:
-                <b>{{ companyDashboard?.avgMilkPerDay || 0 | number: "1.2-2" }}</b>
+                <b>{{ companyDashboard?.avgMilkPerDay || 0 | number: "1.2-2" }} kg</b>
               </p>
-              <p>{{ "dashboard.avgOutput" | translate }}</p>
+              <p>
+                {{ "dashboard.milkProduced" | translate }}:
+                <b>{{ companyDashboard?.milkProduced || 0 | number: "1.2-2" }} kg</b>
+              </p>
+              <p>
+                {{ "dashboard.fatPercent" | translate }}:
+                <b>{{ companyDashboard?.fatPercent || 0 | number: "1.2-2" }} %</b>
+              </p>
+              <p>
+                {{ "dashboard.proteinPercent" | translate }}:
+                <b>{{ companyDashboard?.proteinPercent || 0 | number: "1.2-2" }} %</b>
+              </p>
+              <p>
+                {{ "dashboard.pim" | translate }}:
+                <b>{{ companyDashboard?.pim || 0 }}</b>
+              </p>
             </div>
           </div>
         </div>

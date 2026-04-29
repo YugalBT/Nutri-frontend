@@ -14,6 +14,9 @@ export interface KpiTrendPoint {
   iofc: number;
   deaMilk: number;
   cost: number;
+  feedEfficiency?: number;
+  crep?: number;
+  avgMilkPerDay?: number;
 }
 
 export interface CompanyDashboardData {
@@ -22,6 +25,7 @@ export interface CompanyDashboardData {
   year: number;
   lastEntryDate?: string | null;
   milkPrice: number;
+  totalMilkRevenue?: number;
   iofc: number;
   deaMilk: number;
   cost: number;

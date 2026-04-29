@@ -91,6 +91,8 @@ export const API_ENDPOINTS = {
     DELETE: '/Ration/Delete',
     ACTIVE_INACTIVE: '/Ration/ActiveInActive',
     GET_ALL: '/Ration/GetAll',
+    GET_MATRIX: '/Ration/GetRationMatrix',
+    ARCHIVE: '/Ration/Archive',
   },
   FEED: {
     CREATE: '/Feed/Create',
@@ -316,6 +318,7 @@ export const API_ENDPOINTS = {
   DAY_DATA: {
     SAVE: '/DayData/Save',
     GET_BY_DAY_ID: '/DayData/GetByDayId',
+    SAVE_CALVES: '/DayData/SaveCalves',
     ARCHIVE: '/DayData/Archive',
     ECO_ARCHIVE: '/DayData/EcoArchive',
     BULK_RECALC: '/DayData/BulkRecalculate',

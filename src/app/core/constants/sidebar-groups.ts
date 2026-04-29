@@ -11,13 +11,13 @@ export const SIDEBAR_GROUPS = [
   {
     key: 'farm', title: 'sidebarmenu.feeding', icon: SIDEBAR_ICONS.FARM,
     items: ['Animal Group', 'Feed', 'CalfBarn', 'Ration', 'Animal Type',
-      'Animal Lactation Stage', 'Archive Economic', 'ECO Archive',  'Daily Entry']
+      'Animal Lactation Stage', 'Archive Economic', 'ECO Archive', 'Daily Entry', 'Calves Entry']
   },
   {
     key: 'consultation',
     title: 'sidebarmenu.consultation',
     icon: SIDEBAR_ICONS.FARM,
-    items: ['Parti', 'Sanita', 'Fertilita', 'Milk Price History']
+    items: ['Parti', 'Sanita', 'Fertilita',]
   },
   // {
   //   key: 'nutrition',
@@ -52,6 +52,7 @@ export const SIDEBAR_GROUPS = [
     items: [
       'Archive Technical',
       'Archive Eco',
+      'Milk Price'
 
     ]
   },

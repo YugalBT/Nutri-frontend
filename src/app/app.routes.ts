@@ -611,6 +611,21 @@ export const routes: Routes = [
           ),
       },
       {
+        path: 'calves-entry',
+        canActivate: [permissionGuard],
+        data: {
+          requiredPermissions: [
+            PERMISSIONS.DailyEntryView,
+            PERMISSIONS.DailyEntryAdd,
+            PERMISSIONS.DailyEntryEdit,
+          ],
+        },
+        loadComponent: () =>
+          import('./features/calves-entry/calves-entry.component').then(
+            (m) => m.CalvesEntryComponent,
+          ),
+      },
+      {
         path: 'pricingSetting',
         canActivate: [permissionGuard],
         data: {
