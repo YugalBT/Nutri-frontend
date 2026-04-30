@@ -320,7 +320,7 @@ export class DailyEntryComponent implements OnInit, OnDestroy {
   }
 
   private loadDependenciesAndBuild(dayId: string | null): void {
-    this.isLoading = true;
+    this.isInitializing = true;
     const cid = this.isSuperAdmin && this.selectedCompanyId ? this.selectedCompanyId : undefined;
 
     // Load ALL groups without server-side pagination — order and filtering are done client-side
@@ -361,11 +361,11 @@ export class DailyEntryComponent implements OnInit, OnDestroy {
         }
 
         this.computePagedGroups();
-        this.isLoading = false;
+        this.isInitializing = false;
         this.isSaving = false;
       },
       error: () => {
-        this.isLoading = false;
+        this.isInitializing = false;
         this.isSaving = false;
         this.buildGroupRows();
         this.computePagedGroups();

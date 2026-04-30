@@ -41,7 +41,7 @@
               {{ pt.labelKey | translate }}
             </option>
           </select>
-          <button *ngIf="canSave" type="button" class="btn add-btn save-button" [disabled]="isSaving || isLoading"
+          <button *ngIf="canSave" type="button" class="btn add-btn save-button" [disabled]="isSaving || isInitializing"
             (click)="save()">
             <span *ngIf="!isSaving" class="d-flex align-items-center gap-2">
               <i class="bi bi-check-lg"></i>
@@ -56,39 +56,9 @@
       </div>
     </div>
 
-    <!-- Data Loading State with Skeleton -->
-    <div *ngIf="isLoading" class="loading-overlay enhanced-overlay">
-      <div class="loading-container">
-        <div class="spinner-border text-primary" role="status"></div>
-        <div class="mt-4 text-center flex-grow-1">
-          <p class="loading-title">{{ 'dailyEntry.loading.data' | translate }}</p>
-          <p class="loading-subtitle text-muted small mt-2">{{ 'dailyEntry.loading.fetching' | translate }}</p>
-          <div class="progress mt-3" style="height: 3px;">
-            <div class="progress-bar progress-bar-animated" role="progressbar" style="width: 75%"></div>
-          </div>
-        </div>
-      </div>
-    </div>
+   
 
-    <!-- Skeleton Loader for Cards when loading -->
-    <div *ngIf="isLoading" class="skeleton-cards mt-4">
-      <div class="skeleton-card">
-        <div class="skeleton-header"></div>
-        <div class="skeleton-lines">
-          <div class="skeleton-line"></div>
-          <div class="skeleton-line short"></div>
-        </div>
-      </div>
-      <div class="skeleton-card mt-4">
-        <div class="skeleton-header"></div>
-        <div class="skeleton-lines">
-          <div class="skeleton-line"></div>
-          <div class="skeleton-line"></div>
-        </div>
-      </div>
-    </div>
-
-    <div *ngIf="!isLoading" cdkDropList (cdkDropListDropped)="drop($event)">
+    <div *ngIf="!isInitializing" cdkDropList (cdkDropListDropped)="drop($event)">
       <div *ngFor="let section of sections" cdkDrag>
 
         <ng-container [ngSwitch]="section.id">
@@ -246,7 +216,7 @@
                     <td><input type="number" min="0" step="0.01" class="form-control" formControlName="avgProductionKg"
                         [placeholder]="'dailyEntry.placeholders.kgPerHead' | translate"></td>
                   </tr>
-                  <tr *ngIf="allGroups.length === 0 && !isLoading">
+                  <tr *ngIf="allGroups.length === 0 && !isInitializing">
                     <td colspan="8" class="empty-state text-center py-4">
                       {{ 'dailyEntry.messages.noAnimalGroups' | translate }}
                     </td>

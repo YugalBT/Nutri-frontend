@@ -68,42 +68,55 @@
             </div>
             <div class="col-lg-5 gradient_bg">
                 <div class="language-switcher-right">
-                    <div class="dropdown">
-                        <button class="btn btn-light dropdown-toggle" data-bs-toggle="dropdown">
-                            {{ currentLanguageName }}
-                        </button>
+  <div class="dropdown">
 
-                        <ul class="dropdown-menu dropdown-menu-end">
-                            <li *ngFor="let lang of languages">
-                                <button class="dropdown-item d-flex align-items-center gap-2"
-                                    (click)="changeLanguage(lang.languageCode)">
+    <!-- ✅ Button with selected icon -->
+    <button class="btn btn-light dropdown-toggle d-flex align-items-center gap-2"
+            data-bs-toggle="dropdown">
 
-                                    <!-- 🇮🇳 -->
-                                    <svg *ngIf="lang.languageCode === 'en'" width="20" height="20"
-                                        viewBox="0 0 512 512">
-                                        <rect width="512" height="170" fill="#FF9933" />
-                                        <rect y="170" width="512" height="170" fill="white" />
-                                        <rect y="340" width="512" height="170" fill="#138808" />
-                                        <circle cx="256" cy="256" r="50" stroke="#000080" stroke-width="10"
-                                            fill="none" />
-                                    </svg>
+      <!-- 🌐 English -->
+      <svg *ngIf="currentLang === 'en'" width="20" height="20" viewBox="0 0 24 24" fill="none">
+        <circle cx="12" cy="12" r="10" stroke="#555" stroke-width="1.5"/>
+        <path d="M2 12h20" stroke="#555" stroke-width="1.5"/>
+        <path d="M12 2c3 3 3 17 0 20M12 2c-3 3-3 17 0 20" stroke="#555" stroke-width="1.5"/>
+      </svg>
 
-                                    <!-- 🇮🇹 -->
-                                    <svg *ngIf="lang.languageCode === 'it'" width="20" height="20"
-                                        viewBox="0 0 512 512">
-                                        <rect width="170" height="512" fill="#009246" />
-                                        <rect x="170" width="170" height="512" fill="white" />
-                                        <rect x="340" width="170" height="512" fill="#CE2B37" />
-                                    </svg>
+      <!-- 🇮🇹 Italian -->
+      <svg *ngIf="currentLang === 'it'" width="20" height="20" viewBox="0 0 3 2">
+        <rect width="1" height="2" x="0" fill="#009246"/>
+        <rect width="1" height="2" x="1" fill="#ffffff"/>
+        <rect width="1" height="2" x="2" fill="#CE2B37"/>
+      </svg>
 
-                                    {{ lang.languageName }}
-                                </button>
-                            </li>
-                        </ul>
-                    </div>
+      {{ currentLanguageName }}
+    </button>
 
+    <ul class="dropdown-menu dropdown-menu-end">
+      <li *ngFor="let lang of languages">
+        <button class="dropdown-item d-flex align-items-center gap-2"
+                (click)="changeLanguage(lang.languageCode)">
 
-                </div>
+          <!-- 🌐 English -->
+          <svg *ngIf="lang.languageCode === 'en'" width="20" height="20" viewBox="0 0 24 24" fill="none">
+            <circle cx="12" cy="12" r="10" stroke="#555" stroke-width="1.5"/>
+            <path d="M2 12h20" stroke="#555" stroke-width="1.5"/>
+            <path d="M12 2c3 3 3 17 0 20M12 2c-3 3-3 17 0 20" stroke="#555" stroke-width="1.5"/>
+          </svg>
+
+          <!-- 🇮🇹 Italian -->
+          <svg *ngIf="lang.languageCode === 'it'" width="20" height="20" viewBox="0 0 3 2">
+            <rect width="1" height="2" x="0" fill="#009246"/>
+            <rect width="1" height="2" x="1" fill="#ffffff"/>
+            <rect width="1" height="2" x="2" fill="#CE2B37"/>
+          </svg>
+
+          {{ lang.languageName }}
+        </button>
+      </li>
+    </ul>
+
+  </div>
+</div>
 
                 <div class="inner_content_two">
                     <a class="auth-brand-logo">
