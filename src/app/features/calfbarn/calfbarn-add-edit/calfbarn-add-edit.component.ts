@@ -70,7 +70,7 @@ export class CalfbarnAddEditComponent implements OnInit, OnDestroy {
     });
     this.subs.push(feedSub);
 
-    const animalGroupSub = this.commonService.getAnimalGroupsList().subscribe({
+    const animalGroupSub = this.commonService.getAnimalGroupsListPost().subscribe({
       next: res => {
         if (res?.isSuccess) {
           this.animalGroups = Array.isArray(res?.data) ? res.data : [];

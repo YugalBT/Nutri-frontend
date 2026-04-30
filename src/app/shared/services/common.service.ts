@@ -139,6 +139,18 @@ export class CommonService {
     return this.http.get<AnimalGroupList>(url);
   }
 
+  getAnimalGroupsListPost(companyId?: string): Observable<ApiResponse<AnimalGroupList>> {
+  const base = API_ENDPOINTS.COMMON_API.GET_ALL_ANIMAL_GROUP;
+
+  const payload = {
+    companyId: companyId || '',
+    pageNo: 1,
+    pageSize: 1000 
+  };
+
+  return this.http.post<AnimalGroupList>(base, payload);
+}
+
   getAlltemplateCategoryList(): Observable<
     ApiResponse<TemplateCategoryList[]>
   > {
