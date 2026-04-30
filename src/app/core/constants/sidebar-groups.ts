@@ -17,7 +17,7 @@ export const SIDEBAR_GROUPS = [
     key: 'consultation',
     title: 'sidebarmenu.consultation',
     icon: SIDEBAR_ICONS.FARM,
-    items: ['Parti', 'Sanita', 'Fertilita',]
+    items: ['Calving', 'Health', 'Fertility',]
   },
   // {
   //   key: 'nutrition',
