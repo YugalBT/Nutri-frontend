@@ -1,3 +1,22 @@
+/**
+ * A custom KPI evaluated against a company's aggregated data.
+ * Returned inside CompanyDashboardData.customKpis.
+ */
+export interface CustomKpiResult {
+  kpiId: string;
+  kpiName: string;
+  value: number;
+  /** card | gauge | chart_line | chart_bar */
+  displayType: 'card' | 'gauge' | 'chart_line' | 'chart_bar';
+  /** company | admin | both */
+  displayLocation: 'company' | 'admin' | 'both';
+  gaugeMin: number;
+  gaugeMax: number;
+  sortOrder: number;
+  /** false if formula referenced an unavailable variable or produced a math error */
+  isValid: boolean;
+}
+
 export interface DashboardData {
   totalCompanies: number;
   totalUsers: number;
@@ -48,7 +67,8 @@ export interface CompanyDashboardData {
   proteinPercent?: number;
   pim?: number;
   ageAtFirstCalvingHeifers?: number;
-
+  /** Custom KPIs defined by the Super Admin, evaluated for this company. */
+  customKpis?: CustomKpiResult[];
 }
 
 export interface CompanyComparisonData {

@@ -52,7 +52,43 @@
 
                         </div>
 
+                        <!-- Display Type -->
+                        <div class="col-md-4">
+                            <label class="form-label">Display Type <sup class="text-danger">*</sup></label>
+                            <select formControlName="displayType" class="form-select">
+                                <option *ngFor="let opt of displayTypeOptions" [value]="opt.value">
+                                    {{ opt.label }}
+                                </option>
+                            </select>
+                        </div>
 
+                        <!-- Display Location -->
+                        <div class="col-md-4">
+                            <label class="form-label">Show On <sup class="text-danger">*</sup></label>
+                            <select formControlName="displayLocation" class="form-select">
+                                <option *ngFor="let opt of displayLocationOptions" [value]="opt.value">
+                                    {{ opt.label }}
+                                </option>
+                            </select>
+                        </div>
+
+                        <!-- Gauge Min / Max — only relevant when gauge is selected -->
+                        <ng-container *ngIf="form.get('displayType')?.value === 'gauge'">
+                            <div class="col-md-2">
+                                <label class="form-label">Gauge Min</label>
+                                <input type="number" class="form-control" formControlName="gaugeMin" />
+                            </div>
+                            <div class="col-md-2">
+                                <label class="form-label">Gauge Max</label>
+                                <input type="number" class="form-control" formControlName="gaugeMax" />
+                            </div>
+                        </ng-container>
+
+                        <!-- Sort Order -->
+                        <div class="col-md-2">
+                            <label class="form-label">Sort Order</label>
+                            <input type="number" class="form-control" formControlName="sortOrder" min="0" />
+                        </div>
 
                     </div>
 

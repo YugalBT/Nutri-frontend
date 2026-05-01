@@ -36,10 +36,10 @@ export const PERMISSIONS = {
   FeedAdd: 'FeedAdd',
   FeedDelete: 'FeedDelete',
 
-  OperatorView: 'OperatorView',
-  OperatorEdit: 'OperatorEdit',
-  OperatorAdd: 'OperatorAdd',
-  OperatorDelete: 'OperatorDelete',
+  OperatorView: 'OperatorsView',
+  OperatorEdit: 'OperatorsEdit',
+  OperatorAdd: 'OperatorsAdd',
+  OperatorDelete: 'OperatorsDelete',
 
   CalfBarnView: 'CalfBarnView',
   CalfBarnEdit: 'CalfBarnEdit',

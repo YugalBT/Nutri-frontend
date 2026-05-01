@@ -52,12 +52,29 @@ export class KpiAddEditComponent implements OnInit, OnDestroy {
     this.subs.forEach(s => s.unsubscribe());
   }
 
+  readonly displayTypeOptions = [
+    { value: 'card',       label: 'Card (numeric display)' },
+    { value: 'gauge',      label: 'Gauge (dial chart)' },
+    { value: 'chart_line', label: 'Line Chart (trend)' },
+    { value: 'chart_bar',  label: 'Bar Chart (comparison)' },
+  ];
+
+  readonly displayLocationOptions = [
+    { value: 'company', label: 'Company Dashboard only' },
+    { value: 'admin',   label: 'Admin Dashboard only' },
+    { value: 'both',    label: 'Both Dashboards' },
+  ];
+
   private initializeForm() {
     this.form = this.fb.group({
-      formulaId: ['', Validators.required],
-      kpiname: ['', [Validators.required, Validators.maxLength(20)]],
+      formulaId:       ['', Validators.required],
+      kpiname:         ['', [Validators.required, Validators.maxLength(50)]],
+      displayType:     ['card', Validators.required],
+      displayLocation: ['company', Validators.required],
+      gaugeMin:        [0],
+      gaugeMax:        [100],
+      sortOrder:       [0],
     });
-
   }
 
   private loadFormulaList() {
@@ -87,13 +104,28 @@ export class KpiAddEditComponent implements OnInit, OnDestroy {
       this.toast.warning('No permission');
       return;
     }
-    this.form.reset();
+    // Reset with explicit defaults so gaugeMin/gaugeMax are never null
+    // even when Display Type is 'card' and the gauge fields are hidden
+    this.form.reset({
+      formulaId:       null,
+      kpiname:         '',
+      displayType:     'card',
+      displayLocation: 'company',
+      gaugeMin:        0,
+      gaugeMax:        100,
+      sortOrder:       0,
+    });
 
     if (edit && data) {
       this.form.patchValue({
-        kpiname: data.kpiname,
-        kpiid:data.kpiid,
-        formulaId: data.formulaId,
+        kpiname:         data.kpiname,
+        kpiid:           data.kpiid,
+        formulaId:       data.formulaId,
+        displayType:     data.displayType     ?? 'card',
+        displayLocation: data.displayLocation ?? 'company',
+        gaugeMin:        data.gaugeMin        ?? 0,
+        gaugeMax:        data.gaugeMax        ?? 100,
+        sortOrder:       data.sortOrder       ?? 0,
       });
 
       this.currentKpiId = data.kpiid;
@@ -119,7 +151,15 @@ export class KpiAddEditComponent implements OnInit, OnDestroy {
       return;
     }
 
-    const payload = { ...this.form.value };
+    const raw = this.form.value;
+    // gaugeMin/gaugeMax are hidden when displayType !== 'gauge', so they may be null.
+    // Backend decimal field requires a number — always send a safe default.
+    const payload = {
+      ...raw,
+      gaugeMin:  raw.gaugeMin  != null ? Number(raw.gaugeMin)  : 0,
+      gaugeMax:  raw.gaugeMax  != null ? Number(raw.gaugeMax)  : 100,
+      sortOrder: raw.sortOrder != null ? Number(raw.sortOrder) : 0,
+    };
 
     if (this.isEdit && this.currentKpiId) {
       payload.kpiid = this.currentKpiId;

@@ -13,6 +13,7 @@ import { TranslateService } from '../../i18n/translate.service';
 import {
   AggregatedAnalyticsData,
   CompanyDashboardData,
+  CustomKpiResult,
   DashboardData,
 } from '../../core/models/dashboarddata';
 
@@ -65,11 +66,18 @@ export class DashboardComponent implements OnInit {
   comparisonChart: EChartsOption = {};
   productionChart: EChartsOption = {};
 
-  deaGauge!: EChartsOption;
-  milkGauge!: EChartsOption;
-  feedGauge!: EChartsOption;
-  crepGauge!: EChartsOption;
+  // Hardcoded gauges — commented out, replaced by dynamic customKpiGauges
+  // deaGauge!: EChartsOption;
+  // milkGauge!: EChartsOption;
+  // feedGauge!: EChartsOption;
+  // crepGauge!: EChartsOption;
   isSupplier = false;
+
+  /** Custom KPI card items (displayType = 'card') */
+  customKpiCards: CustomKpiResult[] = [];
+
+  /** Custom KPI gauge configs built from customKpis where displayType = 'gauge' */
+  customKpiGauges: { kpi: CustomKpiResult; option: EChartsOption }[] = [];
 
   constructor(
     private store: Store,
@@ -151,10 +159,21 @@ get isCompanyUser(): boolean {
 
           const d = this.companyDashboard;
 
-          this.deaGauge = this.createGauge(this.t('dashboard.fatPercent'), d.fatPercent ?? 0, 3.0, 5.0);
-          this.milkGauge = this.createGauge(this.t('dashboard.avgMilk'), d.avgMilkPerDay ?? 0, 30, 55);
-          this.feedGauge = this.createGauge(this.t('dashboard.feedEfficiency'), d.feedEfficiency ?? 0, 1, 2.4);
-          this.crepGauge = this.createGauge(this.t('dashboard.crep'), d.crep ?? 0, 2, 5);
+          // Hardcoded gauges commented out — Super Admin now configures gauges dynamically via KPI management
+          // this.deaGauge = this.createGauge(this.t('dashboard.fatPercent'), d.fatPercent ?? 0, 3.0, 5.0);
+          // this.milkGauge = this.createGauge(this.t('dashboard.avgMilk'), d.avgMilkPerDay ?? 0, 30, 55);
+          // this.feedGauge = this.createGauge(this.t('dashboard.feedEfficiency'), d.feedEfficiency ?? 0, 1, 2.4);
+          // this.crepGauge = this.createGauge(this.t('dashboard.crep'), d.crep ?? 0, 2, 5);
+
+          // Build dynamic custom KPI displays from Super Admin configuration
+          const customKpis = d.customKpis ?? [];
+          this.customKpiCards = customKpis.filter(k => k.displayType === 'card');
+          this.customKpiGauges = customKpis
+            .filter(k => k.displayType === 'gauge')
+            .map(k => ({
+              kpi: k,
+              option: this.createGauge(k.kpiName, k.value, k.gaugeMin, k.gaugeMax),
+            }));
         }
 
         this.companyTrendChart = {

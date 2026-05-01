@@ -41,6 +41,13 @@ export class ExpressionListComponent implements OnInit, OnDestroy {
   searchValue = '';
   filterStatus: number | null = 2;
   canAddFormula = false;
+
+  /**
+   * Tracks which builder context will be used when opening the Add Formula modal.
+   * 'formula' = nutritional formula (existing behavior, default)
+   * 'kpi'     = economic dashboard KPI formula (Super Admin only)
+   */
+  formulaBuilderContext: 'formula' | 'kpi' = 'formula';
   viewPermission = PERMISSIONS.formulasView;
   editPermission = PERMISSIONS.formulasEdit;
   deletePermission = PERMISSIONS.formulasDelete;
@@ -141,6 +148,18 @@ export class ExpressionListComponent implements OnInit, OnDestroy {
     this.pageIndex = event.pageIndex;
     this.pageSize = event.pageSize;
     this.loadExpressions(this.pageIndex + 1, this.pageSize);
+  }
+
+  /* ================= ADD ================= */
+
+  /**
+   * Opens the formula builder with the correct variable context.
+   * @param context 'formula' = nutritional (default), 'kpi' = economic dashboard
+   */
+  openAddModal(context: 'formula' | 'kpi' = 'formula'): void {
+    this.formulaBuilderContext = context;
+    // Allow Angular one tick to update the [context] binding on the child component
+    setTimeout(() => this.expressionModal.openModal(false), 0);
   }
 
   /* ================= EDIT ================= */

@@ -6,10 +6,18 @@
       <h3 class="page-title">{{ 'formula.management' | translate }}</h3>
     </div>
 
-    <button *ngIf="canAddFormula" class="btn add-btn" (click)="expressionModal.openModal()">
-      <i class="bi bi-plus-lg me-2"></i>
-      {{ 'formula.addFormula' | translate }}
-    </button>
+    <div class="d-flex gap-2" *ngIf="canAddFormula">
+      <!-- Standard nutritional formula — unchanged behavior -->
+      <button class="btn btn-outline-secondary" (click)="openAddModal('formula')">
+        <i class="bi bi-plus-lg me-1"></i>
+        {{ 'formula.addFormula' | translate }}
+      </button>
+      <!-- KPI Dashboard formula — economic variables only, Super Admin context -->
+      <button class="btn add-btn" (click)="openAddModal('kpi')">
+        <i class="bi bi-graph-up me-1"></i>
+        {{ 'formula.addKpiFormula' | translate }}
+      </button>
+    </div>
   </div>
 
   <!-- SEARCH -->
@@ -42,6 +50,6 @@
   </app-reusable-table>
 
   <!-- ADD / EDIT MODAL -->
-  <app-expression-add-edit #expressionModal></app-expression-add-edit>
+  <app-expression-add-edit #expressionModal [context]="formulaBuilderContext"></app-expression-add-edit>
 
 </div>

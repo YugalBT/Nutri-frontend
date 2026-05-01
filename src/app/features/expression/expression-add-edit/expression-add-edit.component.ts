@@ -1,4 +1,4 @@
-import { Component, ElementRef, ViewChild, OnInit } from '@angular/core';
+import { Component, ElementRef, Input, ViewChild, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { OperatorList, OperatorsAndRationsList } from '../../../core/models/operator-list';
 import { RationList } from '../../../core/models/ration-list';
@@ -22,6 +22,13 @@ export class ExpressionAddEditComponent implements OnInit {
 
   @ViewChild('expressionModal', { static: true }) expressionModal!: ElementRef;
 
+  /**
+   * 'formula'  → regular nutritional formula builder (calls GetAllOperatorAndRation)
+   * 'kpi'      → Super Admin KPI formula builder (calls GetDashboardKpiVariables)
+   * Default is 'formula' so existing usage is unchanged.
+   */
+  @Input() context: 'formula' | 'kpi' = 'formula';
+
   modal: any;
   isEdit = false;
   canSave = false;
@@ -44,14 +51,12 @@ export class ExpressionAddEditComponent implements OnInit {
 
   ngOnInit(): void {
     this.modal = new bootstrap.Modal(this.expressionModal.nativeElement, { backdrop: 'static' });
-    // this.loadOperators();
-    // this.loadRations();
-    this.loadExpressionItems();
   }
 
   /* ================= MODAL ================= */
 
  openModal(edit = false, data?: any): void {
+  this.loadExpressionItems();
   this.isEdit = edit;
   this.canSave = edit
     ? this.commonService.checkPermission(PERMISSIONS.formulasEdit, false)
@@ -211,12 +216,14 @@ export class ExpressionAddEditComponent implements OnInit {
     const validatePayload = {
       formula: this.expressionTokens.join(' ')
     };
+    if (this.context !== 'kpi') {
     this.formulaService.validateformula(validatePayload).subscribe(res => {
       if (!res.isSuccess) {
         this.toast.error(res.message);
         return;
       }
     });
+  }
 
     const payload = this.buildPayload();
 
@@ -242,6 +249,17 @@ export class ExpressionAddEditComponent implements OnInit {
 
   this.expressionTokens.forEach(token => {
 
+    // KPI context: economic variables all share Guid.Empty as id, so storing
+    // token__guid would make editing impossible (all map to same id).
+    // Store plain display names — NCalc evaluates the `formula` string directly
+    // so no guid suffix is needed for KPI formulas.
+    if (this.context === 'kpi') {
+      formulaeArray.push(token);
+      displayArray.push(token);
+      return;
+    }
+
+    // Normal nutritional formula context — use existing guid-based storage
     const found = this.expressionItems.find(
       x => x.displayName === token
     );
@@ -252,7 +270,7 @@ export class ExpressionAddEditComponent implements OnInit {
       return;
     }
 
-    // number
+    // plain number
     formulaeArray.push(token);
     displayArray.push(token);
   });
@@ -269,8 +287,15 @@ export class ExpressionAddEditComponent implements OnInit {
 
   /* ================= API ================= */
 private loadExpressionItems(): void {
-  this.commonService.getGetAllOperatorsAndRationsList().subscribe(res => {
-    this.expressionItems = (res.data ?? []);
+  // Route to the correct API based on context:
+  // 'kpi'     → economic dashboard variables only (Super Admin KPI builder)
+  // 'formula' → existing nutritional formula variables (unchanged behavior)
+  const source$ = this.context === 'kpi'
+    ? this.commonService.getDashboardKpiVariables()
+    : this.commonService.getGetAllOperatorsAndRationsList();
+
+  source$.subscribe(res => {
+    this.expressionItems = res.data ?? [];
   });
 }
   // private loadOperators(): void {
@@ -285,10 +310,6 @@ private loadExpressionItems(): void {
   //   });
   // }
 onValidate(): void {
-  const hasPermission = this.isEdit
-    ? this.commonService.checkPermission(PERMISSIONS.formulasEdit)
-    : this.commonService.checkPermission(PERMISSIONS.FormulaAdd);
-  if (!hasPermission) return;
 
   if (!this.expressionName.trim()) {
     this.toast.warning('Expression name is required');
@@ -300,18 +321,35 @@ onValidate(): void {
     return;
   }
 
-  const validatePayload = {
-    formula: this.expressionTokens.join(' ')
-  };
+  const formula = this.expressionTokens.join(' ');
+
+  // KPI context → backend validator doesn't know economic variables,
+  // so validate client-side by substituting 1 for every identifier
+  if (this.context === 'kpi') {
+    try {
+      const testFormula = formula.replace(/[A-Za-z_][A-Za-z0-9_]*/g, '1');
+      const result = Function(`"use strict"; return (${testFormula})`)();
+      this.validatedResult = String(result);
+      this.isvalidated = true;
+      this.toast.success('KPI formula is valid');
+    } catch {
+      this.toast.error('Invalid KPI formula — check syntax');
+      this.isvalidated = false;
+    }
+    return;
+  }
+
+  // ✅ Existing flow (formula context)
+  const validatePayload = { formula };
 
   this.formulaService.validateformula(validatePayload).subscribe(res => {
-    if(res.isSuccess){
+    if (res.isSuccess) {
       this.toast.success(res.message);
       this.validatedResult = res.data ?? null;
       this.isvalidated = true;
     } else {
       this.toast.error(res.message);
-      this.validatedResult = res.data ?? null;
+      this.isvalidated = false;
     }
   });
 }

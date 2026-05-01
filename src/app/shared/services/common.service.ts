@@ -186,6 +186,17 @@ export class CommonService {
     );
   }
 
+  /**
+   * Super Admin only. Returns math operators + economic dashboard variables
+   * for the KPI formula builder. Separate from getGetAllOperatorsAndRationsList()
+   * so the nutritional formula builder is not affected.
+   */
+  getDashboardKpiVariables(): Observable<ApiResponse<OperatorsAndRationsList[]>> {
+    return this.http.get<OperatorsAndRationsList[]>(
+      API_ENDPOINTS.COMMON_API.GET_DASHBOARD_KPI_VARIABLES,
+    );
+  }
+
   getAllCompany(): Observable<ApiResponse<any>> {
     return this.http.get<ApiResponse<any>>(
       API_ENDPOINTS.COMMON_API.GET_ALL_TENANT
