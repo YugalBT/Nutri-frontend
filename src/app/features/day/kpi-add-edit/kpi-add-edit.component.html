@@ -1,55 +1,84 @@
 <div #kpiModal class="modal fade" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
         <div class="modal-content">
 
             <div class="modal-header">
                 <h5 class="modal-title">
                     {{ isEdit ? ('kpi.editKpi' | translate) : ('kpi.addKpi' | translate) }}
                 </h5>
-
                 <button type="button" class="btn-close" (click)="closeModal()"></button>
             </div>
 
-            <div class="modal-body">
+            <div class="modal-body p-4">
                 <form [formGroup]="form">
 
-                    <div class="row g-3">
+                    <!-- ── Step 1: KPI Details ─────────────────────────────── -->
+                    <div class="kpi-step-header mb-3">
+                        <span class="kpi-step-badge">1</span>
+                        <strong>KPI Details</strong>
+                    </div>
 
-                        <!-- Farm -->
-                        <div class="col-md-4">
-                            <label class="form-label">Formula <sup class="text-danger">*</sup></label>
-                            <select formControlName="formulaId" class="form-select" [disabled]="formulasLoading">
-                                <option [ngValue]="null">Select Formula</option>
-                                <option *ngFor="let f of formula" [ngValue]="f.formulaId">{{ f.formulaName }}
-                                </option>
-                            </select>
+                    <div class="row g-3 mb-3">
 
-                            <div class="text-danger"
-                                *ngIf="form.get('formulaId')?.touched && form.get('formulaId')?.invalid">
-                                Formula is required.
+                        <!-- KPI Type selector -->
+                        <div class="col-12">
+                            <label class="form-label">KPI Type <sup class="text-danger">*</sup></label>
+                            <div class="kpi-type-grid">
+
+                                <label class="kpi-type-option"
+                                       [class.selected]="form.get('kpiType')?.value === 'single'">
+                                    <input type="radio" formControlName="kpiType" value="single" hidden />
+                                    <span class="kpi-type-icon">
+                                        <i class="bi bi-bar-chart-fill"></i>
+                                    </span>
+                                    <div>
+                                        <div class="kpi-type-title">Single Value KPI</div>
+                                        <div class="kpi-type-desc">
+                                            Uses one formula to display a single value in a card.
+                                        </div>
+                                    </div>
+                                </label>
+
+                                <label class="kpi-type-option"
+                                       [class.selected]="form.get('kpiType')?.value === 'multi'">
+                                    <input type="radio" formControlName="kpiType" value="multi" hidden />
+                                    <span class="kpi-type-icon">
+                                        <i class="bi bi-list-ul"></i>
+                                    </span>
+                                    <div>
+                                        <div class="kpi-type-title">Multi-Label KPI</div>
+                                        <div class="kpi-type-desc">
+                                            Uses multiple formulas to display multiple labeled values in a card.
+                                        </div>
+                                    </div>
+                                </label>
+
                             </div>
                         </div>
 
-                        <!-- Date -->
+                        <!-- KPI Name EN -->
                         <div class="col-md-4">
-                            <label class="form-label">{{ 'kpi.kpiName' | translate }} <sup
-                                    class="text-danger">*</sup></label>
-
+                            <label class="form-label">
+                                KPI Name
+                                <span class="badge bg-secondary ms-1" style="font-size:.65rem">EN</span>
+                                <sup class="text-danger">*</sup>
+                            </label>
                             <input class="form-control" formControlName="kpiname"
-                                [placeholder]="'kpi.kpiNamePlaceholder' | translate" />
-
-                            <div class="text-danger"
+                                   placeholder="Enter KPI name in English" />
+                            <div class="text-danger small"
                                 *ngIf="form.get('kpiname')?.touched && form.get('kpiname')?.errors?.['required']">
-                                {{ 'kpi.validation.kpiNameRequired' | translate }}
+                                KPI name is required.
                             </div>
+                        </div>
 
-                            <div class="text-danger"
-                                *ngIf="form.get('kpiname')?.touched && form.get('kpiname')?.errors?.['maxlength']">
-                                {{ 'kpi.validation.kpiNameMaxLength' | translate }}
-                            </div>
-
-
-
+                        <!-- KPI Name IT -->
+                        <div class="col-md-4">
+                            <label class="form-label">
+                                KPI Name
+                                <span class="badge bg-success ms-1" style="font-size:.65rem">IT</span>
+                            </label>
+                            <input class="form-control" formControlName="kpinameIt"
+                                   placeholder="Nome KPI in italiano" />
                         </div>
 
                         <!-- Display Type -->
@@ -62,7 +91,7 @@
                             </select>
                         </div>
 
-                        <!-- Display Location -->
+                        <!-- Show On -->
                         <div class="col-md-4">
                             <label class="form-label">Show On <sup class="text-danger">*</sup></label>
                             <select formControlName="displayLocation" class="form-select">
@@ -72,7 +101,13 @@
                             </select>
                         </div>
 
-                        <!-- Gauge Min / Max — only relevant when gauge is selected -->
+                        <!-- Sort Order -->
+                        <div class="col-md-2">
+                            <label class="form-label">Sort Order</label>
+                            <input type="number" class="form-control" formControlName="sortOrder" min="0" />
+                        </div>
+
+                        <!-- Gauge Min / Max -->
                         <ng-container *ngIf="form.get('displayType')?.value === 'gauge'">
                             <div class="col-md-2">
                                 <label class="form-label">Gauge Min</label>
@@ -84,21 +119,168 @@
                             </div>
                         </ng-container>
 
-                        <!-- Sort Order -->
-                        <div class="col-md-2">
-                            <label class="form-label">Sort Order</label>
-                            <input type="number" class="form-control" formControlName="sortOrder" min="0" />
+                    </div>
+
+                    <!-- Section Panel (optional grouping) -->
+                    <div class="kpi-info-box mb-3">
+                        <i class="bi bi-info-circle me-1"></i>
+                        <strong>Section Panel</strong> — optional.
+                        KPIs with the same Section Name are grouped together inside one coloured
+                        strip-card on the dashboard. Leave blank to display as a standalone card.
+                    </div>
+
+                    <div class="row g-3 mb-4">
+                        <div class="col-md-3">
+                            <label class="form-label">
+                                Section Name
+                                <span class="badge bg-secondary ms-1" style="font-size:.65rem">EN</span>
+                                <span class="text-muted small ms-1">(e.g. Feeding)</span>
+                            </label>
+                            <input class="form-control" formControlName="sectionName"
+                                   placeholder="Leave blank for standalone" />
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">
+                                Section Name
+                                <span class="badge bg-success ms-1" style="font-size:.65rem">IT</span>
+                                <span class="text-muted small ms-1">(es. Alimentazione)</span>
+                            </label>
+                            <input class="form-control" formControlName="sectionNameIt"
+                                   placeholder="Lascia vuoto se standalone" />
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Section Colour</label>
+                            <select formControlName="sectionColor" class="form-select">
+                                <option *ngFor="let opt of sectionColorOptions" [value]="opt.value">
+                                    {{ opt.label }}
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <hr class="my-3" />
+
+                    <!-- ── Step 2: Configure KPI ───────────────────────────── -->
+                    <div class="kpi-step-header mb-3">
+                        <span class="kpi-step-badge">2</span>
+                        <strong>Configure KPI</strong>
+                    </div>
+
+                    <!-- Single Value panel -->
+                    <ng-container *ngIf="kpiType === 'single'">
+                        <div class="row g-3">
+                            <div class="col-md-5">
+                                <label class="form-label">Formula <sup class="text-danger">*</sup></label>
+                                <select formControlName="formulaId" class="form-select"
+                                        [disabled]="formulasLoading">
+                                    <option [ngValue]="null">Select Formula</option>
+                                    <option *ngFor="let f of formula" [ngValue]="f.formulaId">
+                                        {{ f.formulaName }}
+                                    </option>
+                                </select>
+                                <div class="text-muted small mt-1">
+                                    Select the formula that calculates this KPI value.
+                                </div>
+                                <div class="text-danger small"
+                                    *ngIf="form.get('formulaId')?.touched && !form.get('formulaId')?.value">
+                                    Formula is required.
+                                </div>
+                            </div>
+                        </div>
+                    </ng-container>
+
+                    <!-- Multi-Label panel -->
+                    <ng-container *ngIf="kpiType === 'multi'">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <div>
+                                <span class="badge bg-success me-2">Multi-Label Configuration</span>
+                                <span class="text-muted small">
+                                    Add multiple labels with individual formulas. Each label shows its own value.
+                                </span>
+                            </div>
+                            <button type="button" class="btn btn-outline-success btn-sm"
+                                    (click)="addLabel()">
+                                <i class="bi bi-plus-lg me-1"></i> Add Label
+                            </button>
                         </div>
 
-                    </div>
+                        <!-- Labels table -->
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-sm align-middle">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th style="width:40px">#</th>
+                                        <th>Label Name <span class="badge bg-secondary ms-1" style="font-size:.6rem">EN</span> <sup class="text-danger">*</sup></th>
+                                        <th>Label Name <span class="badge bg-success ms-1" style="font-size:.6rem">IT</span></th>
+                                        <th style="width:220px">Formula <sup class="text-danger">*</sup></th>
+                                        <th style="width:80px">Sort</th>
+                                        <th style="width:60px">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody formArrayName="labels">
+                                    <tr *ngFor="let lbl of labels.controls; let i = index"
+                                        [formGroupName]="i">
+                                        <td class="text-muted">{{ i + 1 }}</td>
+                                        <td>
+                                            <input class="form-control form-control-sm"
+                                                   formControlName="labelNameEn"
+                                                   placeholder="Label in English" />
+                                            <div class="text-danger small"
+                                                *ngIf="lbl.get('labelNameEn')?.touched && lbl.get('labelNameEn')?.errors?.['required']">
+                                                Required
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <input class="form-control form-control-sm"
+                                                   formControlName="labelNameIt"
+                                                   placeholder="Etichetta in italiano" />
+                                        </td>
+                                        <td>
+                                            <select formControlName="formulaId"
+                                                    class="form-select form-select-sm"
+                                                    [disabled]="formulasLoading">
+                                                <option [ngValue]="null">Select</option>
+                                                <option *ngFor="let f of formula" [ngValue]="f.formulaId">
+                                                    {{ f.formulaName }}
+                                                </option>
+                                            </select>
+                                            <div class="text-danger small"
+                                                *ngIf="lbl.get('formulaId')?.touched && !lbl.get('formulaId')?.value">
+                                                Required
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <input type="number" class="form-control form-control-sm"
+                                                   formControlName="sortOrder" min="0" />
+                                        </td>
+                                        <td class="text-center">
+                                            <button type="button" class="btn btn-outline-danger btn-sm"
+                                                    (click)="removeLabel(i)">
+                                                <i class="bi bi-trash"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+
+                                    <!-- Empty state -->
+                                    <tr *ngIf="labels.length === 0">
+                                        <td colspan="6" class="text-center py-4 text-muted">
+                                            <i class="bi bi-inbox fs-4 d-block mb-1"></i>
+                                            No labels added yet. Click <strong>+ Add Label</strong> to create your first label.
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </ng-container>
 
                 </form>
             </div>
 
             <div class="modal-footer">
                 <button class="btn btn-outline-secondary" (click)="closeModal()">Cancel</button>
-                <button *ngIf="canSave" class="btn add-btn" (click)="savekpi()" [disabled]="form.invalid">
-                    {{ isEdit ? 'Update' : 'Save' }}
+                <button *ngIf="canSave" class="btn add-btn" (click)="savekpi()"
+                        [disabled]="!isFormValid()">
+                    {{ isEdit ? 'Update KPI' : 'Save KPI' }}
                 </button>
             </div>
 

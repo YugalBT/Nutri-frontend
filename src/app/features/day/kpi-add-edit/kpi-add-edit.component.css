@@ -1,0 +1,79 @@
+/* ── Step badges ──────────────────────────────────────────── */
+.kpi-step-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 16px;
+}
+
+.kpi-step-badge {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: #1d6b8f;
+  color: #fff;
+  font-weight: 700;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+/* ── KPI Type selector ────────────────────────────────────── */
+.kpi-type-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.kpi-type-option {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 14px 16px;
+  border: 2px solid #e0e0e0;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: border-color 0.18s, background 0.18s;
+  background: #fff;
+}
+
+.kpi-type-option:hover {
+  border-color: #1d6b8f;
+  background: #f0f8fc;
+}
+
+.kpi-type-option.selected {
+  border-color: #1d6b8f;
+  background: #eaf4fb;
+}
+
+.kpi-type-icon {
+  font-size: 22px;
+  color: #1d6b8f;
+  margin-top: 2px;
+}
+
+.kpi-type-title {
+  font-weight: 700;
+  font-size: 14px;
+  color: #101828;
+}
+
+.kpi-type-desc {
+  font-size: 12px;
+  color: #667085;
+  margin-top: 2px;
+  line-height: 1.4;
+}
+
+/* ── Info box ─────────────────────────────────────────────── */
+.kpi-info-box {
+  background: #f0f8fc;
+  border: 1px solid #bee3f8;
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-size: 13px;
+  color: #1d4e6b;
+}

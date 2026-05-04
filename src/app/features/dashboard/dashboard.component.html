@@ -280,13 +280,61 @@
           </div>
         </ng-container>
 
-        <!-- ── Dynamic KPI Cards (Super Admin configured via KPI Management) ── -->
+        <!-- ── Multi-Label KPI Cards ── -->
+        <ng-container *ngIf="customKpiMulti.length > 0">
+          <div class="kpi-sections-grid mt-3">
+            <div class="kpi-section-card" *ngFor="let kpi of customKpiMulti">
+              <div class="kpi-section-header {{ kpi.sectionColor }}-header">
+                {{ getKpiLabel(kpi) }}
+              </div>
+              <div class="kpi-section-body">
+                <div class="kpi-section-row" *ngFor="let lbl of kpi.labels">
+                  <span class="kpi-section-label">{{ getLabelName(lbl) }}</span>
+                  <strong class="kpi-section-value" *ngIf="lbl.isValid">
+                    {{ lbl.value | number: '1.2-2' }}
+                  </strong>
+                  <strong class="kpi-section-value text-danger" *ngIf="!lbl.isValid">—</strong>
+                </div>
+                <div *ngIf="kpi.labels.length === 0" class="kpi-section-row">
+                  <span class="text-muted">No labels configured</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </ng-container>
+
+        <!-- ── Dynamic KPI Section Cards (table-card layout) ── -->
+        <ng-container *ngIf="customKpiSections.length > 0">
+          <div class="kpi-sections-grid">
+            <div class="kpi-section-card" *ngFor="let section of customKpiSections">
+
+              <!-- Coloured header: tone-feed-header | tone-herd-header | … -->
+              <div class="kpi-section-header {{ section.colorClass }}-header">
+                {{ getSectionTitle(section) }}
+              </div>
+
+              <!-- One row per KPI in the section -->
+              <div class="kpi-section-body">
+                <div class="kpi-section-row" *ngFor="let kpi of section.items">
+                  <span class="kpi-section-label">{{ getKpiLabel(kpi) }}</span>
+                  <strong class="kpi-section-value" *ngIf="kpi.isValid">
+                    {{ kpi.value | number: '1.2-2' }}
+                  </strong>
+                  <strong class="kpi-section-value text-danger" *ngIf="!kpi.isValid">—</strong>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </ng-container>
+
+        <!-- ── Dynamic KPI Standalone Cards (no section) ── -->
         <ng-container *ngIf="customKpiCards.length > 0">
           <div class="row g-3 mt-2">
             <div class="col-md-3" *ngFor="let kpi of customKpiCards">
               <div class="dashboard-card super-metric-card">
                 <div class="card-top">
-                  <span>{{ kpi.kpiName }}</span>
+                  <span>{{ getKpiLabel(kpi) }}</span>
                 </div>
                 <ng-container *ngIf="kpi.isValid; else kpiError">
                   <h3>{{ kpi.value | number: "1.2-2" }}</h3>

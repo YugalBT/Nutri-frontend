@@ -15,6 +15,7 @@ import {
   CompanyDashboardData,
   CustomKpiResult,
   DashboardData,
+  KpiLabelResult,
 } from '../../core/models/dashboarddata';
 
 import { CommonService } from '../../shared/services/common.service';
@@ -73,11 +74,22 @@ export class DashboardComponent implements OnInit {
   // crepGauge!: EChartsOption;
   isSupplier = false;
 
-  /** Custom KPI card items (displayType = 'card') */
+  /** Standalone single-value KPI cards */
   customKpiCards: CustomKpiResult[] = [];
 
-  /** Custom KPI gauge configs built from customKpis where displayType = 'gauge' */
+  /** Multi-label KPI cards (each has its own label rows) */
+  customKpiMulti: CustomKpiResult[] = [];
+
+  /** Gauge KPIs */
   customKpiGauges: { kpi: CustomKpiResult; option: EChartsOption }[] = [];
+
+  /** Single-value KPIs grouped by sectionName into coloured panels */
+  customKpiSections: {
+    name: string;
+    nameIt: string | null | undefined;
+    colorClass: string;
+    items: CustomKpiResult[];
+  }[] = [];
 
   constructor(
     private store: Store,
@@ -167,13 +179,42 @@ get isCompanyUser(): boolean {
 
           // Build dynamic custom KPI displays from Super Admin configuration
           const customKpis = d.customKpis ?? [];
-          this.customKpiCards = customKpis.filter(k => k.displayType === 'card');
+
+          // ── Gauges (always standalone) ──
           this.customKpiGauges = customKpis
             .filter(k => k.displayType === 'gauge')
             .map(k => ({
               kpi: k,
               option: this.createGauge(k.kpiName, k.value, k.gaugeMin, k.gaugeMax),
             }));
+
+          // ── Multi-label KPI cards (each owns its own label rows) ──
+          this.customKpiMulti = customKpis.filter(k => k.kpiType === 'multi');
+
+          // ── Single-value cards ──
+          const cardKpis = customKpis.filter(k => k.kpiType === 'single' && k.displayType === 'card');
+
+          // Standalone (no sectionName)
+          this.customKpiCards = cardKpis.filter(k => !k.sectionName);
+
+          // Section-grouped — group by sectionName preserving SortOrder
+          const sectionMap = new Map<string, {
+            name: string; nameIt: string | null | undefined;
+            colorClass: string; items: CustomKpiResult[];
+          }>();
+          for (const kpi of cardKpis.filter(k => !!k.sectionName)) {
+            const key = kpi.sectionName!;
+            if (!sectionMap.has(key)) {
+              sectionMap.set(key, {
+                name: key,
+                nameIt: kpi.sectionNameIt,
+                colorClass: kpi.sectionColor || 'tone-feed',
+                items: [],
+              });
+            }
+            sectionMap.get(key)!.items.push(kpi);
+          }
+          this.customKpiSections = Array.from(sectionMap.values());
         }
 
         this.companyTrendChart = {
@@ -288,6 +329,32 @@ get isCompanyUser(): boolean {
     };
   }
 
+  // ─── Bilingual label helpers ───────────────────────────────────────────────
+
+  /**
+   * Returns the Italian KPI name when the UI is in Italian AND an Italian
+   * translation was configured; otherwise falls back to the English name.
+   */
+  getKpiLabel(kpi: CustomKpiResult): string {
+    const isIt = this.translate.lang$.getValue() === 'it';
+    return (isIt && kpi.kpiNameIt) ? kpi.kpiNameIt : kpi.kpiName;
+  }
+
+  /**
+   * Returns the Italian section title when the UI is in Italian AND an Italian
+   * translation was configured; otherwise falls back to the English name.
+   */
+  getSectionTitle(section: { name: string; nameIt?: string | null }): string {
+    const isIt = this.translate.lang$.getValue() === 'it';
+    return (isIt && section.nameIt) ? section.nameIt : section.name;
+  }
+
+  /** Label language helper for multi-label KPI rows */
+  getLabelName(label: { labelNameEn: string; labelNameIt?: string | null }): string {
+    const isIt = this.translate.lang$.getValue() === 'it';
+    return (isIt && label.labelNameIt) ? label.labelNameIt : label.labelNameEn;
+  }
+
   // ✅ KEEP THIS (important)
   getCowPosition(value: number | null | undefined): number {
     const min = 0.9;
@@ -300,6 +367,11 @@ get isCompanyUser(): boolean {
   }
 
   private loadAdminAnalytics(): void {
+    // Admin view has no custom KPI cards/gauges — clear to avoid stale company data
+    this.customKpiCards = [];
+    this.customKpiMulti = [];
+    this.customKpiGauges = [];
+    this.customKpiSections = [];
     this.spinner.show();
     this.commonService.getAggregatedAnalytics(this.selectedYear).subscribe({
       next: (res) => {

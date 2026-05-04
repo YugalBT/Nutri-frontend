@@ -2,8 +2,19 @@
  * A custom KPI evaluated against a company's aggregated data.
  * Returned inside CompanyDashboardData.customKpis.
  */
+export interface KpiLabelResult {
+  labelId: string;
+  labelNameEn: string;
+  labelNameIt?: string | null;
+  value: number;
+  isValid: boolean;
+  sortOrder: number;
+}
+
 export interface CustomKpiResult {
   kpiId: string;
+  /** 'single' | 'multi' */
+  kpiType: 'single' | 'multi';
   kpiName: string;
   value: number;
   /** card | gauge | chart_line | chart_bar */
@@ -15,6 +26,28 @@ export interface CustomKpiResult {
   sortOrder: number;
   /** false if formula referenced an unavailable variable or produced a math error */
   isValid: boolean;
+  /** Populated only when kpiType = 'multi' */
+  labels: KpiLabelResult[];
+
+  /**
+   * Optional group label (e.g. "Feeding", "Herd").
+   * KPIs that share the same sectionName are rendered together
+   * inside one coloured strip-card panel on the dashboard.
+   * Null/undefined = standalone card or gauge.
+   */
+  sectionName?: string | null;
+
+  /** Italian translation of sectionName. */
+  sectionNameIt?: string | null;
+
+  /**
+   * CSS tone class for the strip-card panel.
+   * One of: tone-feed | tone-herd | tone-production | tone-fertility
+   */
+  sectionColor?: string | null;
+
+  /** Italian translation of kpiName. Null when not configured. */
+  kpiNameIt?: string | null;
 }
 
 export interface DashboardData {
