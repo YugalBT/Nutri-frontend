@@ -11,6 +11,8 @@ import { TranslateService } from '../../i18n/translate.service';
 import { Constants } from '../../shared/utils/constants/constants';
 import { API_ENDPOINTS } from '../../core/constants/api-endpoints';
 import { PERMISSIONS } from '../../core/constants/permissions.constants';
+import { debounceTime } from 'rxjs';
+
 
 @Component({
   selector: 'app-calves-entry',
@@ -20,7 +22,9 @@ import { PERMISSIONS } from '../../core/constants/permissions.constants';
   styleUrls: ['./calves-entry.component.css'],
 })
 export class CalvesEntryComponent implements OnInit, OnDestroy {
+
   form!: FormGroup;
+
   isLoading = false;
   isSaving = false;
   isSuperAdmin = false;
@@ -35,20 +39,37 @@ export class CalvesEntryComponent implements OnInit, OnDestroy {
 
   private subs: Subscription[] = [];
 
+  indCostPerHead = 0;
+  grpCostPerHead = 0;
+  indTotal = 0;
+  grpTotal = 0;
+  totalCost = 0;
+  milkPrice = 0;
+  feedPrice = 0;
+  pricesLoaded = false;
+
   constructor(
     private fb: FormBuilder,
     private http: HttpService,
     private toast: ToastService,
     private common: CommonService,
     private translate: TranslateService,
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.isSuperAdmin = localStorage.getItem(Constants.IsSuperAdmin) === 'true';
-    this.canSave = this.common.checkPermission(PERMISSIONS.DailyEntryAdd, false)
-      || this.common.checkPermission(PERMISSIONS.DailyEntryEdit, false);
+
+    this.canSave =
+      this.common.checkPermission(PERMISSIONS.DailyEntryAdd, false) ||
+      this.common.checkPermission(PERMISSIONS.DailyEntryEdit, false);
 
     this.initForm();
+
+    this.form.valueChanges
+      .pipe(debounceTime(200))
+      .subscribe(() => this.calculate());
+
+    this.loadPrices();
 
     if (this.isSuperAdmin) {
       const sub = this.common.getCompanyDropdown().subscribe({
@@ -76,12 +97,11 @@ export class CalvesEntryComponent implements OnInit, OnDestroy {
 
   private initForm(): void {
     this.form = this.fb.group({
-      // Individual hutch calves
       indAnimals: [null],
       indAvgMilk: [null],
       indPowder: [null],
       indAvgFeed: [null],
-      // Group box calves
+
       grpAnimals: [null],
       grpAvgMilk: [null],
       grpPowder: [null],
@@ -89,6 +109,86 @@ export class CalvesEntryComponent implements OnInit, OnDestroy {
     });
   }
 
+  // =============================
+  // 🔹 PRICE LOADING
+  // =============================
+  private loadPrices(): void {
+    // Load latest milk price (PriceAziendali) — same source as backend SaveCalvesData
+    const milkSub = this.http
+      .get<any>(API_ENDPOINTS.MILK_PRICE_HISTORY.GET_BY_FARM)
+      .subscribe({
+        next: (res) => {
+          const list: any[] = Array.isArray(res?.data) ? res.data : [];
+          if (list.length > 0) {
+            this.milkPrice = +(list[0].priceAziendali ?? list[0].PriceAziendali ?? 0);
+          }
+          this.pricesLoaded = true;
+          this.calculate();
+        },
+        error: () => {
+          this.pricesLoaded = true;
+        },
+      });
+    this.subs.push(milkSub);
+
+    // Load feed price — same source as backend (first active feed's pricePerKg)
+    const feedSub = this.http
+      .get<any>(API_ENDPOINTS.COMMON_API.GET_ALL_FEED)
+      .subscribe({
+        next: (res) => {
+          const feeds: any[] = Array.isArray(res?.data) ? res.data : [];
+          if (feeds.length > 0) {
+            this.feedPrice = +(feeds[0].pricePerKg ?? feeds[0].PricePerKg ?? 0);
+          }
+          this.calculate();
+        },
+        error: () => {},
+      });
+    this.subs.push(feedSub);
+  }
+
+  // =============================
+  // 🔹 CALCULATION LOGIC
+  // =============================
+  calculate(): void {
+    const v = this.form.value;
+
+    this.indCostPerHead = this.getCost(
+      v.indAvgMilk ?? 0,
+      v.indPowder ?? 0,
+      v.indAvgFeed ?? 0
+    );
+    this.indTotal = (v.indAnimals || 0) * this.indCostPerHead;
+
+    this.grpCostPerHead = this.getCost(v.grpAvgMilk, v.grpPowder, v.grpAvgFeed);
+    this.grpTotal = (v.grpAnimals || 0) * this.grpCostPerHead;
+
+    this.totalCost = this.indTotal + this.grpTotal;
+  }
+
+  getCost(milk: number, powder: number, feed: number): number {
+
+    // // 🔥 FIX: avoid wrong small % values
+    // if (powder && powder < 10) {
+    //   powder = 0;
+    // }
+
+    let milkCost = 0;
+
+    if (!powder || powder === 0) {
+      milkCost = (milk || 0) * this.milkPrice;
+    } else {
+      milkCost = (milk || 0) * (powder / 100) * this.milkPrice;
+    }
+
+    const feedCost = (feed || 0) * this.feedPrice;
+
+    return +(milkCost + feedCost).toFixed(2);
+  }
+
+  // =============================
+  // 🔹 DATA LOADING
+  // =============================
   onDateChange(): void {
     this.loadDay();
   }
@@ -101,13 +201,23 @@ export class CalvesEntryComponent implements OnInit, OnDestroy {
     this.isLoading = true;
     this.dayId = '';
     this.farmId = '';
-    this.form.reset();
+    this.form.reset({
+      indAnimals: 0,
+      indAvgMilk: 0,
+      indPowder: 0,
+      indAvgFeed: 0,
+      grpAnimals: 0,
+      grpAvgMilk: 0,
+      grpPowder: 0,
+      grpAvgFeed: 0
+    });
 
     const cid = this.isSuperAdmin && this.selectedCompanyId ? this.selectedCompanyId : undefined;
 
     const sub = this.common.getDayList(cid).subscribe({
       next: (res: any) => {
         const days: any[] = Array.isArray(res?.data) ? res.data : [];
+
         const match = days.find((d: any) => {
           const dayDate = (d.date ?? '').split('T')[0];
           return dayDate === this.selectedDate;
@@ -125,6 +235,7 @@ export class CalvesEntryComponent implements OnInit, OnDestroy {
         this.isLoading = false;
       },
     });
+
     this.subs.push(sub);
   }
 
@@ -139,27 +250,37 @@ export class CalvesEntryComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (res) => {
           const d = res?.data;
+
           if (d) {
             this.form.patchValue({
               indAnimals: d.indAnimals,
               indAvgMilk: d.indAvgMilk,
               indPowder: d.indPowder,
               indAvgFeed: d.indAvgFeed,
+
               grpAnimals: d.grpAnimals,
               grpAvgMilk: d.grpAvgMilk,
               grpPowder: d.grpPowder,
               grpAvgFeed: d.grpAvgFeed,
             });
+
+            // 🔥 RECALCULATE AFTER LOAD
+            this.calculate();
           }
+
           this.isLoading = false;
         },
         error: () => {
           this.isLoading = false;
         },
       });
+
     this.subs.push(sub);
   }
 
+  // =============================
+  // 🔹 SAVE LOGIC
+  // =============================
   save(): void {
     if (!this.canSave || this.isSaving) return;
 
@@ -170,9 +291,16 @@ export class CalvesEntryComponent implements OnInit, OnDestroy {
     }
   }
 
+
   private createDayAndSave(): void {
     this.isSaving = true;
-    const payload: any = { date: this.selectedDate, isClosed: false, farmId: null };
+
+    const payload: any = {
+      date: this.selectedDate,
+      isClosed: false,
+      farmId: null,
+    };
+
     if (this.isSuperAdmin && this.selectedCompanyId) {
       payload['companyId'] = this.selectedCompanyId;
     }
@@ -184,12 +312,17 @@ export class CalvesEntryComponent implements OnInit, OnDestroy {
           this.isSaving = false;
           return;
         }
-        // Re-load day list to get the new dayId, then persist
+
         const cid = this.isSuperAdmin && this.selectedCompanyId ? this.selectedCompanyId : undefined;
+
         const sub2 = this.common.getDayList(cid).subscribe({
           next: (res: any) => {
             const days: any[] = Array.isArray(res?.data) ? res.data : [];
-            const match = days.find((d: any) => (d.date ?? '').split('T')[0] === this.selectedDate);
+
+            const match = days.find((d: any) =>
+              (d.date ?? '').split('T')[0] === this.selectedDate
+            );
+
             if (match) {
               this.dayId = match.dayId ?? match.DayId ?? '';
               this.farmId = match.farmId ?? match.FarmId ?? '';
@@ -203,6 +336,7 @@ export class CalvesEntryComponent implements OnInit, OnDestroy {
             this.isSaving = false;
           },
         });
+
         this.subs.push(sub2);
       },
       error: () => {
@@ -210,27 +344,49 @@ export class CalvesEntryComponent implements OnInit, OnDestroy {
         this.isSaving = false;
       },
     });
+
     this.subs.push(sub);
   }
 
   private persistCalvesData(dayId: string): void {
     this.isSaving = true;
+
     const v = this.form.value;
+    if (v.indPowder < 0 || v.grpPowder < 0) {
+      this.toast.warning('Powder % cannot be negative');
+      this.isSaving = false;
+      return;
+    }
+
+    if (v.indPowder > 100 || v.grpPowder > 100) {
+      this.toast.warning('Powder % cannot be more than 100');
+      this.isSaving = false;
+      return;
+    }
 
     const payload: any = {
       dayId,
       farmId: this.farmId || '00000000-0000-0000-0000-000000000000',
       date: this.selectedDate,
-      ...(this.isSuperAdmin && this.selectedCompanyId ? { tenantId: this.selectedCompanyId } : {}),
-      // Calves fields only — all other fields omitted (backend preserves existing values)
+
+      ...(this.isSuperAdmin && this.selectedCompanyId
+        ? { tenantId: this.selectedCompanyId }
+        : {}),
+
       indAnimals: v.indAnimals,
       indAvgMilk: v.indAvgMilk,
       indPowder: v.indPowder,
       indAvgFeed: v.indAvgFeed,
+
       grpAnimals: v.grpAnimals,
       grpAvgMilk: v.grpAvgMilk,
       grpPowder: v.grpPowder,
       grpAvgFeed: v.grpAvgFeed,
+      indCostPerHead: this.indCostPerHead,
+      indTotal: this.indTotal,
+      grpCostPerHead: this.grpCostPerHead,
+      grpTotal: this.grpTotal,
+      totalCost: this.totalCost,
     };
 
     const sub = this.http.post<any>(API_ENDPOINTS.DAY_DATA.SAVE_CALVES, payload).subscribe({
@@ -241,6 +397,7 @@ export class CalvesEntryComponent implements OnInit, OnDestroy {
         } else {
           this.toast.error(res.message);
         }
+
         this.isSaving = false;
       },
       error: () => {
@@ -248,6 +405,7 @@ export class CalvesEntryComponent implements OnInit, OnDestroy {
         this.isSaving = false;
       },
     });
+
     this.subs.push(sub);
   }
 }

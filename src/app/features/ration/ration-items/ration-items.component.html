@@ -1,25 +1,57 @@
 <div class="pagecls">
 
   <!-- Header -->
-  <div class="page-header d-flex justify-content-between align-items-center">
-    <h3 class="page-title">
-      Ration Items of {{ rationName }}
-    </h3>
-
-   <button class="btn add-btn " (click)="goBack()">
-  ← Back
-</button>
-
+  <div class="page-header d-flex justify-content-between align-items-center mb-3">
+    <div>
+      <h3 class="page-title mb-0">{{ rationName }}</h3>
+      <small class="text-muted">Drag column headers to reorder &nbsp;⇄</small>
+    </div>
+    <button class="btn add-btn" (click)="goBack()">← Back</button>
   </div>
 
-  <!-- Reusable Table -->
-  <app-reusable-table
-    [columns]="columns"
-    [columnFields]="columnFields"
-    [data]="items"
-    [showActions]="false"
-    [pageable]="false"
-    [totalRecords]="totalRecords">
-  </app-reusable-table>
+  <!-- Table -->
+  <div class="table-card">
+    <div class="table-responsive">
+      <table class="table table-sm table-hover mb-0">
+
+        <thead>
+          <tr
+            cdkDropList
+            cdkDropListOrientation="horizontal"
+            (cdkDropListDropped)="onColumnDrop($event)"
+            class="ration-header-row">
+            <th *ngFor="let col of columns"
+                cdkDrag
+                class="draggable-col">
+              <div class="col-drag-handle d-flex align-items-center gap-1">
+                <span class="drag-icon">⠿</span>
+                {{ col.label }}
+              </div>
+              <!-- CDK drag placeholder -->
+              <div *cdkDragPlaceholder class="col-drag-placeholder"></div>
+            </th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr *ngFor="let item of items">
+            <td *ngFor="let col of columns">
+              {{ getCellValue(item, col.key) }}
+            </td>
+          </tr>
+          <tr *ngIf="items.length === 0">
+            <td [attr.colspan]="columns.length" class="text-center text-muted py-4">
+              No items found for this ration.
+            </td>
+          </tr>
+        </tbody>
+
+      </table>
+    </div>
+
+    <div class="table-footer px-3 py-2 text-muted small" *ngIf="totalRecords > 0">
+      {{ totalRecords }} item{{ totalRecords !== 1 ? 's' : '' }}
+    </div>
+  </div>
 
 </div>

@@ -1,7 +1,9 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
+import { CdkDragDrop, DragDropModule, moveItemInArray } from '@angular/cdk/drag-drop';
 import { HttpService } from '../../../shared/services/http.service';
 import { ToastService } from '../../../shared/services/toast.service';
 import { CommonService } from '../../../shared/services/common.service';
@@ -59,7 +61,7 @@ interface RationArchiveRecord {
 @Component({
   selector: 'app-ration-list',
   standalone: true,
-  imports: [CommonModule, FormsModule, RationAddEditComponent, TranslatePipe],
+  imports: [CommonModule, FormsModule, DragDropModule, RationAddEditComponent, TranslatePipe],
   templateUrl: './ration-list.component.html',
   styleUrls: ['./ration-list.component.css']
 })
@@ -77,6 +79,8 @@ export class RationListComponent implements OnInit, OnDestroy {
   isArchiveOpen = false;
   isArchiveLoading = false;
 
+  readonly PAGE_NAME = 'ration-matrix-feeds';
+
   private subs: Subscription[] = [];
 
   @ViewChild('rationModal') rationModalRef!: RationAddEditComponent;
@@ -88,6 +92,7 @@ export class RationListComponent implements OnInit, OnDestroy {
     private confirm: ConfirmDialogService,
     private translate: TranslateService,
     private rationService: RationService,
+    private router: Router,
   ) {}
 
   ngOnInit(): void {
@@ -131,10 +136,44 @@ export class RationListComponent implements OnInit, OnDestroy {
         this.groups = res?.data?.groups ?? [];
         this.feeds = res?.data?.feeds ?? [];
         this.isLoading = false;
+        this.applyFeedLayout();
       },
       error: () => { this.isLoading = false; }
     });
     this.subs.push(sub);
+  }
+
+  onFeedDrop(event: CdkDragDrop<RationMatrixFeed[]>): void {
+    moveItemInArray(this.feeds, event.previousIndex, event.currentIndex);
+    this.saveFeedLayout();
+  }
+
+  private applyFeedLayout(): void {
+    const url = `${API_ENDPOINTS.DRAG_AND_DROP.GET}?pageName=${this.PAGE_NAME}`;
+    const sub = this.http.get<any>(url).subscribe({
+      next: (res) => {
+        try {
+          const order: string[] = JSON.parse(res?.data ?? '[]');
+          if (Array.isArray(order) && order.length > 0) {
+            const sorted = order
+              .map(id => this.feeds.find(f => f.feedId === id))
+              .filter((f): f is RationMatrixFeed => !!f);
+            const extras = this.feeds.filter(f => !order.includes(f.feedId));
+            this.feeds = [...sorted, ...extras];
+          }
+        } catch { /* keep default order */ }
+      },
+      error: () => { /* keep default order */ }
+    });
+    this.subs.push(sub);
+  }
+
+  private saveFeedLayout(): void {
+    const payload = {
+      pageName:   this.PAGE_NAME,
+      layoutJson: JSON.stringify(this.feeds.map(f => f.feedId)),
+    };
+    this.http.post<any>(API_ENDPOINTS.DRAG_AND_DROP.SAVE, payload).subscribe();
   }
 
   openArchive(): void {
@@ -174,6 +213,13 @@ export class RationListComponent implements OnInit, OnDestroy {
     if (!item) return '-';
     const v = item.kgPerCowPerDay;
     return Number.isInteger(v) ? v.toString() : v.toString().replace('.', ',');
+  }
+
+  viewRationItems(group: RationMatrixGroup): void {
+    if (!group.rationId) return;
+    this.router.navigate(['/ration/items'], {
+      queryParams: { rationId: group.rationId }
+    });
   }
 
   openAddModal(): void {

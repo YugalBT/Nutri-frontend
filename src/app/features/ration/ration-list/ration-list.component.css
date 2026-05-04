@@ -362,6 +362,52 @@
   color: var(--ration-danger);
 }
 
+.matrix-action-btn.view:hover {
+  background: rgba(29, 107, 143, 0.08);
+  color: #1d6b8f;
+}
+
+/* ── Feed row drag-and-drop ─────────────────────────────────── */
+.feed-drag-handle {
+  display: inline-block;
+  cursor: grab;
+  color: #adb5bd;
+  font-size: 14px;
+  margin-right: 6px;
+  user-select: none;
+  vertical-align: middle;
+}
+
+.feed-drag-handle:active {
+  cursor: grabbing;
+}
+
+.feed-row:hover .feed-drag-handle {
+  color: #1d6b8f;
+}
+
+.feed-drag-placeholder {
+  background: #e8f4fd;
+  border: 2px dashed #1d6b8f;
+  height: 36px;
+  border-radius: 4px;
+}
+
+.cdk-drag-preview {
+  background: #fff;
+  box-shadow: 0 4px 16px rgba(29, 107, 143, 0.2);
+  border-radius: 6px;
+  opacity: 0.95;
+}
+
+.cdk-drag-animating {
+  transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+.cdk-drop-list-dragging .feed-row:not(.cdk-drag-placeholder) {
+  transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+}
+
 .summary-row td {
   background: #f8fbfa;
 }

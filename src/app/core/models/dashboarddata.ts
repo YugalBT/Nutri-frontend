@@ -49,6 +49,10 @@ export interface CompanyDashboardData {
   pim?: number;
   ageAtFirstCalvingHeifers?: number;
 
+  // Calves daily entry
+  calvesTotalCost?: number;
+  calvesIndAnimals?: number;
+  calvesGrpAnimals?: number;
 }
 
 export interface CompanyComparisonData {

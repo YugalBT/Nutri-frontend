@@ -290,7 +290,7 @@
         </div>
 
         <div class="row g-3 mt-1">
-          <div class="col-md-4">
+          <div class="col-md-3">
             <div class="overview-card">
               <h5>{{ "dashboard.feeding" | translate }}</h5>
               <p>
@@ -312,7 +312,7 @@
             </div>
           </div>
 
-          <div class="col-md-4">
+          <div class="col-md-3">
             <div class="overview-card">
               <h5>{{ "dashboard.herd" | translate }}</h5>
               <p>
@@ -338,7 +338,7 @@
             </div>
           </div>
 
-          <div class="col-md-4">
+          <div class="col-md-3">
             <div class="overview-card">
               <h5>{{ "dashboard.production" | translate }}</h5>
               <p>
@@ -360,6 +360,24 @@
               <p>
                 {{ "dashboard.pim" | translate }}:
                 <b>{{ companyDashboard?.pim || 0 }}</b>
+              </p>
+            </div>
+          </div>
+
+          <div class="col-md-3">
+            <div class="overview-card">
+              <h5>{{ "dashboard.calves" | translate }}</h5>
+              <p>
+                {{ "dashboard.calvesTotalCost" | translate }}:
+                <b>{{ companyDashboard?.calvesTotalCost || 0 | number: "1.2-2" }} €</b>
+              </p>
+              <p>
+                {{ "dashboard.calvesIndividualAnimals" | translate }}:
+                <b>{{ companyDashboard?.calvesIndAnimals || 0 }}</b>
+              </p>
+              <p>
+                {{ "dashboard.calvesGroupAnimals" | translate }}:
+                <b>{{ companyDashboard?.calvesGrpAnimals || 0 }}</b>
               </p>
             </div>
           </div>

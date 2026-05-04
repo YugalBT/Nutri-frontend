@@ -121,15 +121,22 @@
                   {{ g.rationName || ('ration.matrix.noRation' | translate) }}
                 </div>
 
-                <div class="group-actions" *ngIf="canEdit || canDelete">
-                  <button *ngIf="canEdit && g.rationId"
+                <div class="group-actions" *ngIf="g.rationId">
+                  <button
+                    class="matrix-action-btn view"
+                    title="{{ 'common.view' | translate }}"
+                    (click)="viewRationItems(g)">
+                    <i class="bi bi-eye-fill"></i>
+                  </button>
+
+                  <button *ngIf="canEdit"
                     class="matrix-action-btn edit"
                     title="{{ 'common.edit' | translate }}"
                     (click)="openEditModal(g)">
                     <i class="bi bi-pencil-fill"></i>
                   </button>
 
-                  <button *ngIf="canDelete && g.rationId"
+                  <button *ngIf="canDelete"
                     class="matrix-action-btn delete"
                     title="{{ 'common.delete' | translate }}"
                     (click)="deleteRation(g)">
@@ -141,7 +148,10 @@
           </tr>
         </thead>
 
-        <tbody>
+        <tbody
+          cdkDropList
+          [cdkDropListData]="feeds"
+          (cdkDropListDropped)="onFeedDrop($event)">
 
           <!-- Cost -->
           <tr class="summary-row cost-row">
@@ -187,9 +197,19 @@
             </td>
           </tr>
 
-          <!-- Feed Rows -->
-          <tr *ngFor="let f of feeds" class="feed-row">
-            <td class="feed-col sticky-col feed-name">{{ f.feedName }}</td>
+          <!-- Feed Rows (draggable) -->
+          <tr *ngFor="let f of feeds"
+              class="feed-row"
+              cdkDrag
+              [cdkDragData]="f">
+
+            <!-- Drag placeholder -->
+            <td *cdkDragPlaceholder [attr.colspan]="groups.length + 1" class="feed-drag-placeholder"></td>
+
+            <td class="feed-col sticky-col feed-name">
+              <span class="feed-drag-handle" cdkDragHandle title="Drag to reorder">⠿</span>
+              {{ f.feedName }}
+            </td>
 
             <td *ngFor="let g of groups"
                 class="feed-value"

@@ -1,0 +1,49 @@
+.ration-header-row th {
+  white-space: nowrap;
+  cursor: grab;
+  user-select: none;
+  background: #f8f9fa;
+}
+
+.ration-header-row th:active {
+  cursor: grabbing;
+}
+
+.col-drag-handle {
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.drag-icon {
+  color: #adb5bd;
+  font-size: 14px;
+  line-height: 1;
+}
+
+.cdk-drag-animating {
+  transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+.col-drag-placeholder {
+  background: #e8f4fd;
+  border: 2px dashed #1d6b8f;
+  height: 36px;
+  min-width: 80px;
+  border-radius: 4px;
+}
+
+.cdk-drag-preview {
+  background: #fff;
+  border: 2px solid #1d6b8f;
+  border-radius: 6px;
+  padding: 6px 12px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #1d6b8f;
+  box-shadow: 0 4px 16px rgba(29, 107, 143, 0.25);
+}
+
+.table-footer {
+  border-top: 1px solid rgba(15, 23, 42, 0.08);
+  color: #6c757d;
+}
