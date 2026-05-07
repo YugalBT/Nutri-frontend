@@ -85,11 +85,17 @@
             <div *ngIf="categoryLabel" class="col-12">
               <div class="alert alert-info py-2 mb-0 d-flex flex-wrap gap-3 small">
                 <span><strong>{{ 'productPrice.category' | translate }}:</strong> {{ categoryLabel }}</span>
+                <span *ngIf="formatLabel"><strong>Format:</strong> {{ formatLabel }}</span>
+                <span *ngIf="dosageLabel"><strong>Dosage:</strong> {{ dosageLabel }}</span>
                 <span><strong>{{ 'productPrice.formulaCost' | translate }}:</strong> {{ formulaCost | number:'1.2-2' }}</span>
                 <span><strong>{{ 'productPrice.targetMargin' | translate }}:</strong> {{ targetMarginPercent * 100 | number:'1.1-2' }}%</span>
+                <span *ngIf="formulaTypeLabel"><strong>{{ 'pricingRules.formulaType' | translate }}:</strong> {{ formulaTypeLabel }}</span>
                 <span *ngIf="isSpecialCategory" class="badge bg-warning text-dark">
                   {{ 'productPrice.specialFormula' | translate }}
                 </span>
+              </div>
+              <div *ngIf="ruleApplied" class="text-muted small mt-2">
+                Rule: {{ ruleApplied }}
               </div>
               <div *ngIf="formulaCost <= 0" class="text-warning small mt-2">
                 {{ 'productPrice.messages.zeroFormulaCostHint' | translate }}

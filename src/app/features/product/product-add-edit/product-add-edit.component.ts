@@ -52,7 +52,7 @@ export class ProductAddEditComponent implements OnInit, OnDestroy {
   // ── Dynamic attribute lists ───────────────────────────────────────────────
   formats:    PricingAttribute[] = [];
   categories: PricingAttribute[] = [];
-  types:      PricingAttribute[] = [];
+  dosages:    PricingAttribute[] = [];
 
   private subs: Subscription[] = [];
   private destroy$ = new Subject<void>();
@@ -80,6 +80,7 @@ export class ProductAddEditComponent implements OnInit, OnDestroy {
       effectiveDate: ['', Validators.required],
       format:        [null, Validators.required],
       category:      [null, Validators.required],
+      dosage:        [null, Validators.required],
       type:          [null],
     });
 
@@ -91,8 +92,7 @@ export class ProductAddEditComponent implements OnInit, OnDestroy {
       .subscribe((catalog) => {
         this.formats    = catalog.formats.filter(f => f.isActive);
         this.categories = catalog.categories.filter(c => c.isActive);
-        // TODO: Uncomment when backend returns 'types' in GetCatalog response
-        // this.types = catalog.types.filter(t => t.isActive);
+        this.dosages    = catalog.dosages.filter(d => d.isActive);
       });
 
     this.listenProductNameChange();
@@ -180,7 +180,10 @@ export class ProductAddEditComponent implements OnInit, OnDestroy {
 
     if (edit && data) {
 
-      this.form.patchValue(data);
+      this.form.patchValue({
+        ...data,
+        dosage: data.dosage ?? data.type ?? null
+      });
 
       this.currentId = data.productId;
 
@@ -212,6 +215,8 @@ export class ProductAddEditComponent implements OnInit, OnDestroy {
     }
 
     const payload = { ...this.form.getRawValue() };
+    // Keep legacy Product.Type populated until the backend/data migration fully retires it.
+    payload.type = payload.type ?? payload.dosage;
 
 
     if (this.isEdit && this.currentId) {

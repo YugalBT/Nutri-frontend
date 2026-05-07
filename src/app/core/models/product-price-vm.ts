@@ -32,6 +32,10 @@ export interface SuggestedPriceVm {
 
   category?: string;
 
+  format?: string;
+
+  dosage?: string;
+
   type?: string;
 
   formulaCost: number;
@@ -41,6 +45,12 @@ export interface SuggestedPriceVm {
   targetMarginPercent: number;
 
   commissionPercent: number;
+
+  formulaType?: string;
+
+  ruleApplied?: string;
+
+  ruleFound?: boolean;
 
   isSpecialCategory: boolean;
 

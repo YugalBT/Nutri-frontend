@@ -6,7 +6,7 @@ export interface PricingRule {
   targetMargin: number;
   minMargin: number;
   commissionPct: number;
-  formulaType: 'Standard' | 'NutriJunior';
+  formulaType: string;
   isActive: boolean;
   ruleLevel: 'Category' | 'Format' | 'Dosage';
 }

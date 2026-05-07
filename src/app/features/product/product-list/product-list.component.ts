@@ -47,6 +47,9 @@ export class ProductListComponent implements OnInit, OnDestroy {
   columnFields: string[] = [
     'productName',
     'productCode',
+    'category',
+    'format',
+    'dosage',
     'effectiveDate',
     'isActive'
   ];
@@ -97,6 +100,9 @@ export class ProductListComponent implements OnInit, OnDestroy {
     this.columns = [
       this.translate.instant('product.name'),
       this.translate.instant('product.code'),
+      'Category',
+      'Format',
+      'Dosage',
       this.translate.instant('product.effectiveDate'),
       this.translate.instant('common.status')
     ];

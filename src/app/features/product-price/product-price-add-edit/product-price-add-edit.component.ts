@@ -50,6 +50,10 @@ export class ProductPriceAddEditComponent implements OnInit {
   highThreshold = 0;
   isSpecialCategory = false;
   categoryLabel = '';
+  formatLabel = '';
+  dosageLabel = '';
+  formulaTypeLabel = '';
+  ruleApplied = '';
 
   // Computed live on the form — customer price is the input, margin is the result
   marginPercent = 0;
@@ -108,6 +112,10 @@ export class ProductPriceAddEditComponent implements OnInit {
     this.highThreshold = 0;
     this.isSpecialCategory = false;
     this.categoryLabel = '';
+    this.formatLabel = '';
+    this.dosageLabel = '';
+    this.formulaTypeLabel = '';
+    this.ruleApplied = '';
     this.marginPercent = 0;
     this.marginLevel = 0;
     this.marginColor = '';
@@ -185,6 +193,10 @@ export class ProductPriceAddEditComponent implements OnInit {
             this.highThreshold = Number(d.highThreshold) || 0;
             this.isSpecialCategory = !!d.isSpecialCategory;
             this.categoryLabel = d.category || '';
+            this.formatLabel = d.format || '';
+            this.dosageLabel = d.dosage || d.type || '';
+            this.formulaTypeLabel = d.formulaType || '';
+            this.ruleApplied = d.ruleApplied || '';
 
             const patch: Record<string, number> = {
               commissionPercent: Number(d.commissionPercent) || 0

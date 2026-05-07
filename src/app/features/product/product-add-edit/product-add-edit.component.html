@@ -101,13 +101,15 @@
             <!-- TYPE (optional — used for product classification only, does not affect pricing) -->
             <div class="col-md-4">
               <label class="form-label">
-                {{ "product.type" | translate }}
-                <span class="text-muted small ms-1">({{ 'common.optional' | translate }})</span>
+                Dosage
+                <sup class="text-danger">*</sup>
               </label>
-              <select formControlName="type" class="form-select">
-                <option [ngValue]="null">{{ 'product.selectType' | translate }}</option>
-                <option *ngFor="let t of types" [value]="t.name">{{ t.name }}</option>
+              <select formControlName="dosage" class="form-select"
+                      [class.is-invalid]="form.get('dosage')?.touched && form.get('dosage')?.invalid">
+                <option [ngValue]="null">-- Select Dosage --</option>
+                <option *ngFor="let d of dosages" [value]="d.name">{{ d.name }}</option>
               </select>
+              <div class="invalid-feedback">{{ 'validation.required' | translate }}</div>
             </div>
 
           </div>
