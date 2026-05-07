@@ -53,6 +53,7 @@ export class ProductAddEditComponent implements OnInit, OnDestroy {
   formats:    PricingAttribute[] = [];
   categories: PricingAttribute[] = [];
   dosages:    PricingAttribute[] = [];
+  types:      PricingAttribute[] = [];
 
   private subs: Subscription[] = [];
   private destroy$ = new Subject<void>();
@@ -93,6 +94,7 @@ export class ProductAddEditComponent implements OnInit, OnDestroy {
         this.formats    = catalog.formats.filter(f => f.isActive);
         this.categories = catalog.categories.filter(c => c.isActive);
         this.dosages    = catalog.dosages.filter(d => d.isActive);
+        this.types      = catalog.types.filter(t => t.isActive);
       });
 
     this.listenProductNameChange();

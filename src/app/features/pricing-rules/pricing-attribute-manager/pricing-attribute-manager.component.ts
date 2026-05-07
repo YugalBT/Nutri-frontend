@@ -115,6 +115,7 @@ export class PricingAttributeManagerComponent implements OnInit, AfterViewInit {
         this.categories   = catalog.categories;
         this.formats      = catalog.formats;
         this.dosages      = catalog.dosages;
+        this.types        = catalog.types;
         this.formulaTypes = catalog.formulaTypes;
       });
   }

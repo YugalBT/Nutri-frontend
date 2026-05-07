@@ -33,6 +33,11 @@
           {{ 'pricingAttrManager.tabDosages' | translate }}
           <span class="pam-count">{{ dosages.length }}</span>
         </button>
+        <button class="pam-tab" [class.active]="activeTab === 'Type'" (click)="setTab('Type')">
+          <i class="bi bi-layers"></i>
+          {{ 'pricingAttrManager.tabTypes' | translate }}
+          <span class="pam-count">{{ types.length }}</span>
+        </button>
         <button class="pam-tab" [class.active]="activeTab === 'FormulaType'" (click)="setTab('FormulaType')">
           <i class="bi bi-calculator"></i>
           {{ 'pricingAttrManager.tabFormulaTypes' | translate }}

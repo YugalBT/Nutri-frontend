@@ -112,6 +112,17 @@
               <div class="invalid-feedback">{{ 'validation.required' | translate }}</div>
             </div>
 
+            <!-- TYPE (optional, product classification only) -->
+            <div class="col-md-4">
+              <label class="form-label">
+                Type
+              </label>
+              <select formControlName="type" class="form-select">
+                <option [ngValue]="null">{{ 'product.selectType' | translate }}</option>
+                <option *ngFor="let t of types" [value]="t.name">{{ t.name }}</option>
+              </select>
+            </div>
+
           </div>
 
         </form>
