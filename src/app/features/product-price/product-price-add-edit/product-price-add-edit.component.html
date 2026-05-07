@@ -28,8 +28,7 @@
                 <sup class="text-danger">*</sup>
               </label>
 
-              <select class="form-select" formControlName="productId"
-                [attr.aria-readonly]="isEdit"
+              <select class="form-select" formControlName="productId" [attr.aria-readonly]="isEdit"
                 [class.is-invalid]="form.get('productId')?.touched && form.get('productId')?.invalid">
 
                 <option value="" disabled selected>
@@ -87,9 +86,12 @@
                 <span><strong>{{ 'productPrice.category' | translate }}:</strong> {{ categoryLabel }}</span>
                 <span *ngIf="formatLabel"><strong>Format:</strong> {{ formatLabel }}</span>
                 <span *ngIf="dosageLabel"><strong>Dosage:</strong> {{ dosageLabel }}</span>
-                <span><strong>{{ 'productPrice.formulaCost' | translate }}:</strong> {{ formulaCost | number:'1.2-2' }}</span>
-                <span><strong>{{ 'productPrice.targetMargin' | translate }}:</strong> {{ targetMarginPercent * 100 | number:'1.1-2' }}%</span>
-                <span *ngIf="formulaTypeLabel"><strong>{{ 'pricingRules.formulaType' | translate }}:</strong> {{ formulaTypeLabel }}</span>
+                <span><strong>{{ 'productPrice.formulaCost' | translate }}:</strong> {{ formulaCost | number:'1.2-2'
+                  }}</span>
+                <span><strong>{{ 'productPrice.targetMargin' | translate }}:</strong> {{ targetMarginPercent * 100 |
+                  number:'1.1-2' }}%</span>
+                <span *ngIf="formulaTypeLabel"><strong>{{ 'pricingRules.formulaType' | translate }}:</strong> {{
+                  formulaTypeLabel }}</span>
                 <span *ngIf="isSpecialCategory" class="badge bg-warning text-dark">
                   {{ 'productPrice.specialFormula' | translate }}
                 </span>
@@ -128,11 +130,11 @@
               </label>
 
               <input type="number" class="form-control"
-                placeholder="{{ 'productPrice.customerPricePlaceholder' | translate }}"
-                formControlName="customerPrice"
+                placeholder="{{ 'productPrice.customerPricePlaceholder' | translate }}" formControlName="customerPrice"
                 [class.is-invalid]="form.get('customerPrice')?.touched && form.get('customerPrice')?.invalid" />
 
-              <div class="invalid-feedback" *ngIf="form.get('customerPrice')?.touched && form.get('customerPrice')?.invalid">
+              <div class="invalid-feedback"
+                *ngIf="form.get('customerPrice')?.touched && form.get('customerPrice')?.invalid">
                 <span *ngIf="form.get('customerPrice')?.errors?.['required']">
                   {{ 'productPrice.validation.customerPriceRequired' | translate }}
                 </span>
@@ -153,8 +155,8 @@
               </label>
 
               <input type="number" class="form-control bg-light"
-                placeholder="{{ 'productPrice.commissionPlaceholder' | translate }}"
-                formControlName="commissionPercent" readonly />
+                placeholder="{{ 'productPrice.commissionPlaceholder' | translate }}" formControlName="commissionPercent"
+                readonly />
 
             </div>
 
@@ -169,9 +171,7 @@
 
               <div class="d-flex align-items-center gap-2">
 
-                <input type="text" class="form-control"
-                  [value]="(marginPercent * 100 | number:'1.2-2') + ' %'"
-                  readonly
+                <input type="text" class="form-control" [value]="(marginPercent * 100 | number:'1.2-2') + ' %'" readonly
                   [ngStyle]="{
                     'background-color':
                       marginColor === 'green'  ? '#d1e7dd' :
@@ -220,13 +220,14 @@
 
         <button class="btn btn-outline-secondary" (click)="modalInstance.hide()">
 
-           {{ 'common.cancel' | translate }}
+          {{ 'common.cancel' | translate }}
 
         </button>
 
-        <button *ngIf="canSave" class="btn add-btn" (click)="save()" [disabled]="form.invalid || (form.getRawValue().customerPrice || 0) <= 0">
+        <button *ngIf="canSave" class="btn add-btn" (click)="save()"
+          [disabled]="form.invalid || (form.getRawValue().customerPrice || 0) <= 0">
 
-         {{ 'productPrice.savePrice' | translate }}
+          {{ 'productPrice.savePrice' | translate }}
         </button>
 
       </div>
