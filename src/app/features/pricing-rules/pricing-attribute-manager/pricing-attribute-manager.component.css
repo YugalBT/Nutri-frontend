@@ -301,3 +301,50 @@
   border-color: #2CA28F;
   box-shadow: 0 0 0 0.18rem rgba(44, 162, 143, 0.2);
 }
+
+/* Formula Type Edit Row */
+.pam-edit-fields-formula {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  width: 100%;
+}
+
+/* Name */
+.pam-edit-fields-formula .pam-edit-name {
+  flex: 1 1 220px;
+  min-width: 180px;
+}
+
+/* Description */
+.pam-edit-fields-formula input[type="text"]:not(.pam-edit-name) {
+  flex: 2 1 320px;
+  min-width: 240px;
+}
+
+/* Cost divisor */
+.pam-edit-divisor {
+  width: 120px !important;
+  flex-shrink: 0;
+}
+
+/* Sort order */
+.pam-edit-fields-formula .pam-edit-order {
+  width: 90px !important;
+  flex-shrink: 0;
+}
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+
+  .pam-edit-fields-formula {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .pam-edit-divisor,
+  .pam-edit-fields-formula .pam-edit-order {
+    width: 100% !important;
+  }
+}
