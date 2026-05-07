@@ -1,0 +1,276 @@
+<div class="modal fade" #attrModal tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content pam-modal-content">
+
+      <!-- Header -->
+      <div class="modal-header pam-header">
+        <div class="pam-title-group">
+          <h5 class="modal-title pam-title">
+            <i class="bi bi-sliders"></i>
+            {{ 'pricingAttrManager.title' | translate }}
+          </h5>
+          <p class="pam-subtitle">
+            {{ 'pricingAttrManager.subtitle' | translate }}
+          </p>
+        </div>
+        <button type="button" class="btn-close" (click)="close()"></button>
+      </div>
+
+      <!-- Tab bar -->
+      <div class="pam-tab-bar">
+        <button class="pam-tab" [class.active]="activeTab === 'Category'" (click)="setTab('Category')">
+          <i class="bi bi-tag"></i>
+          {{ 'pricingAttrManager.tabCategories' | translate }}
+          <span class="pam-count">{{ categories.length }}</span>
+        </button>
+        <button class="pam-tab" [class.active]="activeTab === 'Format'" (click)="setTab('Format')">
+          <i class="bi bi-box-seam"></i>
+          {{ 'pricingAttrManager.tabFormats' | translate }}
+          <span class="pam-count">{{ formats.length }}</span>
+        </button>
+        <button class="pam-tab" [class.active]="activeTab === 'Dosage'" (click)="setTab('Dosage')">
+          <i class="bi bi-droplet-half"></i>
+          {{ 'pricingAttrManager.tabDosages' | translate }}
+          <span class="pam-count">{{ dosages.length }}</span>
+        </button>
+        <button class="pam-tab" [class.active]="activeTab === 'FormulaType'" (click)="setTab('FormulaType')">
+          <i class="bi bi-calculator"></i>
+          {{ 'pricingAttrManager.tabFormulaTypes' | translate }}
+          <span class="pam-count">{{ formulaTypes.length }}</span>
+        </button>
+      </div>
+
+      <!-- Body -->
+      <div class="modal-body pam-body">
+
+        <!-- ══ ATTRIBUTE TABS (Category / Format / Dosage) ══════════════════ -->
+        <ng-container *ngIf="!isFormulaTab">
+          <div class="pam-list">
+
+            <div class="pam-empty" *ngIf="!currentList.length && !addingNew">
+              <i class="bi bi-inbox"></i>
+              <span>{{ emptyStateLabel }}</span>
+            </div>
+
+            <div class="pam-row" *ngFor="let attr of currentList">
+
+              <!-- View mode -->
+              <ng-container *ngIf="editing?.id !== attr.pricingAttributeId">
+                <div class="pam-row-left">
+                  <span class="pam-sort-badge">{{ attr.sortOrder }}</span>
+                  <span class="pam-name" [class.pam-inactive]="!attr.isActive">{{ attr.name }}</span>
+                  <span class="badge pam-status-badge"
+                        [class.pam-active-badge]="attr.isActive"
+                        [class.pam-inactive-badge]="!attr.isActive">
+                    {{ attr.isActive ? ('pricingAttrManager.statusActive' | translate)
+                                     : ('pricingAttrManager.statusInactive' | translate) }}
+                  </span>
+                </div>
+                <div class="pam-row-actions">
+                  <button class="btn btn-sm pam-btn-toggle"
+                          [title]="attr.isActive ? ('pricingAttrManager.deactivate' | translate)
+                                                  : ('pricingAttrManager.activate'   | translate)"
+                          (click)="toggleActive(attr)">
+                    <i class="bi" [ngClass]="attr.isActive ? 'bi-toggle-on' : 'bi-toggle-off'"></i>
+                  </button>
+                  <button class="btn btn-sm pam-btn-edit"
+                          [title]="'pricingAttrManager.rename' | translate"
+                          (click)="startEdit(attr)">
+                    <i class="bi bi-pencil"></i>
+                  </button>
+                  <button class="btn btn-sm pam-btn-delete"
+                          [title]="'common.delete' | translate"
+                          (click)="delete(attr)">
+                    <i class="bi bi-trash"></i>
+                  </button>
+                </div>
+              </ng-container>
+
+              <!-- Edit mode -->
+              <ng-container *ngIf="editing?.id === attr.pricingAttributeId">
+                <div class="pam-edit-row">
+                  <div class="pam-edit-fields">
+                    <input type="text" class="form-control form-control-sm pam-edit-name"
+                           [(ngModel)]="editing!.name"
+                           [placeholder]="'pricingAttrManager.namePlaceholder' | translate"
+                           (keydown.enter)="saveEdit()" (keydown.escape)="cancelEdit()" />
+                    <input type="number" class="form-control form-control-sm pam-edit-order"
+                           [(ngModel)]="editing!.sortOrder"
+                           [placeholder]="'pricingAttrManager.orderPlaceholder' | translate" />
+                  </div>
+                  <div class="pam-edit-actions">
+                    <button class="btn btn-sm btn-primary pam-save-btn"
+                            (click)="saveEdit()" [disabled]="saving">
+                      <i class="bi bi-check-lg"></i>
+                    </button>
+                    <button class="btn btn-sm btn-outline-secondary" (click)="cancelEdit()">
+                      <i class="bi bi-x-lg"></i>
+                    </button>
+                  </div>
+                </div>
+              </ng-container>
+
+            </div><!-- /pam-row -->
+
+            <!-- Add new inline form (attribute) -->
+            <div class="pam-add-row" *ngIf="addingNew">
+              <div class="pam-edit-fields">
+                <input type="text" class="form-control form-control-sm pam-edit-name"
+                       [(ngModel)]="newName" [placeholder]="newNamePlaceholder"
+                       (keydown.enter)="saveNew()" (keydown.escape)="resetNewForm()" autofocus />
+                <input type="number" class="form-control form-control-sm pam-edit-order"
+                       [(ngModel)]="newSortOrder"
+                       [placeholder]="'pricingAttrManager.orderPlaceholder' | translate" />
+              </div>
+              <div class="pam-edit-actions">
+                <button class="btn btn-sm btn-primary pam-save-btn"
+                        (click)="saveNew()" [disabled]="saving || !newName.trim()">
+                  <span *ngIf="!saving"><i class="bi bi-check-lg"></i></span>
+                  <span *ngIf="saving" class="spinner-border spinner-border-sm"></span>
+                </button>
+                <button class="btn btn-sm btn-outline-secondary" (click)="resetNewForm()">
+                  <i class="bi bi-x-lg"></i>
+                </button>
+              </div>
+            </div>
+
+          </div><!-- /pam-list -->
+
+          <button class="btn pam-add-btn" (click)="startAdding()" *ngIf="!addingNew">
+            <i class="bi bi-plus-circle"></i> {{ addButtonLabel }}
+          </button>
+        </ng-container>
+
+        <!-- ══ FORMULA TYPES TAB ═════════════════════════════════════════════ -->
+        <ng-container *ngIf="isFormulaTab">
+          <div class="pam-list">
+
+            <div class="pam-empty" *ngIf="!formulaTypes.length && !addingNew">
+              <i class="bi bi-inbox"></i>
+              <span>{{ emptyStateLabel }}</span>
+            </div>
+
+            <div class="pam-row pam-row-formula" *ngFor="let ft of formulaTypes">
+
+              <!-- View mode -->
+              <ng-container *ngIf="editing?.id !== ft.formulaTypeId">
+                <div class="pam-row-left pam-row-left-formula">
+                  <span class="pam-sort-badge">{{ ft.sortOrder }}</span>
+                  <div class="pam-formula-info">
+                    <span class="pam-name" [class.pam-inactive]="!ft.isActive">{{ ft.name }}</span>
+                    <span class="pam-formula-desc" *ngIf="ft.description">{{ ft.description }}</span>
+                  </div>
+                  <span class="pam-divisor-badge" [title]="'pricingAttrManager.costDivisor' | translate">
+                    ÷ {{ ft.costDivisor }}
+                  </span>
+                  <span class="badge pam-status-badge"
+                        [class.pam-active-badge]="ft.isActive"
+                        [class.pam-inactive-badge]="!ft.isActive">
+                    {{ ft.isActive ? ('pricingAttrManager.statusActive' | translate)
+                                   : ('pricingAttrManager.statusInactive' | translate) }}
+                  </span>
+                </div>
+                <div class="pam-row-actions">
+                  <button class="btn btn-sm pam-btn-toggle"
+                          [title]="ft.isActive ? ('pricingAttrManager.deactivate' | translate)
+                                               : ('pricingAttrManager.activate'   | translate)"
+                          (click)="toggleActiveFormulaType(ft)">
+                    <i class="bi" [ngClass]="ft.isActive ? 'bi-toggle-on' : 'bi-toggle-off'"></i>
+                  </button>
+                  <button class="btn btn-sm pam-btn-edit"
+                          [title]="'pricingAttrManager.rename' | translate"
+                          (click)="startEditFormula(ft)">
+                    <i class="bi bi-pencil"></i>
+                  </button>
+                  <button class="btn btn-sm pam-btn-delete"
+                          [title]="'common.delete' | translate"
+                          (click)="deleteFormulaType(ft)">
+                    <i class="bi bi-trash"></i>
+                  </button>
+                </div>
+              </ng-container>
+
+              <!-- Edit mode -->
+              <ng-container *ngIf="editing?.id === ft.formulaTypeId">
+                <div class="pam-edit-row pam-edit-row-formula">
+                  <div class="pam-edit-fields pam-edit-fields-formula">
+                    <input type="text" class="form-control form-control-sm pam-edit-name"
+                           [(ngModel)]="editing!.name"
+                           [placeholder]="'pricingAttrManager.namePlaceholder' | translate"
+                           (keydown.escape)="cancelEdit()" />
+                    <input type="text" class="form-control form-control-sm"
+                           [(ngModel)]="editing!.description"
+                           [placeholder]="'pricingAttrManager.description' | translate" />
+                    <input type="number" class="form-control form-control-sm pam-edit-divisor"
+                           [(ngModel)]="editing!.costDivisor"
+                           min="0.0001" step="0.01"
+                           [placeholder]="'pricingAttrManager.costDivisor' | translate" />
+                    <input type="number" class="form-control form-control-sm pam-edit-order"
+                           [(ngModel)]="editing!.sortOrder"
+                           [placeholder]="'pricingAttrManager.orderPlaceholder' | translate" />
+                  </div>
+                  <div class="pam-edit-actions">
+                    <button class="btn btn-sm btn-primary pam-save-btn"
+                            (click)="saveEdit()" [disabled]="saving">
+                      <i class="bi bi-check-lg"></i>
+                    </button>
+                    <button class="btn btn-sm btn-outline-secondary" (click)="cancelEdit()">
+                      <i class="bi bi-x-lg"></i>
+                    </button>
+                  </div>
+                </div>
+              </ng-container>
+
+            </div><!-- /pam-row -->
+
+            <!-- Add new inline form (formula type) -->
+            <div class="pam-add-row pam-add-row-formula" *ngIf="addingNew">
+              <div class="pam-edit-fields pam-edit-fields-formula">
+                <input type="text" class="form-control form-control-sm pam-edit-name"
+                       [(ngModel)]="newName" [placeholder]="newNamePlaceholder"
+                       (keydown.enter)="saveNew()" (keydown.escape)="resetNewForm()" autofocus />
+                <input type="text" class="form-control form-control-sm"
+                       [(ngModel)]="newDescription"
+                       [placeholder]="'pricingAttrManager.description' | translate" />
+                <input type="number" class="form-control form-control-sm pam-edit-divisor"
+                       [(ngModel)]="newCostDivisor" min="0.0001" step="0.01"
+                       [placeholder]="'pricingAttrManager.costDivisor' | translate" />
+                <input type="number" class="form-control form-control-sm pam-edit-order"
+                       [(ngModel)]="newSortOrder"
+                       [placeholder]="'pricingAttrManager.orderPlaceholder' | translate" />
+              </div>
+              <div class="pam-edit-actions">
+                <button class="btn btn-sm btn-primary pam-save-btn"
+                        (click)="saveNew()" [disabled]="saving || !newName.trim()">
+                  <span *ngIf="!saving"><i class="bi bi-check-lg"></i></span>
+                  <span *ngIf="saving" class="spinner-border spinner-border-sm"></span>
+                </button>
+                <button class="btn btn-sm btn-outline-secondary" (click)="resetNewForm()">
+                  <i class="bi bi-x-lg"></i>
+                </button>
+              </div>
+            </div>
+
+          </div><!-- /pam-list -->
+
+          <button class="btn pam-add-btn" (click)="startAdding()" *ngIf="!addingNew">
+            <i class="bi bi-plus-circle"></i> {{ addButtonLabel }}
+          </button>
+        </ng-container>
+
+      </div><!-- /modal-body -->
+
+      <!-- Footer -->
+      <div class="modal-footer pam-footer">
+        <span class="pam-hint">
+          <i class="bi bi-info-circle"></i>
+          {{ 'pricingAttrManager.footerHint' | translate }}
+        </span>
+        <button type="button" class="btn btn-primary pam-close-btn" (click)="close()">
+          {{ 'pricingAttrManager.done' | translate }}
+        </button>
+      </div>
+
+    </div>
+  </div>
+</div>

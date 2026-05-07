@@ -1,0 +1,407 @@
+<div class="pr-page-wrapper">
+
+  <!-- ══════════════════════════════════════════════════════════════════════
+       PAGE HEADER
+  ══════════════════════════════════════════════════════════════════════ -->
+  <div class="pr-page-header">
+    <div class="pr-header-left">
+      <div class="pr-header-title-row">
+        <h1 class="pr-page-title">
+          {{ 'pricingRules.pageTitle' | translate }}
+          <i class="bi bi-info-circle pr-info-icon"
+             title="{{ 'pricingRules.pageInfo' | translate }}"></i>
+        </h1>
+      </div>
+      <p class="pr-page-subtitle">
+        {{ 'pricingRules.pageSubtitle' | translate }}
+      </p>
+    </div>
+    <div class="pr-header-actions">
+      <button class="btn btn-outline-secondary pr-btn-reset" (click)="resetChanges()">
+        <i class="bi bi-arrow-clockwise"></i>
+        {{ 'pricingRules.resetChanges' | translate }}
+      </button>
+      <button class="btn btn-outline-secondary pr-btn-attrs" (click)="openAttrManager()"
+              [title]="'pricingRules.manageAttributesTooltip' | translate">
+        <i class="bi bi-sliders"></i>
+        {{ 'pricingRules.manageAttributes' | translate }}
+      </button>
+      <button class="btn btn-primary pr-btn-save">
+        <i class="bi bi-floppy"></i>
+        {{ 'pricingRules.saveAllChanges' | translate }}
+      </button>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════════════════
+       MAIN LAYOUT  (content left + calculator right)
+  ══════════════════════════════════════════════════════════════════════ -->
+  <div class="pr-layout">
+
+    <!-- ── LEFT: Categories + Rules ──────────────────────────────────────── -->
+    <div class="pr-main">
+
+      <!-- Category Tabs -->
+      <ul class="nav pr-category-tabs">
+        <li class="nav-item" *ngFor="let cat of categories">
+          <button
+            class="nav-link pr-tab-btn"
+            [class.active]="selectedCategory === cat.name"
+            (click)="selectCategory(cat.name)">
+            {{ cat.name }}
+          </button>
+        </li>
+        <li class="nav-item ms-auto" *ngIf="!categories.length && !loading">
+          <span class="nav-link text-muted fst-italic">
+            <i class="bi bi-info-circle me-1"></i>{{ 'pricingRules.noCategoriesHint' | translate }}
+          </span>
+        </li>
+      </ul>
+
+      <!-- Loading skeleton -->
+      <div *ngIf="loading" class="pr-loading">
+        <div class="spinner-border text-primary" role="status">
+          <span class="visually-hidden">Loading…</span>
+        </div>
+      </div>
+
+      <ng-container *ngIf="!loading">
+
+        <!-- Add Rule toolbar -->
+        <div class="pr-toolbar">
+          <button class="btn btn-primary pr-add-rule-btn" (click)="openAddModal()">
+            <i class="bi bi-plus-lg"></i>
+            {{ 'pricingRules.addRule' | translate }}
+          </button>
+        </div>
+
+        <!-- ── FORMAT SECTIONS ──────────────────────────────────────────── -->
+        <div class="pr-format-section" *ngFor="let fmt of formats">
+
+          <div class="pr-format-header">
+            <div class="pr-format-title">
+              <span class="pr-format-label">{{ 'pricingRules.formatLabel' | translate }}: {{ fmt.name }}</span>
+              <span class="badge pr-badge-active">{{ 'common.active' | translate }}</span>
+            </div>
+            <div class="pr-format-actions">
+              <button class="btn btn-sm pr-btn-edit" (click)="openFormatModal(fmt.name)">
+                <i class="bi bi-pencil"></i> {{ 'common.edit' | translate }}
+              </button>
+              <button
+                class="btn btn-sm pr-btn-delete-fmt"
+                [disabled]="!getFormatRows(fmt.name).length"
+                (click)="deleteFormatDefaultRule(fmt.name)">
+                <i class="bi bi-trash"></i>
+              </button>
+            </div>
+          </div>
+
+          <!-- Rules table for this format -->
+          <div class="pr-table-wrapper">
+            <table class="table pr-rules-table" *ngIf="getFormatRows(fmt.name).length; else noFormatRules">
+              <thead>
+                <tr>
+                  <th>{{ 'pricingRules.dosage' | translate }}</th>
+                  <th>{{ 'pricingRules.targetMargin' | translate }}</th>
+                  <th>{{ 'pricingRules.minMargin' | translate }}</th>
+                  <th>{{ 'pricingRules.commission' | translate }}</th>
+                  <th>{{ 'pricingRules.formulaType' | translate }}</th>
+                  <th>{{ 'pricingRules.status' | translate }}</th>
+                  <th class="pr-th-actions"></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let rule of getFormatRows(fmt.name)">
+                  <td class="pr-td-dosage">
+                    {{ rule.dosage ?? ('pricingRules.allDosages' | translate) }}
+                  </td>
+                  <td>{{ rule.targetMargin }}%</td>
+                  <td>{{ rule.minMargin }}%</td>
+                  <td>{{ rule.commissionPct }}%</td>
+                  <td>
+                    <span class="pr-formula-badge"
+                          [class.pr-formula-nutri]="rule.formulaType === 'NutriJunior'">
+                      {{ rule.formulaType }}
+                    </span>
+                  </td>
+                  <td>
+                    <span class="pr-status-badge" [ngClass]="getStatusClass(rule)">
+                      {{ getStatus(rule) === 'Healthy'
+                           ? ('pricingRules.statusHealthy' | translate)
+                           : ('pricingRules.statusBelowMin' | translate) }}
+                    </span>
+                  </td>
+                  <td class="pr-td-menu">
+                    <div class="dropdown">
+                      <button class="btn pr-menu-btn"
+                              data-bs-toggle="dropdown"
+                              aria-expanded="false">
+                        <i class="bi bi-three-dots-vertical"></i>
+                      </button>
+                      <ul class="dropdown-menu dropdown-menu-end pr-dropdown">
+                        <li>
+                          <button class="dropdown-item" (click)="openEditModal(rule)">
+                            <i class="bi bi-pencil me-2"></i>
+                            {{ 'common.edit' | translate }}
+                          </button>
+                        </li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li>
+                          <button class="dropdown-item text-danger" (click)="deleteRule(rule.pricingRuleId)">
+                            <i class="bi bi-trash me-2"></i>
+                            {{ 'common.delete' | translate }}
+                          </button>
+                        </li>
+                      </ul>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+
+            <!-- No rules state -->
+            <ng-template #noFormatRules>
+              <div class="pr-no-rules">
+                <i class="bi bi-exclamation-circle text-warning"></i>
+                {{ 'pricingRules.noRulesForFormat' | translate }} <strong>{{ fmt.name }}</strong>.
+                <button class="btn btn-link btn-sm p-0 ms-1" (click)="openFormatModal(fmt.name)">
+                  {{ 'pricingRules.addOne' | translate }}
+                </button>
+              </div>
+            </ng-template>
+          </div>
+
+          <!-- Inheritance info note -->
+          <div class="pr-info-banner" *ngIf="getFormatRows(fmt.name).length">
+            <i class="bi bi-info-circle-fill"></i>
+            {{ 'pricingRules.inheritanceNote' | translate }}
+          </div>
+
+        </div>
+        <!-- /FORMAT SECTIONS -->
+
+        <!-- Empty formats notice -->
+        <div class="pr-no-rules mt-3" *ngIf="!formats.length && !loading">
+          <i class="bi bi-info-circle text-muted me-1"></i>
+          {{ 'pricingRules.noFormatsHint' | translate }}
+          <button class="btn btn-link btn-sm p-0 ms-1" (click)="openAttrManager()">
+            {{ 'pricingRules.manageAttributes' | translate }}
+          </button>
+        </div>
+
+        <!-- ── DEFAULT (Category Level) ─────────────────────────────────── -->
+        <div class="pr-format-section pr-default-section">
+
+          <div class="pr-format-header">
+            <div class="pr-format-title">
+              <span class="pr-format-label">{{ 'pricingRules.defaultLabel' | translate }}
+                <span class="pr-default-label">{{ 'pricingRules.categoryLevelLabel' | translate }}</span>
+              </span>
+              <span class="badge pr-badge-active" *ngIf="getCategoryRule()">{{ 'common.active' | translate }}</span>
+              <span class="badge pr-badge-missing" *ngIf="!getCategoryRule()">{{ 'pricingRules.notSet' | translate }}</span>
+            </div>
+            <div class="pr-format-actions">
+              <button class="btn btn-sm pr-btn-edit" (click)="openCategoryDefaultModal()">
+                <i class="bi bi-pencil"></i> {{ 'common.edit' | translate }}
+              </button>
+              <button
+                class="btn btn-sm pr-btn-delete-fmt"
+                [disabled]="!getCategoryRule()"
+                (click)="deleteCategoryDefaultRule()">
+                <i class="bi bi-trash"></i>
+              </button>
+            </div>
+          </div>
+
+          <!-- Category-rule stat cards -->
+          <div class="pr-default-cards" *ngIf="getCategoryRule() as dr; else noDefaultRule">
+            <div class="pr-stat-card">
+              <div class="pr-stat-icon">
+                <i class="bi bi-bullseye"></i>
+              </div>
+              <div class="pr-stat-body">
+                <span class="pr-stat-label">{{ 'pricingRules.targetMargin' | translate }}</span>
+                <span class="pr-stat-value">{{ dr.targetMargin }}%</span>
+              </div>
+            </div>
+            <div class="pr-stat-card">
+              <div class="pr-stat-icon">
+                <i class="bi bi-shield-check"></i>
+              </div>
+              <div class="pr-stat-body">
+                <span class="pr-stat-label">{{ 'pricingRules.minMargin' | translate }}</span>
+                <span class="pr-stat-value">{{ dr.minMargin }}%</span>
+              </div>
+            </div>
+            <div class="pr-stat-card">
+              <div class="pr-stat-icon">
+                <i class="bi bi-percent"></i>
+              </div>
+              <div class="pr-stat-body">
+                <span class="pr-stat-label">{{ 'pricingRules.commission' | translate }}</span>
+                <span class="pr-stat-value">{{ dr.commissionPct }}%</span>
+              </div>
+            </div>
+            <div class="pr-stat-card">
+              <div class="pr-stat-icon">
+                <i class="bi bi-calculator"></i>
+              </div>
+              <div class="pr-stat-body">
+                <span class="pr-stat-label">{{ 'pricingRules.formulaType' | translate }}</span>
+                <span class="pr-stat-value">{{ dr.formulaType }}</span>
+              </div>
+            </div>
+          </div>
+
+          <ng-template #noDefaultRule>
+            <div class="pr-no-rules">
+              <i class="bi bi-exclamation-circle text-warning"></i>
+              {{ 'pricingRules.noCategoryDefault' | translate }}
+              <button class="btn btn-link btn-sm p-0 ms-1" (click)="openCategoryDefaultModal()">
+                {{ 'pricingRules.addDefault' | translate }}
+              </button>
+            </div>
+          </ng-template>
+
+          <div class="pr-info-banner pr-info-banner-blue" *ngIf="getCategoryRule()">
+            <i class="bi bi-info-circle-fill"></i>
+            {{ 'pricingRules.categoryDefaultNote' | translate }}
+          </div>
+
+        </div>
+        <!-- /DEFAULT -->
+
+      </ng-container>
+    </div>
+    <!-- /LEFT -->
+
+    <!-- ── RIGHT: Test Calculator ─────────────────────────────────────────── -->
+    <div class="pr-calculator">
+
+      <div class="pr-calc-header">
+        <i class="bi bi-calculator-fill"></i>
+        <span>{{ 'pricingRules.testCalculator' | translate }}</span>
+      </div>
+
+      <div class="pr-calc-body">
+
+        <!-- Inputs -->
+        <div class="pr-calc-field">
+          <label class="pr-calc-label">{{ 'pricingRules.category' | translate }}</label>
+          <select class="form-select form-select-sm" [(ngModel)]="calcCategory">
+            <option value="">{{ 'pricingRules.selectPlaceholder' | translate }}</option>
+            <option *ngFor="let c of categories" [value]="c.name">{{ c.name }}</option>
+          </select>
+        </div>
+
+        <div class="pr-calc-field">
+          <label class="pr-calc-label">{{ 'pricingRules.format' | translate }}</label>
+          <select class="form-select form-select-sm" [(ngModel)]="calcFormat">
+            <option value="">{{ 'pricingRules.allPlaceholder' | translate }}</option>
+            <option *ngFor="let f of formats" [value]="f.name">{{ f.name }}</option>
+          </select>
+        </div>
+
+        <div class="pr-calc-field">
+          <label class="pr-calc-label">{{ 'pricingRules.dosage' | translate }}</label>
+          <select class="form-select form-select-sm" [(ngModel)]="calcDosage">
+            <option value="">{{ 'pricingRules.allPlaceholder' | translate }}</option>
+            <option *ngFor="let d of dosages" [value]="d.name">{{ d.name }}</option>
+          </select>
+        </div>
+
+        <div class="pr-calc-field">
+          <label class="pr-calc-label">{{ 'pricingRules.formulaCost' | translate }}</label>
+          <input
+            type="number"
+            class="form-control form-control-sm"
+            [(ngModel)]="calcCost"
+            min="0"
+            step="0.01"
+            placeholder="0.00" />
+        </div>
+
+        <button
+          class="btn btn-primary w-100 pr-calc-btn"
+          (click)="calculate()"
+          [disabled]="calcLoading || !calcCost">
+          <span *ngIf="!calcLoading">{{ 'pricingRules.calculate' | translate }}</span>
+          <span *ngIf="calcLoading" class="spinner-border spinner-border-sm" role="status"></span>
+        </button>
+
+        <!-- Result -->
+        <div class="pr-calc-result" *ngIf="calcResult">
+
+          <div class="pr-rule-applied" [class.pr-rule-found]="calcResult.ruleFound">
+            <div class="pr-rule-applied-header">
+              <span class="pr-rule-applied-label">{{ 'pricingRules.ruleApplied' | translate }}</span>
+              <span class="pr-rule-check" *ngIf="calcResult.ruleFound">
+                <i class="bi bi-check-circle-fill text-success"></i>
+              </span>
+              <span class="pr-rule-check" *ngIf="!calcResult.ruleFound">
+                <i class="bi bi-x-circle-fill text-danger"></i>
+              </span>
+            </div>
+            <div class="pr-rule-path">{{ calcResult.ruleApplied }}</div>
+          </div>
+
+          <div class="pr-result-rows">
+            <div class="pr-result-row">
+              <span class="pr-result-label">{{ 'pricingRules.customerPrice' | translate }}</span>
+              <span class="pr-result-price">€ {{ calcResult.customerPrice | number:'1.2-2' }}</span>
+            </div>
+            <div class="pr-result-row">
+              <span class="pr-result-label">{{ 'pricingRules.targetMargin' | translate }}</span>
+              <span>{{ calcResult.targetMargin }}%</span>
+            </div>
+            <div class="pr-result-row">
+              <span class="pr-result-label">{{ 'pricingRules.minMargin' | translate }}</span>
+              <span>{{ calcResult.minMargin }}%</span>
+            </div>
+            <div class="pr-result-row">
+              <span class="pr-result-label">{{ 'pricingRules.commission' | translate }}</span>
+              <span>{{ calcResult.commissionPct }}%
+                <span class="text-muted">(€ {{ calcResult.commissionAmount | number:'1.2-2' }})</span>
+              </span>
+            </div>
+            <div class="pr-result-row">
+              <span class="pr-result-label">{{ 'pricingRules.formulaType' | translate }}</span>
+              <span>{{ calcResult.formulaType }}</span>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Status guide -->
+        <div class="pr-status-guide">
+          <div class="pr-guide-title">{{ 'pricingRules.statusGuide' | translate }}</div>
+          <div class="pr-guide-row">
+            <span class="pr-guide-dot pr-dot-healthy"></span>
+            <span class="pr-guide-name">{{ 'pricingRules.statusHealthy' | translate }}</span>
+            <span class="pr-guide-desc">{{ 'pricingRules.healthyDesc' | translate }}</span>
+          </div>
+          <div class="pr-guide-row">
+            <span class="pr-guide-dot pr-dot-below"></span>
+            <span class="pr-guide-name">{{ 'pricingRules.statusBelowMin' | translate }}</span>
+            <span class="pr-guide-desc">{{ 'pricingRules.belowMinDesc' | translate }}</span>
+          </div>
+          <div class="pr-guide-row">
+            <span class="pr-guide-dot pr-dot-missing"></span>
+            <span class="pr-guide-name">{{ 'pricingRules.statusMissing' | translate }}</span>
+            <span class="pr-guide-desc">{{ 'pricingRules.missingDesc' | translate }}</span>
+          </div>
+        </div>
+
+      </div><!-- /pr-calc-body -->
+    </div>
+    <!-- /CALCULATOR -->
+
+  </div><!-- /pr-layout -->
+
+</div><!-- /pr-page-wrapper -->
+
+<!-- ── Add / Edit Modal ─────────────────────────────────────────────────── -->
+<app-pricing-rules-add-edit #addEditModal></app-pricing-rules-add-edit>
+
+<!-- ── Attribute Manager Modal ───────────────────────────────────────────── -->
+<app-pricing-attribute-manager #attrManager></app-pricing-attribute-manager>

@@ -70,54 +70,43 @@
               </div>
             </div>
 
-            <!--  NEW: FORMAT -->
+            <!-- FORMAT -->
             <div class="col-md-4">
               <label class="form-label">
                 {{ "product.format" | translate }}
                 <sup class="text-danger">*</sup>
               </label>
-
-              <select formControlName="format" class="form-select">
-                <option [value]="null">-- Select Format --</option>
-                <option value="10kg">10kg Bag</option>
-                <option value="20kg">20kg Bag</option>
-                <option value="500kg">Big Bag 500kg</option>
-                <option value="750kg">Big Bag 750kg</option>
-                <option value="bulk">Bulk</option>
+              <select formControlName="format" class="form-select"
+                      [class.is-invalid]="form.get('format')?.touched && form.get('format')?.invalid">
+                <option [ngValue]="null">{{ 'product.selectFormat' | translate }}</option>
+                <option *ngFor="let f of formats" [value]="f.name">{{ f.name }}</option>
               </select>
+              <div class="invalid-feedback">{{ 'validation.required' | translate }}</div>
             </div>
 
-            <!--  NEW: CATEGORY -->
+            <!-- CATEGORY -->
             <div class="col-md-4">
               <label class="form-label">
                 {{ "product.category" | translate }}
                 <sup class="text-danger">*</sup>
               </label>
-
-              <select formControlName="category" class="form-select">
-                <option [value]="null">-- Select Category --</option>
-                <option value="Mineral">Mineral</option>
-                <option value="NutriJunior">Nutri Junior</option>
-                <option value="MAC">MAC</option>
-                <option value="EVO">EVO</option>
-                <option value="AMF">AMF</option>
+              <select formControlName="category" class="form-select"
+                      [class.is-invalid]="form.get('category')?.touched && form.get('category')?.invalid">
+                <option [ngValue]="null">{{ 'product.selectCategory' | translate }}</option>
+                <option *ngFor="let c of categories" [value]="c.name">{{ c.name }}</option>
               </select>
+              <div class="invalid-feedback">{{ 'validation.required' | translate }}</div>
             </div>
 
-            <!--  NEW: TYPE -->
+            <!-- TYPE (optional — used for product classification only, does not affect pricing) -->
             <div class="col-md-4">
               <label class="form-label">
                 {{ "product.type" | translate }}
-                <sup class="text-danger">*</sup>
+                <span class="text-muted small ms-1">({{ 'common.optional' | translate }})</span>
               </label>
-
               <select formControlName="type" class="form-select">
-                <option [value]="null" selected>-- Select Type --</option>
-                <option value="Restricted">Restricted Feed</option>
-                <option value="Complete">Complete Feed</option>
-                <option value="50-250">50–250g</option>
-                <option value="300-700">300–700g</option>
-                <option value="1000-1200">1000–1200g</option>
+                <option [ngValue]="null">{{ 'product.selectType' | translate }}</option>
+                <option *ngFor="let t of types" [value]="t.name">{{ t.name }}</option>
               </select>
             </div>
 

@@ -81,7 +81,7 @@ export const SIDEBAR_GROUPS = [
   //     'Product',
   //     'PricingFormula',
   //     'Product Pricing',
-  //     'SupplierPrice',
+  //     'Raw Material Costs',
   //     'Pricing Setting',
   //     'Product Build'
 
@@ -95,7 +95,10 @@ export const SIDEBAR_GROUPS = [
     items: [
       'Suppliers',
       'Materials',
-      'Product'
+      'Product',
+      'Raw Material Costs',
+      'Processing Costs'
+
     ]
   },
   {
@@ -103,9 +106,8 @@ export const SIDEBAR_GROUPS = [
     title: 'sidebarmenu.pricing',
     icon: SIDEBAR_ICONS.PRICING,
     items: [
-      'SupplierPrice',
+      'Pricing Rules',
       'Product Pricing',
-      'Pricing Setting'
     ]
   },
   {
@@ -114,7 +116,7 @@ export const SIDEBAR_GROUPS = [
     icon: SIDEBAR_ICONS.PRODUCTION,
     items: [
       'PricingFormula',
-      'Product Build'
+      'Product Creation'
     ]
   },
 

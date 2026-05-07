@@ -354,4 +354,29 @@ export const API_ENDPOINTS = {
     SAVE: '/DayData/SaveLayout',
     GET: '/DayData/GetLayout',
   },
+
+  PRICING_RULES: {
+    GET_ALL:         '/PricingRule/GetAll',
+    CREATE:          '/PricingRule/Create',
+    UPDATE:          '/PricingRule/Update',
+    DELETE:          '/PricingRule/Delete',
+    ACTIVE_INACTIVE: '/PricingRule/ActiveInActive',
+    CALCULATE:       '/PricingRule/Calculate',
+  },
+
+  PRICING_ATTRIBUTES: {
+    GET_CATALOG:     '/PricingAttribute/GetCatalog',
+    CREATE:          '/PricingAttribute/Create',
+    UPDATE:          '/PricingAttribute/Update',
+    DELETE:          '/PricingAttribute/Delete',
+    ACTIVE_INACTIVE: '/PricingAttribute/ActiveInActive',
+  },
+
+  PRICING_FORMULA_TYPES: {
+    GET_ALL:         '/PricingFormulaType/GetAll',
+    CREATE:          '/PricingFormulaType/Create',
+    UPDATE:          '/PricingFormulaType/Update',
+    DELETE:          '/PricingFormulaType/Delete',
+    ACTIVE_INACTIVE: '/PricingFormulaType/ActiveInActive',
+  },
 };

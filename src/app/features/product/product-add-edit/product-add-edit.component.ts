@@ -15,14 +15,16 @@ import {
   ReactiveFormsModule
 } from '@angular/forms';
 
-import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
-import { Subscription } from 'rxjs';
+import { debounceTime, distinctUntilChanged, takeUntil } from 'rxjs/operators';
+import { Subject, Subscription } from 'rxjs';
 
 import { ProductService } from '../../../core/services/product/product.service';
+import { PricingAttributeService } from '../../../core/services/pricing-rules/pricing-attribute.service';
 import { ToastService } from '../../../shared/services/toast.service';
 import { SharedModule } from '../../../shared/shared.module';
 import { TranslatePipe } from '../../../i18n/translate.pipe';
 import { CommonService } from '../../../shared/services/common.service';
+import { PricingAttribute } from '../../../core/models/pricing-attribute';
 import { PERMISSIONS } from '../../../core/constants/permissions.constants';
 
 declare var bootstrap: any;
@@ -47,7 +49,13 @@ export class ProductAddEditComponent implements OnInit, OnDestroy {
 
   currentId: string | null = null;
 
+  // ── Dynamic attribute lists ───────────────────────────────────────────────
+  formats:    PricingAttribute[] = [];
+  categories: PricingAttribute[] = [];
+  types:      PricingAttribute[] = [];
+
   private subs: Subscription[] = [];
+  private destroy$ = new Subject<void>();
 
   private codeDebounce: any;
 
@@ -55,9 +63,10 @@ export class ProductAddEditComponent implements OnInit, OnDestroy {
 
 
   constructor(
-    private fb: FormBuilder,
+    private fb:          FormBuilder,
     private productService: ProductService,
-    private toast: ToastService,
+    private attrService: PricingAttributeService,
+    private toast:       ToastService,
     private commonService: CommonService
   ) { }
 
@@ -66,14 +75,25 @@ export class ProductAddEditComponent implements OnInit, OnDestroy {
   ngOnInit() {
 
     this.form = this.fb.group({
-      productName: ['', Validators.required],
-      productCode: [{ value: '', disabled: true }],
+      productName:   ['', Validators.required],
+      productCode:   [{ value: '', disabled: true }],
       effectiveDate: ['', Validators.required],
-      format: [null, Validators.required],
-      category: [null, Validators.required],
-      type: [null, Validators.required]
-
+      format:        [null, Validators.required],
+      category:      [null, Validators.required],
+      type:          [null],
     });
+
+    // Load catalog once if not already loaded; then stay in sync reactively
+    this.attrService.loadCatalog().pipe(takeUntil(this.destroy$)).subscribe();
+
+    this.attrService.catalog$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((catalog) => {
+        this.formats    = catalog.formats.filter(f => f.isActive);
+        this.categories = catalog.categories.filter(c => c.isActive);
+        // TODO: Uncomment when backend returns 'types' in GetCatalog response
+        // this.types = catalog.types.filter(t => t.isActive);
+      });
 
     this.listenProductNameChange();
 
@@ -254,9 +274,9 @@ export class ProductAddEditComponent implements OnInit, OnDestroy {
 
 
   ngOnDestroy() {
-
+    this.destroy$.next();
+    this.destroy$.complete();
     this.subs.forEach(s => s.unsubscribe());
-
   }
 
 }

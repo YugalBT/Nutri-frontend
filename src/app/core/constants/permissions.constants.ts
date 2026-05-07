@@ -192,6 +192,12 @@ ProductPricingDelete: 'Product PricingDelete',
   MilkPriceHistoryEdit: 'MilkPriceHistoryEdit',
   MilkPriceHistoryAdd: 'MilkPriceHistoryAdd',
   MilkPriceHistoryDelete: 'MilkPriceHistoryDelete',
+
+  // Pricing Rules Manager
+  PricingRulesView: 'Pricing RulesView',
+  PricingRulesEdit: 'Pricing RulesEdit',
+  PricingRulesAdd: 'Pricing RulesAdd',
+  PricingRulesDelete: 'Pricing RulesDelete',
 } as const;
 
 export type PermissionKey = keyof typeof PERMISSIONS;

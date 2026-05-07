@@ -715,6 +715,23 @@ export const routes: Routes = [
       },
 
       
+      // ── Pricing Rules Manager ────────────────────────────────
+      {
+        path: 'pricing-rules',
+        canActivate: [permissionGuard],
+        data: {
+          requiredPermissions: [
+            PERMISSIONS.PricingRulesView,
+            PERMISSIONS.PricingRulesEdit,
+            PERMISSIONS.PricingRulesAdd,
+            PERMISSIONS.PricingRulesDelete,
+          ],
+        },
+        loadComponent: () =>
+          import('./features/pricing-rules/pricing-rules-list/pricing-rules-list.component').then(
+            (m) => m.PricingRulesListComponent,
+          ),
+      },
       // ────────────────────────────────────────────────────────
 
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
