@@ -25,7 +25,8 @@ declare var bootstrap: any;
   selector: 'app-product-price-add-edit',
   standalone: true,
   imports: [SharedModule, TranslatePipe],
-  templateUrl: './product-price-add-edit.component.html'
+  templateUrl: './product-price-add-edit.component.html',
+  styleUrl: './product-price-add-edit.component.css'
 })
 export class ProductPriceAddEditComponent implements OnInit {
 

@@ -100,6 +100,9 @@ export class AuthEffects {
             try {
               if (typeof document !== 'undefined' && user) {
                 const root = document.documentElement;
+                // Always reset first so stale colors from a previous session don't bleed in.
+                root.style.removeProperty('--primary-color');
+                root.style.removeProperty('--secondary-color');
                 if (user?.primaryColor) {
                   root.style.setProperty('--primary-color', user.primaryColor);
                 }

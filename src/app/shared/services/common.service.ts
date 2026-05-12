@@ -358,10 +358,11 @@ export class CommonService {
   }
 
   GetAllMaterialBySupplierId(
-    supplierId: string,
+    supplierId: string | null,
     payload: any,
   ): Observable<ApiResponse<any>> {
-    const url = `${API_ENDPOINTS.COMMON_API.GET_ALL_MATERIAL_BY_SUPPLIER_ID}?supplierId=${supplierId}`;
+    const base = API_ENDPOINTS.COMMON_API.GET_ALL_MATERIAL_BY_SUPPLIER_ID;
+    const url = supplierId ? `${base}?supplierId=${supplierId}` : base;
     return this.http.post<ApiResponse<any>>(url, payload);
   }
 

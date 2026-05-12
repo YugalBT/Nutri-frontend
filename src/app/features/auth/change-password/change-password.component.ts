@@ -1,4 +1,4 @@
-import { Component, signal } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
 import { FormGroup, FormBuilder, Validators, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { ToastrService } from 'ngx-toastr';
@@ -7,16 +7,20 @@ import { ChangePasswordService } from '../../../core/services/change-password/ch
 import { CommonService } from '../../../shared/services/common.service';
 import { PERMISSIONS } from '../../../core/constants/permissions.constants';
 import { TranslatePipe } from '../../../i18n/translate.pipe';
+import { Store } from '@ngrx/store';
+import { selectAuthUser } from '../../../state/auth/auth.selectors';
+import { BrandingService } from '../../../shared/services/branding.service';
+import { take } from 'rxjs/operators';
 
 @Component({
   selector: 'app-change-password',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule,TranslatePipe],
+  imports: [CommonModule, ReactiveFormsModule, TranslatePipe],
   templateUrl: './change-password.component.html',
   styleUrls: ['./change-password.component.css']
 })
-export class ChangePasswordComponent {
-  
+export class ChangePasswordComponent implements OnInit {
+
   changePasswordForm!: FormGroup;
   isSubmitted = signal(false);
   isLoading = signal(false);
@@ -28,13 +32,23 @@ export class ChangePasswordComponent {
   passwordStrength = '';
   canSave = false;
 
-  constructor(private fb: FormBuilder, 
-    private toastr: ToastrService, 
+  constructor(
+    private fb: FormBuilder,
+    private toastr: ToastrService,
     private passwordService: ChangePasswordService,
-    private commonService : CommonService
+    private commonService: CommonService,
+    private store: Store,
+    private brandingService: BrandingService,
   ) {
     this.createForm();
     this.canSave = this.commonService.checkPermission(PERMISSIONS.ChangePasswordEdit, false);
+  }
+
+  ngOnInit(): void {
+    // Apply supplier branding when a supplier user accesses this page.
+    this.store.select(selectAuthUser).pipe(take(1)).subscribe(user => {
+      this.brandingService.updateBranding(user);
+    });
   }
 
   createForm() {

@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { FormsModule } from '@angular/forms';
-import { Subscription } from 'rxjs';
+import { Subscription, debounceTime } from 'rxjs';
 import { HttpService } from '../../shared/services/http.service';
 import { ToastService } from '../../shared/services/toast.service';
 import { CommonService } from '../../shared/services/common.service';
@@ -11,8 +11,6 @@ import { TranslateService } from '../../i18n/translate.service';
 import { Constants } from '../../shared/utils/constants/constants';
 import { API_ENDPOINTS } from '../../core/constants/api-endpoints';
 import { PERMISSIONS } from '../../core/constants/permissions.constants';
-import { debounceTime } from 'rxjs';
-
 
 @Component({
   selector: 'app-calves-entry',
@@ -39,14 +37,22 @@ export class CalvesEntryComponent implements OnInit, OnDestroy {
 
   private subs: Subscription[] = [];
 
+  // ── Price state ────────────────────────────────────────────────
+  /** Full list of feeds for the dropdown */
+  feeds: { feedId: string; feedName: string; pricePerKg: number }[] = [];
+  /** Currently selected feed ID */
+  selectedFeedId = '';
+  /** Feed price derived from the selected feed */
+  feedPrice = 0;
+  /** Milk price — pre-filled from history, editable by the user */
+  milkPrice = 0;
+
+  // ── Calculated outputs ─────────────────────────────────────────
   indCostPerHead = 0;
   grpCostPerHead = 0;
   indTotal = 0;
   grpTotal = 0;
   totalCost = 0;
-  milkPrice = 0;
-  feedPrice = 0;
-  pricesLoaded = false;
 
   constructor(
     private fb: FormBuilder,
@@ -113,7 +119,7 @@ export class CalvesEntryComponent implements OnInit, OnDestroy {
   // 🔹 PRICE LOADING
   // =============================
   private loadPrices(): void {
-    // Load latest milk price (PriceAziendali) — same source as backend SaveCalvesData
+    // Milk price — latest PriceAziendali from history (user can override)
     const milkSub = this.http
       .get<any>(API_ENDPOINTS.MILK_PRICE_HISTORY.GET_BY_FARM)
       .subscribe({
@@ -122,23 +128,27 @@ export class CalvesEntryComponent implements OnInit, OnDestroy {
           if (list.length > 0) {
             this.milkPrice = +(list[0].priceAziendali ?? list[0].PriceAziendali ?? 0);
           }
-          this.pricesLoaded = true;
           this.calculate();
         },
-        error: () => {
-          this.pricesLoaded = true;
-        },
+        error: () => {},
       });
     this.subs.push(milkSub);
 
-    // Load feed price — same source as backend (first active feed's pricePerKg)
+    // Feed list — populate dropdown; default to first feed
     const feedSub = this.http
       .get<any>(API_ENDPOINTS.COMMON_API.GET_ALL_FEED)
       .subscribe({
         next: (res) => {
-          const feeds: any[] = Array.isArray(res?.data) ? res.data : [];
-          if (feeds.length > 0) {
-            this.feedPrice = +(feeds[0].pricePerKg ?? feeds[0].PricePerKg ?? 0);
+          const raw: any[] = Array.isArray(res?.data) ? res.data : [];
+          this.feeds = raw.map(f => ({
+            feedId:    f.feedId    ?? f.FeedId    ?? '',
+            feedName:  f.feedName  ?? f.FeedName  ?? '',
+            pricePerKg: +(f.pricePerKg ?? f.PricePerKg ?? 0),
+          }));
+
+          if (this.feeds.length > 0 && !this.selectedFeedId) {
+            this.selectedFeedId = this.feeds[0].feedId;
+            this.feedPrice      = this.feeds[0].pricePerKg;
           }
           this.calculate();
         },
@@ -148,41 +158,42 @@ export class CalvesEntryComponent implements OnInit, OnDestroy {
   }
 
   // =============================
+  // 🔹 PRICE CHANGE HANDLERS
+  // =============================
+
+  /** Called when the user picks a different feed from the dropdown. */
+  onFeedChange(): void {
+    const feed = this.feeds.find(f => f.feedId === this.selectedFeedId);
+    this.feedPrice = feed?.pricePerKg ?? 0;
+    this.calculate();
+  }
+
+  /** Called when the user edits the milk price input directly. */
+  onMilkPriceChange(): void {
+    this.calculate();
+  }
+
+  // =============================
   // 🔹 CALCULATION LOGIC
   // =============================
   calculate(): void {
     const v = this.form.value;
 
-    this.indCostPerHead = this.getCost(
-      v.indAvgMilk ?? 0,
-      v.indPowder ?? 0,
-      v.indAvgFeed ?? 0
-    );
-    this.indTotal = (v.indAnimals || 0) * this.indCostPerHead;
+    this.indCostPerHead = this.getCost(v.indAvgMilk ?? 0, v.indPowder ?? 0, v.indAvgFeed ?? 0);
+    this.indTotal       = (v.indAnimals || 0) * this.indCostPerHead;
 
-    this.grpCostPerHead = this.getCost(v.grpAvgMilk, v.grpPowder, v.grpAvgFeed);
-    this.grpTotal = (v.grpAnimals || 0) * this.grpCostPerHead;
+    this.grpCostPerHead = this.getCost(v.grpAvgMilk ?? 0, v.grpPowder ?? 0, v.grpAvgFeed ?? 0);
+    this.grpTotal       = (v.grpAnimals || 0) * this.grpCostPerHead;
 
     this.totalCost = this.indTotal + this.grpTotal;
   }
 
   getCost(milk: number, powder: number, feed: number): number {
-
-    // // 🔥 FIX: avoid wrong small % values
-    // if (powder && powder < 10) {
-    //   powder = 0;
-    // }
-
-    let milkCost = 0;
-
-    if (!powder || powder === 0) {
-      milkCost = (milk || 0) * this.milkPrice;
-    } else {
-      milkCost = (milk || 0) * (powder / 100) * this.milkPrice;
-    }
+    const milkCost = (!powder || powder === 0)
+      ? (milk || 0) * this.milkPrice
+      : (milk || 0) * (powder / 100) * this.milkPrice;
 
     const feedCost = (feed || 0) * this.feedPrice;
-
     return +(milkCost + feedCost).toFixed(2);
   }
 
@@ -202,14 +213,8 @@ export class CalvesEntryComponent implements OnInit, OnDestroy {
     this.dayId = '';
     this.farmId = '';
     this.form.reset({
-      indAnimals: 0,
-      indAvgMilk: 0,
-      indPowder: 0,
-      indAvgFeed: 0,
-      grpAnimals: 0,
-      grpAvgMilk: 0,
-      grpPowder: 0,
-      grpAvgFeed: 0
+      indAnimals: 0, indAvgMilk: 0, indPowder: 0, indAvgFeed: 0,
+      grpAnimals: 0, grpAvgMilk: 0, grpPowder: 0, grpAvgFeed: 0,
     });
 
     const cid = this.isSuperAdmin && this.selectedCompanyId ? this.selectedCompanyId : undefined;
@@ -217,62 +222,60 @@ export class CalvesEntryComponent implements OnInit, OnDestroy {
     const sub = this.common.getDayList(cid).subscribe({
       next: (res: any) => {
         const days: any[] = Array.isArray(res?.data) ? res.data : [];
-
-        const match = days.find((d: any) => {
-          const dayDate = (d.date ?? '').split('T')[0];
-          return dayDate === this.selectedDate;
-        });
+        const match = days.find((d: any) => (d.date ?? '').split('T')[0] === this.selectedDate);
 
         if (match) {
-          this.dayId = match.dayId ?? match.DayId ?? '';
+          this.dayId  = match.dayId  ?? match.DayId  ?? '';
           this.farmId = match.farmId ?? match.FarmId ?? '';
           this.loadCalvesData();
         } else {
           this.isLoading = false;
         }
       },
-      error: () => {
-        this.isLoading = false;
-      },
+      error: () => { this.isLoading = false; },
     });
 
     this.subs.push(sub);
   }
 
   private loadCalvesData(): void {
-    if (!this.dayId) {
-      this.isLoading = false;
-      return;
-    }
+    if (!this.dayId) { this.isLoading = false; return; }
 
     const sub = this.http
       .get<any>(`${API_ENDPOINTS.DAY_DATA.GET_BY_DAY_ID}/${this.dayId}`)
       .subscribe({
         next: (res) => {
           const d = res?.data;
-
           if (d) {
             this.form.patchValue({
               indAnimals: d.indAnimals,
               indAvgMilk: d.indAvgMilk,
-              indPowder: d.indPowder,
+              indPowder:  d.indPowder,
               indAvgFeed: d.indAvgFeed,
-
               grpAnimals: d.grpAnimals,
               grpAvgMilk: d.grpAvgMilk,
-              grpPowder: d.grpPowder,
+              grpPowder:  d.grpPowder,
               grpAvgFeed: d.grpAvgFeed,
             });
 
-            // 🔥 RECALCULATE AFTER LOAD
+            // Restore saved feed selection
+            const savedFeedId = d.calfFeedId ?? d.CalfFeedId ?? '';
+            if (savedFeedId && this.feeds.some(f => f.feedId === savedFeedId)) {
+              this.selectedFeedId = savedFeedId;
+              this.onFeedChange();
+            }
+
+            // Restore saved milk price (may have been manually overridden)
+            const savedMilkPrice = +(d.calfMilkPrice ?? d.CalfMilkPrice ?? 0);
+            if (savedMilkPrice > 0) {
+              this.milkPrice = savedMilkPrice;
+            }
+
             this.calculate();
           }
-
           this.isLoading = false;
         },
-        error: () => {
-          this.isLoading = false;
-        },
+        error: () => { this.isLoading = false; },
       });
 
     this.subs.push(sub);
@@ -291,16 +294,10 @@ export class CalvesEntryComponent implements OnInit, OnDestroy {
     }
   }
 
-
   private createDayAndSave(): void {
     this.isSaving = true;
 
-    const payload: any = {
-      date: this.selectedDate,
-      isClosed: false,
-      farmId: null,
-    };
-
+    const payload: any = { date: this.selectedDate, isClosed: false, farmId: null };
     if (this.isSuperAdmin && this.selectedCompanyId) {
       payload['companyId'] = this.selectedCompanyId;
     }
@@ -314,17 +311,13 @@ export class CalvesEntryComponent implements OnInit, OnDestroy {
         }
 
         const cid = this.isSuperAdmin && this.selectedCompanyId ? this.selectedCompanyId : undefined;
-
         const sub2 = this.common.getDayList(cid).subscribe({
           next: (res: any) => {
             const days: any[] = Array.isArray(res?.data) ? res.data : [];
-
-            const match = days.find((d: any) =>
-              (d.date ?? '').split('T')[0] === this.selectedDate
-            );
+            const match = days.find((d: any) => (d.date ?? '').split('T')[0] === this.selectedDate);
 
             if (match) {
-              this.dayId = match.dayId ?? match.DayId ?? '';
+              this.dayId  = match.dayId  ?? match.DayId  ?? '';
               this.farmId = match.farmId ?? match.FarmId ?? '';
               this.persistCalvesData(this.dayId);
             } else {
@@ -332,11 +325,8 @@ export class CalvesEntryComponent implements OnInit, OnDestroy {
               this.isSaving = false;
             }
           },
-          error: () => {
-            this.isSaving = false;
-          },
+          error: () => { this.isSaving = false; },
         });
-
         this.subs.push(sub2);
       },
       error: () => {
@@ -352,13 +342,12 @@ export class CalvesEntryComponent implements OnInit, OnDestroy {
     this.isSaving = true;
 
     const v = this.form.value;
-    if (v.indPowder < 0 || v.grpPowder < 0) {
+    if ((v.indPowder ?? 0) < 0 || (v.grpPowder ?? 0) < 0) {
       this.toast.warning('Powder % cannot be negative');
       this.isSaving = false;
       return;
     }
-
-    if (v.indPowder > 100 || v.grpPowder > 100) {
+    if ((v.indPowder ?? 0) > 100 || (v.grpPowder ?? 0) > 100) {
       this.toast.warning('Powder % cannot be more than 100');
       this.isSaving = false;
       return;
@@ -369,24 +358,27 @@ export class CalvesEntryComponent implements OnInit, OnDestroy {
       farmId: this.farmId || '00000000-0000-0000-0000-000000000000',
       date: this.selectedDate,
 
-      ...(this.isSuperAdmin && this.selectedCompanyId
-        ? { tenantId: this.selectedCompanyId }
-        : {}),
+      ...(this.isSuperAdmin && this.selectedCompanyId ? { tenantId: this.selectedCompanyId } : {}),
 
       indAnimals: v.indAnimals,
       indAvgMilk: v.indAvgMilk,
-      indPowder: v.indPowder,
+      indPowder:  v.indPowder,
       indAvgFeed: v.indAvgFeed,
 
       grpAnimals: v.grpAnimals,
       grpAvgMilk: v.grpAvgMilk,
-      grpPowder: v.grpPowder,
+      grpPowder:  v.grpPowder,
       grpAvgFeed: v.grpAvgFeed,
+
       indCostPerHead: this.indCostPerHead,
-      indTotal: this.indTotal,
+      indTotal:       this.indTotal,
       grpCostPerHead: this.grpCostPerHead,
-      grpTotal: this.grpTotal,
-      totalCost: this.totalCost,
+      grpTotal:       this.grpTotal,
+      totalCost:      this.totalCost,
+
+      // New: user-selected feed and (possibly overridden) milk price
+      feedId:    this.selectedFeedId || null,
+      milkPrice: this.milkPrice,
     };
 
     const sub = this.http.post<any>(API_ENDPOINTS.DAY_DATA.SAVE_CALVES, payload).subscribe({
@@ -397,7 +389,6 @@ export class CalvesEntryComponent implements OnInit, OnDestroy {
         } else {
           this.toast.error(res.message);
         }
-
         this.isSaving = false;
       },
       error: () => {

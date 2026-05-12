@@ -45,23 +45,26 @@ export class SupplierPriceService {
     return this.http.post(API_ENDPOINTS.SUPPLIERPRICE.CREATE_OR_UPDATE,payload);
     }
 
-      // =================  NEW IMPORT / EXPORT =================
+      // =================  IMPORT / EXPORT =================
 
-importSupplierPrices(file: File): Observable<ApiResponse<any>> {
-  const formData = new FormData();
-  formData.append('file', file);
+  importSupplierPrices(file: File, supplierId: string | null): Observable<ApiResponse<any>> {
+    const formData = new FormData();
+    formData.append('file', file);
+    if (supplierId) {
+      formData.append('supplierId', supplierId);
+    }
 
-  return this.http.post<ApiResponse<any>>(
-    API_ENDPOINTS.SUPPLIERPRICE.IMPORT,
-    formData
-  );
-}
+    return this.http.post<ApiResponse<any>>(
+      API_ENDPOINTS.SUPPLIERPRICE.IMPORT,
+      formData
+    );
+  }
 
- exportSupplierPrices(): Observable<ApiResponse<any>> {
-  return this.http.get<ApiResponse<any>>(
-    API_ENDPOINTS.SUPPLIERPRICE.EXPORT
-  );
-}
+  exportSupplierPrices(supplierId: string | null): Observable<ApiResponse<any>> {
+    const base = API_ENDPOINTS.SUPPLIERPRICE.EXPORT;
+    const url = supplierId ? `${base}?supplierId=${supplierId}` : base;
+    return this.http.get<ApiResponse<any>>(url);
+  }
 
   downloadSampleCSV(): Observable<ApiResponse<any>> {
     return this.http.get<ApiResponse<any>>(API_ENDPOINTS.SUPPLIERPRICE.EXPORT_SAMPLE);

@@ -29,3 +29,8 @@ export const selectSupplier = createSelector(
   (state) => state?.supplier
 );
 
+export const selectUserRoleType = createSelector(
+  selectAuthUser,
+  (user) => (user?.roleType || '').toUpperCase()
+);
+

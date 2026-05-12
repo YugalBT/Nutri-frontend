@@ -1,69 +1,182 @@
-<div class="pagecls">
+<div class="pp-page">
 
-  <div class="page-header">
-
-    <div class="border-start border-4 ps-3">
-      <h3 class="page-title">
-        {{ 'productPrice.heading' | translate }}
-      </h3>
+  <!-- ═══ PAGE HEADER ═══ -->
+  <div class="pp-header">
+    <div class="pp-header-left">
+      <h1 class="pp-title">{{ 'productPrice.heading' | translate }}</h1>
+      <p class="pp-subtitle">{{ 'productPrice.pageSubtitle' | translate }}</p>
     </div>
-
-    <button *ngIf="canAddProductPrice"
-      class="btn add-btn"
-      (click)="priceModal.openModal()">
-
+    <button *ngIf="canAddProductPrice" class="btn add-btn" (click)="priceModal.openModal()">
       <i class="bi bi-plus-lg me-2"></i>
       {{ 'productPrice.addPrice' | translate }}
     </button>
-
   </div>
 
-  <!-- Search -->
-
-  <div class="filters-card">
-
+  <!-- ═══ SEARCH ═══ -->
+  <div class="pp-toolbar">
     <app-global-search
       label="Search"
-      placeholder="Search Product Price"
+      placeholder="{{ 'productPrice.heading' | translate }}..."
       [showStatus]="false"
       (search)="onSearch($event)"
       (clear)="clearFilters()">
-
     </app-global-search>
-
   </div>
 
-  <!-- Table -->
-
-  <div class="table-card">
-
-    <app-reusable-table
-
-      [columns]="columns"
-      [columnFields]="columnFields"
-      [data]="prices"
-
-      [showActions]="true"
-      [pageable]="true"
-
-      [totalRecords]="totalRecords"
-      [pageSize]="pageSize"
-      [pageIndex]="pageIndex"
-      [viewPermission]="viewPermission"
-      [editPermission]="editPermission"
-      [deletePermission]="deletePermission"
-
-      (pageChange)="onPageChange($event)"
-      (toggleActive)="onToggleActive($event)"
-      (deleteRow)="onDelete($event)"
-      (editRow)="priceModal.openModal(true,$event)">
-
-    </app-reusable-table>
-
+  <!-- ═══ COLUMN LEGEND ═══ -->
+  <div class="pp-legend-bar">
+    <span class="pp-legend-label">{{ 'productPrice.legend.marginHealth' | translate }}</span>
+    <span class="pp-legend-item">
+      <span class="pp-dot green"></span>{{ 'productPrice.legend.aboveTarget' | translate }}
+    </span>
+    <span class="pp-legend-item">
+      <span class="pp-dot yellow"></span>{{ 'productPrice.legend.nearTarget' | translate }}
+    </span>
+    <span class="pp-legend-item">
+      <span class="pp-dot red"></span>{{ 'productPrice.legend.belowTarget' | translate }}
+    </span>
+    <span class="pp-legend-sep"></span>
+    <span class="pp-legend-item">
+      <span class="pp-col-pill input-pill">{{ 'productPrice.customerPrice' | translate }}</span>
+      = {{ 'productPrice.legend.whatYouCharge' | translate }}
+    </span>
+    <span class="pp-legend-item">
+      <span class="pp-col-pill auto-pill">{{ 'productPrice.suggestedPrice' | translate }}</span>
+      = {{ 'productPrice.legend.systemCalculated' | translate }}
+    </span>
   </div>
 
-  <app-product-price-add-edit
-    #priceModal>
-  </app-product-price-add-edit>
+  <!-- ═══ TABLE CARD ═══ -->
+  <div class="pp-card">
+    <div class="pp-table-wrap">
+      <table class="pp-table">
+        <thead>
+          <tr>
+            <th class="pp-th sn">#</th>
+            <th class="pp-th">{{ 'productPrice.columns.product' | translate }}</th>
+            <th class="pp-th center">{{ 'productPrice.columns.priceMonth' | translate }}</th>
+            <th class="pp-th right">{{ 'productPrice.columns.prevMonth' | translate }}</th>
+            <th class="pp-th right auto-col">
+              <span class="pp-th-auto">{{ 'productPrice.columns.suggested' | translate }}</span>
+            </th>
+            <th class="pp-th right input-col">{{ 'productPrice.columns.customerPrice' | translate }}</th>
+            <th class="pp-th center">{{ 'productPrice.columns.margin' | translate }}</th>
+            <th class="pp-th center">{{ 'productPrice.columns.commission' | translate }}</th>
+            <th class="pp-th center">{{ 'productPrice.columns.status' | translate }}</th>
+            <th class="pp-th center">{{ 'productPrice.columns.actions' | translate }}</th>
+          </tr>
+        </thead>
+        <tbody>
+
+          <tr *ngFor="let row of prices; let i = index" class="pp-tr">
+
+            <!-- # -->
+            <td class="pp-td sn">{{ pageIndex * pageSize + i + 1 }}</td>
+
+            <!-- Product -->
+            <td class="pp-td">
+              <div class="pp-product-name">{{ row.productName }}</div>
+              <div class="pp-product-code" *ngIf="row.productCode">{{ row.productCode }}</div>
+            </td>
+
+            <!-- Month -->
+            <td class="pp-td center">
+              <span class="pp-month-tag">{{ row.priceMonth | date:'MMM yyyy' }}</span>
+            </td>
+
+            <!-- Previous Month Price -->
+            <td class="pp-td right pp-muted">
+              {{ row.previousMonthPrice | number:'1.2-2' }}
+            </td>
+
+            <!-- Suggested Price -->
+            <td class="pp-td right">
+              <span class="pp-suggested-val">{{ row.suggestedPrice | number:'1.2-2' }}</span>
+            </td>
+
+            <!-- Customer Price ← PRIMARY COLUMN -->
+            <td class="pp-td right pp-price-cell">
+              <span class="pp-price-val">{{ row.customerPrice | number:'1.2-2' }}</span>
+            </td>
+
+            <!-- Margin (color-coded) -->
+            <td class="pp-td center">
+              <span class="pp-margin-badge"
+                [class.green]="row.marginPercent >= 0.33"
+                [class.yellow]="row.marginPercent >= 0.25 && row.marginPercent < 0.33"
+                [class.red]="row.marginPercent > 0 && row.marginPercent < 0.25">
+                {{ row.marginPercentDisplay }}
+              </span>
+            </td>
+
+            <!-- Commission -->
+            <td class="pp-td center pp-muted">
+              {{ row.commissionPercentDisplay }}
+            </td>
+
+            <!-- Status -->
+            <td class="pp-td center">
+              <span class="pp-status-badge" [class.active]="row.isActive">
+                {{ row.isActive ? ('common.active' | translate) : ('common.inactive' | translate) }}
+              </span>
+            </td>
+
+            <!-- Actions -->
+            <td class="pp-td center">
+              <div class="pp-actions">
+                <button class="pp-act-btn edit" [title]="'productPrice.editPrice' | translate"
+                  (click)="priceModal.openModal(true, row)">
+                  <i class="bi bi-pencil"></i>
+                </button>
+                <button class="pp-act-btn toggle"
+                  [title]="row.isActive ? ('common.deactivate' | translate) : ('common.activate' | translate)"
+                  (click)="onToggleActive({ row: row, isActive: row.isActive })">
+                  <i class="bi" [ngClass]="row.isActive ? 'bi-toggle-on' : 'bi-toggle-off'"></i>
+                </button>
+                <button class="pp-act-btn delete" [title]="'common.delete' | translate"
+                  (click)="onDelete(row)">
+                  <i class="bi bi-trash"></i>
+                </button>
+              </div>
+            </td>
+
+          </tr>
+
+          <!-- Empty state -->
+          <tr *ngIf="prices.length === 0">
+            <td colspan="10" class="pp-empty-cell">
+              <div class="pp-empty">
+                <i class="bi bi-graph-up-arrow pp-empty-icon"></i>
+                <p class="pp-empty-title">{{ 'productPrice.emptyTitle' | translate }}</p>
+                <p class="pp-empty-sub">{{ 'productPrice.emptyMessage' | translate }}</p>
+              </div>
+            </td>
+          </tr>
+
+        </tbody>
+      </table>
+    </div>
+
+    <!-- ═══ PAGINATION ═══ -->
+    <div class="pp-footer" *ngIf="totalRecords > 0">
+      <span class="pp-record-count">{{ totalRecords }} {{ 'productPrice.records' | translate }}</span>
+      <div class="pp-pager">
+        <button class="pp-pager-btn"
+          [disabled]="pageIndex === 0"
+          (click)="onPageChange({ pageIndex: pageIndex - 1, pageSize: pageSize })">
+          <i class="bi bi-chevron-left"></i>
+        </button>
+        <span class="pp-pager-label">{{ 'productPrice.page' | translate }} {{ pageIndex + 1 }}</span>
+        <button class="pp-pager-btn"
+          [disabled]="(pageIndex + 1) * pageSize >= totalRecords"
+          (click)="onPageChange({ pageIndex: pageIndex + 1, pageSize: pageSize })">
+          <i class="bi bi-chevron-right"></i>
+        </button>
+      </div>
+    </div>
+
+  </div><!-- /pp-card -->
+
+  <app-product-price-add-edit #priceModal></app-product-price-add-edit>
 
 </div>

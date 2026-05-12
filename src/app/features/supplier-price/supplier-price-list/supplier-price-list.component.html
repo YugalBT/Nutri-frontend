@@ -3,13 +3,17 @@
   <div class="sp-header">
     <div class="sp-header-content">
       <div class="sp-title-wrapper">
-        <h1 class="sp-title"> {{ "supplierPrice.heading" | translate }} </h1>
+        <h1 class="sp-title">
+          {{ isDeatechMode ? ('supplierPrice.headingDeatech' | translate) : (isSupplier ? ('supplierPrice.headingSupplier' | translate) : ('supplierPrice.heading' | translate)) }}
+        </h1>
       </div>
-      <p class="sp-subtitle"> {{ "supplierPrice.subtitle" | translate }} </p>
+      <p class="sp-subtitle">
+        {{ isDeatechMode ? ('supplierPrice.subtitleDeatech' | translate) : (isSupplier ? ('supplierPrice.subtitleSupplier' | translate) : ('supplierPrice.subtitle' | translate)) }}
+      </p>
     </div>
   </div>
 
-  <div *ngIf="!isSupplier" class="sp-selector-card">
+  <div *ngIf="!isSupplier && !isDeatechMode" class="sp-selector-card">
     <div class="sp-card-header">
       <h3 class="sp-card-title">
         <i class="bi bi-building sp-card-icon"></i>
@@ -51,17 +55,17 @@
   <div class="d-flex gap-2 mt-3 justify-content-end flex-wrap">
     <button class="btn add-btn" (click)="downloadSampleCSV()">
       <i class="bi bi-download me-2"></i>
-      Sample CSV
+      {{ 'supplierPrice.sampleCsv' | translate }}
     </button>
 
     <button class="btn add-btn" (click)="exportSupplierPrices()">
       <i class="bi bi-download me-2"></i>
-      Export
+      {{ 'common.export' | translate }}
     </button>
 
     <label class="btn add-btn mb-0">
       <i class="bi bi-upload me-2"></i>
-      Import
+      {{ 'common.import' | translate }}
       <input type="file" hidden accept=".csv" (change)="importSupplierPrices($event)">
     </label>
   </div>
@@ -73,14 +77,14 @@
           <i class="bi bi-list-ul sp-table-icon"></i>
           {{ "supplierPrice.materials" | translate }}
         </h2>
-        <p class="sp-table-hint">Search and add only the materials you want to price.</p>
+        <p class="sp-table-hint">{{ 'supplierPrice.tableHint' | translate }}</p>
       </div>
 
       <div class="sp-table-actions">
         <span class="sp-material-count" *ngIf="materials.length > 0">{{ materials.length }}</span>
         <button class="btn btn-outline-secondary" type="button" (click)="openMaterialSearch()">
           <i class="bi bi-search me-1"></i>
-          Search Material
+          {{ 'supplierPrice.searchMaterial' | translate }}
         </button>
       </div>
     </div>
@@ -91,14 +95,14 @@
           <tr class="sp-table-row">
             <th class="sp-table-cell sp-col-sn">{{ "common.sn" | translate }}</th>
             <th class="sp-table-cell sp-col-material">{{ "supplierPrice.material" | translate }}</th>
-            <th class="sp-table-cell sp-col-code">Category</th>
-            <th class="sp-table-cell sp-col-price">{{ "supplierPrice.price" | translate }}</th>
-            <th class="sp-table-cell sp-col-logistics">{{ "supplierPrice.LogisticsCost" | translate }}</th>
-            <th class="sp-table-cell sp-col-delivered">{{ "supplierPrice.deliveredPrice" | translate }}</th>
+            <th class="sp-table-cell sp-col-code">{{ "supplierPrice.category" | translate }}</th>
+            <th class="sp-table-cell sp-col-price">{{ isDeatechMode ? ('supplierPrice.purchasePrice' | translate) : ('supplierPrice.price' | translate) }}</th>
+            <th class="sp-table-cell sp-col-logistics" *ngIf="showLogisticsCols">{{ "supplierPrice.logisticsCost" | translate }}</th>
+            <th class="sp-table-cell sp-col-delivered" *ngIf="showLogisticsCols">{{ "supplierPrice.deliveredPrice" | translate }}</th>
             <th class="sp-table-cell sp-col-month">{{ "supplierPrice.startDate" | translate }}</th>
             <th class="sp-table-cell sp-col-month">{{ "supplierPrice.endDate" | translate }}</th>
-            <th class="sp-table-cell sp-col-status">{{ "supplierPrice.columns.SupplierPriceStatus" | translate }}</th>
-            <th class="sp-table-cell sp-col-action">Action</th>
+            <th class="sp-table-cell sp-col-status">{{ "supplierPrice.priceStatus" | translate }}</th>
+            <th class="sp-table-cell sp-col-action">{{ "common.actions" | translate }}</th>
           </tr>
         </thead>
         <tbody class="sp-table-body">
@@ -128,7 +132,7 @@
               </div>
             </td>
 
-            <td class="sp-table-cell sp-cell-discount">
+            <td class="sp-table-cell sp-cell-discount" *ngIf="showLogisticsCols">
               <div class="sp-input-group">
                 <input
                   type="number"
@@ -143,7 +147,7 @@
               </div>
             </td>
 
-            <td class="sp-table-cell sp-cell-delivered">
+            <td class="sp-table-cell sp-cell-delivered" *ngIf="showLogisticsCols">
               <div class="sp-input-group sp-input-group-readonly">
                 <span class="sp-currency-symbol">€</span>
                 <input
@@ -210,15 +214,15 @@
           <i class="bi bi-inbox"></i>
         </div>
         <h3 class="sp-empty-title">{{ "common.noData" | translate }}</h3>
-        <p class="sp-empty-message" *ngIf="!selectedSupplierId">
+        <p class="sp-empty-message" *ngIf="!selectedSupplierId && !isDeatechMode">
           {{ "supplierPrice.selectSupplierFirst" | translate }}
         </p>
-        <p class="sp-empty-message" *ngIf="selectedSupplierId">
-          Click Search Material and add only the rows you need.
+        <p class="sp-empty-message" *ngIf="selectedSupplierId || isDeatechMode">
+          {{ 'supplierPrice.emptyHint' | translate }}
         </p>
-        <button *ngIf="selectedSupplierId" type="button" class="btn add-btn mt-3" (click)="openMaterialSearch()">
+        <button *ngIf="selectedSupplierId || isDeatechMode" type="button" class="btn add-btn mt-3" (click)="openMaterialSearch()">
           <i class="bi bi-search me-1"></i>
-          Search Material
+          {{ 'supplierPrice.searchMaterial' | translate }}
         </button>
       </div>
     </div>
@@ -240,7 +244,7 @@
       <div class="modal-content">
         <div class="modal-header">
           <div>
-            <h5 class="modal-title">Search Materials</h5>
+            <h5 class="modal-title">{{ 'supplierPrice.searchMaterialsTitle' | translate }}</h5>
           </div>
           <button class="btn-close" type="button" (click)="closeMaterialSearch()"></button>
         </div>
@@ -252,43 +256,43 @@
               class="form-control"
               [(ngModel)]="materialSearchTerm"
               [ngModelOptions]="{ standalone: true }"
-              placeholder="Search by material name or category"
+              [placeholder]="'supplierPrice.searchPlaceholder' | translate"
               (keyup.enter)="searchMaterials()"
             />
             <button type="button" class="btn add-btn" (click)="searchMaterials()">
               <i class="bi bi-search me-1"></i>
-              Search
+              {{ 'common.search' | translate }}
             </button>
             <button type="button" class="btn btn-outline-secondary" (click)="clearMaterialSearch()">
-              Clear
+              {{ 'common.clear' | translate }}
             </button>
           </div>
 
           <div class="text-center py-4" *ngIf="materialSearchLoading">
             <div class="spinner-border text-secondary" role="status"></div>
-            <div class="mt-2">Loading materials...</div>
+            <div class="mt-2">{{ 'common.loading' | translate }}</div>
           </div>
 
           <div class="sp-search-empty" *ngIf="!materialSearchLoading && !materialSearchResults.length">
             <i class="bi bi-search"></i>
-            <h5>{{ materialSearchMessage || 'No materials loaded yet' }}</h5>
-            <p>Enter a material name or category and press Search.</p>
+            <h5>{{ materialSearchMessage || ('supplierPrice.noMaterialsYet' | translate) }}</h5>
+            <p>{{ 'supplierPrice.searchInstruction' | translate }}</p>
           </div>
 
           <div class="sp-search-results" *ngIf="materialSearchResults.length">
             <div class="sp-search-results-header">
-              <h6>Results</h6>
-              <span>{{ materialSearchResults.length }} materials</span>
+              <h6>{{ 'common.results' | translate }}</h6>
+              <span>{{ materialSearchResults.length }} {{ 'supplierPrice.materials' | translate }}</span>
             </div>
 
             <div class="table-responsive">
               <table class="table table-hover align-middle">
                 <thead>
                   <tr>
-                    <th>Material</th>
-                    <th>Category</th>
-                    <th>Price (€/ton)</th>
-                    <th class="text-end">Action</th>
+                    <th>{{ 'supplierPrice.material' | translate }}</th>
+                    <th>{{ 'supplierPrice.category' | translate }}</th>
+                    <th>{{ 'supplierPrice.pricePerTon' | translate }}</th>
+                    <th class="text-end">{{ 'common.actions' | translate }}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -307,7 +311,7 @@
                         [disabled]="isMaterialSelected(material.materialId)"
                       >
                         <i class="bi" [ngClass]="isMaterialSelected(material.materialId) ? 'bi-check2-circle' : 'bi-plus-circle'"></i>
-                        {{ isMaterialSelected(material.materialId) ? 'Added' : 'Add' }}
+                        {{ isMaterialSelected(material.materialId) ? ('common.added' | translate) : ('common.add' | translate) }}
                       </button>
                     </td>
                   </tr>

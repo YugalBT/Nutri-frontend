@@ -1,9 +1,9 @@
 import { inject } from '@angular/core';
 import { CanActivateFn, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
-import { take, map, tap } from 'rxjs/operators';
+import { take, map, tap, combineLatest } from 'rxjs';
 import { ToastService } from '../../shared/services/toast.service';
-import { selectUserRoles } from '../../state/auth/auth.selectors';
+import { selectUserRoles, selectUserRoleType } from '../../state/auth/auth.selectors';
 import { PERMISSIONS } from '../constants/permissions.constants';
 
 
@@ -13,12 +13,21 @@ export const permissionGuard: CanActivateFn = (route, state) => {
   const toast = inject(ToastService);
 
   const requiredPermissions: string[] = route.data?.['requiredPermissions'] || [];
-  console.log("requiredPermissions",requiredPermissions);
-  return store.select(selectUserRoles).pipe(
+  const requiredRoleTypes: string[] = (route.data?.['requiredRoleTypes'] || []).map(
+    (r: string) => r.toUpperCase()
+  );
+
+  return combineLatest([
+    store.select(selectUserRoles),
+    store.select(selectUserRoleType),
+  ]).pipe(
     take(1),
-    map((roles: string[]) => {
-  console.log("selectUserRoles",roles);
-      return requiredPermissions.some(p => roles.includes(p));
+    map(([roles, roleType]: [string[], string]) => {
+      const hasPermission = requiredPermissions.length === 0 ||
+        requiredPermissions.some(p => roles.includes(p));
+      const hasRole = requiredRoleTypes.length === 0 ||
+        requiredRoleTypes.includes(roleType);
+      return hasPermission && hasRole;
     }),
     tap((allowed) => {
       if (!allowed) {

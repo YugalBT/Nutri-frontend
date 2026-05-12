@@ -164,6 +164,49 @@ export class SidebarComponent implements OnInit {
   // }
 private buildAccordionMenu(flatMenu: MenuItem[]): void {
 
+  const roleType = (this.user?.roleType || '').toUpperCase();
+  const isAdmin = roleType === 'ADMIN';
+
+  // Check whether the current user has the SupplierPriceView permission.
+  const hasSupplierPriceView = (this.user?.permissions as any[] ?? [])
+    .some((p: any) => p.modulePermissionDisplay === 'SupplierPriceView');
+
+  // Inject Deatech Raw Material Costs for Super Admin (ADMIN) only,
+  // AND only when the user has the SupplierPriceView permission.
+  // This is a frontend-only route not returned by the backend menu API.
+  // Suppliers (CLIENT) use the /supplier-price route instead.
+  if (isAdmin && hasSupplierPriceView) {
+    const alreadyPresent = flatMenu.some(
+      m => m.roleDisplayName === 'Deatech Raw Material Costs'
+    );
+    if (!alreadyPresent) {
+      flatMenu = [
+        ...flatMenu,
+        {
+          roleDisplayName: 'Deatech Raw Material Costs',
+          roleDisplayNameIt: 'Costi Materie Prime Deatech',
+          roleName: 'DeatechRawMaterialCosts',
+          url: '/deatech-supplier-price',
+          safeIcon: this.sanitizeIcon(
+            `<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24"
+              fill="none" stroke="#D2D2D2" stroke-width="1.8"
+              stroke-linecap="round" stroke-linejoin="round">
+              <path d="M20 10L12 2H4v8l8 8a2 2 0 002.8 0l5.2-5.2a2 2 0 000-2.8z"/>
+              <circle cx="7.5" cy="7.5" r="1.5"/>
+              <path d="M14 14h4M16 12v4"/>
+            </svg>`
+          ),
+        } as MenuItem,
+      ];
+    }
+  }
+
+  // Hide the supplier-facing "Raw Material Costs" page from admin sidebar.
+  // Admins use "Deatech Raw Material Costs" (/deatech-supplier-price) instead.
+  if (isAdmin) {
+    flatMenu = flatMenu.filter(m => m.roleDisplayName !== 'Raw Material Costs');
+  }
+
   const groupedItemNames = SIDEBAR_GROUPS.flatMap(group => group.items);
 
   this.topMenus = flatMenu.filter(m =>

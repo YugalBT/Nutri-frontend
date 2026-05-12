@@ -57,7 +57,64 @@
   <!-- FORM -->
   <form *ngIf="!isLoading" [formGroup]="form">
 
-  
+    <!-- PRICE SETTINGS ─────────────────────────────────────────────── -->
+    <div class="table-card mt-3">
+      <div class="table-card-header">
+        {{ 'calvesEntry.sections.priceSettings' | translate }}
+      </div>
+
+      <div class="form-section">
+        <div class="row g-3 align-items-end">
+
+          <!-- Feed selector -->
+          <div class="col-12 col-sm-6 col-md-4 col-lg-3 form-group-item">
+            <label>{{ 'calvesEntry.fields.feed' | translate }}</label>
+            <select class="form-select"
+                    [(ngModel)]="selectedFeedId"
+                    [ngModelOptions]="{standalone: true}"
+                    (change)="onFeedChange()">
+              <option value="">{{ 'calvesEntry.placeholders.selectFeed' | translate }}</option>
+              <option *ngFor="let f of feeds" [value]="f.feedId">
+                {{ f.feedName }}
+              </option>
+            </select>
+          </div>
+
+          <!-- Feed price (read-only, driven by selected feed) -->
+          <div class="col-12 col-sm-6 col-md-4 col-lg-3 form-group-item">
+            <label>{{ 'calvesEntry.fields.feedPrice' | translate }}</label>
+            <div class="input-group">
+              <span class="input-group-text">€</span>
+              <input type="number"
+                     class="form-control"
+                     [value]="feedPrice"
+                     readonly
+                     tabindex="-1">
+            </div>
+            <small class="text-muted">{{ 'calvesEntry.hints.feedPrice' | translate }}</small>
+          </div>
+
+          <!-- Milk price (editable, pre-filled from history) -->
+          <div class="col-12 col-sm-6 col-md-4 col-lg-3 form-group-item">
+            <label>{{ 'calvesEntry.fields.milkPrice' | translate }}</label>
+            <div class="input-group">
+              <span class="input-group-text">€</span>
+              <input type="number"
+                     step="0.001"
+                     min="0"
+                     class="form-control"
+                     [(ngModel)]="milkPrice"
+                     [ngModelOptions]="{standalone: true}"
+                     (ngModelChange)="onMilkPriceChange()">
+            </div>
+            <small class="text-muted">{{ 'calvesEntry.hints.milkPrice' | translate }}</small>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- INDIVIDUAL ──────────────────────────────────────────────────── -->
     <div class="table-card mt-3">
 
       <div class="table-card-header">

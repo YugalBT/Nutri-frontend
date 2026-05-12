@@ -15,6 +15,8 @@ import { TranslatePipe } from '../../../i18n/translate.pipe';
 import { updateFirstLogin } from '../../../state/auth/auth.actions';
 import { Store } from '@ngrx/store';
 import { BrandingService } from '../../../shared/services/branding.service';
+import { selectAuthUser } from '../../../state/auth/auth.selectors';
+import { take } from 'rxjs/operators';
 
 @Component({
   selector: 'app-reset-password',
@@ -52,7 +54,17 @@ export class ResetPasswordComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    // Check if URL contains /supplier
+    // Re-apply branding using the stored user so supplier theming works
+    // both on the public /supplier/reset-password route and when an
+    // authenticated supplier is redirected here after first login.
+    this.store.select(selectAuthUser).pipe(take(1)).subscribe(user => {
+      this.brandingService.updateBranding(user);
+      if (user?.supplierDetails) {
+        this.switchToSupplierKeys();
+      }
+    });
+
+    // URL-based check as fallback (covers public /supplier/reset-password)
     this.checkIfSupplier();
 
     this.resetForm = this.fb.group(

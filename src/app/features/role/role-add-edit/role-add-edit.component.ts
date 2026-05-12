@@ -109,6 +109,7 @@ export class UserRoleAddEditComponent implements OnInit, OnDestroy {
       isDefault: [false],
       isShow: [false],
       isEditable: [false],
+      isSupplier: [false],
       description: ['']
     });
   }
@@ -172,6 +173,7 @@ private loadModules(masterRoles: boolean = false): void {
         isDefault : roleData.isDefault || false,
         isShow : roleData.isShow,
         isEditable : roleData.isEditable || false,
+        isSupplier : roleData.isSupplier || false,
         description: roleData.nameIt || ''
       });
          
@@ -273,6 +275,7 @@ private loadModules(masterRoles: boolean = false): void {
     isDefault: this.form.get('isDefault')?.value || false,
     isShow: this.form.get('isShow')?.value,
     isEditable: this.form.get('isEditable')?.value || false,
+    isSupplier: this.form.get('isSupplier')?.value || false,
     rolePermissionId: checkedPermissions || []
   };
 

@@ -556,6 +556,7 @@ export const routes: Routes = [
             PERMISSIONS.MaterialsView,
             PERMISSIONS.MaterialsDelete,
           ],
+          mode: 'all',
         },
         loadComponent: () =>
           import('./features/materials/material-list/material-list.component').then(
@@ -563,6 +564,25 @@ export const routes: Routes = [
           ),
       },
       {
+        // Deatech-owned materials only (SupplierId IS NULL) — office / Super Admin view
+        path: 'deatech-materials',
+        canActivate: [permissionGuard],
+        data: {
+          requiredPermissions: [
+            PERMISSIONS.MaterialsAdd,
+            PERMISSIONS.MaterialsEdit,
+            PERMISSIONS.MaterialsView,
+            PERMISSIONS.MaterialsDelete,
+          ],
+          mode: 'deatech',
+        },
+        loadComponent: () =>
+          import('./features/materials/material-list/material-list.component').then(
+            (m) => m.MaterialListComponent,
+          ),
+      },
+      {
+        // Supplier's own material prices — accessible to supplier (CLIENT) users only
         path: 'supplier-price',
         canActivate: [permissionGuard],
         data: {
@@ -572,6 +592,27 @@ export const routes: Routes = [
             PERMISSIONS.SupplierPriceView,
             PERMISSIONS.SupplierPriceDelete,
           ],
+          requiredRoleTypes: ['CLIENT'],
+          mode: 'supplier',
+        },
+        loadComponent: () =>
+          import('./features/supplier-price/supplier-price-list/supplier-price-list.component').then(
+            (m) => m.SupplierPriceListComponent,
+          ),
+      },
+      {
+        // Deatech raw material costs — accessible to Super Admin (ADMIN) users only
+        path: 'deatech-supplier-price',
+        canActivate: [permissionGuard],
+        data: {
+          requiredPermissions: [
+            PERMISSIONS.SupplierPriceAdd,
+            PERMISSIONS.SupplierPriceEdit,
+            PERMISSIONS.SupplierPriceView,
+            PERMISSIONS.SupplierPriceDelete,
+          ],
+          requiredRoleTypes: ['ADMIN'],
+          mode: 'deatech',
         },
         loadComponent: () =>
           import('./features/supplier-price/supplier-price-list/supplier-price-list.component').then(

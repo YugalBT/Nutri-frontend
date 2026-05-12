@@ -97,7 +97,8 @@ export const SIDEBAR_GROUPS = [
       'Materials',
       'Product',
       'Raw Material Costs',
-      'Processing Costs'
+      'Processing Costs',
+      'Product Creation'
 
     ]
   },
@@ -108,6 +109,7 @@ export const SIDEBAR_GROUPS = [
     items: [
       'Pricing Rules',
       'Product Pricing',
+      'Deatech Raw Material Costs',
     ]
   },
   {
@@ -115,8 +117,7 @@ export const SIDEBAR_GROUPS = [
     title: 'sidebarmenu.production',
     icon: SIDEBAR_ICONS.PRODUCTION,
     items: [
-      'PricingFormula',
-      'Product Creation'
+      'PricingFormula'
     ]
   },
 

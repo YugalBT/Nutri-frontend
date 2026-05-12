@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { ToastService } from '../../../shared/services/toast.service';
 import { CommonService } from '../../../shared/services/common.service';
@@ -21,6 +21,21 @@ declare var bootstrap: any;
 })
 export class SupplierPriceListComponent implements OnInit, OnDestroy {
   @ViewChild('materialSearchModal', { static: true }) materialSearchModal!: ElementRef;
+
+  /**
+   * 'deatech'  → show Deatech-owned materials (SupplierId IS NULL).
+   *              Logistics Cost + Delivered Price columns are visible.
+   *              Supplier selector shown so office can pick whose prices to edit.
+   * 'supplier' → show this supplier's own materials.
+   *              Only the final Price column is shown (no logistics breakdown).
+   */
+  @Input() mode: 'deatech' | 'supplier' = 'supplier';
+
+  /** True when the Logistics Cost and Delivered Price columns should be shown. */
+  get showLogisticsCols(): boolean { return this.mode === 'deatech'; }
+
+  /** True when viewing Deatech's own raw material costs (no supplier selector needed). */
+  get isDeatechMode(): boolean { return this.mode === 'deatech'; }
 
   materials: any[] = [];
   allMaterials: any[] = [];
@@ -50,10 +65,18 @@ export class SupplierPriceListComponent implements OnInit, OnDestroy {
     this.isSupplier = !!this.tokenservice.isSupplier();
 
     if (this.isSupplier) {
+      // Supplier portal: load their own prices automatically
       this.supplierData = this.tokenservice.getSupplierData();
       this.selectedSupplierId = this.supplierData?.supplierId || null;
-      this.onSupplierChange();
+      if (this.selectedSupplierId) {
+        this.loadSavedPrices();
+      }
+    } else if (this.isDeatechMode) {
+      // Deatech office view: no supplier selector — load Deatech's own materials
+      this.selectedSupplierId = null;
+      this.loadSavedPrices();
     } else {
+      // Admin/Employee viewing a specific supplier's prices: show supplier dropdown
       this.loadSuppliers();
     }
   }
@@ -84,6 +107,39 @@ export class SupplierPriceListComponent implements OnInit, OnDestroy {
     this.filterStartDate = null;
     this.filterEndDate = null;
     this.resetMaterialSelection();
+    this.loadSavedPrices();
+  }
+
+  /** Load already-saved prices from the API for the currently selected supplier. */
+  loadSavedPrices(): void {
+    if (!this.selectedSupplierId) return;
+
+    const payload: any = {
+      supplierId: this.selectedSupplierId,
+      pageNo: 1,
+      recordPerPage: 1000,
+    };
+
+    if (this.filterStartDate) { payload['startDate'] = this.filterStartDate; }
+    if (this.filterEndDate)   { payload['endDate']   = this.filterEndDate;   }
+
+    const sub = this.supplierPriceService.getSupplierPrices(payload).subscribe({
+      next: (res: any) => {
+        if (res?.isSuccess && Array.isArray(res.data) && res.data.length > 0) {
+          this.allMaterials = res.data.map((m: any) => this.buildMaterialRow(m));
+          this.syncDisplayedMaterials();
+        } else {
+          this.allMaterials = [];
+          this.materials = [];
+        }
+      },
+      error: () => {
+        this.allMaterials = [];
+        this.materials = [];
+      }
+    });
+
+    this.subs.push(sub);
   }
 
   markChanged(row: any): void {
@@ -119,7 +175,8 @@ export class SupplierPriceListComponent implements OnInit, OnDestroy {
   }
 
   saveToApi(rows: any[], singleRow?: any): void {
-    if (!this.selectedSupplierId) {
+    // In deatech mode there is no supplier — suppress this check
+    if (!this.selectedSupplierId && !this.isDeatechMode) {
       this.toast.error('Supplier is required');
       return;
     }
@@ -176,9 +233,12 @@ export class SupplierPriceListComponent implements OnInit, OnDestroy {
     this.filterEndDate = null;
     this.clearMaterialSearch();
 
-    if (this.isSupplier) {
+    if (this.isSupplier || this.isDeatechMode) {
+      // Supplier or Deatech office view: keep the implicit supplierId and reload
       this.resetMaterialSelection();
+      this.loadSavedPrices();
     } else {
+      // Admin viewing supplier prices: reset supplier selection
       this.selectedSupplierId = null;
       this.resetMaterialSelection();
     }
@@ -193,7 +253,11 @@ export class SupplierPriceListComponent implements OnInit, OnDestroy {
   onDateFilterApply(filter: DateRangeFilter): void {
     this.filterStartDate = filter.startDate;
     this.filterEndDate = filter.endDate;
-    this.applyDateFilter();
+    if (this.selectedSupplierId) {
+      this.loadSavedPrices();   // reload from API with date range
+    } else {
+      this.applyDateFilter();   // fallback: filter in memory
+    }
   }
 
   private applyDateFilter(): void {
@@ -278,7 +342,7 @@ export class SupplierPriceListComponent implements OnInit, OnDestroy {
   }
 
   openMaterialSearch(): void {
-    if (!this.selectedSupplierId) {
+    if (!this.selectedSupplierId && !this.isDeatechMode) {
       this.toast.warning('Please select a supplier first');
       return;
     }
@@ -302,7 +366,7 @@ export class SupplierPriceListComponent implements OnInit, OnDestroy {
   }
 
   searchMaterials(): void {
-    if (!this.selectedSupplierId) {
+    if (!this.selectedSupplierId && !this.isDeatechMode) {
       this.toast.warning('Please select a supplier first');
       return;
     }
@@ -315,6 +379,7 @@ export class SupplierPriceListComponent implements OnInit, OnDestroy {
       recordPerPage: 20,
       searchValue: this.materialSearchTerm?.trim() || '',
       status: 2,
+      ownership: this.mode,
     };
 
     const sub = this.commonService
@@ -384,52 +449,50 @@ export class SupplierPriceListComponent implements OnInit, OnDestroy {
     const file = event.target.files[0];
     if (!file) return;
 
-    if (!this.selectedSupplierId) {
+    // Reset file input so the same file can be re-imported if needed
+    event.target.value = '';
+
+    if (!this.selectedSupplierId && !this.isDeatechMode) {
       this.toast.error('Please select supplier');
       return;
     }
 
     const sub = this.supplierPriceService
-      .importSupplierPrices(file)
-      .subscribe((res: ApiResponse<any>) => {
-        if (res.isSuccess) {
-          this.toast.success(res.message);
-          this.onSupplierChange();
-        } else {
-          this.toast.error(res.message);
-        }
+      .importSupplierPrices(file, this.selectedSupplierId)
+      .subscribe({
+        next: (res: ApiResponse<any>) => {
+          if (res.isSuccess) {
+            this.toast.success(res.message || 'Import successful');
+            this.loadSavedPrices();   // works for all modes (supplier, deatech, admin)
+          } else {
+            this.toast.error(res.message || 'Import failed');
+          }
+        },
+        error: (err) => this.toast.error(err?.message || 'Import failed'),
       });
 
     this.subs.push(sub);
   }
 
   exportSupplierPrices(): void {
-    if (!this.selectedSupplierId) {
+    if (!this.selectedSupplierId && !this.isDeatechMode) {
       this.toast.error('Please select supplier');
       return;
     }
 
     const sub = this.supplierPriceService
-      .exportSupplierPrices()
-      .subscribe((res) => {
-        if (!res?.isSuccess || !res?.data) {
-          this.toast.error('Export failed');
-          return;
-        }
+      .exportSupplierPrices(this.selectedSupplierId)
+      .subscribe({
+        next: (res) => {
+          if (!res?.isSuccess || !res?.data) {
+            this.toast.error(res?.message || 'Export failed');
+            return;
+          }
 
-        const blob = new Blob(
-          [Uint8Array.from(atob(res.data), (c) => c.charCodeAt(0))],
-          { type: 'text/csv;charset=utf-8;' }
-        );
-
-        const url = URL.createObjectURL(blob);
-        const link = document.createElement('a');
-        link.href = url;
-        link.download = 'supplier-prices.csv';
-        link.click();
-        URL.revokeObjectURL(url);
-
-        this.toast.success('Export successful');
+          this.downloadBlob(res.data, 'supplier-prices.csv');
+          this.toast.success('Export successful');
+        },
+        error: (err) => this.toast.error(err?.message || 'Export failed'),
       });
 
     this.subs.push(sub);
@@ -438,28 +501,32 @@ export class SupplierPriceListComponent implements OnInit, OnDestroy {
   downloadSampleCSV(): void {
     const sub = this.supplierPriceService
       .downloadSampleCSV()
-      .subscribe((res) => {
-        if (!res?.isSuccess || !res?.data) {
-          this.toast.error('Download failed');
-          return;
-        }
+      .subscribe({
+        next: (res) => {
+          if (!res?.isSuccess || !res?.data) {
+            this.toast.error(res?.message || 'Download failed');
+            return;
+          }
 
-        const blob = new Blob(
-          [Uint8Array.from(atob(res.data), (c) => c.charCodeAt(0))],
-          { type: 'text/csv;charset=utf-8;' }
-        );
-
-        const url = URL.createObjectURL(blob);
-        const link = document.createElement('a');
-        link.href = url;
-        link.download = 'supplier-price-sample.csv';
-        link.click();
-        URL.revokeObjectURL(url);
-
-        this.toast.success('Sample downloaded');
+          this.downloadBlob(res.data, 'supplier-price-sample.csv');
+          this.toast.success('Sample downloaded');
+        },
+        error: (err) => this.toast.error(err?.message || 'Download failed'),
       });
 
     this.subs.push(sub);
+  }
+
+  /** Decode a base64 string from the API and trigger a browser file download. */
+  private downloadBlob(base64: string, filename: string): void {
+    const bytes = Uint8Array.from(atob(base64), (c) => c.charCodeAt(0));
+    const blob = new Blob([bytes], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = filename;
+    link.click();
+    URL.revokeObjectURL(url);
   }
 
   ngOnDestroy(): void {

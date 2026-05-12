@@ -1,0 +1,287 @@
+/* ════════════════════════════════════════
+   HEADER ICON
+════════════════════════════════════════ */
+.ppm-header-icon {
+  width: 42px;
+  height: 42px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #2ca28f, #1a7a6e);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.15rem;
+  flex-shrink: 0;
+}
+
+/* ════════════════════════════════════════
+   STEP BLOCKS
+════════════════════════════════════════ */
+.ppm-step {
+  border: 1px solid #f0f0f0;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.ppm-step-auto {
+  background: #f8fafc;
+}
+
+.ppm-step-result {
+  background: #f9fafb;
+}
+
+.ppm-step-result.result-green  { background: #f0fdf4; border-color: #bbf7d0; }
+.ppm-step-result.result-yellow { background: #fffbeb; border-color: #fde68a; }
+.ppm-step-result.result-red    { background: #fff5f5; border-color: #fecaca; }
+
+/* ── Step header row ── */
+.ppm-step-hd {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 16px;
+  background: rgba(0,0,0,0.02);
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.ppm-step-result .ppm-step-hd {
+  background: rgba(0,0,0,0.03);
+}
+
+/* Step number circle */
+.ppm-num {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: #2ca28f;
+  color: #fff;
+  font-size: 0.78rem;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  line-height: 1;
+}
+
+.ppm-num.auto   { background: #9ca3af; }
+.ppm-num.green  { background: #059669; }
+.ppm-num.yellow { background: #d97706; }
+.ppm-num.red    { background: #dc2626; }
+
+.ppm-step-title {
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: #374151;
+}
+
+/* Auto badge */
+.ppm-auto-badge {
+  background: #e5e7eb;
+  color: #6b7280;
+  font-weight: 500;
+  font-size: 0.72rem;
+}
+
+/* ── Step body ── */
+.ppm-step-body {
+  padding: 16px;
+}
+
+/* ════════════════════════════════════════
+   FORM LABELS
+════════════════════════════════════════ */
+.ppm-label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #374151;
+  margin-bottom: 5px;
+}
+
+.ppm-label-primary {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #0369a1;
+  display: block;
+  margin-bottom: 5px;
+}
+
+/* Auto tag inside label */
+.ppm-auto-tag {
+  background: #e5e7eb;
+  color: #6b7280;
+  font-weight: 500;
+}
+
+/* ════════════════════════════════════════
+   CLASSIFICATION TAGS
+════════════════════════════════════════ */
+.ppm-tag-category { background: #dbeafe; color: #1d4ed8; }
+.ppm-tag-formula  { background: #fef3c7; color: #92400e; }
+.ppm-tag-special  { background: #fce7f3; color: #9d174d; }
+.ppm-tag-default  { background: #f3f4f6; color: #374151; }
+
+/* ════════════════════════════════════════
+   COST METRIC CARDS
+════════════════════════════════════════ */
+.ppm-metric-card {
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  padding: 12px 14px;
+  background: #fff;
+}
+
+.ppm-metric-card.primary {
+  border-color: #2ca28f;
+  background: #f0fdf9;
+}
+
+.ppm-metric-card.result {
+  border-color: #0369a1;
+  background: #eff6ff;
+}
+
+.ppm-metric-label {
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #9ca3af;
+  margin-bottom: 6px;
+}
+
+.ppm-metric-value {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #111827;
+  line-height: 1.2;
+  margin-bottom: 4px;
+}
+
+.ppm-metric-hint {
+  font-size: 0.7rem;
+  color: #9ca3af;
+}
+
+/* ════════════════════════════════════════
+   STEP 3 — PRICE INPUTS
+════════════════════════════════════════ */
+/* Suggested: dashed border */
+.ppm-input-suggested {
+  border-style: dashed !important;
+  color: #6b7280;
+  background: #f9fafb !important;
+}
+
+/* Customer Price input group */
+.ppm-price-group .input-group-text.ppm-price-prefix-box {
+  background: #eff6ff;
+  border-color: #0369a1;
+  border-right: none;
+  color: #0369a1;
+  font-weight: 700;
+  font-size: 1rem;
+}
+
+.ppm-price-group .ppm-input-price {
+  border-color: #0369a1 !important;
+  border-left: none !important;
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #0369a1;
+  background: #eff6ff;
+}
+
+.ppm-price-group .ppm-input-price:focus {
+  box-shadow: 0 0 0 3px rgba(3, 105, 161, 0.15);
+  border-color: #0369a1 !important;
+}
+
+.ppm-price-hint {
+  color: #0369a1 !important;
+  font-weight: 500;
+}
+
+/* ════════════════════════════════════════
+   STEP 4 — MARGIN RESULT
+════════════════════════════════════════ */
+
+/* Level badge */
+.ppm-level-badge {
+  font-size: 0.75rem;
+  font-weight: 600;
+  background: #e5e7eb;
+  color: #374151;
+}
+
+.ppm-level-badge.green  { background: #d1fae5; color: #065f46; }
+.ppm-level-badge.yellow { background: #fef3c7; color: #92400e; }
+.ppm-level-badge.red    { background: #fee2e2; color: #991b1b; }
+
+/* Big margin number */
+.ppm-margin-big {
+  font-size: 2.6rem;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  color: #9ca3af;
+  line-height: 1;
+  margin-bottom: 12px;
+}
+
+.ppm-margin-big.green  { color: #059669; }
+.ppm-margin-big.yellow { color: #d97706; }
+.ppm-margin-big.red    { color: #dc2626; }
+
+/* Yellow bar (Bootstrap doesn't have one for progress) */
+.ppm-bar-yellow {
+  background-color: #f59e0b !important;
+}
+
+/* Threshold dots */
+.ppm-thresh-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  vertical-align: middle;
+}
+
+.ppm-thresh-dot.green  { background: #059669; }
+.ppm-thresh-dot.yellow { background: #d97706; }
+.ppm-thresh-dot.red    { background: #dc2626; }
+
+/* P&L breakdown */
+.ppm-breakdown {
+  border: 1px solid #e5e7eb;
+  background: #fff;
+}
+
+.ppm-breakdown-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 9px 14px;
+  font-size: 0.85rem;
+  border-bottom: 1px solid #f3f4f6;
+}
+
+.ppm-breakdown-row:last-child {
+  border-bottom: none;
+}
+
+.ppm-breakdown-row.total {
+  background: #f9fafb;
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+.ppm-breakdown-divider {
+  height: 2px;
+  background: #e5e7eb;
+  margin: 0 14px;
+}
+
+.ppm-margin-result.green  { color: #059669; }
+.ppm-margin-result.yellow { color: #d97706; }
+.ppm-margin-result.red    { color: #dc2626; }

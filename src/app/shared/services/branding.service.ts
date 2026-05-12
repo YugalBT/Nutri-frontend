@@ -60,13 +60,9 @@ export class BrandingService {
   }
 
   private isSupplierUser(user?: any): boolean {
-    if (!user) {
-      return false;
-    }
-
-    const roleType = String(user?.roleType || '').toUpperCase();
-    const roleName = String(user?.roleName || '').toUpperCase();
-
-    return !!user?.supplierDetails || roleType.includes('SUPPLIER') || roleName.includes('SUPPLIER');
+    // Supplier status is determined solely by the backend:
+    // AuthService sets supplierDetails on the login response when the user's role
+    // has IsSupplier = true.  We rely on that flag exclusively — no roleType guessing.
+    return !!user?.supplierDetails;
   }
 }

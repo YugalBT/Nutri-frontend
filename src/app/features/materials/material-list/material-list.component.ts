@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, ViewChild, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, ViewChild, OnDestroy, OnInit } from '@angular/core';
 import { ReusableTableComponent } from '../../../shared/components/reusable-table/reusable-table.component';
 import { MaterialAddEditComponent } from '../material-add-edit/material-add-edit.component';
 import { GlobalSearchComponent } from '../../../shared/components/global-search/global-search.component';
@@ -30,6 +30,14 @@ import { CommonService } from '../../../shared/services/common.service';
 export class MaterialListComponent implements OnInit, OnDestroy {
 
   @ViewChild('materialModal') materialModal!: MaterialAddEditComponent;
+
+  /**
+   * 'deatech'  → show only Deatech-owned materials (SupplierId IS NULL).
+   *              Only office users / Super Admin see this view.
+   * 'supplier' → show only the authenticated supplier's own materials.
+   * 'all'      → no ownership filter (default admin view).
+   */
+  @Input() mode: 'deatech' | 'supplier' | 'all' = 'all';
 
   columns: string[] = [];
   columnFields: string[] = [
@@ -110,7 +118,9 @@ export class MaterialListComponent implements OnInit, OnDestroy {
       recordPerPage,
       searchValue: this.searchValue || '',
       status: this.filterStatus,
-      supplierId:this.supplierData?.supplierId
+      supplierId: this.supplierData?.supplierId,
+      // Pass ownership so the backend filters to the correct material pool
+      ownership: this.mode === 'all' ? '' : this.mode,
     };
 
     const sub = this.materialService.getMaterials(payload)
