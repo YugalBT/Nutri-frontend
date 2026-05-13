@@ -1,0 +1,216 @@
+<div class="benchmark-page">
+  <section class="benchmark-topbar">
+    <div class="benchmark-title">
+      <h2>Benchmark Analytics</h2>
+      <p>Compare farm performance with market benchmarks and top performers.</p>
+    </div>
+
+    <div class="benchmark-filters">
+      <div class="filter-item">
+        <label>Year</label>
+        <select class="form-select" [(ngModel)]="selectedYear" (ngModelChange)="onFiltersChange()">
+          <option *ngFor="let year of yearOptions" [value]="year">{{ year }}</option>
+        </select>
+      </div>
+
+      <div class="filter-item">
+        <label>Period</label>
+        <select class="form-select" [(ngModel)]="selectedPeriod" (ngModelChange)="onFiltersChange()">
+          <option *ngFor="let option of periodOptions" [value]="option">{{ option }}</option>
+        </select>
+      </div>
+
+      <div class="filter-item">
+        <label>Company</label>
+        <select class="form-select" [(ngModel)]="selectedCompany" (ngModelChange)="onFiltersChange()">
+          <option *ngFor="let option of companyOptions" [value]="option">{{ option }}</option>
+        </select>
+      </div>
+
+      <div class="filter-item">
+        <label>Region</label>
+        <select class="form-select" [(ngModel)]="selectedRegion" (ngModelChange)="onFiltersChange()">
+          <option *ngFor="let option of regionOptions" [value]="option">{{ option }}</option>
+        </select>
+      </div>
+
+      <div class="filter-item">
+        <label>Animal Group</label>
+        <select class="form-select" [(ngModel)]="selectedAnimalGroup" (ngModelChange)="onFiltersChange()">
+          <option *ngFor="let option of animalGroupOptions" [value]="option">{{ option }}</option>
+        </select>
+      </div>
+
+      <div class="filter-item">
+        <label>Compare Against</label>
+        <select class="form-select" [(ngModel)]="selectedCompareAgainst" (ngModelChange)="onFiltersChange()">
+          <option *ngFor="let item of compareAgainstOptions" [value]="item">{{ item }}</option>
+        </select>
+      </div>
+
+      <button class="btn btn-primary btn-apply" (click)="applyFilters()">Apply</button>
+    </div>
+
+    <div class="benchmark-actions">
+      <button class="btn btn-secondary">Export Excel</button>
+      <button class="btn btn-primary" (click)="exportPdf()">Export PDF</button>
+    </div>
+  </section>
+
+  <div *ngIf="isLoading" class="loading-state">Loading benchmark analytics...</div>
+
+  <ng-container *ngIf="!isLoading">
+    <section class="kpi-panel">
+      <article *ngFor="let item of benchmarkSummary" class="kpi-stat-card" [ngClass]="'theme-' + item.theme">
+        <div class="kpi-header">
+          <div class="kpi-icon">%</div>
+          <span class="kpi-label">{{ item.label }}</span>
+        </div>
+        <div class="kpi-value">
+          {{ item.value }} <span *ngIf="item.suffix" class="kpi-unit">{{ item.suffix }}</span>
+        </div>
+        <div *ngIf="item.delta" class="kpi-delta">{{ item.delta }}</div>
+      </article>
+    </section>
+
+    <section class="comparison-panel">
+      <div class="panel-header">
+        <div>
+          <h3>Benchmark Comparison</h3>
+          <p>Key KPIs against market average, top 25% and bottom 25%.</p>
+        </div>
+        <button class="icon-btn">+</button>
+      </div>
+
+      <div class="table-wrap">
+        <table class="comparison-table">
+          <thead>
+            <tr>
+              <th>KPI</th>
+              <th>Your Farm</th>
+              <th>Market Average</th>
+              <th>Top 25%</th>
+              <th>Bottom 25%</th>
+              <th>Deviation</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let row of benchmarkComparisonRows">
+              <td>{{ row.label }}</td>
+              <td>{{ row.yourFarm }}</td>
+              <td>{{ row.marketAvg }}</td>
+              <td>{{ row.top25 }}</td>
+              <td>{{ row.bottom25 }}</td>
+              <td class="deviation">{{ row.deviation }}</td>
+              <td>
+                <span class="status-badge" [ngClass]="'status-' + row.status.toLowerCase()">{{ row.status }}</span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="benchmark-row">
+      <article class="ranking-card">
+        <div class="card-head">
+          <h4>Performance Ranking (IOFC)</h4>
+          <button class="btn btn-link">View All</button>
+        </div>
+        <div class="ranking-chart" *ngIf="benchmarkData?.companyRanking?.length">
+          <div echarts [options]="rankingChart" class="benchmark-chart"></div>
+        </div>
+        <div class="ranking-list" *ngIf="!benchmarkData?.companyRanking?.length">
+          <div class="empty-state">No ranking data available for the selected year.</div>
+        </div>
+      </article>
+
+      <article class="trend-card">
+        <div class="card-head">
+          <h4>Trend Analysis</h4>
+        </div>
+        <div class="trend-controls">
+          <button class="btn btn-small">IOFC</button>
+          <button class="btn btn-small">DEA</button>
+          <button class="btn btn-small">Milk</button>
+          <button class="btn btn-small">Feed Efficiency</button>
+        </div>
+        <div echarts [options]="trendChart" class="benchmark-chart"></div>
+      </article>
+    </section>
+
+    <section class="benchmark-row secondary-row">
+      <article class="metric-card pie-card">
+        <div class="card-head"><h4>Cost Breakdown</h4></div>
+        <div echarts [options]="costBreakdownChart" class="benchmark-chart"></div>
+        <div class="legend-list" *ngIf="benchmarkData?.costBreakdown?.length">
+          <div *ngFor="let item of benchmarkData.costBreakdown">
+            <span class="legend-dot" [style.background]="item.color"></span>
+            {{ item.category }} {{ item.percentOfTotal | number:'1.0-1' }}%
+          </div>
+        </div>
+      </article>
+
+      <article class="metric-card summary-card">
+        <div class="card-head"><h4>Economic Summary</h4></div>
+        <div class="summary-list">
+          <div class="summary-item" *ngFor="let metric of benchmarkData?.economicSummary">
+            <span>{{ metric.label }}</span>
+            <strong>{{ metric.value | number:'1.0-0' }} {{ metric.unit }}</strong>
+            <small [ngClass]="{'positive': metric.change >= 0, 'negative': metric.change < 0}">
+              {{ metric.change >= 0 ? '+' : '' }}{{ metric.change | number:'1.0-0' }}% vs prior year
+            </small>
+          </div>
+        </div>
+      </article>
+
+      <article class="metric-card distribution-card">
+        <div class="card-head"><h4>Performance Distribution (IOFC)</h4></div>
+        <div echarts [options]="distributionChart" class="benchmark-chart"></div>
+        <div class="distribution-labels" *ngIf="benchmarkData">
+          <span>Top performers: {{ benchmarkData.topPerformerPercent | number:'1.0-0' }}%</span>
+          <span>Average: {{ benchmarkData.averagePerformerPercent | number:'1.0-0' }}%</span>
+          <span>Below average: {{ benchmarkData.belowAveragePercent | number:'1.0-0' }}%</span>
+        </div>
+      </article>
+    </section>
+
+    <section class="archive-panel">
+      <div class="panel-header">
+        <div>
+          <h3>Recent Reports Archive</h3>
+          <p>Latest generated reports with animal group and IOFC trends.</p>
+        </div>
+        <button class="btn btn-secondary">View All Reports</button>
+      </div>
+
+      <div class="table-wrap">
+        <table class="archive-table">
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Company</th>
+              <th>Ration</th>
+              <th>Animal Group</th>
+              <th>Animals</th>
+              <th>Avg Milk (kg/day)</th>
+              <th>IOFC (€/cow/day)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let row of recentReports">
+              <td>{{ row.date }}</td>
+              <td>{{ row.company }}</td>
+              <td>{{ row.ration }}</td>
+              <td>{{ row.group }}</td>
+              <td>{{ row.animals }}</td>
+              <td>{{ row.avgMilk | number:'1.2-2' }}</td>
+              <td>{{ row.iofc | number:'1.2-2' }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </ng-container>
+</div>

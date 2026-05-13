@@ -262,6 +262,17 @@ export const routes: Routes = [
           ),
       },
       {
+        path: 'benchmark-analytics',
+        canActivate: [permissionGuard],
+        data: {
+          requiredPermissions: [PERMISSIONS.ReportsView],
+        },
+        loadComponent: () =>
+          import('./features/benchmark-analytics/benchmark-analytics.component').then(
+            (m) => m.BenchmarkAnalyticsComponent,
+          ),
+      },
+      {
         path: 'kpi',
         canActivate: [permissionGuard],
         data: {

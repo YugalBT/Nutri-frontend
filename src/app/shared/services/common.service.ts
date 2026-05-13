@@ -259,6 +259,16 @@ export class CommonService {
     );
   }
 
+  getBenchmarkAnalytics(
+    year: number,
+    companyId?: string | null,
+  ): Observable<any> {
+    const query = companyId ? `?year=${year}&companyId=${companyId}` : `?year=${year}`;
+    return this.http.get<any>(
+      `/api/benchmark/GetAnalytics${query}`,
+    );
+  }
+
   getAggregatedArchive(payload: {
     year: number;
     period: string;

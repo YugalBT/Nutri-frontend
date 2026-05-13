@@ -166,16 +166,21 @@ private buildAccordionMenu(flatMenu: MenuItem[]): void {
 
   const roleType = (this.user?.roleType || '').toUpperCase();
   const isAdmin = roleType === 'ADMIN';
+  const isSuperAdmin = this.user?.isSuperAdmin === true;
 
-  // Check whether the current user has the SupplierPriceView permission.
-  const hasSupplierPriceView = (this.user?.permissions as any[] ?? [])
-    .some((p: any) => p.modulePermissionDisplay === 'SupplierPriceView');
+  // Supplier identity takes priority over everything else.
+  // A supplier user has supplierDetails populated by the backend at login.
+  // Even when isSuperAdmin is true, if supplierDetails is present this is a
+  // supplier portal user — they must see the supplier-facing menu, not Deatech's.
+  const isSupplier = !!this.user?.supplierDetails;
 
-  // Inject Deatech Raw Material Costs for Super Admin (ADMIN) only,
-  // AND only when the user has the SupplierPriceView permission.
-  // This is a frontend-only route not returned by the backend menu API.
-  // Suppliers (CLIENT) use the /supplier-price route instead.
-  if (isAdmin && hasSupplierPriceView) {
+  const roles: string[] = this.user?.roles || [];
+  const hasSupplierPriceView = roles.includes('SupplierPriceView');
+
+  // Inject "Deatech Raw Material Costs" ONLY for Deatech employees (non-supplier
+  // superadmins / admins) who hold the SupplierPriceView permission.
+  // Supplier users always use the supplier-facing /supplier-price route instead.
+  if (!isSupplier && (isAdmin || isSuperAdmin) && hasSupplierPriceView) {
     const alreadyPresent = flatMenu.some(
       m => m.roleDisplayName === 'Deatech Raw Material Costs'
     );
@@ -201,9 +206,10 @@ private buildAccordionMenu(flatMenu: MenuItem[]): void {
     }
   }
 
-  // Hide the supplier-facing "Raw Material Costs" page from admin sidebar.
-  // Admins use "Deatech Raw Material Costs" (/deatech-supplier-price) instead.
-  if (isAdmin) {
+  // Remove the supplier-facing "Raw Material Costs" entry from the sidebar only
+  // for Deatech employees (who use /deatech-supplier-price instead).
+  // Supplier users keep their own "Raw Material Costs" entry unchanged.
+  if (!isSupplier && (isAdmin || isSuperAdmin)) {
     flatMenu = flatMenu.filter(m => m.roleDisplayName !== 'Raw Material Costs');
   }
 

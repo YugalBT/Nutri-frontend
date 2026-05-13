@@ -110,20 +110,28 @@ export class SupplierPriceListComponent implements OnInit, OnDestroy {
     this.loadSavedPrices();
   }
 
-  /** Load already-saved prices from the API for the currently selected supplier. */
+  /** Load already-saved prices from the API for the currently selected supplier (or Deatech). */
   loadSavedPrices(): void {
-    if (!this.selectedSupplierId) return;
+    // Deatech mode has no supplierId — that is intentional.
+    // Standard supplier/admin mode requires a supplierId to be selected first.
+    if (!this.selectedSupplierId && !this.isDeatechMode) return;
 
     const payload: any = {
-      supplierId: this.selectedSupplierId,
       pageNo: 1,
       recordPerPage: 1000,
+      ownership: this.mode,   // 'deatech' or 'supplier'
+      savedOnly: true,        // only return materials with an existing price record
     };
 
     if (this.filterStartDate) { payload['startDate'] = this.filterStartDate; }
     if (this.filterEndDate)   { payload['endDate']   = this.filterEndDate;   }
 
-    const sub = this.supplierPriceService.getSupplierPrices(payload).subscribe({
+    // Use the correct endpoint: POST /Supplier/GetAllSupplierPrice
+    // supplierId is null for deatech mode — the backend handles this correctly.
+    const sub = this.commonService.GetAllMaterialBySupplierId(
+      this.selectedSupplierId,
+      payload,
+    ).subscribe({
       next: (res: any) => {
         if (res?.isSuccess && Array.isArray(res.data) && res.data.length > 0) {
           this.allMaterials = res.data.map((m: any) => this.buildMaterialRow(m));
@@ -253,7 +261,7 @@ export class SupplierPriceListComponent implements OnInit, OnDestroy {
   onDateFilterApply(filter: DateRangeFilter): void {
     this.filterStartDate = filter.startDate;
     this.filterEndDate = filter.endDate;
-    if (this.selectedSupplierId) {
+    if (this.selectedSupplierId || this.isDeatechMode) {
       this.loadSavedPrices();   // reload from API with date range
     } else {
       this.applyDateFilter();   // fallback: filter in memory

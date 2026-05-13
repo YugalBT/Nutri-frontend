@@ -63,6 +63,7 @@ export const SIDEBAR_GROUPS = [
     icon: SIDEBAR_ICONS.REPORTS,
     items: [
       'Reports',
+      'Benchmark Analytics',
       'Technical Report',
       'Economic Report'
       // 'Monthly Report',
@@ -98,7 +99,8 @@ export const SIDEBAR_GROUPS = [
       'Product',
       'Raw Material Costs',
       'Processing Costs',
-      'Product Creation'
+      'Product Creation',
+      'Deatech Raw Material Costs',
 
     ]
   },
@@ -109,7 +111,7 @@ export const SIDEBAR_GROUPS = [
     items: [
       'Pricing Rules',
       'Product Pricing',
-      'Deatech Raw Material Costs',
+      
     ]
   },
   {
