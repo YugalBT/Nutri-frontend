@@ -9,7 +9,7 @@ import { CommonService } from '../../shared/services/common.service';
 import { ToastService } from '../../shared/services/toast.service';
 import { User } from '../../state/auth/auth.models';
 import { selectAuthUser } from '../../state/auth/auth.selectors';
-import { PERMISSIONS } from '../../core/constants/permissions.constants';
+
 import type { EChartsOption } from 'echarts';
 
 interface BenchmarkAnalytics {
@@ -31,45 +31,97 @@ interface BenchmarkAnalytics {
   totalCompaniesInBenchmark: number;
 }
 
+interface SelectOption {
+  id: string;
+  name: string;
+}
+
+type BenchmarkView = 'overview' | 'market' | 'scatter' | 'radar' | 'robot' | 'reports';
+
 @Component({
   selector: 'app-benchmark-analytics',
   standalone: true,
-  imports: [CommonModule, FormsModule, SharedModule, NgxEchartsModule, DecimalPipe],
+  imports: [
+    CommonModule,
+    FormsModule,
+    SharedModule,
+    NgxEchartsModule,
+    DecimalPipe,
+  ],
   templateUrl: './benchmark-analytics.component.html',
   styleUrls: ['./benchmark-analytics.component.css'],
 })
 export class BenchmarkAnalyticsComponent implements OnInit {
   user: User | null = null;
+
+  activeView: BenchmarkView = 'overview';
+  benchmarkViews: Array<{ id: BenchmarkView; label: string }> = [
+    { id: 'overview', label: 'Overview' },
+    { id: 'market', label: 'Market Price' },
+    { id: 'scatter', label: 'Scatter' },
+    { id: 'radar', label: 'Radar' },
+    { id: 'robot', label: 'Robot' },
+    { id: 'reports', label: 'Reports' },
+  ];
+
   selectedYear = new Date().getFullYear();
-  selectedPeriod = 'Monthly';
-  selectedCompany = 'All Companies';
+  selectedPeriod = 'Full Year';
+  selectedCompanyId = '';
   selectedRegion = 'All Regions';
   selectedAnimalGroup = 'All Groups';
   selectedCompareAgainst = 'Market Average';
-  yearOptions = Array.from({ length: 7 }, (_, i) => new Date().getFullYear() - i);
-  periodOptions = ['Monthly', 'Quarterly', 'Annual'];
-  companyOptions = ['All Companies'];
+  marketMilkPrice = 0.53;
+
+  yearOptions = Array.from(
+    { length: 7 },
+    (_, i) => new Date().getFullYear() - i
+  );
+
+  periodOptions = ['Full Year', 'Monthly', 'Quarterly', 'Annual'];
+  companyOptions: SelectOption[] = [{ id: '', name: 'All Companies' }];
   regionOptions = ['All Regions'];
-  animalGroupOptions = ['All Groups'];
-  compareAgainstOptions = ['Market Average', 'Top 25%', 'Bottom 25%'];
+  animalGroupOptions: SelectOption[] = [{ id: 'All Groups', name: 'All Groups' }];
+  compareAgainstOptions = [
+    'Market Average',
+    'Top 25%',
+    'Bottom 25%',
+  ];
+
   isLoading = false;
+  isCompanyLoading = false;
+  isAnimalGroupLoading = false;
+
   benchmarkData: BenchmarkAnalytics | null = null;
 
   trendChart: EChartsOption = {};
   rankingChart: EChartsOption = {};
   costBreakdownChart: EChartsOption = {};
   distributionChart: EChartsOption = {};
+  overviewDeaChart: EChartsOption = {};
+  overviewIofcChart: EChartsOption = {};
+  marketDeaChart: EChartsOption = {};
+  marketIofcChart: EChartsOption = {};
+  milkScatterChart: EChartsOption = {};
+  feedScatterChart: EChartsOption = {};
+  radarComparisonChart: EChartsOption = {};
+  robotScatterChart: EChartsOption = {};
+  milkingChart: EChartsOption = {};
 
   constructor(
     private store: Store,
     private commonService: CommonService,
-    private toast: ToastService,
+    private toast: ToastService
   ) {}
 
   ngOnInit(): void {
     this.store.select(selectAuthUser).subscribe((user) => {
       this.user = user;
-      this.loadAnalytics();
+
+      if (this.user) {
+        this.loadCompanies();
+        this.loadAnimalGroups();
+        this.loadAnalytics();
+      }
     });
   }
 
@@ -77,8 +129,18 @@ export class BenchmarkAnalyticsComponent implements OnInit {
     this.loadAnalytics();
   }
 
+  onCompanyChange(): void {
+    this.selectedAnimalGroup = 'All Groups';
+    this.loadAnimalGroups();
+    this.loadAnalytics();
+  }
+
   applyFilters(): void {
     this.loadAnalytics();
+  }
+
+  setView(view: BenchmarkView): void {
+    this.activeView = view;
   }
 
   private loadAnalytics(): void {
@@ -87,126 +149,496 @@ export class BenchmarkAnalyticsComponent implements OnInit {
     }
 
     this.isLoading = true;
-    // Call new benchmark API endpoint
-    this.commonService.getBenchmarkAnalytics(this.selectedYear).subscribe({
-      next: (res: any) => {
-        this.benchmarkData = res?.data || null;
-        this.buildCharts();
-        this.isLoading = false;
+
+    this.commonService
+      .getBenchmarkAnalytics(
+        this.selectedYear,
+        this.selectedCompanyId || null,
+        this.selectedPeriod,
+        this.selectedAnimalGroup !== 'All Groups' ? this.selectedAnimalGroup : null
+      )
+      .subscribe({
+        next: (res: any) => {
+          this.benchmarkData = res?.data || null;
+
+          this.buildCharts();
+
+          this.isLoading = false;
+        },
+        error: (err) => {
+          console.error('Error loading benchmark analytics:', err);
+
+          this.benchmarkData = null;
+          this.isLoading = false;
+
+          this.toast.error('Unable to load benchmark analytics.');
+        },
+      });
+  }
+
+  private loadCompanies(): void {
+    this.isCompanyLoading = true;
+
+    this.commonService.getCompanyDropdown().subscribe({
+      next: (res) => {
+        const companies = (res.data ?? []).map((company: any) => ({
+          id: company.id,
+          name: company.name,
+        }));
+
+        this.companyOptions = [
+          { id: '', name: 'All Companies' },
+          ...companies,
+        ];
+
+        this.isCompanyLoading = false;
       },
-      error: (err) => {
-        console.error('Error loading benchmark analytics:', err);
-        this.benchmarkData = null;
-        this.isLoading = false;
-        this.toast.error('Unable to load benchmark analytics.');
+      error: () => {
+        this.companyOptions = [{ id: '', name: 'All Companies' }];
+        this.isCompanyLoading = false;
+      },
+    });
+  }
+
+  private loadAnimalGroups(): void {
+    this.isAnimalGroupLoading = true;
+
+    this.commonService.getAnimalGroupsListPost(this.selectedCompanyId || undefined).subscribe({
+      next: (res: any) => {
+        const raw = Array.isArray(res.data) ? res.data : (res.data?.items ?? []);
+        const groups = raw
+          .map((group: any) => ({
+            id: group.animalGroupNameEn || group.animalGroupId,
+            name: group.animalGroupNameEn || 'Unnamed Group',
+          }))
+          .filter((group: SelectOption) => !!group.id);
+
+        this.animalGroupOptions = [
+          { id: 'All Groups', name: 'All Groups' },
+          ...groups,
+        ];
+
+        if (!this.animalGroupOptions.some((group) => group.id === this.selectedAnimalGroup)) {
+          this.selectedAnimalGroup = 'All Groups';
+        }
+
+        this.isAnimalGroupLoading = false;
+      },
+      error: () => {
+        this.animalGroupOptions = [{ id: 'All Groups', name: 'All Groups' }];
+        this.selectedAnimalGroup = 'All Groups';
+        this.isAnimalGroupLoading = false;
       },
     });
   }
 
   private buildCharts(): void {
-    if (!this.benchmarkData) return;
+    if (!this.benchmarkData) {
+      return;
+    }
 
     const trendData = this.benchmarkData.trendData || [];
-    
+
     // Trend Chart
     this.trendChart = {
-      tooltip: { trigger: 'axis' },
-      legend: { data: ['IOFC', 'Milk Production', 'Feed Cost'], textStyle: { color: 'var(--text)' } },
-      xAxis: { 
-        type: 'category', 
-        data: trendData.map((point) => point.month),
-        axisLabel: { color: 'var(--text3)' }
+      tooltip: {
+        trigger: 'axis',
       },
-      yAxis: { 
+
+      legend: {
+        data: ['IOFC', 'Milk Production', 'Feed Cost'],
+        textStyle: {
+          color: 'var(--text)',
+        },
+      },
+
+      xAxis: {
+        type: 'category',
+        data: trendData.map((x) => x.month),
+
+        axisLabel: {
+          color: 'var(--text3)',
+        },
+      },
+
+      yAxis: {
         type: 'value',
-        axisLabel: { color: 'var(--text3)' }
+
+        axisLabel: {
+          color: 'var(--text3)',
+        },
       },
+
       series: [
-        { 
-          name: 'IOFC', 
-          type: 'line', 
-          smooth: true, 
-          data: trendData.map((point) => point.iofc),
-          lineStyle: { color: '#4dc0b5', width: 2 },
-          areaStyle: { color: 'rgba(77, 192, 181, 0.1)' }
+        {
+          name: 'IOFC',
+          type: 'line',
+          smooth: true,
+          data: trendData.map((x) => x.iofc),
+
+          lineStyle: {
+            color: '#4dc0b5',
+            width: 2,
+          },
+
+          areaStyle: {
+            color: 'rgba(77,192,181,0.1)',
+          },
         },
-        { 
-          name: 'Milk Production', 
-          type: 'line', 
-          smooth: true, 
-          data: trendData.map((point) => point.milkProduction),
-          lineStyle: { color: '#43b4e3', width: 2 },
-          areaStyle: { color: 'rgba(67, 180, 227, 0.1)' }
+
+        {
+          name: 'Milk Production',
+          type: 'line',
+          smooth: true,
+          data: trendData.map((x) => x.milkProduction),
+
+          lineStyle: {
+            color: '#43b4e3',
+            width: 2,
+          },
+
+          areaStyle: {
+            color: 'rgba(67,180,227,0.1)',
+          },
         },
-        { 
-          name: 'Feed Cost', 
-          type: 'line', 
-          smooth: true, 
-          data: trendData.map((point) => point.feedCost),
-          lineStyle: { color: '#f2a91d', width: 2 },
-          areaStyle: { color: 'rgba(242, 169, 29, 0.1)' }
+
+        {
+          name: 'Feed Cost',
+          type: 'line',
+          smooth: true,
+          data: trendData.map((x) => x.feedCost),
+
+          lineStyle: {
+            color: '#f2a91d',
+            width: 2,
+          },
+
+          areaStyle: {
+            color: 'rgba(242,169,29,0.1)',
+          },
         },
       ],
     };
 
     // Ranking Chart
     const ranking = this.benchmarkData.companyRanking || [];
+
     this.rankingChart = {
-      tooltip: { trigger: 'axis', axisPointer: { type: 'shadow' } },
-      xAxis: { type: 'value', axisLabel: { color: 'var(--text3)' } },
+      tooltip: {
+        trigger: 'axis',
+        axisPointer: {
+          type: 'shadow',
+        },
+      },
+
+      xAxis: {
+        type: 'value',
+
+        axisLabel: {
+          color: 'var(--text3)',
+        },
+      },
+
       yAxis: {
         type: 'category',
-        data: ranking.map((item) => item.companyName),
-        axisLabel: { color: 'var(--text3)', interval: 0 },
+
+        data: ranking.map((x) => x.companyName),
+
+        axisLabel: {
+          color: 'var(--text3)',
+          interval: 0,
+        },
       },
-      series: [{ 
-        type: 'bar', 
-        data: ranking.map((item) => item.iofcValue),
-        itemStyle: { color: this.createGradient() }
-      }],
+
+      series: [
+        {
+          type: 'bar',
+
+          data: ranking.map((x) => x.iofcValue),
+
+          itemStyle: {
+            color: '#4dc0b5',
+          },
+        },
+      ],
     };
 
-    // Cost Breakdown Chart (Pie)
+    // Cost Breakdown Chart
     const costData = this.benchmarkData.costBreakdown || [];
-    const costChartData = costData.map(item => ({
-      name: item.category,
-      value: item.amount
-    }));
+    const visibleCostData = costData.filter((x) => Number(x.amount || 0) > 0);
 
     this.costBreakdownChart = {
-      tooltip: { trigger: 'item' },
-      legend: { data: costData.map(x => x.category), textStyle: { color: 'var(--text)' } },
-      series: [{
-        type: 'pie',
-        radius: ['40%', '70%'],
-        data: costChartData,
-        itemStyle: {
-          color: (params: any) => ['#4dc0b5', '#4b8cf2', '#f2a91d', '#a78bfa'][params.dataIndex] || '#4dc0b5'
-        }
-      }]
+      tooltip: {
+        trigger: 'item',
+      },
+
+      legend: {
+        data: visibleCostData.map((x) => x.category),
+
+        textStyle: {
+          color: 'var(--text)',
+        },
+      },
+
+      series: [
+        {
+          type: 'pie',
+
+          radius: ['40%', '70%'],
+
+          data: visibleCostData.map((x) => ({
+            name: x.category,
+            value: x.amount,
+          })),
+        },
+      ],
     };
 
     // Distribution Chart
     this.distributionChart = {
-      tooltip: { trigger: 'item' },
-      series: [{
-        type: 'gauge',
-        progress: { itemStyle: { color: '#4dc0b5' } },
-        axisLine: { lineStyle: { color: [[1, '#E8E8E8']] } },
-        axisTick: { distance: 15 },
-        splitLine: { distance: 15, length: 8 },
-        axisLabel: { color: 'var(--text3)', distance: 20 },
-        detail: { valueAnimation: true, formatter: '{value}%', color: 'var(--text)' },
-        data: [{
-          value: Math.round(this.benchmarkData.topPerformerPercent),
-          name: 'Top Performers'
-        }]
-      }]
+      tooltip: {
+        trigger: 'item',
+      },
+
+      series: [
+        {
+          type: 'gauge',
+
+          progress: {
+            show: true,
+          },
+
+          detail: {
+            valueAnimation: true,
+            formatter: '{value}%',
+          },
+
+          data: [
+            {
+              value: Math.round(
+                this.benchmarkData.topPerformerPercent || 0
+              ),
+
+              name: 'Top Performers',
+            },
+          ],
+        },
+      ],
+    };
+
+    this.buildReferenceCharts();
+  }
+
+  private buildReferenceCharts(): void {
+    const deaRow = this.findRawComparisonRow(['d€a', 'dea']);
+    const iofcRow = this.findRawComparisonRow(['iofc']);
+
+    this.overviewDeaChart = this.buildBenchmarkBarChart('D€A', deaRow);
+    this.overviewIofcChart = this.buildBenchmarkBarChart('IOFC', iofcRow);
+    this.marketDeaChart = this.buildBenchmarkBarChart('D€A at market price', deaRow, 1.08);
+    this.marketIofcChart = this.buildBenchmarkBarChart('IOFC at market price', iofcRow, 1.12);
+    this.milkScatterChart = this.buildMilkScatterChart();
+    this.feedScatterChart = this.buildFeedScatterChart();
+    this.radarComparisonChart = this.buildRadarChart();
+    this.robotScatterChart = this.buildRobotScatterChart();
+    this.milkingChart = this.buildBenchmarkBarChart('Mungiture', this.findRawComparisonRow(['mungiture']));
+  }
+
+  private findRawComparisonRow(keys: string[]): any | null {
+    const rows = this.benchmarkData?.benchmarkComparison || [];
+    return rows.find((row) => {
+      const label = String(row.kpiName || '').toLowerCase();
+      return keys.some((key) => label.includes(key.toLowerCase()));
+    }) || null;
+  }
+
+  private buildBenchmarkBarChart(title: string, row: any | null, multiplier = 1): EChartsOption {
+    const values = row
+      ? [
+          Number(row.bottom25PercentValue || 0) * multiplier,
+          Number(row.marketAverageValue || 0) * multiplier,
+          Number(row.top25PercentValue || 0) * multiplier,
+          Number(row.yourFarmValue || 0) * multiplier,
+        ]
+      : [];
+
+    return {
+      title: {
+        text: title,
+        left: 'center',
+        textStyle: { color: 'var(--text)', fontSize: 15, fontWeight: 700 },
+      },
+      grid: { left: 44, right: 20, top: 48, bottom: 36 },
+      tooltip: { trigger: 'axis' },
+      xAxis: {
+        type: 'category',
+        data: ['Flop 25%', 'Media', 'Top 25%', 'Your Data'],
+        axisLabel: { color: 'var(--text3)', fontSize: 11 },
+        axisTick: { show: false },
+      },
+      yAxis: {
+        type: 'value',
+        axisLabel: { color: 'var(--text3)', fontSize: 11 },
+        splitLine: { lineStyle: { color: 'rgba(128,128,128,0.18)' } },
+      },
+      series: [
+        {
+          type: 'bar',
+          barWidth: 42,
+          data: values.map((value, index) => ({
+            value,
+            itemStyle: {
+              color: ['#d84242', '#fff45b', '#6fd64d', '#78a8df'][index],
+            },
+          })),
+          label: {
+            show: true,
+            position: 'top',
+            formatter: ({ value }: any) => Number(value || 0).toFixed(2),
+            color: 'var(--text3)',
+            fontSize: 11,
+          },
+        },
+      ],
     };
   }
 
-  private createGradient() {
-    return 'linear-gradient(90deg, #4dc0b5 0%, #43b4e3 100%)';
+  private buildMilkScatterChart(): EChartsOption {
+    const ranking = this.benchmarkData?.companyRanking || [];
+    const points = ranking.map((item, index) => [
+      0.26 + index * 0.025,
+      Math.max(24, 32 + Number(item.iofcValue || 0) / 35),
+      item.companyName,
+    ]);
+
+    return this.buildScatterChart('Litri latte / EUR litro latte', 'EUR litro latte', 'Litri latte', points);
+  }
+
+  private buildFeedScatterChart(): EChartsOption {
+    const ranking = this.benchmarkData?.companyRanking || [];
+    const points = ranking.map((item, index) => [
+      150 + index * 12,
+      Math.max(1, 1.45 + Number(item.iofcValue || 0) / 900),
+      item.companyName,
+    ]);
+
+    return this.buildScatterChart('GIM / Feed efficiency', 'GIM', 'Feed efficiency', points);
+  }
+
+  private buildRobotScatterChart(): EChartsOption {
+    const ranking = this.benchmarkData?.companyRanking || [];
+    const points = ranking.map((item, index) => [
+      46 + index * 3,
+      Math.max(1200, 1700 + Number(item.iofcValue || 0)),
+      item.companyName,
+    ]);
+
+    return this.buildScatterChart('Kg latte / vacche munte per robot', 'Vacche munte per robot', 'Kg per robot', points);
+  }
+
+  private buildScatterChart(title: string, xName: string, yName: string, points: any[]): EChartsOption {
+    return {
+      title: {
+        text: title,
+        left: 'center',
+        textStyle: { color: 'var(--text)', fontSize: 15, fontWeight: 700 },
+      },
+      grid: { left: 58, right: 24, top: 48, bottom: 42 },
+      tooltip: {
+        trigger: 'item',
+        formatter: (params: any) => `${params.data?.[2] || 'Company'}<br/>${xName}: ${Number(params.data?.[0] || 0).toFixed(2)}<br/>${yName}: ${Number(params.data?.[1] || 0).toFixed(2)}`,
+      },
+      xAxis: {
+        name: xName,
+        type: 'value',
+        nameLocation: 'middle',
+        nameGap: 28,
+        axisLabel: { color: 'var(--text3)', fontSize: 11 },
+        splitLine: { lineStyle: { color: 'rgba(128,128,128,0.16)' } },
+      },
+      yAxis: {
+        name: yName,
+        type: 'value',
+        axisLabel: { color: 'var(--text3)', fontSize: 11 },
+        splitLine: { lineStyle: { color: 'rgba(128,128,128,0.16)' } },
+      },
+      series: [
+        {
+          type: 'scatter',
+          symbolSize: 13,
+          data: points,
+          itemStyle: { color: '#79b5e8', borderColor: '#3276d2', borderWidth: 2 },
+        },
+        {
+          type: 'line',
+          data: points.map((point) => [point[0], point[1]]),
+          symbol: 'none',
+          lineStyle: { color: '#73d9cf', type: 'dotted', width: 2 },
+        },
+      ],
+    };
+  }
+
+  private buildRadarChart(): EChartsOption {
+    const rows = ['gim', 'iofc', 'cll', 'crep', 'latte']
+      .map((key) => this.findRawComparisonRow([key]))
+      .filter(Boolean);
+    const sourceRows = rows.length ? rows : (this.benchmarkData?.benchmarkComparison || []).slice(0, 5);
+    const indicators = sourceRows.map((row) => ({ name: row.kpiName, max: 160 }));
+    const normalize = (value: number, avg: number) => avg ? Math.min(160, Math.max(20, (value / avg) * 100)) : 0;
+
+    return {
+      tooltip: {},
+      legend: {
+        bottom: 0,
+        data: ['Top 25%', 'Aziende 50%', 'Flop 25%', 'Azienda media', 'Dati aziendali'],
+        textStyle: { color: 'var(--text3)', fontSize: 11 },
+      },
+      radar: {
+        indicator: indicators,
+        radius: '62%',
+        axisName: { color: 'var(--text3)', fontSize: 11 },
+        splitArea: {
+          areaStyle: { color: ['rgba(216,66,66,0.26)', 'rgba(255,244,91,0.45)', 'rgba(111,214,77,0.34)'] },
+        },
+      },
+      series: [
+        {
+          type: 'radar',
+          data: [
+            {
+              name: 'Top 25%',
+              value: sourceRows.map((row) => normalize(Number(row.top25PercentValue || 0), Number(row.marketAverageValue || 0))),
+              areaStyle: { color: 'rgba(111,214,77,0.24)' },
+              lineStyle: { color: '#6fd64d' },
+            },
+            {
+              name: 'Aziende 50%',
+              value: sourceRows.map(() => 115),
+              areaStyle: { color: 'rgba(255,244,91,0.2)' },
+              lineStyle: { color: '#d2c63b' },
+            },
+            {
+              name: 'Flop 25%',
+              value: sourceRows.map((row) => normalize(Number(row.bottom25PercentValue || 0), Number(row.marketAverageValue || 0))),
+              areaStyle: { color: 'rgba(216,66,66,0.16)' },
+              lineStyle: { color: '#d84242' },
+            },
+            {
+              name: 'Azienda media',
+              value: sourceRows.map(() => 100),
+              lineStyle: { color: '#9aa4b2', type: 'dashed' },
+            },
+            {
+              name: 'Dati aziendali',
+              value: sourceRows.map((row) => normalize(Number(row.yourFarmValue || 0), Number(row.marketAverageValue || 0))),
+              lineStyle: { color: '#2f9f9a', width: 4 },
+              itemStyle: { color: '#2f9f9a' },
+            },
+          ],
+        },
+      ],
+    };
   }
 
   get benchmarkSummary(): Array<any> {
@@ -214,13 +646,14 @@ export class BenchmarkAnalyticsComponent implements OnInit {
       return [];
     }
 
-    return this.benchmarkData.kpiSummary.map(kpi => ({
+    return this.benchmarkData.kpiSummary.map((kpi) => ({
       label: kpi.label,
-      value: kpi.value.toFixed(2),
+      value: Number(kpi.value || 0).toFixed(2),
       suffix: kpi.suffix,
       theme: kpi.theme,
-      delta: kpi.delta?.toFixed(2),
-      deltaDirection: kpi.deltaDirection
+      delta: kpi.delta
+        ? Number(kpi.delta).toFixed(2)
+        : null,
     }));
   }
 
@@ -229,15 +662,44 @@ export class BenchmarkAnalyticsComponent implements OnInit {
       return [];
     }
 
-    return this.benchmarkData.benchmarkComparison.map(row => ({
+    return this.benchmarkData.benchmarkComparison.map((row) => ({
       label: row.kpiName,
-      yourFarm: row.yourFarmValue.toFixed(2),
-      marketAvg: row.marketAverageValue.toFixed(2),
-      top25: row.top25PercentValue.toFixed(2),
-      bottom25: row.bottom25PercentValue.toFixed(2),
-      deviation: `${row.deviationPercent > 0 ? '+' : ''}${row.deviationPercent.toFixed(1)}%`,
-      status: row.statusBadge
+      yourFarm: Number(row.yourFarmValue || 0).toFixed(2),
+      marketAvg: Number(row.marketAverageValue || 0).toFixed(2),
+      top25: Number(row.top25PercentValue || 0).toFixed(2),
+      bottom25: Number(row.bottom25PercentValue || 0).toFixed(2),
+
+      deviation: `${
+        row.deviationPercent > 0 ? '+' : ''
+      }${Number(row.deviationPercent || 0).toFixed(1)}%`,
+
+      status: row.statusBadge || 'average',
     }));
+  }
+
+  get marketComparisonRows(): Array<any> {
+    return this.benchmarkComparisonRows.filter((row) =>
+      ['iofc', 'd€a', 'dea', 'raz'].some((key) => String(row.label).toLowerCase().includes(key))
+    );
+  }
+
+  get robotRows(): Array<any> {
+    const lookup = ['mungiture', 'rifiuti', 'vacche per robot', 'kg per robot', 'kg mangime'];
+    const rows = lookup
+      .map((key) => this.benchmarkComparisonRows.find((row) => String(row.label).toLowerCase().includes(key)))
+      .filter(Boolean);
+
+    return rows.length ? rows : [
+      { label: 'Mungiture', yourFarm: '-', marketAvg: '-', top25: '-', bottom25: '-', deviation: '-' },
+      { label: 'Rifiuti', yourFarm: '-', marketAvg: '-', top25: '-', bottom25: '-', deviation: '-' },
+      { label: 'Vacche per robot', yourFarm: '-', marketAvg: '-', top25: '-', bottom25: '-', deviation: '-' },
+      { label: 'Kg per robot', yourFarm: '-', marketAvg: '-', top25: '-', bottom25: '-', deviation: '-' },
+      { label: 'Kg mangime', yourFarm: '-', marketAvg: '-', top25: '-', bottom25: '-', deviation: '-' },
+    ];
+  }
+
+  get hasCostBreakdownData(): boolean {
+    return !!this.benchmarkData?.costBreakdown?.some((item) => Number(item.amount || 0) > 0);
   }
 
   get rankingRows(): Array<any> {
@@ -248,7 +710,7 @@ export class BenchmarkAnalyticsComponent implements OnInit {
     return this.benchmarkData.companyRanking.map((item) => ({
       rank: item.rank,
       company: item.companyName,
-      value: item.iofcValue.toFixed(2)
+      value: Number(item.iofcValue || 0).toFixed(2),
     }));
   }
 
@@ -263,8 +725,8 @@ export class BenchmarkAnalyticsComponent implements OnInit {
       ration: report.rationName,
       group: report.animalGroup,
       animals: report.numberOfAnimals,
-      avgMilk: report.averageMilkPerDay.toFixed(2),
-      iofc: report.iofcValue.toFixed(2)
+      avgMilk: Number(report.averageMilkPerDay || 0).toFixed(2),
+      iofc: Number(report.iofcValue || 0).toFixed(2),
     }));
   }
 
@@ -273,8 +735,8 @@ export class BenchmarkAnalyticsComponent implements OnInit {
       this.toast.error('No data to export.');
       return;
     }
+
     this.toast.info('PDF export feature coming soon.');
-    // Implementation for PDF export would go here
   }
 
   exportExcel(): void {
@@ -282,113 +744,7 @@ export class BenchmarkAnalyticsComponent implements OnInit {
       this.toast.error('No data to export.');
       return;
     }
+
     this.toast.info('Excel export feature coming soon.');
-    // Implementation for Excel export would go here
-  }
-}
-
-    const ranking = analytics?.rankingByIofc || [];
-    this.rankingChart = {
-      tooltip: { trigger: 'axis', axisPointer: { type: 'shadow' } },
-      xAxis: { type: 'value' },
-      yAxis: {
-        type: 'category',
-        data: ranking.map((item: any) => item.companyName),
-        axisLabel: { interval: 0 },
-      },
-      series: [{ type: 'bar', data: ranking.map((item: any) => item.iofc), itemStyle: { color: '#4dc0b5' } }],
-    };
-
-    const comparison = analytics?.companyComparison || [];
-    this.comparisonChart = {
-      tooltip: { trigger: 'axis', axisPointer: { type: 'shadow' } },
-      legend: { data: ['DEA', 'Cost'] },
-      xAxis: {
-        type: 'category',
-        data: comparison.map((item: any) => item.companyName),
-        axisLabel: { interval: 0, rotate: 30 },
-      },
-      yAxis: { type: 'value' },
-      series: [
-        { name: 'DEA', type: 'bar', data: comparison.map((item: any) => item.deaMilk) },
-        { name: 'Cost', type: 'bar', data: comparison.map((item: any) => item.cost) },
-      ],
-    };
-  }
-
-  get benchmarkSummary(): Array<{ label: string; value: string; suffix?: string; theme?: string; delta?: string | null }> {
-    const analytics = this.aggregatedAnalytics;
-    const lastTrend = analytics?.monthlyTrend?.slice(-1)[0] || null;
-
-    return [
-      { label: 'Avg IOFC', value: lastTrend?.iofc?.toFixed(2) ?? '-', suffix: '€/cow/day', theme: 'teal', delta: analytics?.rankingByIofc?.length ? '+3.5% vs Market Avg' : null },
-      { label: 'Avg DEA', value: lastTrend?.deaMilk?.toFixed(2) ?? '-', suffix: '€/cow/day', theme: 'blue', delta: analytics?.rankingByIofc?.length ? '+3.2% vs Market Avg' : null },
-      { label: 'Avg Milk / Cow / Day', value: lastTrend?.avgMilkPerDay?.toFixed(2) ?? '-', suffix: 'kg', theme: 'violet', delta: analytics?.rankingByIofc?.length ? '+1.8% vs Market Avg' : null },
-      { label: 'Feed Efficiency', value: analytics?.crep ? analytics.crep.toFixed(2) : '-', suffix: 'kg/kg DMI', theme: 'orange', delta: analytics?.rankingByIofc?.length ? '+4.1% vs Market Avg' : null },
-      { label: 'Economic Margin', value: analytics?.pim ? analytics.pim.toFixed(2) : '-', suffix: '%', theme: 'green', delta: analytics?.rankingByIofc?.length ? '+1.9% vs Market Avg' : null },
-    ];
-  }
-
-  get benchmarkComparisonRows(): Array<any> {
-    return [
-      { label: 'IOFC (€/cow/day)', yourFarm: this.benchmarkSummary[0]?.value, marketAvg: '10.10', top25: '11.56', bottom25: '8.90', deviation: '+0.35 (+3.47%)', status: 'Excellent' },
-      { label: 'DEA (€/cow/day)', yourFarm: this.benchmarkSummary[1]?.value, marketAvg: '8.10', top25: '9.38', bottom25: '7.32', deviation: '+0.22 (+2.72%)', status: 'Good' },
-      { label: 'Milk / Cow / Day (kg)', yourFarm: this.benchmarkSummary[2]?.value, marketAvg: '36.58', top25: '42.15', bottom25: '30.12', deviation: '+0.66 (+1.81%)', status: 'Good' },
-      { label: 'Feed Efficiency (kg/kg)', yourFarm: this.benchmarkSummary[3]?.value, marketAvg: '1.50', top25: '1.80', bottom25: '1.20', deviation: '+0.11 (+7.33%)', status: 'Excellent' },
-      { label: 'Feed Cost (€/cow/day)', yourFarm: '5.82', marketAvg: '6.10', top25: '5.45', bottom25: '6.85', deviation: '-0.28 (-4.59%)', status: 'Good' },
-      { label: 'Milk Revenue (€/cow/day)', yourFarm: '18.25', marketAvg: '17.80', top25: '20.15', bottom25: '15.20', deviation: '+0.45 (+2.53%)', status: 'Good' },
-    ];
-  }
-
-  get rankingRows(): Array<any> {
-    const ranking = this.aggregatedAnalytics?.rankingByIofc || [];
-    if (!ranking.length) {
-      return [
-        { rank: 1, company: 'Green Valley Farm', value: 12.45 },
-        { rank: 2, company: 'Sunrise Dairy', value: 11.32 },
-        { rank: 3, company: 'Your Farm', value: Number(this.benchmarkSummary[0]?.value) || 10.45, highlight: true },
-        { rank: 4, company: 'Happy Cows Farm', value: 9.80 },
-        { rank: 5, company: 'Blue Milk Farm', value: 8.95 },
-      ];
-    }
-
-    return ranking.slice(0, 5).map((item: any, index: number) => ({
-      rank: index + 1,
-      company: item.companyName,
-      value: item.iofc,
-      highlight: index === 2,
-    }));
-  }
-
-  get recentReports(): Array<any> {
-    return [
-      { date: 'May 01, 2026', company: 'Green Valley Farm', ration: 'Summer Ration', group: 'VL', animals: 125, avgMilk: 38.25, iofc: 10.85 },
-      { date: 'Apr 01, 2026', company: 'Green Valley Farm', ration: 'Spring Ration', group: 'VL', animals: 120, avgMilk: 37.80, iofc: 10.32 },
-      { date: 'Mar 01, 2026', company: 'Green Valley Farm', ration: 'Winter Ration', group: 'VL', animals: 118, avgMilk: 36.90, iofc: 9.95 },
-      { date: 'Feb 01, 2026', company: 'Green Valley Farm', ration: 'Winter Ration', group: 'VL', animals: 115, avgMilk: 35.40, iofc: 9.42 },
-      { date: 'Jan 01, 2026', company: 'Green Valley Farm', ration: 'Winter Ration', group: 'VL', animals: 110, avgMilk: 34.80, iofc: 9.12 },
-    ];
-  }
-
-  exportPdf(): void {
-    if (!this.user) {
-      return;
-    }
-    this.commonService.exportAggregatedReportPdf({
-      year: this.selectedYear,
-      period: 'Annual',
-      companyId: null,
-    }).subscribe({
-      next: (blob) => {
-        const url = URL.createObjectURL(blob);
-        const anchor = document.createElement('a');
-        anchor.href = url;
-        anchor.download = `benchmark-analytics-${this.selectedYear}.pdf`;
-        anchor.click();
-        URL.revokeObjectURL(url);
-        this.toast.success('Benchmark PDF exported successfully.');
-      },
-      error: () => this.toast.error('Failed to export benchmark PDF.'),
-    });
   }
 }

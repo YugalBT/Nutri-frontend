@@ -179,7 +179,7 @@ export class HeaderComponent implements OnInit {
   darkMode = false;
   showNotificationPopup = false;
   notificationsData: any[] = [];
-  companies: CompanyList[] = [];
+  companies: Array<Pick<CompanyList, 'tenantId' | 'companyName'>> = [];
 
   totalRecords = 0;
   pageSize = 10;
@@ -212,9 +212,9 @@ export class HeaderComponent implements OnInit {
 
     this.localizationService.getAllLanguages().subscribe((res) => {
       this.languages = res?.data ?? [];
-
-      this.loadCompanies(this.pageIndex, this.pageSize);
     });
+
+    this.loadCompanies();
 
     this.localizationService.getCurrentLanguage$().subscribe((lang) => {
       this.currentLang = lang;
@@ -333,30 +333,19 @@ export class HeaderComponent implements OnInit {
       : root.classList.remove('dark-mode');
   }
 
-  private loadCompanies(pageNo: number, recordPerPage: number) {
+  private loadCompanies() {
     this.companiesLoading = true;
-    const payload = {
-      searchValue: this.searchValue ?? '',
-      pageNo,
-      recordPerPage,
-      status: 1,
-    };
 
-    const sub = this.companyService.getAllMappedCompanies(payload).subscribe({
+    this.commonService.getCompanyDropdown().subscribe({
       next: (res: ApiResponse<any>) => {
-        const list = Array.isArray(res.data)
-          ? res.data
-          : (res.data?.items ?? []);
+        const list = Array.isArray(res.data) ? res.data : [];
 
         this.companies = list.map((item: any) => ({
-          ...item,
-          fullName: `${item.firstName ?? ''} ${item.lastName ?? ''}`.trim(),
+          tenantId: item.id,
+          companyName: item.companyName,
         }));
 
-        this.totalRecords =
-  res.totalRecords ??
-  (Array.isArray(res.data) ? res.data.length : res.data?.totalRecords ?? 0);
-
+        this.totalRecords = this.companies.length;
         this.companiesLoading = false;
       },
       error: () => {

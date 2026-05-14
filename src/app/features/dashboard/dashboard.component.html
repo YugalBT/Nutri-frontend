@@ -155,7 +155,8 @@
       <section class="company-dashboard">
         <div class="superadmin-titlebar">
           <div class="superadmin-title-copy">
-            <h2>{{ 'dashboard.companyLabel' | translate }} <span>{{ companyDashboard?.companyName || user?.companyName }}</span></h2>
+            <h2>{{ 'dashboard.companyLabel' | translate }} <span>{{ companyDashboard?.companyName || user?.companyName
+                }}</span></h2>
             <p>{{ "dashboard.overview" | translate }}</p>
           </div>
 
@@ -237,56 +238,127 @@
           {{ "dashboard.performanceIndicators" | translate }}
         </h5>
 
-        <div class="row dashboard-gauges">
-          <div class="col-md-3">
-            <div class="gauge-card">
-              <div echarts [options]="deaGauge" class="gauge-box"></div>
-            </div>
-          </div>
+       <div class="row dashboard-gauges g-3">
 
-          <div class="col-md-3">
-            <div class="gauge-card">
-              <div echarts [options]="milkGauge" class="gauge-box"></div>
-            </div>
-          </div>
+  <!-- Fat % -->
+  <div class="col-xl-3 col-md-6">
+    <div class="gauge-card gauge-teal">
 
-          <div class="col-md-3">
-            <div class="gauge-card">
-              <div echarts [options]="feedGauge" class="gauge-box"></div>
-            </div>
-          </div>
-
-          <div class="col-md-3">
-            <div class="gauge-card">
-              <div echarts [options]="crepGauge" class="gauge-box"></div>
-            </div>
-          </div>
+      <div class="gauge-header">
+        <div>
+          <h6>{{ "dashboard.fatPercent" | translate }}</h6>
+          <span>{{ "dashboard.milkQuality" | translate }}</span>
         </div>
 
-        <div class="row mt-3">
-          <div class="col-12">
-            <div class="dea-performance-bar">
-              <div class="performance-scale">
-                <span>0.90</span>
-                <span>1.00</span>
-                <span>1.10</span>
-                <span>1.20</span>
-                <span>1.30</span>
-                <span>1.40</span>
-                <span>1.50</span>
-              </div>
+        <div class="gauge-icon">
+          🥛
+        </div>
+      </div>
 
-              <div class="performance-bar">
-                <div class="cow-indicator" [style.left.%]="getCowPosition(companyDashboard?.deaMilk ?? 0)">
-                  <span class="cow-indicator-dot" aria-hidden="true"></span>
-                </div>
-              </div>
+      <div echarts [options]="deaGauge" class="gauge-box"></div>
 
-              <div class="dea-value">
-                {{ companyDashboard?.deaMilk | number: "1.2-2" }}
-              </div>
-            </div>
+    </div>
+  </div>
+
+  <!-- Average Milk -->
+  <div class="col-xl-3 col-md-6">
+    <div class="gauge-card gauge-blue">
+
+      <div class="gauge-header">
+        <div>
+          <h6>{{ "dashboard.averageMilk" | translate }}</h6>
+          <span>{{ "dashboard.production" | translate }}</span>
+        </div>
+
+        <div class="gauge-icon">
+          🐄
+        </div>
+      </div>
+
+      <div echarts [options]="milkGauge" class="gauge-box"></div>
+
+    </div>
+  </div>
+
+  <!-- Feed Efficiency -->
+  <div class="col-xl-3 col-md-6">
+    <div class="gauge-card gauge-purple">
+
+      <div class="gauge-header">
+        <div>
+          <h6>{{ "dashboard.feedEfficiency" | translate }}</h6>
+          <span>{{ "dashboard.nutrition" | translate }}</span>
+        </div>
+
+        <div class="gauge-icon">
+          🌾
+        </div>
+      </div>
+
+      <div echarts [options]="feedGauge" class="gauge-box"></div>
+
+    </div>
+  </div>
+
+  <!-- CREP -->
+  <div class="col-xl-3 col-md-6">
+    <div class="gauge-card gauge-orange">
+
+      <div class="gauge-header">
+        <div>
+          <h6>{{ "dashboard.crep" | translate }}</h6>
+          <span>{{ "dashboard.reproduction" | translate }}</span>
+        </div>
+
+        <div class="gauge-icon">
+          📈
+        </div>
+      </div>
+
+      <div echarts [options]="crepGauge" class="gauge-box"></div>
+
+    </div>
+  </div>
+
+</div>
+
+        <div class="dea-score-card mt-3">
+
+          <div class="dea-score-header">
+            <h5>{{ "dashboard.DEAMilkPerformance" | translate }}</h5>
+            <span>{{ "dashboard.EfficiencyBenchmarkScale" | translate }}</span>
           </div>
+
+          <div class="dea-performance-bar">
+
+            <div class="performance-scale">
+              <span>0.90</span>
+              <span>1.00</span>
+              <span>1.10</span>
+              <span>1.20</span>
+              <span>1.30</span>
+              <span>1.40</span>
+              <span>1.50</span>
+            </div>
+
+            <div class="performance-bar">
+
+              <div class="cow-indicator" [style.left.%]="getCowPosition(companyDashboard?.deaMilk ?? 0)">
+
+                <div class="indicator-value">
+                  {{ companyDashboard?.deaMilk | number: "1.2-2" }}
+                </div>
+
+                <div class="cow-icon-wrapper">
+                  🐄
+                </div>
+
+              </div>
+
+            </div>
+
+          </div>
+
         </div>
 
         <div class="row g-3 mt-1">
@@ -383,13 +455,21 @@
           </div>
         </div>
 
-        <div class="card mt-3">
-          <div class="card-header">
-            {{ "dashboard.graphicalKpi" | translate }}
+        <div class="graph-card mt-4">
+
+          <div class="graph-card-header">
+
+            <div>
+              <h4>{{ "dashboard.graphicalKpi" | translate }}</h4>
+              <span>{{ "dashboard.KPIPerformanceAnalytics" | translate }}</span>
+            </div>
+
           </div>
-          <div class="card-body">
+
+          <div class="graph-card-body">
             <div echarts [options]="companyTrendChart" class="chart-box"></div>
           </div>
+
         </div>
       </section>
     </ng-template>

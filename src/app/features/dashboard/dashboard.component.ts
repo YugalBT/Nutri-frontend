@@ -74,7 +74,7 @@ export class DashboardComponent implements OnInit {
   constructor(
     private store: Store,
     private commonService: CommonService,
-    private translate: TranslateService, 
+    private translate: TranslateService,
     private tokenservice: TokenService,
     private loader: LoaderService,
     private spinner: NgxSpinnerService,
@@ -91,7 +91,7 @@ export class DashboardComponent implements OnInit {
     this.translate.lang$.subscribe(() => {
       this.loadDashboard();
     });
-    
+
     const supplierData = this.tokenservice.getSupplierData();
     this.isSupplier = !!supplierData;
   }
@@ -101,11 +101,11 @@ export class DashboardComponent implements OnInit {
   //   return this.user?.isSuperAdmin === true || ['SUPERADMIN', 'ADMIN', 'COLLABORATOR'].includes(role);
   // }
   get isAdmin(): boolean {
-  return this.user?.isSuperAdmin === true;
-}
-get isCompanyUser(): boolean {
-  return this.user?.isCompany === true && !this.user?.isSuperAdmin;
-}
+    return this.user?.isSuperAdmin === true;
+  }
+  get isCompanyUser(): boolean {
+    return this.user?.isCompany === true && !this.user?.isSuperAdmin;
+  }
   private get currentCompanyId(): string | null {
     return this.user?.tenantId || this.user?.parentTenantId || null;
   }
@@ -133,6 +133,7 @@ get isCompanyUser(): boolean {
         } else {
           this.loadCompanyDashboard();
         }
+
       },
       error: () => {
         this.spinner.hide();
@@ -214,10 +215,12 @@ get isCompanyUser(): boolean {
           ],
         };
 
-        this.spinner.hide();
+        setTimeout(() => {
+          this.spinner.hide();
+        }, 500);
       },
       error: () => {
-       this.spinner.hide();
+        this.spinner.hide();
       },
     });
   }
@@ -269,7 +272,6 @@ get isCompanyUser(): boolean {
     };
   }
 
-  // ✅ KEEP THIS (important)
   getCowPosition(value: number | null | undefined): number {
     const min = 0.9;
     const max = 1.5;
@@ -471,7 +473,9 @@ get isCompanyUser(): boolean {
           ],
         };
 
-        this.spinner.hide();
+        setTimeout(() => {
+          this.spinner.hide();
+        }, 300);
       },
       error: () => {
         this.spinner.hide();

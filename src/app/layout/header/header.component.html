@@ -6,9 +6,9 @@
           ☰
         </button>
 
-        @if (companies.length > 0 && !impersonated) {
-        <select class="form-select" [value]="selectedTenantId" (change)="onCompanyChange($event)">
-          <option value="">Select Company</option>
+        @if (!impersonated) {
+        <select class="form-select" [value]="selectedTenantId" (change)="onCompanyChange($event)" [disabled]="companiesLoading || companies.length === 0">
+          <option value="">{{ companiesLoading ? 'Loading companies...' : 'Select Company' }}</option>
 
           @for (company of companies; track company.tenantId) {
           <option [value]="company.tenantId">
@@ -20,7 +20,8 @@
         @if (companiesLoading) {
         <span class="select-spinner spinner-border spinner-border-sm"></span>
         }
-        } @if (impersonated) {
+        }
+        @if (impersonated) {
         <button class="btn add-btn ms-2" (click)="backToAdmin()">
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
             stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">

@@ -262,10 +262,25 @@ export class CommonService {
   getBenchmarkAnalytics(
     year: number,
     companyId?: string | null,
+    period?: string | null,
+    animalGroup?: string | null,
   ): Observable<any> {
-    const query = companyId ? `?year=${year}&companyId=${companyId}` : `?year=${year}`;
+    const params = new URLSearchParams({ year: String(year) });
+
+    if (companyId) {
+      params.set('companyId', companyId);
+    }
+
+    if (period) {
+      params.set('period', period);
+    }
+
+    if (animalGroup && animalGroup !== 'All Groups') {
+      params.set('animalGroup', animalGroup);
+    }
+
     return this.http.get<any>(
-      `/api/benchmark/GetAnalytics${query}`,
+      `/Benchmark/GetAnalyticsFiltered?${params.toString()}`,
     );
   }
 

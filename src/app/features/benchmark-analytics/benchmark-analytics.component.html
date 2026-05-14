@@ -22,37 +22,39 @@
 
       <div class="filter-item">
         <label>Company</label>
-        <select class="form-select" [(ngModel)]="selectedCompany" (ngModelChange)="onFiltersChange()">
-          <option *ngFor="let option of companyOptions" [value]="option">{{ option }}</option>
+        <select class="form-select" [(ngModel)]="selectedCompanyId" (ngModelChange)="onCompanyChange()">
+          <option *ngFor="let option of companyOptions" [value]="option.id">{{ option.name }}</option>
         </select>
+        <small *ngIf="isCompanyLoading" class="filter-hint">Loading companies...</small>
       </div>
 
-      <div class="filter-item">
+      <!-- <div class="filter-item">
         <label>Region</label>
         <select class="form-select" [(ngModel)]="selectedRegion" (ngModelChange)="onFiltersChange()">
           <option *ngFor="let option of regionOptions" [value]="option">{{ option }}</option>
         </select>
-      </div>
+      </div> -->
 
       <div class="filter-item">
         <label>Animal Group</label>
         <select class="form-select" [(ngModel)]="selectedAnimalGroup" (ngModelChange)="onFiltersChange()">
-          <option *ngFor="let option of animalGroupOptions" [value]="option">{{ option }}</option>
+          <option *ngFor="let option of animalGroupOptions" [value]="option.id">{{ option.name }}</option>
         </select>
+        <small *ngIf="isAnimalGroupLoading" class="filter-hint">Loading groups...</small>
       </div>
 
-      <div class="filter-item">
+      <!-- <div class="filter-item">
         <label>Compare Against</label>
         <select class="form-select" [(ngModel)]="selectedCompareAgainst" (ngModelChange)="onFiltersChange()">
           <option *ngFor="let item of compareAgainstOptions" [value]="item">{{ item }}</option>
         </select>
-      </div>
+      </div> -->
 
       <button class="btn btn-primary btn-apply" (click)="applyFilters()">Apply</button>
     </div>
 
     <div class="benchmark-actions">
-      <button class="btn btn-secondary">Export Excel</button>
+      <button class="btn btn-secondary" (click)="exportExcel()">Export Excel</button>
       <button class="btn btn-primary" (click)="exportPdf()">Export PDF</button>
     </div>
   </section>
@@ -71,6 +73,9 @@
         </div>
         <div *ngIf="item.delta" class="kpi-delta">{{ item.delta }}</div>
       </article>
+      <div *ngIf="!benchmarkSummary.length" class="empty-state wide-state">
+        No KPI summary data is available for the selected filters.
+      </div>
     </section>
 
     <section class="comparison-panel">
@@ -107,6 +112,9 @@
                 <span class="status-badge" [ngClass]="'status-' + row.status.toLowerCase()">{{ row.status }}</span>
               </td>
             </tr>
+            <tr *ngIf="!benchmarkComparisonRows.length">
+              <td colspan="7" class="empty-cell">No benchmark comparison data is available.</td>
+            </tr>
           </tbody>
         </table>
       </div>
@@ -116,7 +124,7 @@
       <article class="ranking-card">
         <div class="card-head">
           <h4>Performance Ranking (IOFC)</h4>
-          <button class="btn btn-link">View All</button>
+          <!-- <button class="btn btn-link">View All</button> -->
         </div>
         <div class="ranking-chart" *ngIf="benchmarkData?.companyRanking?.length">
           <div echarts [options]="rankingChart" class="benchmark-chart"></div>
@@ -136,16 +144,22 @@
           <button class="btn btn-small">Milk</button>
           <button class="btn btn-small">Feed Efficiency</button>
         </div>
-        <div echarts [options]="trendChart" class="benchmark-chart"></div>
+        <div *ngIf="benchmarkData?.trendData?.length; else noTrendData" echarts [options]="trendChart" class="benchmark-chart"></div>
+        <ng-template #noTrendData>
+          <div class="empty-state">No trend data available for the selected filters.</div>
+        </ng-template>
       </article>
     </section>
 
     <section class="benchmark-row secondary-row">
       <article class="metric-card pie-card">
         <div class="card-head"><h4>Cost Breakdown</h4></div>
-        <div echarts [options]="costBreakdownChart" class="benchmark-chart"></div>
-        <div class="legend-list" *ngIf="benchmarkData?.costBreakdown?.length">
-          <div *ngFor="let item of benchmarkData.costBreakdown">
+        <div *ngIf="hasCostBreakdownData; else noCostData" echarts [options]="costBreakdownChart" class="benchmark-chart"></div>
+        <ng-template #noCostData>
+          <div class="empty-state">No cost data available for the selected filters.</div>
+        </ng-template>
+        <div class="legend-list" *ngIf="hasCostBreakdownData">
+          <div *ngFor="let item of benchmarkData?.costBreakdown || []">
             <span class="legend-dot" [style.background]="item.color"></span>
             {{ item.category }} {{ item.percentOfTotal | number:'1.0-1' }}%
           </div>
@@ -161,6 +175,9 @@
             <small [ngClass]="{'positive': metric.change >= 0, 'negative': metric.change < 0}">
               {{ metric.change >= 0 ? '+' : '' }}{{ metric.change | number:'1.0-0' }}% vs prior year
             </small>
+          </div>
+          <div *ngIf="!benchmarkData?.economicSummary?.length" class="empty-state">
+            No economic summary data is available.
           </div>
         </div>
       </article>
@@ -195,7 +212,7 @@
               <th>Animal Group</th>
               <th>Animals</th>
               <th>Avg Milk (kg/day)</th>
-              <th>IOFC (€/cow/day)</th>
+              <th>IOFC (EUR/cow/day)</th>
             </tr>
           </thead>
           <tbody>
@@ -207,6 +224,9 @@
               <td>{{ row.animals }}</td>
               <td>{{ row.avgMilk | number:'1.2-2' }}</td>
               <td>{{ row.iofc | number:'1.2-2' }}</td>
+            </tr>
+            <tr *ngIf="!recentReports.length">
+              <td colspan="7" class="empty-cell">No recent reports are available for the selected filters.</td>
             </tr>
           </tbody>
         </table>
