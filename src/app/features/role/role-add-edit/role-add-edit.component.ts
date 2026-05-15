@@ -17,6 +17,8 @@ import { AddEditRoleService } from '../../../core/services/role/add-edit-role.se
 import { RoleItem, CreateUpdateRolePayload, Module, GetAllModulesResponse } from '../../../core/models/add-edit-role';
 import { SharedModule } from '../../../shared/shared.module';
 import { PERMISSIONS } from '../../../core/constants/permissions.constants';
+import { PermissionService } from '../../../shared/services/permission.service';
+import { selectUserRoles } from '../../../state/auth/auth.selectors';
 
 declare var bootstrap: any;
 
@@ -35,6 +37,8 @@ export class UserRoleAddEditComponent implements OnInit, OnDestroy {
   isEditMode = false;
   roleId: string | null = null;
   canManageRoles = false;
+  canSave = false;
+  userRoles: string[] = [];
   isLoading = false;
   modules: Module[] = [];
   modulesLoading = false;
@@ -56,12 +60,15 @@ export class UserRoleAddEditComponent implements OnInit, OnDestroy {
     private confirm: ConfirmDialogService,
     private spinner: NgxSpinnerService,
     private roleService: AddEditRoleService,
-    private commonService: CommonService
+    private commonService: CommonService,
+    private permissionService: PermissionService
   ) {
     this.initForm();
   }
 
   ngOnInit(): void {
+    this.loadUserPermissions();
+    
     // Check permission to manage roles
     localStorage.getItem('isSuperAdmin') === 'true' ? this.isSuperAdmin = true : this.isSuperAdmin = false;
     // const canManageSub = this.store.select(selectCanManageRoles).pipe(take(1)).subscribe((canManage) => {
@@ -72,10 +79,27 @@ export class UserRoleAddEditComponent implements OnInit, OnDestroy {
     //   this.canManageRoles = true;
     // });
     // this.subs.push(canManageSub);
-    if(!this.commonService.checkPermission(PERMISSIONS.RoleAdd)|| !this.commonService.checkPermission(PERMISSIONS.RoleEdit))
+    if(
+      !this.commonService.checkPermission(PERMISSIONS.RoleAdd, false) &&
+      !this.commonService.checkPermission(PERMISSIONS.RoleEdit, false)
+    )
       return;
 
     this.loadModules();
+  }
+
+  private loadUserPermissions(): void {
+    const subRoles = this.store.select(selectUserRoles).subscribe(roles => {
+      this.userRoles = roles || [];
+      this.updateCanSave();
+    });
+    this.subs.push(subRoles);
+  }
+
+  private updateCanSave(): void {
+    this.canSave = this.isEditMode
+      ? this.userRoles.includes(PERMISSIONS.RoleEdit)
+      : this.userRoles.includes(PERMISSIONS.RoleAdd);
   }
 
   private initForm(): void {
@@ -85,6 +109,7 @@ export class UserRoleAddEditComponent implements OnInit, OnDestroy {
       isDefault: [false],
       isShow: [false],
       isEditable: [false],
+      isSupplier: [false],
       description: ['']
     });
   }
@@ -138,6 +163,7 @@ private loadModules(masterRoles: boolean = false): void {
  
   openModal(isEdit: boolean, roleData?: RoleItem | undefined): void {
     this.isEditMode = isEdit;
+    this.updateCanSave();
     this.roleId = isEdit && roleData ? roleData.roleId : null;
     
     if (isEdit && roleData) {
@@ -147,9 +173,11 @@ private loadModules(masterRoles: boolean = false): void {
         isDefault : roleData.isDefault || false,
         isShow : roleData.isShow,
         isEditable : roleData.isEditable || false,
+        isSupplier : roleData.isSupplier || false,
         description: roleData.nameIt || ''
       });
-         this.loadModules(roleData.isShow);
+         
+        this.loadModules(true);
       // If modules are already loaded, populate permissions immediately from roleData
       if (this.modules && this.modules.length > 0) {
         this.populatePermissionsFromRole(roleData);
@@ -226,9 +254,10 @@ private loadModules(masterRoles: boolean = false): void {
   
   saveRole(): void {
 
- if(!this.commonService.checkPermission(PERMISSIONS.RoleAdd)|| !this.commonService.checkPermission(PERMISSIONS.RoleEdit))
+ if (!this.canSave) {
+      this.toast.error(this.translate.instant('common.noPermission') || 'No permission to save');
       return;
-
+    }
 
   if (this.form.invalid) {
     this.toast.error(this.translate.instant('common.formInvalid') || 'Please fill required fields');
@@ -246,6 +275,7 @@ private loadModules(masterRoles: boolean = false): void {
     isDefault: this.form.get('isDefault')?.value || false,
     isShow: this.form.get('isShow')?.value,
     isEditable: this.form.get('isEditable')?.value || false,
+    isSupplier: this.form.get('isSupplier')?.value || false,
     rolePermissionId: checkedPermissions || []
   };
 

@@ -6,6 +6,7 @@ export interface RoleItem {
   isDefault?: boolean;
   isShow?: boolean;
   isEditable?: boolean;
+  isSupplier?: boolean;
   tenantId?: string;
   rolePermissionId?: string[];
 }
@@ -23,6 +24,7 @@ export interface CreateUpdateRolePayload {
   isDefault?: boolean;
   isShow?: boolean;
   isEditable?: boolean;
+  isSupplier?: boolean;
   rolePermissionId?: string[];
   roleId?: string; // present for update
 }

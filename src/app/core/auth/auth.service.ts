@@ -96,11 +96,16 @@ export class AuthService {
             companyCode = rawCompany;
           }
         }
+        
+        // Get login portal URL BEFORE clearing localStorage
+        const loginUrl = localStorage.getItem('LOGIN_PORTAL_URL') || ROUTE_CONST.LOGIN;
+        
         localStorage.clear();
         this.toast.success(Constants.LOGOUT_SUCCESS);
         //const normalizedCompany = companyCode ? companyCode.toString().replace(/^\/+|\/+$/g, '') : '';
         // const target = normalizedCompany ? `/${normalizedCompany}/login` : '/404';
-        this.router.navigateByUrl(ROUTE_CONST.LOGIN);
+        
+        this.router.navigateByUrl(loginUrl);
       }
     });
   }

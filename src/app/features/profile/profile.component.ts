@@ -33,6 +33,7 @@ export class ProfileComponent implements OnInit {
   @ViewChild('fileInput') fileInput!: ElementRef<HTMLInputElement>;
   imagePreview: string | null = null;
   logoFile!: File;
+  canSave = false;
 
   constructor(
       private formHelper: FormHelper,
@@ -48,9 +49,9 @@ export class ProfileComponent implements OnInit {
 
   ngOnInit() {
 
-    if (!this.commonService.checkPermission(PERMISSIONS.ProfileEdit)
-      || !this.commonService.checkPermission(PERMISSIONS.ProfileView))
+    if (!this.commonService.checkPermission(PERMISSIONS.ProfileView, false))
       return;
+    this.canSave = this.commonService.checkPermission(PERMISSIONS.ProfileEdit, false);
     this.profileService.profileDetails().pipe(take(1)).subscribe((res) => {
       if (res?.isSuccess && res?.data) {
 
@@ -122,6 +123,9 @@ export class ProfileComponent implements OnInit {
   // }
 
   onSubmit() {
+    if (!this.commonService.checkPermission(PERMISSIONS.ProfileEdit)) {
+      return;
+    }
     if (this.profileForm.invalid) {
       this.toast.error('Please correct the errors in the form before submitting.');
       return;

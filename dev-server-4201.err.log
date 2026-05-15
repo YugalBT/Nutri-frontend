@@ -1,0 +1,80 @@
+[1m[31m[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'apiUrl' does not exist on type '{}'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/shared/services/common.service.ts:40:41:
+[37m      40 │   private readonly baseUrl = environment.[32mapiUrl[37m;
+         ╵                                          [32m~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'apiUrl' does not exist on type '{}'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/shared/services/http.service.ts:14:32:
+[37m      14 │   private baseUrl = environment.[32mapiUrl[37m;
+         ╵                                 [32m~~~~~~[0m
+
+[39m[22m
+[1m[31m[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'apiUrl' does not exist on type '{}'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/shared/services/common.service.ts:40:41:
+[37m      40 │   private readonly baseUrl = environment.[32mapiUrl[37m;
+         ╵                                          [32m~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'apiUrl' does not exist on type '{}'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/shared/services/http.service.ts:14:32:
+[37m      14 │   private baseUrl = environment.[32mapiUrl[37m;
+         ╵                                 [32m~~~~~~[0m
+
+[39m[22m
+[1m[31m[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG9: Property 'dropGroup' does not exist on type 'DailyEntryComponent'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/daily-entry/daily-entry.component.html:187:45:
+[37m      187 │                        (cdkDropListDropped)="[32mdropGroup[37m($event)">
+          ╵                                              [32m~~~~~~~~~[0m
+
+  Error occurs in the template of component DailyEntryComponent.
+
+    src/app/features/daily-entry/daily-entry.component.ts:22:15:
+[37m      22 │   templateUrl: [32m'./daily-entry.component.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+[39m[22m
+[1m[31m[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG9: Property 'dropGroup' does not exist on type 'DailyEntryComponent'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/daily-entry/daily-entry.component.html:187:45:
+[37m      187 │                        (cdkDropListDropped)="[32mdropGroup[37m($event)">
+          ╵                                              [32m~~~~~~~~~[0m
+
+  Error occurs in the template of component DailyEntryComponent.
+
+    src/app/features/daily-entry/daily-entry.component.ts:22:15:
+[37m      22 │   templateUrl: [32m'./daily-entry.component.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+[39m[22m
+[1m[31m[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG9: Property 'dropGroup' does not exist on type 'DailyEntryComponent'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/daily-entry/daily-entry.component.html:187:45:
+[37m      187 │                        (cdkDropListDropped)="[32mdropGroup[37m($event)">
+          ╵                                              [32m~~~~~~~~~[0m
+
+  Error occurs in the template of component DailyEntryComponent.
+
+    src/app/features/daily-entry/daily-entry.component.ts:22:15:
+[37m      22 │   templateUrl: [32m'./daily-entry.component.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+[39m[22m
+[1m[31m[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG9: Property 'dropGroup' does not exist on type 'DailyEntryComponent'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/daily-entry/daily-entry.component.html:187:45:
+[37m      187 │                        (cdkDropListDropped)="[32mdropGroup[37m($event)">
+          ╵                                              [32m~~~~~~~~~[0m
+
+  Error occurs in the template of component DailyEntryComponent.
+
+    src/app/features/daily-entry/daily-entry.component.ts:22:15:
+[37m      22 │   templateUrl: [32m'./daily-entry.component.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+[39m[22m

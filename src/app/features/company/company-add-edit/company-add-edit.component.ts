@@ -33,6 +33,7 @@ export class CompanyAddEditComponent implements OnInit {
 
   form!: FormGroup;
   isEdit = false;
+  canSave = false;
   isSubmitted = false;
   showCurrent = false;
 
@@ -72,7 +73,7 @@ export class CompanyAddEditComponent implements OnInit {
           
         ],
       ],
-      middleName: ['', [Validators.required]],
+      middleName: [''],
       lastName: [
         '',
         [
@@ -222,6 +223,13 @@ export class CompanyAddEditComponent implements OnInit {
   // --------------------------------------------------
   openModal(edit = false, data?: any): void {
     this.isEdit = edit;
+    this.canSave = edit
+      ? this.commonService.checkPermission(PERMISSIONS.TenantEdit, false)
+      : this.commonService.checkPermission(PERMISSIONS.TenantAdd, false);
+    if (!this.canSave) {
+      this.toast.error(this.translate.instant('common.noPermission') || 'No permission');
+      return;
+    }
     this.isSubmitted = false;
 
     if (edit && data) {
@@ -308,6 +316,10 @@ export class CompanyAddEditComponent implements OnInit {
   // SAVE
   // --------------------------------------------------
   saveCompany(): void {
+    const hasPermission = this.isEdit
+      ? this.commonService.checkPermission(PERMISSIONS.TenantEdit)
+      : this.commonService.checkPermission(PERMISSIONS.TenantAdd);
+    if (!hasPermission) return;
     this.isSubmitted = true;
     this.form.markAllAsTouched();
     const passwordControl = this.form.get('password');

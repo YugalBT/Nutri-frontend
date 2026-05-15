@@ -4,6 +4,7 @@ import { NgControl } from '@angular/forms';
 @Directive({
   selector: '[appImageValidator]',
   standalone: true
+  
 })
 export class ImageValidatorDirective {
 

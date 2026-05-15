@@ -7,6 +7,7 @@ import { TemplateCategoryList } from '../../../../core/models/template-builder/t
 import { TemplatePlaceholderList } from '../../../../core/models/template-builder/template-placeholder-list';
 import { SharedModule } from '../../../../shared/shared.module';
 import { TranslatePipe } from '../../../../i18n/translate.pipe';
+import { PERMISSIONS } from '../../../../core/constants/permissions.constants';
 
 declare var bootstrap: any;
 
@@ -24,6 +25,7 @@ export class PlaceholderMappingAddEditComponent {
   form!: FormGroup;
   modal: any;
   isEdit = false;
+  canSave = false;
   currentId: string | null = null;
 
   categories: TemplateCategoryList[] = [];
@@ -65,6 +67,13 @@ export class PlaceholderMappingAddEditComponent {
 
   openModal(edit = false, data?: any) {
     this.isEdit = edit;
+    this.canSave = edit
+      ? this.commonService.checkPermission(PERMISSIONS.CategoryMappingEdit, false)
+      : this.commonService.checkPermission(PERMISSIONS.CategoryMappingAdd, false);
+    if (!this.canSave) {
+      this.toast.error('No permission');
+      return;
+    }
     this.form.reset();
     this.placeholderIds.clear();
     this.currentId = null;
@@ -152,6 +161,10 @@ confirmSelection() {
   }
 
   save() {
+    const hasPermission = this.isEdit
+      ? this.commonService.checkPermission(PERMISSIONS.CategoryMappingEdit)
+      : this.commonService.checkPermission(PERMISSIONS.CategoryMappingAdd);
+    if (!hasPermission) return;
     if (this.form.invalid) {
       this.form.markAllAsTouched();
       this.toast.warning('Please fill all required fields');

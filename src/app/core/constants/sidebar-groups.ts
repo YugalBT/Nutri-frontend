@@ -9,10 +9,15 @@ export const SIDEBAR_GROUPS = [
     items: ['Users', 'Roles',]
   },
   {
-    key: 'farm',
-    title: 'sidebarmenu.feeding',
+    key: 'farm', title: 'sidebarmenu.feeding', icon: SIDEBAR_ICONS.FARM,
+    items: ['Animal Group', 'Feed', 'CalfBarn', 'Ration', 'Animal Type',
+      'Animal Lactation Stage', 'Archive Economic', 'ECO Archive', 'Daily Entry', 'Calves Entry']
+  },
+  {
+    key: 'consultation',
+    title: 'sidebarmenu.consultation',
     icon: SIDEBAR_ICONS.FARM,
-    items: ['Farm', 'Feed', 'Ration','CalfBarn','Animal Group','Animal Type', 'Animal Lactation Stage']
+    items: ['Calving', 'Health', 'Fertility',]
   },
   // {
   //   key: 'nutrition',
@@ -40,7 +45,17 @@ export const SIDEBAR_GROUPS = [
       'Kpi'
     ]
   },
+  {
+    key: 'archive',
+    title: 'sidebarmenu.archive',
+    icon: SIDEBAR_ICONS.ARCHIVE,
+    items: [
+      'Archive Technical',
+      'Archive Eco',
+      'Milk Price'
 
+    ]
+  },
 
   {
     key: 'reports',
@@ -48,6 +63,7 @@ export const SIDEBAR_GROUPS = [
     icon: SIDEBAR_ICONS.REPORTS,
     items: [
       'Reports',
+      'Benchmark Analytics',
       'Technical Report',
       'Economic Report'
       // 'Monthly Report',
@@ -56,21 +72,56 @@ export const SIDEBAR_GROUPS = [
       // 'Production Trends'
     ]
   },
-{
-  key: 'supplier',
-  title: 'sidebarmenu.supplier',
-  icon: SIDEBAR_ICONS.SUPPLIER,
-  items: [
-    'Suppliers',
-    'Materials',
-    'Product',
-    'Product Pricing',
-    'SupplierPrice',
-    'Pricing Setting',
-    'PricingFormula',
-    
-  ]
-},
+  // {
+  //   key: 'supplier',
+  //   title: 'sidebarmenu.supplier',
+  //   icon: SIDEBAR_ICONS.SUPPLIER,
+  //   items: [
+  //     'Suppliers',
+  //     'Materials',
+  //     'Product',
+  //     'PricingFormula',
+  //     'Product Pricing',
+  //     'Raw Material Costs',
+  //     'Pricing Setting',
+  //     'Product Build'
+
+
+  //   ]
+  // },
+  {
+    key: 'supplierMaster',
+    title: 'sidebarmenu.supplierMaster',
+    icon: SIDEBAR_ICONS.SUPPLIER_MASTER,
+    items: [
+      'Suppliers',
+      'Materials',
+      'Product',
+      'Raw Material Costs',
+      'Processing Costs',
+      'Product Creation',
+      'Deatech Raw Material Costs',
+
+    ]
+  },
+  {
+    key: 'pricing',
+    title: 'sidebarmenu.pricing',
+    icon: SIDEBAR_ICONS.PRICING,
+    items: [
+      'Pricing Rules',
+      'Product Pricing',
+      
+    ]
+  },
+  {
+    key: 'production',
+    title: 'sidebarmenu.production',
+    icon: SIDEBAR_ICONS.PRODUCTION,
+    items: [
+      'PricingFormula'
+    ]
+  },
 
   {
     key: 'settings',

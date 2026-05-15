@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common';
 import { Component, ViewChild, OnInit, OnDestroy } from '@angular/core';
 
 import { Subscription } from 'rxjs';
@@ -17,6 +18,8 @@ import { ReusableTableComponent } from '../../../shared/components/reusable-tabl
 import { GlobalSearchComponent } from '../../../shared/components/global-search/global-search.component';
 
 import { TranslatePipe } from '../../../i18n/translate.pipe';
+import { CommonService } from '../../../shared/services/common.service';
+import { PERMISSIONS } from '../../../core/constants/permissions.constants';
 
 
 @Component({
@@ -24,6 +27,7 @@ import { TranslatePipe } from '../../../i18n/translate.pipe';
   standalone: true,
   imports: [
     ReusableTableComponent,
+    CommonModule,
     ProductAddEditComponent,
     GlobalSearchComponent,
     TranslatePipe
@@ -43,6 +47,9 @@ export class ProductListComponent implements OnInit, OnDestroy {
   columnFields: string[] = [
     'productName',
     'productCode',
+    'category',
+    'format',
+    'dosage',
     'effectiveDate',
     'isActive'
   ];
@@ -60,6 +67,10 @@ export class ProductListComponent implements OnInit, OnDestroy {
   searchValue = '';
 
   filterStatus: number | null = 2;
+  canAddProduct = false;
+  viewPermission = PERMISSIONS.ProductView;
+  editPermission = PERMISSIONS.ProductEdit;
+  deletePermission = PERMISSIONS.ProductDelete;
 
 
   private subs: Subscription[] = [];
@@ -69,7 +80,8 @@ export class ProductListComponent implements OnInit, OnDestroy {
     private productService: ProductService,
     private toast: ToastService,
     private confirm: ConfirmDialogService,
-    private translate: TranslateService
+    private translate: TranslateService,
+    private commonService: CommonService
   ) {
 
     this.setColumns();
@@ -88,6 +100,9 @@ export class ProductListComponent implements OnInit, OnDestroy {
     this.columns = [
       this.translate.instant('product.name'),
       this.translate.instant('product.code'),
+      'Category',
+      'Format',
+      'Dosage',
       this.translate.instant('product.effectiveDate'),
       this.translate.instant('common.status')
     ];
@@ -96,6 +111,10 @@ export class ProductListComponent implements OnInit, OnDestroy {
 
 
   ngOnInit() {
+    this.canAddProduct = this.commonService.checkPermission(PERMISSIONS.ProductAdd, false);
+    if (!this.commonService.checkPermission(PERMISSIONS.ProductView, false)) {
+      return;
+    }
 
     this.loadProducts(1, this.pageSize);
 
@@ -189,6 +208,9 @@ export class ProductListComponent implements OnInit, OnDestroy {
 
 
   onToggleActive(event: any) {
+    if (!this.commonService.checkPermission(PERMISSIONS.ProductEdit)) {
+      return;
+    }
 
     const sub = this.productService
       .activeInActive(event.row.productId)
@@ -214,6 +236,9 @@ export class ProductListComponent implements OnInit, OnDestroy {
 
 
   onDelete(row: any) {
+    if (!this.commonService.checkPermission(PERMISSIONS.ProductDelete)) {
+      return;
+    }
 
     this.confirm
       .confirm(this.translate.instant('common.deleteConfirm'))

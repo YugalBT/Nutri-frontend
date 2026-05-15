@@ -6,10 +6,21 @@
       <h3 class="page-title">{{ 'feed.Heading' | translate  }}</h3>
     </div>
 
-    <button class="btn add-btn" (click)="openAddFeedModal()">
+    <button *ngIf="canAddFeed" class="btn add-btn" (click)="openAddFeedModal()">
       <i class="bi bi-plus-lg me-2"></i>
       {{ 'feed.addFeed' | translate  }}
     </button>
+  </div>
+
+  <!-- Company selector for superadmin -->
+  <div *ngIf="isSuperAdmin && companies.length > 0" class="filters-card pb-0">
+    <div class="d-flex align-items-center gap-2">
+      <label class="form-label mb-0 text-muted" style="white-space:nowrap;">{{ 'dailyEntry.filters.company' | translate }}</label>
+      <select class="form-select form-select-sm" style="width:220px"
+        [(ngModel)]="selectedCompanyId" (change)="onCompanyChange()">
+        <option *ngFor="let c of companies" [value]="c.id">{{ c.name }}</option>
+      </select>
+    </div>
   </div>
 
   <!-- Search Filters Section -->
@@ -35,10 +46,14 @@
       [totalRecords]="totalRecords"
       [pageSize]="pageSize"
       [pageIndex]="pageIndex"
+      [viewPermission]="viewPermission"
+      [editPermission]="editPermission"
+      [deletePermission]="deletePermission"
       (pageChange)="onPageChange($event)"
       (toggleActive)="onToggleActive($event)"
       (deleteRow)="onDelete($event)"
-      (editRow)="feedModal.openModal(true, $event)">
+      [columnColorMap]="columnColorMap"
+      (editRow)="openEditFeedModal($event)">
     </app-reusable-table>
   </div>
 

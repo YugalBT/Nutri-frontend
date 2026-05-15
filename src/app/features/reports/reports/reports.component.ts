@@ -13,6 +13,7 @@ import { CommonService } from '../../../shared/services/common.service';
 import { AggregatedArchiveItem, AggregatedReportItem } from '../../../core/models/dashboarddata';
 import { forkJoin } from 'rxjs';
 import { ToastService } from '../../../shared/services/toast.service';
+import { PERMISSIONS } from '../../../core/constants/permissions.constants';
 
 @Component({
   selector: 'app-reports',
@@ -41,6 +42,8 @@ export class ReportsComponent implements OnInit {
   reports: any[] = [];
   archive: AggregatedArchiveItem[] = [];
   editableArchive: Record<string, { rationName: string; animalCount: number; avgMilkPerDay: number }> = {};
+  canExportReports = false;
+  canSaveArchive = false;
 
   costIncomeChart: EChartsOption = {};
   marginTrendChart: EChartsOption = {};
@@ -52,6 +55,14 @@ export class ReportsComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.canExportReports = this.commonService.hasAnyPermission(
+      [PERMISSIONS.ReportsView, PERMISSIONS.ReportsAdd, PERMISSIONS.ReportsEdit],
+      false
+    );
+    this.canSaveArchive = this.commonService.checkPermission(PERMISSIONS.ReportsEdit, false);
+    if (!this.commonService.checkPermission(PERMISSIONS.ReportsView, false)) {
+      return;
+    }
     this.store.select(selectAuthUser).subscribe((u) => {
       this.user = u;
       this.loadData();
@@ -239,6 +250,9 @@ export class ReportsComponent implements OnInit {
   }
 
   saveArchiveRow(row: AggregatedArchiveItem): void {
+    if (!this.commonService.checkPermission(PERMISSIONS.ReportsEdit)) {
+      return;
+    }
     const edit = this.editableArchive[row.reportDetailId];
     if (!edit) {
       return;

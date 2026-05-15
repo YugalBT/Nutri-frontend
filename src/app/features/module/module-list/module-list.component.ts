@@ -11,6 +11,9 @@ import { ApiResponse } from '../../../core/models/api-response';
 import { ModuleListService } from '../../../core/services/module/module-list.service';
 import { CommonService } from '../../../shared/services/common.service';
 import { PERMISSIONS } from '../../../core/constants/permissions.constants';
+import { PermissionService } from '../../../shared/services/permission.service';
+import { Store } from '@ngrx/store';
+import { selectUserRoles } from '../../../state/auth/auth.selectors';
 
 @Component({
   selector: 'app-module-list',
@@ -39,20 +42,39 @@ export class ModuleListComponent implements OnInit, OnDestroy {
   pageIndex = 0;
 
   searchValue = '';
+
+  // Permissions
+  canAddModule = false;
+  viewPermission = PERMISSIONS.ModuleView;
+  editPermission = PERMISSIONS.ModuleEdit;
+  deletePermission = PERMISSIONS.ModuleDelete;
+  userRoles: string[] = [];
+
   subs: Subscription[] = [];
 
   constructor(
     private moduleService: ModuleListService,
     private confirm: ConfirmDialogService,
     private toast: ToastService,
-    private commonService : CommonService
+    private commonService : CommonService,
+    private permissionService: PermissionService,
+    private store: Store
   ) { }
 
   ngOnInit(): void {
-    if(!this.commonService.checkPermission(PERMISSIONS.ModuleView)
-      || !this.commonService.checkPermission(PERMISSIONS.ModuleDelete))
+    this.loadUserPermissions();
+
+    if(!this.commonService.checkPermission(PERMISSIONS.ModuleView, false))
         return;
     this.loadModules();
+  }
+
+  private loadUserPermissions(): void {
+    const subRoles = this.store.select(selectUserRoles).subscribe(roles => {
+      this.userRoles = roles || [];
+      this.canAddModule = this.userRoles.includes(PERMISSIONS.ModuleAdd);
+    });
+    this.subs.push(subRoles);
   }
 
  loadModules() {

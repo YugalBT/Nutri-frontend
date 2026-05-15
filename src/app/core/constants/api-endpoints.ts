@@ -30,7 +30,7 @@ export const API_ENDPOINTS = {
   },
 
   COMMON_API: {
-    GET_ALL_TENANT : '/Common/GetAllTenant',
+    GET_ALL_TENANT: '/Common/GetAllTenant',
     GET_ALL_ROLES: '/Common/GetAllRoles',
     GET_ALL_NOTIFICATION: '/Common/GetAllNotification',
     GET_ALL_FARMS: '/Common/GetAllFarm',
@@ -57,6 +57,8 @@ export const API_ENDPOINTS = {
     GET_OPERATORS_AND_MATERIAL: '/Common/GetAllOperatorAndMaterial',
     GET_PRODUCT: '/Common/GetAllProduct',
     GET_ALL_MATERIAL_BY_SUPPLIER_ID_IN_FORMULA: '/Common/GetAllMaterialBySupplierId',
+    GET_ALL_PRODUCT_BY_SUPPLIER_ID: '/Common/GetAllProductBySupplierId',
+    GET_ALL_FORMULA_BY_SUPPLIER_ID: '/Common/GetAllFormulaBySupplierId'
   },
 
   Module: {
@@ -73,6 +75,7 @@ export const API_ENDPOINTS = {
     UPDATE: '/Tenant/Update',
     DELETE: '/Tenant/Delete',
     ACTIVE_INACTIVE: '/Tenant/ActiveInActive',
+    GET_DROPDOWN: '/Tenant/GetDropdown',
   },
 
   FARM: {
@@ -88,6 +91,8 @@ export const API_ENDPOINTS = {
     DELETE: '/Ration/Delete',
     ACTIVE_INACTIVE: '/Ration/ActiveInActive',
     GET_ALL: '/Ration/GetAll',
+    GET_MATRIX: '/Ration/GetRationMatrix',
+    ARCHIVE: '/Ration/Archive',
   },
   FEED: {
     CREATE: '/Feed/Create',
@@ -184,6 +189,7 @@ export const API_ENDPOINTS = {
     ACTIVE_INACTIVE: '/Formula/ActiveInActive',
     GET_ALL: '/Formula/GetAll',
     VALIDATE_FORMULA: '/Ration/ValidateFormula',
+    CALCULATE: '/Formula/Calculate',
   },
   TECHNICAL_REPORT: {
     CREATE: '/Ration/SaveTechnicalRecord',
@@ -215,6 +221,7 @@ export const API_ENDPOINTS = {
     EXPORT_AGGREGATED_REPORT_PDF: '/Dashboard/AggregatedReportExportPdf',
     EXPORT_AGGREGATED_REPORT_CSV: '/Dashboard/AggregatedReportExportCsv',
     UPDATE_COMPANY_ARCHIVE: '/Dashboard/CompanyArchiveUpdate',
+    GET_HEALTH_MONTHLY: '/Dashboard/HealthMonthly',
   },
 
   SUPPLIER: {
@@ -233,8 +240,9 @@ export const API_ENDPOINTS = {
     ACTIVE_INACTIVE: '/Material/ActiveInActive',
     GET_ALL: '/Material/GetAll',
     GENERATE_SUPPLIER_CODE: '/Material/GenerateMaterialCode',
-     IMPORTMATERIAL: '/Material/ImportMaterials',
-  EXPORTMATERIAL: '/Material/ExportMaterials',
+    IMPORTMATERIAL: '/Material/ImportMaterials',
+    EXPORTMATERIAL: '/Material/ExportMaterials',
+    EXPORTSAMPLECSV: '/Material/DownloadSample',
   },
 
   PRODUCT: {
@@ -254,6 +262,9 @@ export const API_ENDPOINTS = {
     GET_ALL: '/SupplierPrice/GetAll',
     GENERATE_SUPPLIER_CODE: '/SupplierPrice/GenerateSupplierCode',
     BULK_SAVE: '/SupplierPrice/BulkSave',
+    IMPORT: '/SupplierPrice/ImportSupplierPrices',
+    EXPORT: '/SupplierPrice/ExportSupplierPrices',
+    EXPORT_SAMPLE: '/SupplierPrice/DownloadSampleCSV',
   },
 
   SUPPLIER_PRICE_FORMULA: {
@@ -263,26 +274,109 @@ export const API_ENDPOINTS = {
     ACTIVE_INACTIVE: '/MstFormula/ActiveInActive',
     GET_ALL: '/MstFormula/GetAll',
     VALIDATE_FORMULA: '/MstFormula/Validate',
-    
+    CALCULATE: '/MstFormula/Calculate',
+
   },
 
-   CALFBARN: {
+  CALFBARN: {
     CREATE: '/CalfBarn/Create',
     UPDATE: '/CalfBarn/Update',
     DELETE: '/CalfBarn/Delete',
     ACTIVE_INACTIVE: '/CalfBarn/ActiveInActive',
     GET_ALL: '/CalfBarn/GetAll',
   },
-   PRICINGSETTING: {
+  PRICINGSETTING: {
     UPDATE: '/PricingSetting/Add',
     GET_ALL: '/PricingSetting/GetAll',
   },
-   PRODUCTPRICING: {
+  PRODUCTPRICING: {
     CREATE: '/ProductPricing/Create',
     GET_ALL: '/ProductPricing/GetAll',
     UPDATE: '/ProductPricing/Update',
     ACTIVE_INACTIVE: '/ProductPricing/ActiveInActive',
     DELETE: '/ProductPricing/Delete',
     GET_PREVIOUS_PRICE: '/ProductPricing/GetPreviousPrice',
+    GET_SUGGESTED_PRICE: '/ProductPricing/GetSuggestedPrice',
+  },
+
+  PRODUCT_BUILD: {
+    CREATE: '/ProductBuild/Create',
+    UPDATE: '/ProductBuild/Update',
+    DELETE: '/ProductBuild/Delete',
+    ACTIVE_INACTIVE: '/ProductBuild/ActiveInActive',
+    GET_ALL: '/ProductBuild/GetAll',
+    GENERATE_SUPPLIER_CODE: '/Supplier/GenerateSupplierCode',
+    GET_BY_ID: '/ProductBuild/GetById',
+  },
+  DAY: {
+    CREATE: '/Day/Create',
+    UPDATE: '/Day/Update',
+    DELETE: '/Day/Delete',
+    ACTIVE_INACTIVE: '/Day/ActiveInActive',
+    GET_ALL: '/Day/GetAll',
+  },
+  DAY_DATA: {
+    SAVE: '/DayData/Save',
+    GET_BY_DAY_ID: '/DayData/GetByDayId',
+    SAVE_CALVES: '/DayData/SaveCalves',
+    ARCHIVE: '/DayData/Archive',
+    ECO_ARCHIVE: '/DayData/EcoArchive',
+    BULK_RECALC: '/DayData/BulkRecalculate',
+  },
+
+  MILK_PRICE_HISTORY: {
+    SAVE: '/MilkPriceHistory/Save',
+    GET_BY_FARM: '/MilkPriceHistory/GetByFarm',
+  },
+
+  CALVING: {
+    CREATE: '/Calving/Create',
+    UPDATE: '/Calving/Update',
+    DELETE: '/Calving/Delete',
+    GET_ALL: '/Calving/GetAll',
+  },
+
+  HEALTH_EVENT: {
+    CREATE: '/HealthEvent/Create',
+    UPDATE: '/HealthEvent/Update',
+    DELETE: '/HealthEvent/Delete',
+    GET_ALL: '/HealthEvent/GetAll',
+  },
+
+  FERTILITY_RECORD: {
+    CREATE: '/FertilityRecord/Create',
+    UPDATE: '/FertilityRecord/Update',
+    DELETE: '/FertilityRecord/Delete',
+    GET_ALL: '/FertilityRecord/GetAll',
+  },
+
+  DRAG_AND_DROP: {
+    SAVE: '/DayData/SaveLayout',
+    GET: '/DayData/GetLayout',
+  },
+
+  PRICING_RULES: {
+    GET_ALL:         '/PricingRule/GetAll',
+    CREATE:          '/PricingRule/Create',
+    UPDATE:          '/PricingRule/Update',
+    DELETE:          '/PricingRule/Delete',
+    ACTIVE_INACTIVE: '/PricingRule/ActiveInActive',
+    CALCULATE:       '/PricingRule/Calculate',
+  },
+
+  PRICING_ATTRIBUTES: {
+    GET_CATALOG:     '/PricingAttribute/GetCatalog',
+    CREATE:          '/PricingAttribute/Create',
+    UPDATE:          '/PricingAttribute/Update',
+    DELETE:          '/PricingAttribute/Delete',
+    ACTIVE_INACTIVE: '/PricingAttribute/ActiveInActive',
+  },
+
+  PRICING_FORMULA_TYPES: {
+    GET_ALL:         '/PricingFormulaType/GetAll',
+    CREATE:          '/PricingFormulaType/Create',
+    UPDATE:          '/PricingFormulaType/Update',
+    DELETE:          '/PricingFormulaType/Delete',
+    ACTIVE_INACTIVE: '/PricingFormulaType/ActiveInActive',
   },
 };

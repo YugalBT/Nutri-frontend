@@ -44,10 +44,38 @@ export class CommonService {
     private httpClient: HttpClient,
     private toast: ToastService,
     private translate: TranslateService,
-  ) {}
+  ) { }
 
   checkPermission(roleName: string, showAlert: boolean = true) {
     const hasPermission = StorageHelper.CheckRole(roleName);
+    if (!hasPermission && showAlert) {
+      this.toast.error(
+        this.translate.instant('common.noPermission') || 'No permission',
+      );
+    }
+
+    return hasPermission;
+  }
+
+  hasAnyPermission(roleNames: string[], showAlert: boolean = false): boolean {
+    const hasPermission = roleNames.some((roleName) =>
+      StorageHelper.CheckRole(roleName),
+    );
+
+    if (!hasPermission && showAlert) {
+      this.toast.error(
+        this.translate.instant('common.noPermission') || 'No permission',
+      );
+    }
+
+    return hasPermission;
+  }
+
+  hasAllPermissions(roleNames: string[], showAlert: boolean = false): boolean {
+    const hasPermission = roleNames.every((roleName) =>
+      StorageHelper.CheckRole(roleName),
+    );
+
     if (!hasPermission && showAlert) {
       this.toast.error(
         this.translate.instant('common.noPermission') || 'No permission',
@@ -75,8 +103,15 @@ export class CommonService {
   getFeedList(): Observable<ApiResponse<FeedList>> {
     return this.http.get<FeedList>(API_ENDPOINTS.COMMON_API.GET_ALL_FEED);
   }
-  getDayList(): Observable<ApiResponse<KpiList>> {
-    return this.http.get<KpiList>(API_ENDPOINTS.COMMON_API.GET_ALL_Days);
+  getDayList(companyId?: string): Observable<ApiResponse<KpiList>> {
+    const url = companyId
+      ? `${API_ENDPOINTS.COMMON_API.GET_ALL_Days}?companyId=${companyId}`
+      : API_ENDPOINTS.COMMON_API.GET_ALL_Days;
+    return this.http.get<KpiList>(url);
+  }
+
+  getCompanyDropdown(): Observable<ApiResponse<{ id: string; name: string }[]>> {
+    return this.http.get<{ id: string; name: string }[]>(API_ENDPOINTS.Tenant.GET_DROPDOWN);
   }
   getAnimalTypeList(): Observable<ApiResponse<any>> {
     return this.http.get<FarmList>(API_ENDPOINTS.COMMON_API.GET_ALL_ANIMALTYPE);
@@ -87,11 +122,34 @@ export class CommonService {
     );
   }
 
-  getAnimalGroupsList(): Observable<ApiResponse<AnimalGroupList>> {
-    return this.http.get<AnimalGroupList>(
-      API_ENDPOINTS.COMMON_API.GET_ALL_ANIMAL_GROUP,
-    );
+  getAnimalGroupsList(companyId?: string, paginationParams?: any): Observable<ApiResponse<AnimalGroupList>> {
+    const base = API_ENDPOINTS.COMMON_API.GET_ALL_ANIMAL_GROUP;
+    
+    // If pagination params provided, use POST with pagination
+    if (paginationParams && (paginationParams.pageNo || paginationParams.sortColumn)) {
+      const payload = {
+        companyId: companyId || '',
+        ...paginationParams,
+      };
+      return this.http.post<AnimalGroupList>(base, payload);
+    }
+    
+    // Otherwise use GET for backward compatibility
+    const url = companyId ? `${base}?companyId=${companyId}` : base;
+    return this.http.get<AnimalGroupList>(url);
   }
+
+  getAnimalGroupsListPost(companyId?: string): Observable<ApiResponse<AnimalGroupList>> {
+  const base = API_ENDPOINTS.COMMON_API.GET_ALL_ANIMAL_GROUP;
+
+  const payload = {
+    companyId: companyId || '',
+    pageNo: 1,
+    pageSize: 1000 
+  };
+
+  return this.http.post<AnimalGroupList>(base, payload);
+}
 
   getAlltemplateCategoryList(): Observable<
     ApiResponse<TemplateCategoryList[]>
@@ -109,8 +167,11 @@ export class CommonService {
     );
   }
 
-  getGetAllRationList(): Observable<ApiResponse<RationList[]>> {
-    return this.http.get<RationList[]>(API_ENDPOINTS.COMMON_API.GET_RATION);
+  getGetAllRationList(companyId?: string): Observable<ApiResponse<RationList[]>> {
+    const url = companyId
+      ? `${API_ENDPOINTS.COMMON_API.GET_RATION}?companyId=${companyId}`
+      : API_ENDPOINTS.COMMON_API.GET_RATION;
+    return this.http.get<RationList[]>(url);
   }
 
   getGetAllOperatorList(): Observable<ApiResponse<OperatorList[]>> {
@@ -125,21 +186,26 @@ export class CommonService {
     );
   }
 
-  getAllCompany():Observable<ApiResponse<any>>{
+  getAllCompany(): Observable<ApiResponse<any>> {
     return this.http.get<ApiResponse<any>>(
       API_ENDPOINTS.COMMON_API.GET_ALL_TENANT
     )
   }
   getAnimalGroupByFarmID(
-    FarmId: string,
+    FarmId?: string,
   ): Observable<ApiResponse<AnimalGroupList[]>> {
+    const query = FarmId ? `?FarmId=${FarmId}` : '';
     return this.http.get<AnimalGroupList[]>(
-      `${API_ENDPOINTS.COMMON_API.GET_ANIMALGROUPS_BY_FARM_ID}?FarmId=${FarmId}`,
+      `${API_ENDPOINTS.COMMON_API.GET_ANIMALGROUPS_BY_FARM_ID}${query}`,
     );
   }
-  getFeedByFarmID(FarmId: string): Observable<ApiResponse<FeedList[]>> {
+  getFeedByFarmID(FarmId?: string, companyId?: string): Observable<ApiResponse<FeedList[]>> {
+    const params: string[] = [];
+    if (FarmId) params.push(`FarmId=${FarmId}`);
+    if (companyId) params.push(`companyId=${companyId}`);
+    const query = params.length ? `?${params.join('&')}` : '';
     return this.http.get<FeedList[]>(
-      `${API_ENDPOINTS.COMMON_API.GET_FEEDS_BY_FARM_ID}?FarmId=${FarmId}`,
+      `${API_ENDPOINTS.COMMON_API.GET_FEEDS_BY_FARM_ID}${query}`,
     );
   }
 
@@ -190,6 +256,31 @@ export class CommonService {
   ): Observable<ApiResponse<AggregatedAnalyticsData>> {
     return this.http.get<AggregatedAnalyticsData>(
       `${API_ENDPOINTS.DASHBOARD.GET_AGGREGATED_ANALYTICS}?year=${year}`,
+    );
+  }
+
+  getBenchmarkAnalytics(
+    year: number,
+    companyId?: string | null,
+    period?: string | null,
+    animalGroup?: string | null,
+  ): Observable<any> {
+    const params = new URLSearchParams({ year: String(year) });
+
+    if (companyId) {
+      params.set('companyId', companyId);
+    }
+
+    if (period) {
+      params.set('period', period);
+    }
+
+    if (animalGroup && animalGroup !== 'All Groups') {
+      params.set('animalGroup', animalGroup);
+    }
+
+    return this.http.get<any>(
+      `/Benchmark/GetAnalyticsFiltered?${params.toString()}`,
     );
   }
 
@@ -292,10 +383,11 @@ export class CommonService {
   }
 
   GetAllMaterialBySupplierId(
-    supplierId: string,
+    supplierId: string | null,
     payload: any,
   ): Observable<ApiResponse<any>> {
-    const url = `${API_ENDPOINTS.COMMON_API.GET_ALL_MATERIAL_BY_SUPPLIER_ID}?supplierId=${supplierId}`;
+    const base = API_ENDPOINTS.COMMON_API.GET_ALL_MATERIAL_BY_SUPPLIER_ID;
+    const url = supplierId ? `${base}?supplierId=${supplierId}` : base;
     return this.http.post<ApiResponse<any>>(url, payload);
   }
 
@@ -307,17 +399,35 @@ export class CommonService {
     );
   }
 
-  GetAllMaterialBySupplierIdInFormula(
-    supplierId: string,
-  ): Observable<ApiResponse<any>> {
+  GetAllMaterialBySupplierIdInFormula(supplierId: string,): Observable<ApiResponse<any>> {
     const url = `${API_ENDPOINTS.COMMON_API.GET_ALL_MATERIAL_BY_SUPPLIER_ID_IN_FORMULA}?supplierId=${supplierId}`;
     return this.http.get<ApiResponse<any>>(url);
   }
 
-
-    getGetAllProductList(): Observable<ApiResponse<any[]>> {
-    return this.http.get<any[]>(
-      API_ENDPOINTS.COMMON_API.GET_PRODUCT,
+  getGetAllProductList(): Observable<ApiResponse<any[]>> {
+    return this.http.get<any[]>(API_ENDPOINTS.COMMON_API.GET_PRODUCT,
     );
   }
+
+  GetAllProductBySupplierId(supplierId: string,): Observable<ApiResponse<any>> {
+    const url = `${API_ENDPOINTS.COMMON_API.GET_ALL_PRODUCT_BY_SUPPLIER_ID}?SupplierId=${supplierId}`;
+    return this.http.get<ApiResponse<any>>(url);
+  }
+
+  GetAllFormulaBySupplierId(supplierId: string,): Observable<ApiResponse<any>> {
+    const url = `${API_ENDPOINTS.COMMON_API.GET_ALL_FORMULA_BY_SUPPLIER_ID}?SupplierId=${supplierId}`;
+    return this.http.get<ApiResponse<any>>(url);
+  }
+
+  // Save Layout
+saveUserLayout(payload: { pageName: string; layoutJson: string }): Observable<any> {
+  return this.http.post<any>(API_ENDPOINTS.DRAG_AND_DROP.SAVE, payload);
+}
+
+// Get Layout
+getUserLayout(pageName: string): Observable<any> {
+  return this.http.get<any>(
+    `${API_ENDPOINTS.DRAG_AND_DROP.GET}?pageName=${pageName}`
+  );
+}
 }

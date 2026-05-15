@@ -1,0 +1,219 @@
+<!-- Bootstrap Modal -->
+<div class="modal fade" #prModal tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-md">
+    <div class="modal-content pr-modal-content">
+
+      <!-- Header -->
+      <div class="modal-header pr-modal-header">
+        <div class="pr-modal-title-group">
+          <h5 class="modal-title pr-modal-title">
+            <i class="bi" [ngClass]="isEdit ? 'bi-pencil-square' : 'bi-plus-circle'"></i>
+            {{ isEdit ? ('pricingRules.editRule' | translate) : ('pricingRules.addRule' | translate) }}
+          </h5>
+          <!-- Rule level indicator -->
+          <span class="pr-level-badge" [ngClass]="ruleLevelClass">
+            {{ ruleLevelLabel }}
+          </span>
+        </div>
+        <button type="button" class="btn-close" (click)="close()" aria-label="Close"></button>
+      </div>
+
+      <!-- Body -->
+      <div class="modal-body pr-modal-body" [formGroup]="form">
+
+        <!-- Row 1: Category + Format -->
+        <div class="row g-3 mb-3">
+          <div class="col-6">
+            <label class="form-label pr-label">
+              {{ 'pricingRules.category' | translate }}
+              <span class="text-danger">*</span>
+            </label>
+            <select class="form-select" formControlName="category"
+                    [class.is-invalid]="isInvalid('category')">
+              <option value="">{{ 'pricingRules.selectPlaceholder' | translate }}</option>
+              <option *ngFor="let c of categories" [value]="c.name">{{ c.name }}</option>
+            </select>
+            <div class="invalid-feedback">{{ 'pricingRules.categoryRequired' | translate }}</div>
+          </div>
+
+          <div class="col-6">
+            <label class="form-label pr-label">
+              {{ 'pricingRules.format' | translate }}
+              <span class="pr-optional">(optional)</span>
+            </label>
+            <select class="form-select" formControlName="format">
+              <option [ngValue]="null">{{ 'pricingRules.categoryDefaultPlaceholder' | translate }}</option>
+              <option *ngFor="let f of formats" [value]="f.name">{{ f.name }}</option>
+            </select>
+            <div class="pr-field-hint">{{ 'pricingRules.categoryLevelHint' | translate }}</div>
+          </div>
+        </div>
+
+        <!-- Row 2: Dosage + Formula Type -->
+        <div class="row g-3 mb-3">
+          <div class="col-6">
+            <label class="form-label pr-label">
+              {{ 'pricingRules.dosage' | translate }}
+              <span class="pr-optional">(optional)</span>
+            </label>
+            <select class="form-select" formControlName="dosage">
+              <option [ngValue]="null">{{ 'pricingRules.allDosagesPlaceholder' | translate }}</option>
+              <option *ngFor="let d of dosages" [value]="d.name">{{ d.name }}</option>
+            </select>
+            <div class="pr-field-hint">{{ 'pricingRules.allDosagesHint' | translate }}</div>
+          </div>
+
+          <div class="col-6">
+            <label class="form-label pr-label">
+              {{ 'pricingRules.formulaType' | translate }}
+              <span class="text-danger">*</span>
+            </label>
+            <div class="pr-formula-radios">
+              <label
+                *ngFor="let ft of formulaTypes; trackBy: trackFormulaType"
+                class="pr-formula-radio"
+                [class.selected]="form.get('formulaType')?.value === ft.name">
+                <input
+                  type="radio"
+                  formControlName="formulaType"
+                  [value]="ft.name"
+                  class="visually-hidden" />
+                <span class="pr-radio-label">{{ ft.name }}</span>
+                <span class="pr-radio-desc" *ngIf="ft.description">{{ ft.description }}</span>
+                <span class="pr-radio-divisor">÷ {{ ft.costDivisor }}</span>
+              </label>
+              <div class="pr-formula-empty" *ngIf="!formulaTypes.length">
+                {{ 'pricingAttrManager.emptyFormulaTypeState' | translate }}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Separator -->
+        <div class="pr-divider">
+          <span>{{ 'pricingRules.marginCommission' | translate }}</span>
+        </div>
+
+        <!-- Row 3: Target Margin + Min Margin + Commission -->
+        <div class="row g-3 mb-3">
+          <div class="col-4">
+            <label class="form-label pr-label">
+              {{ 'pricingRules.targetMargin' | translate }}
+              <span class="text-danger">*</span>
+            </label>
+            <div class="input-group">
+              <input
+                type="number"
+                class="form-control"
+                formControlName="targetMargin"
+                [class.is-invalid]="isInvalid('targetMargin')"
+                min="0"
+                max="100"
+                step="0.5"
+                placeholder="0" />
+              <span class="input-group-text pr-pct-suffix">%</span>
+            </div>
+            <div class="invalid-feedback" *ngIf="form.get('targetMargin')?.errors?.['required']">{{ 'common.required' | translate }}</div>
+            <div class="invalid-feedback" *ngIf="form.get('targetMargin')?.errors?.['min'] || form.get('targetMargin')?.errors?.['max']">{{ 'pricingRules.marginRange' | translate }}</div>
+          </div>
+
+          <div class="col-4">
+            <label class="form-label pr-label">
+              {{ 'pricingRules.minMargin' | translate }}
+              <span class="text-danger">*</span>
+            </label>
+            <div class="input-group">
+              <input
+                type="number"
+                class="form-control"
+                formControlName="minMargin"
+                [class.is-invalid]="isInvalid('minMargin')"
+                min="0"
+                max="100"
+                step="0.5"
+                placeholder="0" />
+              <span class="input-group-text pr-pct-suffix">%</span>
+            </div>
+            <div class="invalid-feedback">{{ 'pricingRules.required0to100' | translate }}</div>
+          </div>
+
+          <div class="col-4">
+            <label class="form-label pr-label">
+              {{ 'pricingRules.commission' | translate }}
+              <span class="text-danger">*</span>
+            </label>
+            <div class="input-group">
+              <input
+                type="number"
+                class="form-control"
+                formControlName="commissionPct"
+                [class.is-invalid]="isInvalid('commissionPct')"
+                min="0"
+                max="100"
+                step="0.1"
+                placeholder="0" />
+              <span class="input-group-text pr-pct-suffix">%</span>
+            </div>
+            <div class="invalid-feedback">{{ 'pricingRules.required0to100' | translate }}</div>
+          </div>
+        </div>
+
+        <!-- Margin health preview -->
+        <div class="pr-margin-preview"
+             *ngIf="form.get('targetMargin')?.value != null && form.get('minMargin')?.value != null">
+          <ng-container *ngIf="form.get('targetMargin')!.value >= form.get('minMargin')!.value; else belowMin">
+            <i class="bi bi-check-circle-fill text-success"></i>
+            <span>
+              {{ 'pricingRules.targetMarginLabel' | translate }} <strong>{{ form.get('targetMargin')!.value }}%</strong>
+              {{ 'pricingRules.marginAboveMin' | translate }} <strong>{{ form.get('minMargin')!.value }}%</strong>
+              — {{ 'pricingRules.ruleShowAs' | translate }} <span class="pr-healthy-text">{{ 'pricingRules.statusHealthy' | translate }}</span>.
+            </span>
+          </ng-container>
+          <ng-template #belowMin>
+            <i class="bi bi-exclamation-triangle-fill text-warning"></i>
+            <span>
+              {{ 'pricingRules.targetMarginLabel' | translate }} <strong>{{ form.get('targetMargin')!.value }}%</strong>
+              {{ 'pricingRules.marginBelowMin' | translate }} <strong>{{ form.get('minMargin')!.value }}%</strong>
+              — {{ 'pricingRules.ruleShowAs' | translate }} <span class="pr-below-text">{{ 'pricingRules.statusBelowMin' | translate }}</span>.
+            </span>
+          </ng-template>
+        </div>
+
+        <!-- Active toggle -->
+        <div class="pr-active-toggle">
+          <div class="form-check form-switch">
+            <input
+              class="form-check-input"
+              type="checkbox"
+              formControlName="isActive"
+              id="prActiveCheck" />
+            <label class="form-check-label pr-active-label" for="prActiveCheck">
+              {{ 'common.active' | translate }}
+            </label>
+          </div>
+          <span class="pr-active-hint">{{ 'pricingRules.inactiveRulesNote' | translate }}</span>
+        </div>
+
+      </div><!-- /modal-body -->
+
+      <!-- Footer -->
+      <div class="modal-footer pr-modal-footer">
+        <button type="button" class="btn btn-outline-secondary pr-cancel-btn" (click)="close()">
+          {{ 'common.cancel' | translate }}
+        </button>
+        <button
+          type="button"
+          class="btn btn-primary pr-save-btn"
+          (click)="save()"
+          [disabled]="loading">
+          <span *ngIf="!loading">
+            <i class="bi bi-floppy me-1"></i>
+            {{ isEdit ? ('common.update' | translate) : ('common.save' | translate) }}
+          </span>
+          <span *ngIf="loading" class="spinner-border spinner-border-sm" role="status"></span>
+        </button>
+      </div>
+
+    </div>
+  </div>
+</div>

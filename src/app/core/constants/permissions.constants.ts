@@ -36,6 +36,16 @@ export const PERMISSIONS = {
   FeedAdd: 'FeedAdd',
   FeedDelete: 'FeedDelete',
 
+  OperatorView: 'OperatorView',
+  OperatorEdit: 'OperatorEdit',
+  OperatorAdd: 'OperatorAdd',
+  OperatorDelete: 'OperatorDelete',
+
+  CalfBarnView: 'CalfBarnView',
+  CalfBarnEdit: 'CalfBarnEdit',
+  CalfBarnAdd: 'CalfBarnAdd',
+  CalfBarnDelete: 'CalfBarnDelete',
+
   RationView: 'RationView',
   RationEdit: 'RationEdit',
   RationAdd: 'RationAdd',
@@ -120,6 +130,74 @@ export const PERMISSIONS = {
   SupplierPriceEdit: 'SupplierPriceEdit',
   SupplierPriceAdd: 'SupplierPriceAdd',
   SupplierPriceDelete: 'SupplierPriceDelete',
+
+  // Nutri farm — new modules
+  DailyEntryView: 'DailyEntryView',
+  DailyEntryEdit: 'DailyEntryEdit',
+  DailyEntryAdd: 'DailyEntryAdd',
+  DailyEntryDelete: 'DailyEntryDelete',
+
+  ArchiveView: 'ArchiveView',
+  ArchiveEdit: 'ArchiveEdit',
+  ArchiveAdd: 'ArchiveAdd',
+  ArchiveDelete: 'ArchiveDelete',
+
+  PartiView: 'PartiView',
+  PartiEdit: 'PartiEdit',
+  PartiAdd: 'PartiAdd',
+  PartiDelete: 'PartiDelete',
+
+  SanitaView: 'SanitaView',
+  SanitaEdit: 'SanitaEdit',
+  SanitaAdd: 'SanitaAdd',
+  SanitaDelete: 'SanitaDelete',
+
+  FertilitaView: 'FertilitaView',
+  FertilitaEdit: 'FertilitaEdit',
+  FertilitaAdd: 'FertilitaAdd',
+  FertilitaDelete: 'FertilitaDelete',
+
+  // Language
+LanguageView: 'LanguageView',
+LanguageEdit: 'LanguageEdit',
+LanguageAdd: 'LanguageAdd',
+LanguageDelete: 'LanguageDelete',
+
+PricingSettingView: 'Pricing SettingView',
+PricingSettingEdit: 'Pricing SettingEdit',
+
+// Pricing Formula
+PricingFormulaView: 'PricingFormulaView',
+PricingFormulaEdit: 'PricingFormulaEdit',
+PricingFormulaAdd: 'PricingFormulaAdd',
+PricingFormulaDelete: 'PricingFormulaDelete',
+
+// Product
+ProductView: 'ProductView',
+ProductEdit: 'ProductEdit',
+ProductAdd: 'ProductAdd',
+ProductDelete: 'ProductDelete',
+
+ProductBuildView: 'Product BuildView',
+ProductBuildEdit: 'Product BuildEdit',
+ProductBuildAdd: 'Product BuildAdd',
+ProductBuildDelete: 'Product BuildDelete',
+
+ProductPricingView: 'Product PricingView',
+ProductPricingEdit: 'Product PricingEdit',
+ProductPricingAdd: 'Product PricingAdd',
+ProductPricingDelete: 'Product PricingDelete',
+
+  MilkPriceHistoryView: 'MilkPriceHistoryView',
+  MilkPriceHistoryEdit: 'MilkPriceHistoryEdit',
+  MilkPriceHistoryAdd: 'MilkPriceHistoryAdd',
+  MilkPriceHistoryDelete: 'MilkPriceHistoryDelete',
+
+  // Pricing Rules Manager
+  PricingRulesView: 'Pricing RulesView',
+  PricingRulesEdit: 'Pricing RulesEdit',
+  PricingRulesAdd: 'Pricing RulesAdd',
+  PricingRulesDelete: 'Pricing RulesDelete',
 } as const;
 
 export type PermissionKey = keyof typeof PERMISSIONS;

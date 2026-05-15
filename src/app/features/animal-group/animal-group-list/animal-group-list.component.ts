@@ -1,5 +1,6 @@
 // animal-group-list.component.ts
-import { Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { AnimalGroupService } from '../../../core/services/animal-group/animal-group.service';
 import { ToastService } from '../../../shared/services/toast.service';
@@ -8,6 +9,7 @@ import { ApiResponse } from '../../../core/models/api-response';
 import { PERMISSIONS } from '../../../core/constants/permissions.constants';
 import { Store } from '@ngrx/store';
 import { selectUserRoles } from '../../../state/auth/auth.selectors';
+import { PermissionService } from '../../../shared/services/permission.service';
 import { AnimalGroupAddEditComponent } from '../animal-group-add-edit/animal-group-add-edit.component';
 import { GlobalSearchComponent } from '../../../shared/components/global-search/global-search.component';
 import { ReusableTableComponent } from '../../../shared/components/reusable-table/reusable-table.component';
@@ -18,6 +20,7 @@ import { TranslateService } from '../../../i18n/translate.service';
   selector: 'app-animal-group-list',
   standalone: true,
   imports: [
+    CommonModule,
     AnimalGroupAddEditComponent,
     GlobalSearchComponent,
     ReusableTableComponent,
@@ -29,7 +32,6 @@ import { TranslateService } from '../../../i18n/translate.service';
 export class AnimalGroupListComponent implements OnInit, OnDestroy {
   @ViewChild('animalGroupModal')
   animalGroupModalRef!: AnimalGroupAddEditComponent;
-  @Input() farmId!: string;
   columns: string[] = [];
   columnFields: string[] = [];
 
@@ -39,13 +41,25 @@ export class AnimalGroupListComponent implements OnInit, OnDestroy {
   pageIndex = 0;
   searchValue = '';
   filterStatus: number | null = 2;
+  sortColumn = '';
+  sortDirection: 'asc' | 'desc' = 'asc';
+  sortableColumns: string[] = [
+    'animalGroupNameEn',
+    'typeNameEn',
+    'lactationNameEn',
+    'numberOfAnimal',
+    'avgMilkPerDay',
+    'animalCategoryCode',
+  ];
 
   private subs: Subscription[] = [];
 
-  // permissions
-  canAdd = false;
-  canEdit = false;
-  canDelete = false;
+  // Permissions
+  canAddAnimalGroup = false;
+  viewPermission = PERMISSIONS.AnimalGroupView;
+  editPermission = PERMISSIONS.AnimalGroupEdit;
+  deletePermission = PERMISSIONS.AnimalGroupDelete;
+  userRoles: string[] = [];
   langSub: any;
 
   constructor(
@@ -54,6 +68,7 @@ export class AnimalGroupListComponent implements OnInit, OnDestroy {
     private confirm: ConfirmDialogService,
     private store: Store,
     private translateService: TranslateService,
+    private permissionService: PermissionService
   ) {
     this.setColumns();
     this.langSub = this.translateService.lang$.subscribe(() =>
@@ -62,7 +77,6 @@ export class AnimalGroupListComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.searchValue = this.farmId || '';
     this.loadUserPermissions();
     this.loadAnimalGroups(1, this.pageSize);
 
@@ -78,7 +92,6 @@ export class AnimalGroupListComponent implements OnInit, OnDestroy {
 
   private setColumns(): void {
     this.columns = [
-      this.translateService.instant('farm.columns.farmName') ?? ' ',
       this.translateService.instant('animalGroup.columns.animalGroupName') ??
         ' ',
       this.translateService.instant('animalGroup.columns.animalType') ?? ' ',
@@ -86,28 +99,27 @@ export class AnimalGroupListComponent implements OnInit, OnDestroy {
         ' ',
       this.translateService.instant('animalGroup.columns.noOfAnimals') ?? ' ',
       this.translateService.instant('animalGroup.columns.avgMilkPerDay') ?? ' ',
+      this.translateService.instant('animalGroup.columns.categoryCode') ?? ' ',
       this.translateService.instant('common.status') ?? ' ',
     ];
 
     this.columnFields = [
-      'farmName',
       'animalGroupNameEn',
       'typeNameEn',
       'lactationNameEn',
       'numberOfAnimal',
       'avgMilkPerDay',
+      'animalCategoryCode',
       'isActive',
     ];
   }
 
   private loadUserPermissions(): void {
-    const s = this.store.select(selectUserRoles).subscribe((roles) => {
-      const userRoles = roles || [];
-      this.canAdd = userRoles.includes(PERMISSIONS.AnimalGroupAdd);
-      this.canEdit = userRoles.includes(PERMISSIONS.AnimalGroupEdit);
-      this.canDelete = userRoles.includes(PERMISSIONS.AnimalGroupDelete);
+    const subRoles = this.store.select(selectUserRoles).subscribe(roles => {
+      this.userRoles = roles || [];
+      this.canAddAnimalGroup = this.userRoles.includes(PERMISSIONS.AnimalGroupAdd);
     });
-    this.subs.push(s);
+    this.subs.push(subRoles);
   }
 
   loadAnimalGroups(pageNo: number, recordPerPage: number): void {
@@ -116,6 +128,8 @@ export class AnimalGroupListComponent implements OnInit, OnDestroy {
       recordPerPage,
       searchValue: this.searchValue || '',
       status: this.filterStatus,
+      sortColumn: this.sortColumn || '',
+      sortDirection: this.sortDirection,
     };
 
     const s = this.animalGroupService.getAnimalGroupDetails(payload).subscribe({
@@ -133,12 +147,16 @@ export class AnimalGroupListComponent implements OnInit, OnDestroy {
   onSearch(value: string): void {
     this.searchValue = value;
     this.pageIndex = 0;
+    this.sortColumn = '';
+    this.sortDirection = 'asc';
     this.loadAnimalGroups(1, this.pageSize);
   }
 
   onStatusChange(status: number | null): void {
     this.filterStatus = status === null ? 2 : status;
     this.pageIndex = 0;
+    this.sortColumn = '';
+    this.sortDirection = 'asc';
     this.loadAnimalGroups(1, this.pageSize);
   }
 
@@ -146,6 +164,13 @@ export class AnimalGroupListComponent implements OnInit, OnDestroy {
     this.pageIndex = event.pageIndex;
     this.pageSize = event.pageSize;
     this.loadAnimalGroups(this.pageIndex + 1, this.pageSize);
+  }
+
+  onSortChange(event: { column: string; direction: 'asc' | 'desc' }): void {
+    this.sortColumn = event.column;
+    this.sortDirection = event.direction;
+    this.pageIndex = 0;
+    this.loadAnimalGroups(1, this.pageSize);
   }
 
   onToggleActive(event: { row: any; isActive: boolean }): void {
@@ -207,8 +232,6 @@ export class AnimalGroupListComponent implements OnInit, OnDestroy {
     this.loadAnimalGroups(1, this.pageSize);
   }
   openAddModal(): void {
-  this.animalGroupModalRef.openModal(false, {
-    farmId: this.farmId 
-  });
-}
+    this.animalGroupModalRef.openModal(false);
+  }
 }

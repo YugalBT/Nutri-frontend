@@ -55,3 +55,33 @@ input:checked + .slider:before {
 .cke_notification_warning {
   display: none !important;
 }
+
+/* Badge Styles */
+.rt-badge {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 500;
+  color: white;
+}
+
+.badge-green {
+  background-color: #28a745 !important;
+}
+
+.badge-blue {
+  background-color: #007bff !important;
+}
+
+.badge-light-blue {
+  background-color: #17a2b8 !important;
+}
+
+.badge-gray {
+  background-color: #6c757d !important;
+}
+
+.badge-default {
+  background-color: #adb5bd !important;
+}

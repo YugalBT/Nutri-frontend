@@ -184,7 +184,7 @@
       </div> -->
 
       <div class="text-end mt-4">
-        <button class="btn add-btn px-4" type="submit" [disabled]="companyForm.invalid">{{'companysetting.saveSettings' | translate}}</button>
+        <button *ngIf="canSave" class="btn add-btn px-4" type="submit" [disabled]="companyForm.invalid">{{'companysetting.saveSettings' | translate}}</button>
       </div>
 
     </form>

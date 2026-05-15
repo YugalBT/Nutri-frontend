@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ReusableTableComponent } from '../../../shared/components/reusable-table/reusable-table.component';
 import { AddeditComponent } from '../addedit/addedit.component';
@@ -14,11 +15,14 @@ import { UsersService } from '../../../core/services/users/user.service';
 import { PaginationRequest } from '../../../shared/modal/pagination-request.model';
 import { CommonService } from '../../../shared/services/common.service';
 import { PERMISSIONS } from '../../../core/constants/permissions.constants';
+import { PermissionService } from '../../../shared/services/permission.service';
+import { Store } from '@ngrx/store';
+import { selectUserRoles } from '../../../state/auth/auth.selectors';
 
 @Component({
   selector: 'app-list',
   standalone: true,
-  imports: [ReusableTableComponent, AddeditComponent, TranslatePipe, GlobalSearchComponent],
+  imports: [CommonModule, ReusableTableComponent, AddeditComponent, TranslatePipe, GlobalSearchComponent],
   templateUrl: './list.component.html',
   styleUrls: ['./list.component.css']
 })
@@ -36,6 +40,13 @@ export class ListComponent implements OnInit, OnDestroy {
   searchValue = '';
   filterStatus: number | null = 2;
 
+  // Permissions
+  canAddUser = false;
+  viewPermission = PERMISSIONS.UserView;
+  editPermission = PERMISSIONS.UserEdit;
+  deletePermission = PERMISSIONS.UserDelete;
+  userRoles: string[] = [];
+
   private subs: Subscription[] = [];
   private langSub: Subscription | undefined;
 
@@ -45,7 +56,9 @@ export class ListComponent implements OnInit, OnDestroy {
     private toast: ToastService,
     private confirm: ConfirmDialogService,
     private spinner: NgxSpinnerService,
-    private commonService : CommonService
+    private commonService : CommonService,
+    private permissionService: PermissionService,
+    private store: Store
   ) {
     this.setColumns();
     this.langSub = this.translate.lang$.subscribe(() => this.setColumns());
@@ -53,15 +66,23 @@ export class ListComponent implements OnInit, OnDestroy {
 
   // 🔹 Load Users Initially
   ngOnInit(): void {
+    this.loadUserPermissions();
 
-    if(!this.commonService.checkPermission(PERMISSIONS.UserView)
-      || !this.commonService.checkPermission(PERMISSIONS.UserDelete))
+    if(!this.commonService.checkPermission(PERMISSIONS.UserView, false))
         return;
     this.loadUsers(1, this.pageSize);
     const sub = this.usersService.usersChanged$.subscribe(() => {
       this.loadUsers(this.pageIndex + 1, this.pageSize);
     });
     this.subs.push(sub);
+  }
+
+  private loadUserPermissions(): void {
+    const subRoles = this.store.select(selectUserRoles).subscribe(roles => {
+      this.userRoles = roles || [];
+      this.canAddUser = this.userRoles.includes(PERMISSIONS.UserAdd);
+    });
+    this.subs.push(subRoles);
   }
 
   private loadUsers(pageNo: number, recordPerPage: number): void {
@@ -157,8 +178,7 @@ export class ListComponent implements OnInit, OnDestroy {
 
 
   onDelete(row: any): void {
-    if(!this.commonService.checkPermission(PERMISSIONS.UserView)
-      || !this.commonService.checkPermission(PERMISSIONS.UserDelete))
+    if(!this.commonService.checkPermission(PERMISSIONS.UserDelete))
         return;
     const id = row?.userId;
     if (!id) {

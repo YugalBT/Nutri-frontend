@@ -21,7 +21,8 @@ import { CompanyService } from '../../../core/services/company/company.service';
 import { CompanyList } from '../../../core/models/company-list';
 import { Store } from '@ngrx/store';
 import { User } from '../../../state/auth/auth.models';
-import { selectAuthUser } from '../../../state/auth/auth.selectors';
+import { selectAuthUser, selectUserRoles } from '../../../state/auth/auth.selectors';
+import { PermissionService } from '../../../shared/services/permission.service';
 
 declare var bootstrap: any;
 
@@ -46,6 +47,8 @@ export class AddeditComponent implements OnInit, OnDestroy {
 
   isEdit = false;
   showCurrent = false;
+  canSave = false;
+  userRoles: string[] = [];
 
   roles: RoleList[] = [];
   rolesLoading = false;
@@ -69,11 +72,13 @@ export class AddeditComponent implements OnInit, OnDestroy {
     private translate: TranslateService,
     public phoneService: PhoneService,
     private companiesService: CompanyService,
-    private store: Store
+    private store: Store,
+    private permissionService: PermissionService
   ) { this.user$ = this.store.select(selectAuthUser);}
 
 
   ngOnInit(): void {
+    this.loadUserPermissions();
 
     if (
       !this.commonService.checkPermission(PERMISSIONS.UserAdd) &&
@@ -88,6 +93,20 @@ export class AddeditComponent implements OnInit, OnDestroy {
 
     // if not superadmin then disable companies selection
 
+  }
+
+  private loadUserPermissions(): void {
+    const subRoles = this.store.select(selectUserRoles).subscribe(roles => {
+      this.userRoles = roles || [];
+      this.updateCanSave();
+    });
+    this.subs.push(subRoles);
+  }
+
+  private updateCanSave(): void {
+    this.canSave = this.isEdit 
+      ? this.userRoles.includes(PERMISSIONS.UserEdit) 
+      : this.userRoles.includes(PERMISSIONS.UserAdd);
   }
 
   @HostListener('document:click', ['$event'])
@@ -111,7 +130,7 @@ closeOnOutsideClick(event: MouseEvent) {
   private initializeForm(): void {
     this.form = this.fb.group({
       name: ['', [Validators.required]],
-      middleName: ['', [Validators.required]],
+      middleName: [''],
       lastName: ['', [Validators.required]],
       email: ['', [Validators.required, Validators.email]],
       phone: [
@@ -228,6 +247,7 @@ closeOnOutsideClick(event: MouseEvent) {
 
   openModal(edit = false, data?: any): void {
     this.isEdit = edit;
+    this.updateCanSave();
     this.form.reset({ isActive: true });
     this.tenantIds.clear();
     this.searchCompany = '';
@@ -266,6 +286,10 @@ closeOnOutsideClick(event: MouseEvent) {
   /* ---------------- SAVE ---------------- */
 
   saveUser(): void {
+    if (!this.canSave) {
+      this.toast.error(this.translate.instant('common.noPermission') || 'No permission to save');
+      return;
+    }
 
     if (
       !this.commonService.checkPermission(PERMISSIONS.UserAdd) &&

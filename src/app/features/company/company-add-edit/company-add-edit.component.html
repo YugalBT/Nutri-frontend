@@ -229,24 +229,24 @@
                   formControlName="middleName"
                   [placeholder]="'company.middleNamePlaceholder' | translate"
                 />
-                <div
+                <!-- <div
                   *ngIf="form.get('middleName')?.errors?.['pattern']"
                   class="text-danger"
                 >
                   {{ "validation.onlyChars" | translate }}
-                </div>
-                <div
+                </div> -->
+                <!-- <div
                   *ngIf="form.get('middleName')?.errors?.['minlength']"
                   class="text-danger"
                 >
                   {{ "validation.minLength" | translate }}
-                </div>
-                <div
+                </div> -->
+                <!-- <div
                   *ngIf="form.get('middleName')?.errors?.['maxlength']"
                   class="text-danger"
                 >
                   {{ "validation.maxLength" | translate }}
-                </div>
+                </div> -->
               </div>
               <div class="col-md-4 col-12">
                 <label class="form-label"
@@ -514,12 +514,12 @@
                   [placeholder]="'company.middleNamePlaceholder' | translate"
                 />
                 <!-- Middle Name is optional, so no required validation message -->
-                <div
+                <!-- <div
                   *ngIf="form.get('userMiddleName')?.errors?.['pattern']"
                   class="text-danger"
                 >
                   {{ "addressValidation.userMiddleNamePattern" | translate }}
-                </div>
+                </div> -->
               </div>
               <div class="col-md-4 col-12">
                 <label class="form-label"
@@ -675,24 +675,29 @@
                   >
                 </label>
                 <div class="input-group">
-                  <input
-                    [type]="!showCurrent ? 'password' : 'text'"
-                    autocomplete="off"
-                    class="form-control"
-                    formControlName="password"
-                    [placeholder]="'company.passwordPlaceholder' | translate"
-                  />
-                  <span
-                    class="input-group-text"
-                    role="button"
-                    (click)="showCurrent = !showCurrent"
-                  >
-                    <i
-                      class="fa"
-                      [ngClass]="showCurrent ? 'fa-eye' : 'fa-eye-slash'"
-                    ></i>
-                  </span>
-                </div>
+  <!-- Dummy input to prevent autofill -->
+  <input type="text" style="display:none" autocomplete="off">
+
+  <!-- Password input field with autocomplete="new-password" -->
+  <input
+    [type]="!showCurrent ? 'password' : 'text'"
+    autocomplete="new-password"  
+    class="form-control"
+    formControlName="password"
+    name="user-password"  
+    [placeholder]="'company.passwordPlaceholder' | translate"
+  />
+  <span
+    class="input-group-text"
+    role="button"
+    (click)="showCurrent = !showCurrent"
+  >
+    <i
+      class="fa"
+      [ngClass]="showCurrent ? 'fa-eye' : 'fa-eye-slash'"
+    ></i>
+  </span>
+</div>
                 <!-- PASSWORD ERRORS (REAL TIME) -->
                 <div
                   *ngIf="form.get('password')?.dirty"
@@ -740,7 +745,7 @@
         <button class="btn btn-outline-secondary" (click)="closeModal()">
           {{ "common.cancel" | translate }}
         </button>
-        <button class="btn add-btn" (click)="saveCompany()">
+        <button *ngIf="canSave" class="btn add-btn" (click)="saveCompany()" [disabled]="form.invalid">
           {{ "common.save" | translate }}
         </button>
       </div>

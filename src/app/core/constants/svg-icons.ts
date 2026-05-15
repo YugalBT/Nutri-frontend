@@ -99,6 +99,42 @@ SUPPLIER: `
   <path d="M13 12h.01"/>
   <path d="M13 15h.01"/>
 </svg>`,
+SUPPLIER_MASTER: `
+<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22"
+  viewBox="0 0 24 24" fill="none" stroke="white"
+  stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+  <path d="M3 21h18"/>
+  <path d="M5 21V7l7-4 7 4v14"/>
+  <circle cx="12" cy="12" r="2"/>
+</svg>
+`,
+PRICING: `
+<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22"
+  viewBox="0 0 24 24" fill="none" stroke="white"
+  stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+  <path d="M12 1v22"/>
+  <path d="M17 5H9a3 3 0 0 0 0 6h6a3 3 0 0 1 0 6H7"/>
+</svg>
+`,
+PRODUCTION: `
+<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22"
+  viewBox="0 0 24 24" fill="none" stroke="white"
+  stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+  <circle cx="12" cy="12" r="3"/>
+  <path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1"/>
+  <path d="M4.6 9a1.7 1.7 0 0 0-.3-1.8l-.1-.1"/>
+</svg>
+`,
+ARCHIVE: `
+<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22"
+  viewBox="0 0 24 24" fill="none" stroke="white"
+  stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
 
+  <rect x="3" y="4" width="18" height="4" rx="1"></rect>
+  <path d="M5 8v11h14V8"></path>
+  <path d="M10 12h4"></path>
+
+</svg>
+`,
 
 };

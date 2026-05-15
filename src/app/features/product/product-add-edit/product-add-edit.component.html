@@ -2,6 +2,7 @@
   <div class="modal-dialog modal-lg modal-dialog-centered">
     <div class="modal-content">
 
+      <!-- HEADER -->
       <div class="modal-header">
         <h5 class="modal-title">
           {{ isEdit ? ('product.editProduct' | translate) : ('product.addProduct' | translate) }}
@@ -9,15 +10,14 @@
         <button type="button" class="btn-close" (click)="closeModal()"></button>
       </div>
 
+      <!-- BODY -->
       <div class="modal-body">
-
         <form [formGroup]="form">
 
           <div class="row g-3">
 
             <!-- Product Name -->
             <div class="col-md-4">
-
               <label class="form-label">
                 {{ "product.name" | translate }}
                 <sup class="text-danger">*</sup>
@@ -26,25 +26,18 @@
               <input
                 formControlName="productName"
                 class="form-control"
-                 [placeholder]="'product.namePlaceholder' | translate"
+                [placeholder]="'product.namePlaceholder' | translate"
                 [class.is-invalid]="form.get('productName')?.touched && form.get('productName')?.invalid"
               />
 
               <div class="invalid-feedback"
                    *ngIf="form.get('productName')?.touched && form.get('productName')?.errors">
-
-                <span *ngIf="form.get('productName')?.errors?.['required']">
-                  {{ "validation.required" | translate }}
-                </span>
-
+                {{ "validation.required" | translate }}
               </div>
-
             </div>
-
 
             <!-- Product Code -->
             <div class="col-md-4">
-
               <label class="form-label">
                 {{ "product.code" | translate }}
               </label>
@@ -55,16 +48,10 @@
                 readonly
                 [placeholder]="'product.codePlaceholder' | translate"
               />
-
             </div>
-
-
-            
-
 
             <!-- Effective Date -->
             <div class="col-md-4">
-
               <label class="form-label">
                 {{ "product.effectiveDate" | translate }}
                 <sup class="text-danger">*</sup>
@@ -79,37 +66,80 @@
 
               <div class="invalid-feedback"
                    *ngIf="form.get('effectiveDate')?.touched && form.get('effectiveDate')?.errors">
-
                 {{ "validation.required" | translate }}
-
               </div>
+            </div>
 
+            <!-- FORMAT -->
+            <div class="col-md-4">
+              <label class="form-label">
+                {{ "product.format" | translate }}
+                <sup class="text-danger">*</sup>
+              </label>
+              <select formControlName="format" class="form-select"
+                      [class.is-invalid]="form.get('format')?.touched && form.get('format')?.invalid">
+                <option [ngValue]="null">{{ 'product.selectFormat' | translate }}</option>
+                <option *ngFor="let f of formats" [value]="f.name">{{ f.name }}</option>
+              </select>
+              <div class="invalid-feedback">{{ 'validation.required' | translate }}</div>
+            </div>
+
+            <!-- CATEGORY -->
+            <div class="col-md-4">
+              <label class="form-label">
+                {{ "product.category" | translate }}
+                <sup class="text-danger">*</sup>
+              </label>
+              <select formControlName="category" class="form-select"
+                      [class.is-invalid]="form.get('category')?.touched && form.get('category')?.invalid">
+                <option [ngValue]="null">{{ 'product.selectCategory' | translate }}</option>
+                <option *ngFor="let c of categories" [value]="c.name">{{ c.name }}</option>
+              </select>
+              <div class="invalid-feedback">{{ 'validation.required' | translate }}</div>
+            </div>
+
+            <!-- TYPE (optional — used for product classification only, does not affect pricing) -->
+            <div class="col-md-4">
+              <label class="form-label">
+                Dosage
+                <sup class="text-danger">*</sup>
+              </label>
+              <select formControlName="dosage" class="form-select"
+                      [class.is-invalid]="form.get('dosage')?.touched && form.get('dosage')?.invalid">
+                <option [ngValue]="null">-- Select Dosage --</option>
+                <option *ngFor="let d of dosages" [value]="d.name">{{ d.name }}</option>
+              </select>
+              <div class="invalid-feedback">{{ 'validation.required' | translate }}</div>
+            </div>
+
+            <!-- TYPE (optional, product classification only) -->
+            <div class="col-md-4">
+              <label class="form-label">
+                Type
+              </label>
+              <select formControlName="type" class="form-select">
+                <option [ngValue]="null">{{ 'product.selectType' | translate }}</option>
+                <option *ngFor="let t of types" [value]="t.name">{{ t.name }}</option>
+              </select>
             </div>
 
           </div>
 
         </form>
-
       </div>
 
-
+      <!-- FOOTER -->
       <div class="modal-footer">
-
-        <button class="btn btn-outline-secondary"
-                (click)="closeModal()">
-
+        <button class="btn btn-outline-secondary" (click)="closeModal()">
           {{ "common.cancel" | translate }}
-
         </button>
 
-
-        <button class="btn add-btn"
-                (click)="saveProduct()">
-
+        <button *ngIf="canSave"
+                class="btn add-btn"
+                (click)="saveProduct()"
+                [disabled]="form.invalid">
           {{ isEdit ? ('common.update' | translate) : ('common.save' | translate) }}
-
         </button>
-
       </div>
 
     </div>

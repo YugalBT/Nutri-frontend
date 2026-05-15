@@ -1,0 +1,38 @@
+.calves-entry .table-card {
+  background: #fff;
+  border-radius: 8px;
+  border: 1px solid #e8ecf0;
+  overflow: hidden;
+}
+
+.calves-entry .table-card-header {
+  padding: 0.75rem 1.25rem;
+  background: #f8f9fa;
+  border-bottom: 1px solid #e8ecf0;
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: #344767;
+}
+
+.calves-entry .form-section {
+  padding: 1.25rem;
+}
+
+.calves-entry .form-group-item label {
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: #6c757d;
+  margin-bottom: 0.3rem;
+  display: block;
+}
+
+.calves-entry .filters-section {
+  margin-bottom: 1rem;
+}
+
+.calves-entry .filter-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  align-items: center;
+}

@@ -5,7 +5,7 @@
       <h3 class="page-title">{{ 'animalLactationStage.Heading' | translate }}</h3>
     </div>
 
-    <button class="btn add-btn" (click)="animalModal.openModal()">
+    <button *ngIf="canAddAnimalLactation" class="btn add-btn" (click)="animalModal.openModal()">
       <i class="bi bi-plus-lg me-2"></i>
       {{ 'animalLactationStage.addLactationStage' | translate }}
     </button>
@@ -34,6 +34,9 @@
       [totalRecords]="totalRecords"
       [pageSize]="pageSize"
       [pageIndex]="pageIndex"
+      [viewPermission]="viewPermission"
+      [editPermission]="editPermission"
+      [deletePermission]="deletePermission"
       (pageChange)="onPageChange($event)"
       (toggleActive)="onToggleActive($event)"
       (deleteRow)="onDelete($event)"

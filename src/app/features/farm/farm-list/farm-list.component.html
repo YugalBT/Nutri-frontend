@@ -6,7 +6,7 @@
       <h3 class="page-title">{{ 'farm.Heading' | translate }}</h3>
     </div>
 
-    <button class="btn add-btn" (click)="farmModal.openModal()">
+    <button class="btn add-btn" *ngIf="canAddFarm" (click)="farmModal.openModal()">
       <i class="bi bi-plus-lg me-2"></i>
       {{ 'farm.addFarm' | translate }}
     </button>
@@ -34,6 +34,10 @@
       [pageable]="true"
       [totalRecords]="totalRecords"
       [clickableField]="'farmName'"
+      [viewPermission]="viewPermission"
+      [editPermission]="editPermission"
+      [deletePermission]="deletePermission"
+      [showView]="true"
       (cellClick)="onCellClick($event)"
       [pageSize]="pageSize"
       [pageIndex]="pageIndex"

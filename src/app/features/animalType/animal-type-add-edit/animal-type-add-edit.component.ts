@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ToastService } from '../../../shared/services/toast.service';
 import { AnimaltypeService } from '../../../core/services/animaltype/animaltype.service';
@@ -7,6 +7,10 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { CommonService } from '../../../shared/services/common.service';
 import { PERMISSIONS } from '../../../core/constants/permissions.constants';
 import { TranslatePipe } from '../../../i18n/translate.pipe';
+import { PermissionService } from '../../../shared/services/permission.service';
+import { Store } from '@ngrx/store';
+import { selectUserRoles } from '../../../state/auth/auth.selectors';
+import { Subscription } from 'rxjs';
 
 declare var bootstrap: any;
 @Component({
@@ -17,39 +21,67 @@ declare var bootstrap: any;
   templateUrl: './animal-type-add-edit.component.html',
   styleUrl: './animal-type-add-edit.component.css'
 })
-export class AnimalTypeAddEditComponent implements OnInit{
+export class AnimalTypeAddEditComponent implements OnInit, OnDestroy {
 
   @ViewChild('animalTypeModal') animalTypeModal!: ElementRef;
   private modalInstance: any;
 
   form!: FormGroup;
   isEdit = false;
+  canSave = false;
+  userRoles: string[] = [];
+
+  private subs: Subscription[] = [];
 
     constructor(
     private fb: FormBuilder,
     private animalTypeService: AnimaltypeService,
     private toast: ToastService,
-    private commonService : CommonService
+    private commonService : CommonService,
+    private permissionService: PermissionService,
+    private store: Store
   ) {}
   
-    ngOnInit(): void {
-
-    if(!this.commonService.checkPermission(PERMISSIONS.AnimalTypeAdd)|| !this.commonService.checkPermission(PERMISSIONS.AnimalTypeEdit))
-      return;
+  ngOnInit(): void {
+    this.loadUserPermissions();
     this.form = this.fb.group({
       typeNameIt: ['', 
         [Validators.minLength(3),Validators.maxLength(20),
-        Validators.pattern(/^[A-Za-z]+$/)]],
+        Validators.pattern(/^[A-Za-z]+$/)]], 
       typeNameEn: ['', 
         [Validators.required, Validators.minLength(3),Validators.maxLength(20),
-           Validators.pattern(/^[A-Za-z]+$/)]],
+           Validators.pattern(/^[A-Za-z]+$/)]], 
       animalTypeId: [''] 
     });
+  }
+
+  private loadUserPermissions(): void {
+    const subRoles = this.store.select(selectUserRoles).subscribe(roles => {
+      this.userRoles = roles || [];
+      this.updateCanSave();
+    });
+    this.subs.push(subRoles);
+  }
+
+  private updateCanSave(): void {
+    this.canSave = this.isEdit 
+      ? this.userRoles.includes(PERMISSIONS.AnimalTypeEdit) 
+      : this.userRoles.includes(PERMISSIONS.AnimalTypeAdd);
+  }
+
+  ngOnDestroy(): void {
+    this.subs.forEach(sub => sub.unsubscribe());
   }
   
     
   openModal(edit = false, data?: any) {
     this.isEdit = edit;
+    this.updateCanSave();
+
+    if (!this.canSave) {
+      this.toast.error('No permission to open this action');
+      return;
+    }
 
     if (edit && data) {
       this.form.patchValue(data);
@@ -66,9 +98,11 @@ export class AnimalTypeAddEditComponent implements OnInit{
   }
 
    save() {
-    if(!this.commonService.checkPermission(PERMISSIONS.AnimalTypeAdd)|| !this.commonService.checkPermission(PERMISSIONS.AnimalTypeEdit))
+    if (!this.canSave) {
+      this.toast.error('No permission to save');
       return;
-    
+    }
+
     if (this.form.invalid) {
       this.form.markAllAsTouched();
       return;

@@ -1,4 +1,5 @@
-import { Component, ViewChild, OnDestroy, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { Component, Input, ViewChild, OnDestroy, OnInit } from '@angular/core';
 import { ReusableTableComponent } from '../../../shared/components/reusable-table/reusable-table.component';
 import { MaterialAddEditComponent } from '../material-add-edit/material-add-edit.component';
 import { GlobalSearchComponent } from '../../../shared/components/global-search/global-search.component';
@@ -9,11 +10,15 @@ import { ConfirmDialogService } from '../../../shared/services/confirm-dialog.se
 import { TranslateService } from '../../../i18n/translate.service';
 import { TranslatePipe } from '../../../i18n/translate.pipe';
 import { ApiResponse } from '../../../core/models/api-response';
+import { TokenService } from '../../../shared/services/token.service';
+import { PERMISSIONS } from '../../../core/constants/permissions.constants';
+import { CommonService } from '../../../shared/services/common.service';
 
 @Component({
   selector: 'app-material-list',
   standalone: true,
   imports: [
+    CommonModule,
     ReusableTableComponent,
     MaterialAddEditComponent,
     GlobalSearchComponent,
@@ -26,13 +31,20 @@ export class MaterialListComponent implements OnInit, OnDestroy {
 
   @ViewChild('materialModal') materialModal!: MaterialAddEditComponent;
 
+  /**
+   * 'deatech'  → show only Deatech-owned materials (SupplierId IS NULL).
+   *              Only office users / Super Admin see this view.
+   * 'supplier' → show only the authenticated supplier's own materials.
+   * 'all'      → no ownership filter (default admin view).
+   */
+  @Input() mode: 'deatech' | 'supplier' | 'all' = 'all';
+
   columns: string[] = [];
   columnFields: string[] = [
     'materialName',
-    'materialCode',
-    'supplierName',
+   // 'materialCode',
+    // 'supplierName',
     'unit',
-    'basePrice',
     'isActive'
   ];
 
@@ -42,6 +54,14 @@ export class MaterialListComponent implements OnInit, OnDestroy {
   pageIndex = 0;
   searchValue = '';
   filterStatus: number | null = 2;
+  isSupplier = false;
+  supplierData: any = null;
+
+  // Permissions
+  canAddMaterials = false;
+  viewPermission = PERMISSIONS.MaterialsView;
+  editPermission = PERMISSIONS.MaterialsEdit;
+  deletePermission = PERMISSIONS.MaterialsDelete;
 
   private subs: Subscription[] = [];
 
@@ -49,27 +69,33 @@ export class MaterialListComponent implements OnInit, OnDestroy {
     private materialService: MaterialService,
     private toast: ToastService,
     private confirm: ConfirmDialogService,
-    private translate: TranslateService
+    private translate: TranslateService,
+    private tokenservice: TokenService,
+    private commonService: CommonService
   ) {
     this.setColumns();
 
     this.translate.lang$.subscribe(() => {
       this.setColumns();
     });
+    this.isSupplier = !!this.tokenservice.isSupplier();
+    if (this.isSupplier) {
+      this.supplierData = this.tokenservice.getSupplierData();
+    }
   }
 
   private setColumns(): void {
-    this.columns = [
+      this.columns = [
       this.translate.instant('material.name'),
-      this.translate.instant('material.code'),
-      this.translate.instant('material.supplier'),
+      //this.translate.instant('material.code'),
+      //this.translate.instant('material.supplier'),
       this.translate.instant('material.unit'),
-      this.translate.instant('material.basePrice'),
       this.translate.instant('common.status')
     ];
   }
 
   ngOnInit(): void {
+    this.loadUserPermissions();
 
     this.loadMaterials(1, this.pageSize);
 
@@ -81,13 +107,20 @@ export class MaterialListComponent implements OnInit, OnDestroy {
     this.subs.push(sub);
   }
 
+  private loadUserPermissions(): void {
+    this.canAddMaterials = this.commonService.checkPermission(PERMISSIONS.MaterialsAdd, false);
+  }
+
   private loadMaterials(pageNo: number, recordPerPage: number): void {
 
     const payload = {
       pageNo,
       recordPerPage,
       searchValue: this.searchValue || '',
-      status: this.filterStatus
+      status: this.filterStatus,
+      supplierId: this.supplierData?.supplierId,
+      // Pass ownership so the backend filters to the correct material pool
+      ownership: this.mode === 'all' ? '' : this.mode,
     };
 
     const sub = this.materialService.getMaterials(payload)
@@ -101,28 +134,66 @@ export class MaterialListComponent implements OnInit, OnDestroy {
 
     this.subs.push(sub);
   }
-
 exportMaterials(): void {
 
-  const sub = this.materialService
-    .exportMaterials()
-    .subscribe((blob: Blob) => {
+  const sub = this.materialService.exportMaterials()
+    .subscribe((res) => {
 
-      const url = window.URL.createObjectURL(blob);
+      if (!res?.isSuccess || !res?.data) {
+        this.toast.error('Export failed');
+        return;
+      }
+
+      // 🔥 Direct Base64 → Blob (short method)
+      const blob = new Blob(
+        [Uint8Array.from(atob(res.data), c => c.charCodeAt(0))],
+        { type: 'text/csv;charset=utf-8;' }
+      );
+
+      const url = URL.createObjectURL(blob);
 
       const link = document.createElement('a');
       link.href = url;
       link.download = 'materials.csv';
       link.click();
 
-      window.URL.revokeObjectURL(url);
+      URL.revokeObjectURL(url);
 
       this.toast.success('Materials exported successfully');
-
     });
 
   this.subs.push(sub);
+}
 
+exportSampleCSV(): void {
+
+  const sub = this.materialService.exportSampleCSV()
+    .subscribe((res) => {
+
+      if (!res?.isSuccess || !res?.data) {
+        this.toast.error('Export failed');
+        return;
+      }
+
+      // 🔥 Direct Base64 → Blob (short method)
+      const blob = new Blob(
+        [Uint8Array.from(atob(res.data), c => c.charCodeAt(0))],
+        { type: 'text/csv;charset=utf-8;' }
+      );
+
+      const url = URL.createObjectURL(blob);
+
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = 'materials-sample.csv';
+      link.click();
+
+      URL.revokeObjectURL(url);
+
+      this.toast.success('Sample CSV downloaded successfully');
+    });
+
+  this.subs.push(sub);
 }
 
   onSearch(value: string): void {
@@ -189,7 +260,9 @@ importMaterials(event: any): void {
             this.toast.error(res.message);
           }
         },
-        error: (err) => this.toast.error(err?.error?.message)
+        error: (err) => this.toast.error(
+          err?.error?.message || err?.error || err?.message || 'Failed to update material status'
+        )
       });
 
     this.subs.push(sub);
@@ -218,7 +291,11 @@ importMaterials(event: any): void {
               this.toast.error(res.message);
             }
           },
-          error: (err) => this.toast.error(err?.error?.message)
+          error: (err) => this.toast.error(
+            typeof err?.error === 'string'
+              ? err.error
+              : err?.error?.message || err?.message || 'Failed to delete material'
+          )
         });
 
       this.subs.push(sub);

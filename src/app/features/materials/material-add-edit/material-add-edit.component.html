@@ -42,7 +42,7 @@
     </div>
 
     <!-- Material Code -->
-    <div class="col-12 col-md-4">
+    <!-- <div class="col-12 col-md-4">
       <label class="form-label">
         {{ "material.code" | translate }}
         <sup class="text-danger">*</sup>
@@ -64,56 +64,38 @@
           {{ "validation.maxLength200" | translate }}
         </span>
       </div>
-    </div>
-     <!-- Unit -->
-    <div class="col-12 col-md-4">
-      <label class="form-label">
-        {{ "material.unit" | translate }}
-        <sup class="text-danger">*</sup>
-      </label>
+    </div> -->
+<!-- Unit -->
+<div class="col-12 col-md-4">
+  <label class="form-label">
+    {{ "material.unit" | translate }}
+    <sup class="text-danger">*</sup>
+  </label>
 
-      <input
-        formControlName="unit"
-        class="form-control"
-        [placeholder]="'material.placeholder.unit' | translate"
-        [class.is-invalid]="form.get('unit')?.touched && form.get('unit')?.invalid"
-      />
+  <select
+    formControlName="unit"
+    class="form-select"
+    [class.is-invalid]="form.get('unit')?.touched && form.get('unit')?.invalid">
 
-      <div class="invalid-feedback"
-           *ngIf="form.get('unit')?.touched && form.get('unit')?.errors">
-        <span *ngIf="form.get('unit')?.errors?.['required']">
-          {{ "validation.required" | translate }}
-        </span>
-        <span *ngIf="form.get('unit')?.errors?.['maxlength']">
-          {{ "validation.maxLength200" | translate }}
-        </span>
-      </div>
-    </div>
-     <!-- Base Price -->
-    <div class="col-12 col-md-4">
-      <label class="form-label">
-        {{ "material.basePrice" | translate }}
-        <sup class="text-danger">*</sup>
-      </label>
+    <option value="" disabled selected>
+      {{ "material.placeholder.unit" | translate }}
+    </option>
 
-      <input
-        formControlName="basePrice"
-        class="form-control"
-        [placeholder]="'material.placeholder.basePrice' | translate"
-        [class.is-invalid]="form.get('basePrice')?.touched && form.get('basePrice')?.invalid"
-      />
+    <option *ngFor="let u of unitList" [value]="u">
+      {{ u }}
+    </option>
 
-      <div class="invalid-feedback"
-           *ngIf="form.get('basePrice')?.touched && form.get('basePrice')?.errors">
-        <span *ngIf="form.get('basePrice')?.errors?.['required']">
-          {{ "validation.required" | translate }}
-        </span>
-        <span *ngIf="form.get('basePrice')?.errors?.['maxlength']">
-          {{ "validation.maxLength200" | translate }}
-        </span>
-      </div>
-    </div>
+  </select>
 
+  <div class="invalid-feedback"
+       *ngIf="form.get('unit')?.touched && form.get('unit')?.errors">
+
+    <span *ngIf="form.get('unit')?.errors?.['required']">
+      {{ "validation.required" | translate }}
+    </span>
+
+  </div>
+</div>
      <!-- Category Name -->
   <div class="col-12 col-md-4">
     <label class="form-label">
@@ -140,7 +122,9 @@
   </div>
 
     <!-- Supplier -->
-    <div class="col-sm-12 col-md-4">
+     
+
+    <!-- <div  *ngIf="!isSupplier" class="col-sm-12 col-md-4">
       <label class="form-label">
         {{ "material.supplier" | translate }}
         <sup class="text-danger">*</sup>
@@ -164,7 +148,7 @@
            *ngIf="form.get('supplierId')?.touched && form.get('supplierId')?.errors">
         {{ "validation.required" | translate }}
       </div>
-    </div>
+    </div> -->
 
   </div>
 </form>

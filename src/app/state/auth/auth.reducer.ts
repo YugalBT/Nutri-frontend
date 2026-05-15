@@ -62,7 +62,17 @@ on(AuthActions.updateFirstLogin, (state, { isFirstLogin }) => ({
     user: state.user
       ? { ...state.user, isFirstLogin }
       : state.user
-  }))
+  })),
+  on(AuthActions.loginSuccess, (state, { user, token }) => ({
+  ...state,
+  user,
+  token,
+  loading: false,
+  error: null,
+  supplier: user?.supplierDetails || null
+}))
+
+  
 
 
 );

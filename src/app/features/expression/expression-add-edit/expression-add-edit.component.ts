@@ -7,6 +7,7 @@ import { FormulaService } from '../../../core/services/formula/formula.service';
 import { SharedModule } from '../../../shared/shared.module';
 import { ToastService } from '../../../shared/services/toast.service';
 import { TranslatePipe } from '../../../i18n/translate.pipe';
+import { PERMISSIONS } from '../../../core/constants/permissions.constants';
 
 declare var bootstrap: any;
 
@@ -23,6 +24,7 @@ export class ExpressionAddEditComponent implements OnInit {
 
   modal: any;
   isEdit = false;
+  canSave = false;
   formulaId: string | null = null;
 
   expressionName = '';
@@ -51,6 +53,14 @@ export class ExpressionAddEditComponent implements OnInit {
 
  openModal(edit = false, data?: any): void {
   this.isEdit = edit;
+  this.canSave = edit
+    ? this.commonService.checkPermission(PERMISSIONS.formulasEdit, false)
+    : this.commonService.checkPermission(PERMISSIONS.FormulaAdd, false);
+  if (!this.canSave) {
+    this.toast.warning('No permission');
+    return;
+  }
+
   this.insertIndex = null;
   this.isvalidated = false;
   this.validatedResult = null;
@@ -183,6 +193,11 @@ export class ExpressionAddEditComponent implements OnInit {
   /* ================= SAVE ================= */
 
   validateExpression(): void {
+    const hasPermission = this.isEdit
+      ? this.commonService.checkPermission(PERMISSIONS.formulasEdit)
+      : this.commonService.checkPermission(PERMISSIONS.FormulaAdd);
+    if (!hasPermission) return;
+
     if (!this.expressionName.trim()) {
       this.toast.warning('Expression name is required');
       return;
@@ -270,6 +285,11 @@ private loadExpressionItems(): void {
   //   });
   // }
 onValidate(): void {
+  const hasPermission = this.isEdit
+    ? this.commonService.checkPermission(PERMISSIONS.formulasEdit)
+    : this.commonService.checkPermission(PERMISSIONS.FormulaAdd);
+  if (!hasPermission) return;
+
   if (!this.expressionName.trim()) {
     this.toast.warning('Expression name is required');
     return;

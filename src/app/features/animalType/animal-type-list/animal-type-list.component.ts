@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { finalize } from 'rxjs/operators';
@@ -14,11 +15,15 @@ import { ToastService } from '../../../shared/services/toast.service';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { CommonService } from '../../../shared/services/common.service';
 import { PERMISSIONS } from '../../../core/constants/permissions.constants';
+import { PermissionService } from '../../../shared/services/permission.service';
+import { Store } from '@ngrx/store';
+import { selectUserRoles } from '../../../state/auth/auth.selectors';
 
 @Component({
   selector: 'app-animal-type-list',
   standalone: true,
   imports: [
+    CommonModule,
     AnimalTypeAddEditComponent,
     ReusableTableComponent,
     GlobalSearchComponent,
@@ -43,6 +48,13 @@ export class AnimalTypeListComponent implements OnInit, OnDestroy {
   searchValue = '';
   filterStatus: number | null = null;
 
+  // Permissions
+  canAddAnimalType = false;
+  viewPermission = PERMISSIONS.AnimalTypeView;
+  editPermission = PERMISSIONS.AnimalTypeEdit;
+  deletePermission = PERMISSIONS.AnimalTypeDelete;
+  userRoles: string[] = [];
+
   private searchDebounce: any;
   private subs: Subscription[] = [];
   private langSub!: Subscription;
@@ -53,7 +65,9 @@ export class AnimalTypeListComponent implements OnInit, OnDestroy {
     private toast: ToastService,
     private confirm: ConfirmDialogService,
     private commonService: CommonService,
-    private translateService: TranslateService
+    private translateService: TranslateService,
+    private permissionService: PermissionService,
+    private store: Store
   ) {
     // initial column load
     this.setColumns();
@@ -64,6 +78,8 @@ export class AnimalTypeListComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    this.loadUserPermissions();
+
     if (!this.commonService.checkPermission(PERMISSIONS.AnimalTypeView))
       return;
 
@@ -73,6 +89,14 @@ export class AnimalTypeListComponent implements OnInit, OnDestroy {
       this.animalTypeService.animalTypeChanged$
         .subscribe(() => this.reloadList())
     );
+  }
+
+  private loadUserPermissions(): void {
+    const subRoles = this.store.select(selectUserRoles).subscribe(roles => {
+      this.userRoles = roles || [];
+      this.canAddAnimalType = this.userRoles.includes(PERMISSIONS.AnimalTypeAdd);
+    });
+    this.subs.push(subRoles);
   }
 
   // TRANSLATED COLUMNS

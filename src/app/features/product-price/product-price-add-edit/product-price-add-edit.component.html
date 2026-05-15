@@ -1,171 +1,362 @@
 <div #priceModal class="modal fade">
+  <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-content border-0 shadow-lg rounded-4 overflow-hidden">
 
-  <div class="modal-dialog modal-lg modal-dialog-centered">
-
-    <div class="modal-content">
-
-      <div class="modal-header">
-
-        <h5 class="modal-title">
-          {{ isEdit ? ('productPrice.editPrice' | translate) : ('productPrice.addPrice' | translate) }}
-        </h5>
-
-        <button class="btn-close" (click)="modalInstance.hide()">
-        </button>
-
+      <!-- ══════════════════════════════════
+           HEADER
+      ══════════════════════════════════ -->
+      <div class="modal-header border-0 pb-0 px-4 pt-4">
+        <div class="d-flex align-items-center gap-3">
+          <div class="ppm-header-icon">
+            <i class="bi bi-currency-euro"></i>
+          </div>
+          <div>
+            <h5 class="modal-title fw-bold mb-0" style="font-size:1.1rem; color:#111827;">
+              {{ isEdit ? ('productPrice.editPrice' | translate) : ('productPrice.addPrice' | translate) }}
+            </h5>
+            <p class="text-muted mb-0" style="font-size:0.8rem;">
+              {{ isEdit
+                  ? ('productPrice.subtitleEdit' | translate)
+                  : ('productPrice.subtitleAdd'  | translate) }}
+            </p>
+          </div>
+        </div>
+        <button type="button" class="btn-close ms-auto" (click)="modalInstance.hide()"></button>
       </div>
 
-
-      <div class="modal-body">
-
+      <!-- ══════════════════════════════════
+           BODY
+      ══════════════════════════════════ -->
+      <div class="modal-body px-4 py-3">
         <form [formGroup]="form">
 
-          <div class="row g-3">
+          <!-- ─────────────────────────────────
+               STEP 1 — PRODUCT & MONTH
+          ───────────────────────────────── -->
+          <div class="ppm-step mb-3">
+            <div class="ppm-step-hd">
+              <span class="ppm-num">1</span>
+              <span class="ppm-step-title">{{ 'productPrice.step.selectProductMonth' | translate }}</span>
+            </div>
 
-            <!-- Product -->
+            <div class="ppm-step-body">
+              <div class="row g-3">
 
-            <div class="col-md-4">
+                <div class="col-md-7">
+                  <label class="form-label ppm-label">
+                    {{ 'productPrice.product' | translate }}
+                    <sup class="text-danger">*</sup>
+                  </label>
+                  <select class="form-select" formControlName="productId"
+                    [class.is-invalid]="form.get('productId')?.touched && form.get('productId')?.invalid">
+                    <option value="" disabled selected>{{ 'productPrice.selectProduct' | translate }}</option>
+                    <option *ngFor="let p of products" [value]="p.productId">{{ p.productName }}</option>
+                  </select>
+                  <div class="invalid-feedback">{{ 'productPrice.productRequired' | translate }}</div>
+                </div>
 
-              <label class="form-label">
-                {{ 'productPrice.product' | translate }}
-                <sup class="text-danger">*</sup>
-              </label>
+                <div class="col-md-5">
+                  <label class="form-label ppm-label">
+                    {{ 'productPrice.month' | translate }}
+                    <sup class="text-danger">*</sup>
+                  </label>
+                  <input type="month" class="form-control" formControlName="priceMonth"
+                    [class.is-invalid]="form.get('priceMonth')?.invalid && form.get('priceMonth')?.touched" />
+                  <div class="invalid-feedback">{{ 'productPrice.monthRequired' | translate }}</div>
+                </div>
 
-              <select class="form-select" formControlName="productId"
-                [class.is-invalid]="form.get('productId')?.touched && form.get('productId')?.invalid">
+              </div>
+            </div>
+          </div>
 
-                <option value="" disabled>
-                  {{ 'productPrice.selectProduct' | translate }}
-                </option>
+          <!-- ─────────────────────────────────
+               STEP 2 — FORMULA COST & RULE
+          ───────────────────────────────── -->
+          <div class="ppm-step ppm-step-auto mb-3" *ngIf="categoryLabel">
+            <div class="ppm-step-hd">
+              <span class="ppm-num auto">2</span>
+              <span class="ppm-step-title">{{ 'productPrice.step.formulaCostRule' | translate }}</span>
+              <span class="badge rounded-pill ppm-auto-badge ms-2">
+                <i class="bi bi-lightning-fill me-1"></i>{{ 'productPrice.autoCalculated' | translate }}
+              </span>
+            </div>
 
+            <div class="ppm-step-body">
 
-                <option *ngFor="let p of products" [value]="p.productId">
+              <!-- Classification tags -->
+              <div class="d-flex flex-wrap gap-2 mb-3">
+                <span class="badge ppm-tag-category rounded-pill">
+                  <i class="bi bi-grid-3x3-gap-fill me-1"></i>{{ categoryLabel }}
+                </span>
+                <span class="badge ppm-tag-default rounded-pill" *ngIf="formatLabel">
+                  <i class="bi bi-layers me-1"></i>{{ formatLabel }}
+                </span>
+                <span class="badge ppm-tag-default rounded-pill" *ngIf="dosageLabel">
+                  <i class="bi bi-droplet-half me-1"></i>{{ dosageLabel }}
+                </span>
+                <span class="badge ppm-tag-formula rounded-pill" *ngIf="formulaTypeLabel">
+                  <i class="bi bi-calculator me-1"></i>{{ formulaTypeLabel }}
+                </span>
+                <span class="badge ppm-tag-special rounded-pill" *ngIf="isSpecialCategory">
+                  <i class="bi bi-star-fill me-1"></i>{{ 'productPrice.specialFormula' | translate }}
+                </span>
+              </div>
 
-                  {{p.productName}}
+              <!-- Cost flow: 3 metric cards with arrows -->
+              <div class="row g-2 align-items-stretch">
 
-                </option>
+                <!-- Formula Cost -->
+                <div class="col">
+                  <div class="ppm-metric-card primary h-100">
+                    <div class="ppm-metric-label">{{ 'productPrice.formulaCost' | translate }}</div>
+                    <div class="ppm-metric-value">€ {{ formulaCost | number:'1.2-2' }}</div>
+                    <div class="ppm-metric-hint">{{ 'productPrice.rawMaterialCostHint' | translate }}</div>
+                  </div>
+                </div>
 
-              </select>
+                <div class="col-auto d-flex align-items-center px-1">
+                  <i class="bi bi-arrow-right text-muted" style="font-size:1.1rem;"></i>
+                </div>
 
-              <div class="invalid-feedback">
-                {{ 'productPrice.productRequired' | translate }}
+                <!-- Target Margin -->
+                <div class="col">
+                  <div class="ppm-metric-card h-100">
+                    <div class="ppm-metric-label">{{ 'productPrice.targetMargin' | translate }}</div>
+                    <div class="ppm-metric-value">{{ targetMarginPercent * 100 | number:'1.1-2' }}%</div>
+                    <div class="ppm-metric-hint">{{ 'productPrice.fromPricingRule' | translate }}</div>
+                  </div>
+                </div>
+
+                <div class="col-auto d-flex align-items-center px-1">
+                  <i class="bi bi-arrow-right text-muted" style="font-size:1.1rem;"></i>
+                </div>
+
+                <!-- Suggested Price -->
+                <div class="col">
+                  <div class="ppm-metric-card result h-100">
+                    <div class="ppm-metric-label">{{ 'productPrice.suggestedPrice' | translate }}</div>
+                    <div class="ppm-metric-value">€ {{ form.getRawValue().suggestedPrice | number:'1.2-2' }}</div>
+                    <div class="ppm-metric-hint">{{ 'productPrice.costDivisorHint' | translate }}</div>
+                  </div>
+                </div>
+
+              </div><!-- /row -->
+
+              <!-- Rule matched -->
+              <div class="d-flex align-items-center gap-2 mt-2" *ngIf="ruleApplied">
+                <i class="bi bi-check-circle-fill text-success" style="font-size:0.9rem;"></i>
+                <span class="text-muted" style="font-size:0.8rem;">
+                  {{ 'productPrice.ruleMatched' | translate }}
+                  <strong class="text-dark">{{ ruleApplied }}</strong>
+                </span>
+              </div>
+
+              <!-- Zero cost warning -->
+              <div class="alert alert-warning py-2 px-3 mb-0 mt-2 d-flex align-items-center gap-2"
+                *ngIf="formulaCost <= 0" style="font-size:0.8rem;">
+                <i class="bi bi-exclamation-triangle-fill"></i>
+                {{ 'productPrice.messages.zeroFormulaCostHint' | translate }}
               </div>
 
             </div>
+          </div>
 
-
-            <!-- Month -->
-
-            <div class="col-md-4">
-
-              <label class="form-label">
-  {{ 'productPrice.month' | translate }}
-  <sup class="text-danger">*</sup>
-</label>
-
-              <input type="month" class="form-control" formControlName="priceMonth"
-                [class.is-invalid]="form.get('priceMonth')?.invalid && form.get('priceMonth')?.touched" />
-
-              <div class="invalid-feedback">
-  {{ 'productPrice.monthRequired' | translate }}
-</div>
-
+          <!-- ─────────────────────────────────
+               STEP 3 — SET THE PRICE
+          ───────────────────────────────── -->
+          <div class="ppm-step mb-3">
+            <div class="ppm-step-hd">
+              <span class="ppm-num">3</span>
+              <span class="ppm-step-title">{{ 'productPrice.step.setCustomerPrice' | translate }}</span>
             </div>
 
+            <div class="ppm-step-body">
+              <div class="row g-3 align-items-end">
 
-            <!-- Previous Price -->
+                <!-- Previous Month -->
+                <div class="col-md-4">
+                  <label class="form-label ppm-label">
+                    {{ 'productPrice.previousMonth' | translate }}
+                    <span class="badge bg-secondary bg-opacity-10 text-secondary ms-1 rounded-pill"
+                      style="font-size:0.68rem;">{{ 'productPrice.referenceTag' | translate }}</span>
+                  </label>
+                  <div class="input-group">
+                    <span class="input-group-text bg-light border-end-0 text-muted">€</span>
+                    <input type="number" class="form-control border-start-0 bg-light text-muted"
+                      formControlName="previousMonthPrice" readonly />
+                  </div>
+                  <div class="form-text">{{ 'productPrice.lastSavedPriceHint' | translate }}</div>
+                </div>
 
-            <div class="col-md-4">
+                <!-- Suggested Price -->
+                <div class="col-md-4">
+                  <label class="form-label ppm-label">
+                    {{ 'productPrice.suggestedPrice' | translate }}
+                    <span class="badge ppm-auto-tag ms-1 rounded-pill"
+                      style="font-size:0.68rem;">{{ 'productPrice.autoTag' | translate }}</span>
+                  </label>
+                  <div class="input-group">
+                    <span class="input-group-text bg-light border-end-0 text-muted">€</span>
+                    <input type="number" class="form-control border-start-0 ppm-input-suggested"
+                      formControlName="suggestedPrice" />
+                  </div>
+                  <div class="form-text">{{ 'productPrice.calculatedOverrideHint' | translate }}</div>
+                </div>
 
-<label class="form-label">
-  {{ 'productPrice.previousPrice' | translate }}
-</label>
+                <!-- Customer Price — PRIMARY INPUT -->
+                <div class="col-md-4">
+                  <label class="form-label ppm-label-primary">
+                    {{ 'productPrice.customerPrice' | translate }}
+                    <sup class="text-danger">*</sup>
+                  </label>
+                  <div class="input-group ppm-price-group">
+                    <span class="input-group-text ppm-price-prefix-box">€</span>
+                    <input type="number" class="form-control ppm-input-price"
+                      formControlName="customerPrice"
+                      placeholder="0.00"
+                      [class.is-invalid]="form.get('customerPrice')?.touched && form.get('customerPrice')?.invalid" />
+                    <div class="invalid-feedback">
+                      <span *ngIf="form.get('customerPrice')?.errors?.['required']">
+                        {{ 'productPrice.validation.customerPriceRequired' | translate }}
+                      </span>
+                      <span *ngIf="form.get('customerPrice')?.errors?.['min']">
+                        {{ 'productPrice.validation.customerPriceMin' | translate }}
+                      </span>
+                    </div>
+                  </div>
+                  <div class="form-text ppm-price-hint">{{ 'productPrice.finalPriceHint' | translate }}</div>
+                </div>
 
-              <input type="number" class="form-control" placeholder="{{ 'productPrice.previousPricePlaceholder' | translate }}"
-                formControlName="previousMonthPrice" />
+              </div><!-- /row -->
+
+              <!-- Commission -->
+              <div class="d-flex align-items-center gap-2 mt-3 p-2 rounded-3 bg-light"
+                *ngIf="form.getRawValue().commissionPercent > 0"
+                style="font-size:0.8rem; color:#6b7280;">
+                <i class="bi bi-percent"></i>
+                {{ 'productPrice.commissionApplied' | translate }}
+                <strong class="text-dark">
+                  {{ form.getRawValue().commissionPercent * 100 | number:'1.2-2' }}%
+                </strong>
+                <span class="badge ppm-auto-tag rounded-pill ms-1"
+                  style="font-size:0.68rem;">{{ 'productPrice.autoFromCategory' | translate }}</span>
+              </div>
 
             </div>
+          </div>
 
+          <!-- ─────────────────────────────────
+               STEP 4 — RESULTING MARGIN
+          ───────────────────────────────── -->
+          <div class="ppm-step ppm-step-result mb-1"
+            *ngIf="(form.getRawValue().customerPrice || 0) > 0 && formulaCost > 0"
+            [class.result-green]="marginColor === 'green'"
+            [class.result-yellow]="marginColor === 'yellow'"
+            [class.result-red]="marginColor === 'red'">
 
-            <!-- Suggested Price -->
-
-            <div class="col-md-4">
-
-<label class="form-label">
-  {{ 'productPrice.suggestedPrice' | translate }}
-</label>
-
-              <input type="number" class="form-control" placeholder="{{ 'productPrice.suggestedPricePlaceholder' | translate }}"
-                formControlName="suggestedPrice" />
-
+            <div class="ppm-step-hd">
+              <span class="ppm-num"
+                [class.green]="marginColor === 'green'"
+                [class.yellow]="marginColor === 'yellow'"
+                [class.red]="marginColor === 'red'">4</span>
+              <span class="ppm-step-title">{{ 'productPrice.step.resultingMargin' | translate }}</span>
+              <span class="badge rounded-pill ms-2 ppm-level-badge"
+                [class.green]="marginLevel === 3"
+                [class.yellow]="marginLevel === 2"
+                [class.red]="marginLevel === 1">
+                <i class="bi me-1"
+                  [ngClass]="marginLevel === 3 ? 'bi-arrow-up-circle-fill'
+                            : marginLevel === 2 ? 'bi-dash-circle-fill'
+                            : 'bi-arrow-down-circle-fill'"></i>
+                <ng-container *ngIf="marginLevel === 3">{{ 'productPrice.marginLevel.high' | translate }}</ng-container>
+                <ng-container *ngIf="marginLevel === 2">{{ 'productPrice.marginLevel.mid' | translate }}</ng-container>
+                <ng-container *ngIf="marginLevel === 1">{{ 'productPrice.marginLevel.low' | translate }}</ng-container>
+              </span>
             </div>
 
+            <div class="ppm-step-body">
 
-            <!-- Customer Price -->
+              <!-- Big % number -->
+              <div class="ppm-margin-big"
+                [class.green]="marginColor === 'green'"
+                [class.yellow]="marginColor === 'yellow'"
+                [class.red]="marginColor === 'red'">
+                {{ marginPercent * 100 | number:'1.2-2' }}%
+              </div>
 
-            <div class="col-md-4">
+              <!-- Bootstrap progress bar -->
+              <div class="progress mb-2" style="height:10px; border-radius:99px;">
+                <div class="progress-bar ppm-bar"
+                  [class.bg-success]="marginColor === 'green'"
+                  [class.ppm-bar-yellow]="marginColor === 'yellow'"
+                  [class.bg-danger]="marginColor === 'red'"
+                  role="progressbar"
+                  [style.width.%]="(marginPercent * 100) > 100 ? 100 : (marginPercent * 100) < 0 ? 0 : (marginPercent * 100)">
+                </div>
+              </div>
 
-              <label class="form-label">
-  {{ 'productPrice.customerPrice' | translate }}
-</label>
+              <!-- Threshold legend -->
+              <div class="d-flex gap-3 flex-wrap mb-3" style="font-size:0.775rem; color:#6b7280;"
+                *ngIf="midThreshold || highThreshold">
+                <span>
+                  <span class="ppm-thresh-dot red me-1"></span>
+                  &lt; {{ midThreshold * 100 | number:'1.0-1' }}% — {{ 'productPrice.marginLevel.low' | translate }}
+                </span>
+                <span>
+                  <span class="ppm-thresh-dot yellow me-1"></span>
+                  {{ midThreshold * 100 | number:'1.0-1' }}–{{ highThreshold * 100 | number:'1.0-1' }}% — {{ 'productPrice.marginLevel.mid' | translate }}
+                </span>
+                <span>
+                  <span class="ppm-thresh-dot green me-1"></span>
+                  ≥ {{ highThreshold * 100 | number:'1.0-1' }}% — {{ 'productPrice.marginLevel.high' | translate }}
+                </span>
+              </div>
 
-              <input type="number" class="form-control" placeholder="{{ 'productPrice.customerPricePlaceholder' | translate }}"
-                formControlName="customerPrice" />
+              <!-- P&L breakdown -->
+              <div class="ppm-breakdown rounded-3 overflow-hidden">
+                <div class="ppm-breakdown-row">
+                  <span class="text-muted">{{ 'productPrice.customerPrice' | translate }}</span>
+                  <span class="fw-semibold">€ {{ form.getRawValue().customerPrice | number:'1.2-2' }}</span>
+                </div>
+                <div class="ppm-breakdown-row">
+                  <span class="text-muted">{{ 'productPrice.breakdown.formulaCost' | translate }}</span>
+                  <span class="text-muted">− € {{ formulaCost | number:'1.2-2' }}</span>
+                </div>
+                <div class="ppm-breakdown-divider"></div>
+                <div class="ppm-breakdown-row total">
+                  <span class="fw-semibold">{{ 'productPrice.breakdown.grossMargin' | translate }}</span>
+                  <span class="fw-bold ppm-margin-result"
+                    [class.green]="marginColor === 'green'"
+                    [class.yellow]="marginColor === 'yellow'"
+                    [class.red]="marginColor === 'red'">
+                    € {{ (form.getRawValue().customerPrice - formulaCost) | number:'1.2-2' }}
+                    &nbsp;({{ marginPercent * 100 | number:'1.2-2' }}%)
+                  </span>
+                </div>
+              </div>
 
             </div>
-
-
-            <!-- Commission -->
-
-            <div class="col-md-4">
-
-<label class="form-label">
-  {{ 'productPrice.commission' | translate }}
-</label>
-
-              <input type="number" class="form-control" placeholder="{{ 'productPrice.commissionPlaceholder' | translate }}"
-                formControlName="commissionPercent" />
-
-            </div>
-
-
-            <!-- Margin -->
-
-            <div class="col-md-4">
-
-<label class="form-label">
-  {{ 'productPrice.margin' | translate }}
-</label>
-
-              <input type="number" class="form-control" placeholder="{{ 'productPrice.marginPlaceholder' | translate }}"
-                formControlName="marginPercent" />
-
-            </div>
-
           </div>
 
         </form>
+      </div><!-- /modal-body -->
 
+      <!-- ══════════════════════════════════
+           FOOTER
+      ══════════════════════════════════ -->
+      <div class="modal-footer border-0 px-4 py-3">
+        <button type="button" class="btn btn-outline-secondary rounded-3"
+          (click)="modalInstance.hide()">
+          {{ 'common.cancel' | translate }}
+        </button>
+        <button *ngIf="canSave" type="button" class="btn add-btn rounded-3"
+          (click)="save()"
+          [disabled]="form.invalid || (form.getRawValue().customerPrice || 0) <= 0">
+          <i class="bi bi-check-circle me-2"></i>
+          {{ 'productPrice.savePrice' | translate }}
+        </button>
       </div>
 
-
-      <div class="modal-footer">
-
-        <button class="btn btn-outline-secondary" (click)="modalInstance.hide()">
-
-           {{ 'common.cancel' | translate }}
-
-        </button>
-
-        <button class="btn add-btn" (click)="save()">
-
-         {{ 'productPrice.savePrice' | translate }}
-        </button>
-
-      </div>
-
-    </div>
-
-  </div>
-
+    </div><!-- /modal-content -->
+  </div><!-- /modal-dialog -->
 </div>

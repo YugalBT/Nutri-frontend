@@ -1,47 +1,301 @@
-<div class="pagecls">
+<div class="pagecls ration-page">
 
-  <!-- Page Header -->
-  <div class="page-header">
-    <div>
-      <h3 class="page-title">{{ 'ration.Heading' | translate }}</h3>
+  <div class="ration-hero">
+    <div class="ration-title-block">
+      <div class="border-start border-4 ps-3">
+        <p class="ration-eyebrow mb-1">
+          {{ 'ration.workspace' | translate }}
+        </p>
+        <h3 class="page-title">{{ 'ration.Heading' | translate }}</h3>
+      </div>
     </div>
 
-    <button class="btn add-btn" (click)="openAddRationModal()" [disabled]="!canAddRation">
+    <div class="ration-actions">
+      <button type="button" class="btn archive-btn" (click)="openArchive()">
+        <i class="bi bi-archive"></i>
+        {{ 'ration.archive' | translate }}
+      </button>
+
+      <button *ngIf="canAdd" class="btn add-btn" (click)="openAddModal()">
+        <i class="bi bi-plus-lg me-2"></i>
+        {{ 'ration.addRation' | translate }}
+      </button>
+    </div>
+  </div>
+
+  <div class="ration-toolbar" *ngIf="isSuperAdmin && companies.length > 0">
+    <div class="toolbar-field">
+      <label class="form-label mb-0">
+        {{ 'dailyEntry.filters.company' | translate }}
+      </label>
+      <select class="form-select form-select-sm"
+        [(ngModel)]="selectedCompanyId" (change)="onCompanyChange()">
+        <option *ngFor="let c of companies" [value]="c.id">{{ c.name }}</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- Summary -->
+  <div *ngIf="!isLoading && groups.length > 0" class="ration-summary-grid">
+
+    <div class="summary-card">
+      <span class="summary-label">
+        {{ 'ration.summary.animalGroups' | translate }}
+      </span>
+      <strong>{{ groups.length }}</strong>
+    </div>
+
+    <div class="summary-card">
+      <span class="summary-label">
+        {{ 'ration.summary.savedRations' | translate }}
+      </span>
+      <strong>{{ activeRationCount }}</strong>
+    </div>
+
+    <div class="summary-card">
+      <span class="summary-label">
+        {{ 'ration.summary.totalCost' | translate }}
+      </span>
+      <strong>{{ fmt(totalCostEur) }} EUR</strong>
+    </div>
+
+    <div class="summary-card">
+      <span class="summary-label">
+        {{ 'ration.summary.avgDryMatter' | translate }}
+      </span>
+      <strong>{{ fmt(averageDryMatterPct, 1) }}%</strong>
+    </div>
+
+  </div>
+
+  <!-- Loader -->
+  <div *ngIf="isLoading" class="ration-loading">
+    <div class="spinner-border text-primary"></div>
+    <span>{{ 'ration.loading.matrix' | translate }}</span>
+  </div>
+
+  <!-- Empty -->
+  <div *ngIf="!isLoading && groups.length === 0" class="ration-empty">
+    <div class="empty-icon">
+      <i class="bi bi-table"></i>
+    </div>
+    <h4>{{ 'common.noData' | translate }}</h4>
+    <p>{{ 'ration.empty.description' | translate }}</p>
+
+    <button *ngIf="canAdd" class="btn add-btn" (click)="openAddModal()">
       <i class="bi bi-plus-lg me-2"></i>
       {{ 'ration.addRation' | translate }}
     </button>
   </div>
 
-  <div class="filters-card">
-    <app-global-search
-      [placeholder]="'ration.searchByRationNameOrType' | translate"
-      [showStatus]="true"
-      (search)="onSearch($event)"
-      (statusChange)="onStatusChange($event)"
-      (clear)="clearFilters()">
-    </app-global-search>
+  <!-- Matrix -->
+  <div *ngIf="!isLoading && groups.length > 0" class="ration-matrix-card">
+
+    <div class="matrix-card-header">
+      <div>
+        <h4>{{ 'ration.matrix.title' | translate }}</h4>
+        <p>{{ 'ration.matrix.description' | translate }}</p>
+      </div>
+      <span class="matrix-count">
+        {{ feeds.length }} {{ 'ration.matrix.feeds' | translate }}
+      </span>
+    </div>
+
+    <div class="ration-table-shell">
+      <table class="ration-matrix">
+
+        <thead>
+          <tr class="matrix-header-groups">
+            <th class="feed-col sticky-col">
+              <span>{{ 'feed.heading' | translate }}</span>
+            </th>
+
+            <th *ngFor="let g of groups" class="group-col">
+              <div class="group-header">
+                <div class="group-header-top">
+                  <span class="group-name">{{ g.groupName }}</span>
+                  <span class="status-dot" [class.inactive]="!g.rationId"></span>
+                </div>
+
+                <div class="ration-name">
+                  {{ g.rationName || ('ration.matrix.noRation' | translate) }}
+                </div>
+
+                <div class="group-actions" *ngIf="g.rationId">
+                  <button
+                    class="matrix-action-btn view"
+                    title="{{ 'common.view' | translate }}"
+                    (click)="viewRationItems(g)">
+                    <i class="bi bi-eye-fill"></i>
+                  </button>
+
+                  <button *ngIf="canEdit"
+                    class="matrix-action-btn edit"
+                    title="{{ 'common.edit' | translate }}"
+                    (click)="openEditModal(g)">
+                    <i class="bi bi-pencil-fill"></i>
+                  </button>
+
+                  <button *ngIf="canDelete"
+                    class="matrix-action-btn delete"
+                    title="{{ 'common.delete' | translate }}"
+                    (click)="deleteRation(g)">
+                    <i class="bi bi-trash-fill"></i>
+                  </button>
+                </div>
+              </div>
+            </th>
+          </tr>
+        </thead>
+
+        <tbody
+          cdkDropList
+          [cdkDropListData]="feeds"
+          (cdkDropListDropped)="onFeedDrop($event)">
+
+          <!-- Cost -->
+          <tr class="summary-row cost-row">
+            <td class="feed-col sticky-col summary-label">
+              {{ 'ration.table.cost' | translate }}
+            </td>
+            <td *ngFor="let g of groups" class="summary-value">
+              <strong>{{ fmt(g.costEurPerHead) }}</strong>
+              <span>{{ 'ration.unit.eurPerHead' | translate }}</span>
+            </td>
+          </tr>
+
+          <!-- Kg FM -->
+          <tr class="summary-row">
+            <td class="feed-col sticky-col summary-label">
+              {{ 'ration.table.kgFm' | translate }}
+            </td>
+            <td *ngFor="let g of groups" class="summary-value">
+              <strong>{{ fmt(g.kgFm) }}</strong>
+              <span>{{ 'ration.unit.kg' | translate }}</span>
+            </td>
+          </tr>
+
+          <!-- Kg DM -->
+          <tr class="summary-row">
+            <td class="feed-col sticky-col summary-label">
+              {{ 'ration.table.kgDm' | translate }}
+            </td>
+            <td *ngFor="let g of groups" class="summary-value">
+              <strong>{{ fmt(g.kgDm) }}</strong>
+              <span>{{ 'ration.unit.kg' | translate }}</span>
+            </td>
+          </tr>
+
+          <!-- % DM -->
+          <tr class="summary-row summary-row-last">
+            <td class="feed-col sticky-col summary-label">
+              {{ 'ration.table.pctDm' | translate }}
+            </td>
+            <td *ngFor="let g of groups" class="summary-value">
+              <strong>{{ fmt(g.pctDm, 1) }}</strong>
+              <span>%</span>
+            </td>
+          </tr>
+
+          <!-- Feed Rows (draggable) -->
+          <tr *ngFor="let f of feeds"
+              class="feed-row"
+              cdkDrag
+              [cdkDragData]="f">
+
+            <!-- Drag placeholder -->
+            <td *cdkDragPlaceholder [attr.colspan]="groups.length + 1" class="feed-drag-placeholder"></td>
+
+            <td class="feed-col sticky-col feed-name">
+              <span class="feed-drag-handle" cdkDragHandle title="Drag to reorder">⠿</span>
+              {{ f.feedName }}
+            </td>
+
+            <td *ngFor="let g of groups"
+                class="feed-value"
+                [class.empty-value]="getAmount(g, f.feedId) === '-'">
+              {{ getAmount(g, f.feedId) }}
+            </td>
+          </tr>
+
+        </tbody>
+      </table>
+    </div>
   </div>
 
-  <div class="table-card">
-    <app-reusable-table
-      [columns]="columns"
-      [showActions]="true"
-      [data]="ration"
-      [columnFields]="columnFields"
-      [pageable]="true"
-      [totalRecords]="totalRecords",
-      [clickableField]="'rationName'"
-      (cellClick)="onCellClick($event)"
-      [pageSize]="pageSize"
-      [pageIndex]="pageIndex"
-      (pageChange)="onPageChange($event)"
-      (toggleActive)="onToggleActive($event)"
-      (deleteRow)="onDelete($event)"
-      (editRow)="rationModal.openModal(true, $event)">
-    </app-reusable-table>
+  <!-- Archive Drawer -->
+  <div class="ration-archive-drawer" *ngIf="isArchiveOpen">
+
+    <div class="archive-backdrop" (click)="closeArchive()"></div>
+
+    <div class="archive-panel">
+
+      <div class="archive-panel-header">
+        <div>
+          <p class="ration-eyebrow mb-1">
+            {{ 'ration.archive.history' | translate }}
+          </p>
+          <h4>{{ 'ration.archive' | translate }}</h4>
+        </div>
+
+        <button type="button" class="matrix-action-btn" (click)="closeArchive()">
+          <i class="bi bi-x-lg"></i>
+        </button>
+      </div>
+
+      <!-- Loading -->
+      <div *ngIf="isArchiveLoading" class="ration-loading archive-loading">
+        <div class="spinner-border text-primary"></div>
+        <span>{{ 'ration.archive.loading' | translate }}</span>
+      </div>
+
+      <!-- Empty -->
+      <div *ngIf="!isArchiveLoading && archiveRecords.length === 0"
+           class="ration-empty archive-empty">
+        <div class="empty-icon"><i class="bi bi-archive"></i></div>
+        <h4>{{ 'ration.archive.emptyTitle' | translate }}</h4>
+        <p>{{ 'ration.archive.emptyDesc' | translate }}</p>
+      </div>
+
+      <!-- Records -->
+      <div *ngIf="!isArchiveLoading && archiveRecords.length > 0"
+           class="archive-list">
+
+        <div class="archive-record" *ngFor="let a of archiveRecords">
+
+          <div class="archive-record-head">
+            <div>
+              <strong>{{ a.rationName }}</strong>
+              <span>{{ a.animalGroupName || '-' }} / v{{ a.versionNo }} / {{ a.actionType }}</span>
+            </div>
+            <small>{{ a.archivedAt | date:'short' }}</small>
+          </div>
+
+          <div class="archive-metrics">
+            <span>{{ 'ration.archive.cost' | translate }} {{ fmt(a.costEurPerHead || 0) }} EUR</span>
+            <span>{{ 'ration.archive.fm' | translate }} {{ fmt(a.kgFm || 0) }} Kg</span>
+            <span>{{ 'ration.archive.dm' | translate }} {{ fmt(a.kgDm || 0) }} Kg</span>
+            <span>{{ fmt(a.pctDm || 0, 1) }}% DM</span>
+          </div>
+
+          <div class="archive-items">
+            <div class="archive-item" *ngFor="let item of a.items">
+              <span>{{ item.feedName }}</span>
+              <span>{{ item.kgPerCowPerDay ?? '-' }} Kg</span>
+              <span>{{ item.feedCategory || '-' }}</span>
+              <span>
+                {{ item.vatApplicable ? ((item.vatPct || 0) + '% IVA') : ('ration.archive.noVat' | translate) }}
+              </span>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
   </div>
 
-  <!-- Add/Edit Modal -->
-<app-ration-add-edit #rationModal></app-ration-add-edit>
+  <app-ration-add-edit #rationModal (onRationSaved)="loadMatrix()"></app-ration-add-edit>
 
 </div>

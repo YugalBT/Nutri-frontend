@@ -8,7 +8,7 @@ import { FormsModule } from '@angular/forms';
 import { NgxEchartsModule } from 'ngx-echarts';
 import type { EChartsOption } from 'echarts';
 import { TranslatePipe } from '../../i18n/translate.pipe';
-import { TranslateService } from '../../i18n/translate.service'; // ✅ added
+import { TranslateService } from '../../i18n/translate.service';
 
 import {
   AggregatedAnalyticsData,
@@ -18,6 +18,9 @@ import {
 
 import { CommonService } from '../../shared/services/common.service';
 import { ApiResponse } from '../../core/models/api-response';
+import { TokenService } from '../../shared/services/token.service';
+import { LoaderService } from '../../shared/services/loader.service';
+import { NgxSpinnerModule, NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'app-dashboard',
@@ -29,6 +32,7 @@ import { ApiResponse } from '../../core/models/api-response';
     TranslatePipe,
     DatePipe,
     DecimalPipe,
+    NgxSpinnerModule
   ],
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.css'],
@@ -37,7 +41,7 @@ export class DashboardComponent implements OnInit {
 
   user$: Observable<User | null>;
   user: User | null = null;
-  isLoading = false;
+  isLoading = true;
 
   dashboardData: DashboardData = {
     totalCompanies: 0,
@@ -47,6 +51,7 @@ export class DashboardComponent implements OnInit {
     totalFarms: 0,
     totalRations: 0,
     totalActiveFarms: 0,
+    totalSuppliers: 0
   };
 
   companyDashboard: CompanyDashboardData | null = null;
@@ -58,16 +63,21 @@ export class DashboardComponent implements OnInit {
   companyTrendChart: EChartsOption = {};
   adminTrendChart: EChartsOption = {};
   comparisonChart: EChartsOption = {};
+  productionChart: EChartsOption = {};
 
   deaGauge!: EChartsOption;
   milkGauge!: EChartsOption;
   feedGauge!: EChartsOption;
   crepGauge!: EChartsOption;
+  isSupplier = false;
 
   constructor(
     private store: Store,
     private commonService: CommonService,
-    private translate: TranslateService // ✅ added
+    private translate: TranslateService,
+    private tokenservice: TokenService,
+    private loader: LoaderService,
+    private spinner: NgxSpinnerService,
   ) {
     this.user$ = this.store.select(selectAuthUser);
   }
@@ -78,15 +88,26 @@ export class DashboardComponent implements OnInit {
       this.loadDashboard();
     });
 
-    // ✅ language change support (optional but recommended)
     this.translate.lang$.subscribe(() => {
       this.loadDashboard();
     });
+
+    const supplierData = this.tokenservice.getSupplierData();
+    this.isSupplier = !!supplierData;
   }
 
+  // get isAdmin(): boolean {
+  //   const role = (this.user?.roleType || '').toUpperCase();
+  //   return this.user?.isSuperAdmin === true || ['SUPERADMIN', 'ADMIN', 'COLLABORATOR'].includes(role);
+  // }
   get isAdmin(): boolean {
-    const role = (this.user?.roleType || '').toUpperCase();
-    return role === 'ADMIN' && this.user?.isSuperAdmin === true;
+    return this.user?.isSuperAdmin === true;
+  }
+  get isCompanyUser(): boolean {
+    return this.user?.isCompany === true && !this.user?.isSuperAdmin;
+  }
+  private get currentCompanyId(): string | null {
+    return this.user?.tenantId || this.user?.parentTenantId || null;
   }
 
   onYearChange(year: number): void {
@@ -94,14 +115,13 @@ export class DashboardComponent implements OnInit {
     this.loadDashboard();
   }
 
-  // ✅ helper for translation
   private t(key: string): string {
     return this.translate.instant(key);
   }
 
   loadDashboard(): void {
-    this.isLoading = true;
 
+    this.spinner.show();
     this.commonService.getDashboardData().subscribe({
       next: (res: ApiResponse<DashboardData>) => {
         if (res?.isSuccess && res?.data) {
@@ -113,15 +133,17 @@ export class DashboardComponent implements OnInit {
         } else {
           this.loadCompanyDashboard();
         }
+
       },
       error: () => {
-        this.isLoading = false;
+        this.spinner.hide();
       },
     });
   }
 
   private loadCompanyDashboard(): void {
-    this.commonService.getCompanyDashboardData(this.selectedYear).subscribe({
+    this.spinner.show();
+    this.commonService.getCompanyDashboardData(this.selectedYear, this.currentCompanyId ?? undefined).subscribe({
       next: (res) => {
 
         this.companyDashboard = res?.isSuccess ? res.data : null;
@@ -130,8 +152,7 @@ export class DashboardComponent implements OnInit {
 
           const d = this.companyDashboard;
 
-          // ✅ ONLY label translated (logic untouched)
-          this.deaGauge = this.createGauge(this.t('dashboard.dea'), d.deaMilk ?? 0, 0.9, 1.5);
+          this.deaGauge = this.createGauge(this.t('dashboard.fatPercent'), d.fatPercent ?? 0, 3.0, 5.0);
           this.milkGauge = this.createGauge(this.t('dashboard.avgMilk'), d.avgMilkPerDay ?? 0, 30, 55);
           this.feedGauge = this.createGauge(this.t('dashboard.feedEfficiency'), d.feedEfficiency ?? 0, 1, 2.4);
           this.crepGauge = this.createGauge(this.t('dashboard.crep'), d.crep ?? 0, 2, 5);
@@ -143,7 +164,10 @@ export class DashboardComponent implements OnInit {
             data: [
               this.t('dashboard.iofc'),
               this.t('dashboard.deaMilk'),
-              this.t('dashboard.cost')
+              this.t('dashboard.cost'),
+              this.t('dashboard.feedEfficiency'),
+              this.t('dashboard.crep'),
+              this.t('dashboard.avgMilk'),
             ]
           },
           xAxis: {
@@ -170,18 +194,37 @@ export class DashboardComponent implements OnInit {
               smooth: true,
               data: this.companyDashboard?.kpiTrend?.map((x) => x.cost) || [],
             },
+            {
+              name: this.t('dashboard.feedEfficiency'),
+              type: 'line',
+              smooth: true,
+              data: this.companyDashboard?.kpiTrend?.map((x) => x.feedEfficiency ?? 0) || [],
+            },
+            {
+              name: this.t('dashboard.crep'),
+              type: 'line',
+              smooth: true,
+              data: this.companyDashboard?.kpiTrend?.map((x) => x.crep ?? 0) || [],
+            },
+            {
+              name: this.t('dashboard.avgMilk'),
+              type: 'line',
+              smooth: true,
+              data: this.companyDashboard?.kpiTrend?.map((x) => x.avgMilkPerDay ?? 0) || [],
+            },
           ],
         };
 
-        this.isLoading = false;
+        setTimeout(() => {
+          this.spinner.hide();
+        }, 500);
       },
       error: () => {
-        this.isLoading = false;
+        this.spinner.hide();
       },
     });
   }
 
-  // ✅ ORIGINAL FUNCTION (UNCHANGED)
   createGauge(title: string, value: number, min: number, max: number): EChartsOption {
     return {
       title: {
@@ -229,7 +272,6 @@ export class DashboardComponent implements OnInit {
     };
   }
 
-  // ✅ KEEP THIS (important)
   getCowPosition(value: number | null | undefined): number {
     const min = 0.9;
     const max = 1.5;
@@ -241,6 +283,7 @@ export class DashboardComponent implements OnInit {
   }
 
   private loadAdminAnalytics(): void {
+    this.spinner.show();
     this.commonService.getAggregatedAnalytics(this.selectedYear).subscribe({
       next: (res) => {
 
@@ -269,31 +312,173 @@ export class DashboardComponent implements OnInit {
         const comparison = this.aggregatedAnalytics?.companyComparison || [];
 
         this.comparisonChart = {
-          tooltip: { trigger: 'axis' },
+          color: ['#1d6b8f', '#f28c38'],
+          tooltip: {
+            trigger: 'axis',
+            backgroundColor: 'rgba(255, 255, 255, 0.98)',
+            borderColor: 'rgba(15, 23, 42, 0.12)',
+            borderWidth: 1,
+            textStyle: { color: '#101828' },
+            axisPointer: { type: 'shadow' },
+          },
+          grid: {
+            left: 42,
+            right: 18,
+            top: 30,
+            bottom: 84,
+            containLabel: false,
+          },
           legend: {
+            top: 0,
+            itemWidth: 14,
+            itemHeight: 10,
+            textStyle: { color: '#475467' },
             data: [
-              this.t('dashboard.iofc'),
               this.t('dashboard.deaMilk'),
-              this.t('dashboard.cost')
+              this.t('dashboard.cost'),
             ]
           },
           xAxis: {
             type: 'category',
             data: comparison.map((c) => c.companyName),
-            axisLabel: { interval: 0, rotate: 20 },
+            axisLabel: {
+              interval: 0,
+              rotate: 42,
+              color: '#475467',
+              fontSize: 10,
+              margin: 16,
+            },
+            axisLine: { lineStyle: { color: '#d0d5dd' } },
+            axisTick: { alignWithLabel: true },
           },
-          yAxis: { type: 'value' },
+          yAxis: {
+            type: 'value',
+            min: 0,
+            splitNumber: 5,
+            axisLabel: {
+              color: '#475467',
+              fontSize: 11,
+              margin: 8,
+              formatter: (value: number) => `${Math.round(value)}`,
+            },
+            splitLine: { lineStyle: { color: '#d9e3ea' } },
+            axisLine: { lineStyle: { color: '#d0d5dd' } },
+          },
           series: [
-            { name: this.t('dashboard.iofc'), type: 'bar', data: comparison.map((c) => c.iofc) },
-            { name: this.t('dashboard.deaMilk'), type: 'bar', data: comparison.map((c) => c.deaMilk) },
-            { name: this.t('dashboard.cost'), type: 'bar', data: comparison.map((c) => c.cost) },
+            {
+              name: this.t('dashboard.deaMilk'),
+              type: 'bar',
+              data: comparison.map((c) => c.deaMilk),
+              barWidth: 18,
+              itemStyle: {
+                borderRadius: [4, 4, 0, 0],
+                color: '#1d6b8f',
+              },
+            },
+            {
+              name: this.t('dashboard.cost'),
+              type: 'bar',
+              data: comparison.map((c) => c.cost),
+              barWidth: 18,
+              itemStyle: {
+                borderRadius: [4, 4, 0, 0],
+                color: '#f28c38',
+              },
+            },
           ],
         };
 
-        this.isLoading = false;
+        this.productionChart = {
+          color: ['#2aa39a'],
+          tooltip: {
+            trigger: 'axis',
+            formatter: (params: any) => {
+              const points = Array.isArray(params) ? params : [params];
+              const header = points[0]?.axisValueLabel || points[0]?.name || '';
+              const lines = points
+                .map((p) => {
+                  const rawValue = Number(p.value ?? 0);
+                  const value = Number.isFinite(rawValue) ? rawValue : 0;
+                  return `${p.marker}${p.seriesName}: <b>${value.toFixed(1).replace(/\.0$/, '')}</b>`;
+                })
+                .join('<br/>');
+              return `${header}<br/>${lines}`;
+            },
+            backgroundColor: 'rgba(255, 255, 255, 0.98)',
+            borderColor: 'rgba(15, 23, 42, 0.12)',
+            borderWidth: 1,
+            textStyle: { color: '#101828' },
+            axisPointer: { type: 'shadow' },
+          },
+          grid: {
+            left: 42,
+            right: 18,
+            top: 32,
+            bottom: 84,
+            containLabel: false,
+          },
+          xAxis: {
+            type: 'category',
+            data: comparison.map((c) => c.companyName),
+            axisLabel: {
+              interval: 0,
+              rotate: 42,
+              color: '#475467',
+              fontSize: 10,
+              margin: 16,
+            },
+            axisLine: { lineStyle: { color: '#d0d5dd' } },
+            axisTick: { alignWithLabel: true },
+          },
+          yAxis: {
+            type: 'value',
+            min: 0,
+            splitNumber: 5,
+            axisLabel: {
+              color: '#475467',
+              fontSize: 11,
+              margin: 8,
+              formatter: (value: number) => `${Math.round(value)}`,
+            },
+            splitLine: { lineStyle: { color: '#d9e3ea' } },
+            axisLine: { lineStyle: { color: '#d0d5dd' } },
+          },
+          series: [
+            {
+              name: this.t('dashboard.avgMilkPerDay'),
+              type: 'bar',
+              data: comparison.map((c) => c.avgMilkPerDay),
+              barWidth: 18,
+              barCategoryGap: '42%',
+              itemStyle: {
+                borderRadius: [4, 4, 0, 0],
+                color: '#2aa39a',
+              },
+              label: {
+                show: true,
+                position: 'top',
+                color: '#101828',
+                fontSize: 11,
+                fontWeight: 700,
+                formatter: ({ value }) => {
+                  const numericValue = Number(value ?? 0);
+                  if (!numericValue) {
+                    return '';
+                  }
+
+                  return numericValue.toFixed(1).replace(/\.0$/, '');
+                },
+              },
+            },
+          ],
+        };
+
+        setTimeout(() => {
+          this.spinner.hide();
+        }, 300);
       },
       error: () => {
-        this.isLoading = false;
+        this.spinner.hide();
       },
     });
   }

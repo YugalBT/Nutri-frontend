@@ -3,7 +3,8 @@
         <div class="sidebar" style="flex-shrink: 0;">
             <div class="sidebar-inner">
                 <div class="menu-top">
-                    <div class="side-logo d-flex align-items-center gap-2 mb-30"><img alt=""
+                    <div class="side-logo brand-logo-shell d-flex align-items-center gap-2 mb-30"><img alt=""
+                            class="brand-logo"
                             src="assets/image/small-logo.png">
                     </div>
                     <div class="side-menus">
@@ -20,10 +21,21 @@
 
                                 </span>{{ 'sidebarmenu.dashboard' | translate }}</a>
                         </div>
+                       
+                        
                     </div>
                 </div>
                 <div class="menu-scrollable">
+                    <div class="side-menus mt-2" *ngFor="let item of topMenus">
+                            <div class="side-menu-item">
+                                <a [routerLink]="item.url" routerLinkActive="active"
+                                    [routerLinkActiveOptions]="{ exact: true }">
 
+                                    <span class="side-item-icon" [innerHTML]="item.safeIcon"></span>
+                                    {{ getTranslatedKey(item?.roleDisplayName ?? '') | translate }}
+                                </a>
+                            </div>
+                        </div>
                     <ng-container *ngFor="let group of groupedMenus; let i = index">
 
                         <div class="side-menus">

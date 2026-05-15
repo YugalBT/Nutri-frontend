@@ -1,0 +1,223 @@
+<div class="pagecls">
+  <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+    <h3 class="page-title mb-0">{{ 'archive.heading.historicalRecords' | translate }}</h3>
+    <div class="d-flex gap-2 flex-wrap align-items-end">
+      <div *ngIf="isSuperAdmin && companies.length > 0">
+        <label class="form-label form-label-sm mb-1">{{ 'dailyEntry.filters.company' | translate }}</label>
+        <select class="form-select form-select-sm" [(ngModel)]="selectedCompanyId" (change)="onCompanyChange()">
+          <option value="">{{ 'common.all' | translate }}</option>
+          <option *ngFor="let c of companies" [value]="c.id">{{ c.name }}</option>
+        </select>
+      </div>
+      <div>
+        <label class="form-label form-label-sm mb-1">{{ 'archive.filters.from' | translate }}</label>
+        <input type="date" class="form-control form-control-sm" [(ngModel)]="fromDate" (change)="loadArchive()" />
+      </div>
+      <div>
+        <label class="form-label form-label-sm mb-1">{{ 'archive.filters.to' | translate }}</label>
+        <input type="date" class="form-control form-control-sm" [(ngModel)]="toDate" (change)="loadArchive()" />
+      </div>
+      <button *ngIf="canRecalculate" class="btn btn-sm btn-warning" [disabled]="isRecalculating"
+        (click)="bulkRecalculate()">
+        {{ isRecalculating ? ('archive.actions.recalculating' | translate) : ('archive.actions.bulkRecalculate' |
+        translate) }}
+      </button>
+    </div>
+  </div>
+
+  <div class="alert alert-info py-2 px-3 mb-3" style="font-size: 12px">
+    <strong>{{ 'archive.info.adminOnly' | translate }}</strong>
+    {{ 'archive.info.bulkRecalculateHelp' | translate }}
+  </div>
+
+  <div *ngIf="isLoading" class="text-center py-4">
+    <div class="spinner-border text-primary"></div>
+  </div>
+
+  <div class="table-card" *ngIf="!isLoading">
+    <div class="table-responsive">
+      <table class="table table-sm table-hover mb-0 archive-table">
+        <thead>
+          <tr class="group-row">
+            <th *ngIf="isSuperAdmin" colspan="1">{{ 'dashboard.company' | translate }}</th>
+            <th colspan="1">{{ 'archive.table.date' | translate }}</th>
+
+            <th colspan="9">{{ 'dashboard.herd' | translate }}</th>
+            <th colspan="6">{{ 'archive.sections.fertility' | translate }}</th>
+            <th colspan="8">{{ 'dailyEntry.sections.calves' | translate }}</th>
+            <th colspan="9">{{ 'dashboard.production' | translate }}</th>
+            <th colspan="5">{{ 'dailyEntry.sections.robot' | translate }}</th>
+            <th colspan="2">{{ 'dashboard.feeding' | translate }}</th>
+            <th colspan="5">{{ 'dailyEntry.sections.health' | translate }}</th>
+            <th colspan="1">{{ 'archive.table.priceType' | translate }}</th>
+            <th colspan="1">{{ 'common.actions' | translate }}</th>
+          </tr>
+
+          <tr class="label-row">
+            <th *ngIf="isSuperAdmin">{{ 'dashboard.company' | translate }}</th>
+            <th>{{ 'archive.table.date' | translate }}</th>
+
+            <!-- Herd -->
+            <th>{{ 'archive.table.gim' | translate }}</th>
+            <th>{{ 'archive.table.dryAnimals' | translate }}</th>
+            <th>{{ 'archive.table.firstCalving' | translate }}</th>
+            <th>{{ 'archive.table.firstCalvingPct' | translate }}</th>
+            <th>{{ 'archive.table.secondCalving' | translate }}</th>
+            <th>{{ 'archive.table.multiparous' | translate }}</th>
+            <th>{{ 'dailyEntry.fields.categoryCode' | translate }}</th>
+            <th>{{ 'dailyEntry.fields.totalHeads' | translate }}</th>
+            <th>{{ 'dailyEntry.fields.inLactation' | translate }}</th>
+
+            <!-- Fertility -->
+            <th>{{ 'archive.fields.pregnantCows' | translate }}</th>
+            <th>{{ 'archive.fields.pregnantPct' | translate }}</th>
+            <th>{{ 'archive.fields.cowDiagnoses' | translate }}</th>
+            <th>{{ 'archive.fields.positiveCows' | translate }}</th>
+            <th>{{ 'archive.fields.heiferDiagnoses' | translate }}</th>
+            <th>{{ 'archive.fields.positiveHeifers' | translate }}</th>
+
+            <!-- Calves -->
+            <th>{{ 'dailyEntry.fields.numberOfAnimals' | translate }}</th>
+            <th>{{ 'dailyEntry.fields.avgMilk' | translate }}</th>
+            <th>{{ 'dailyEntry.fields.powderPercentage' | translate }}</th>
+            <th>{{ 'dailyEntry.fields.avgFeed' | translate }}</th>
+            <th>{{ 'dailyEntry.fields.numberOfAnimals' | translate }}</th>
+            <th>{{ 'dailyEntry.fields.avgMilk' | translate }}</th>
+            <th>{{ 'dailyEntry.fields.powderPercentage' | translate }}</th>
+            <th>{{ 'dailyEntry.fields.avgFeed' | translate }}</th>
+
+            <!-- Production -->
+            <th>{{ 'archive.table.milkDeliveredKg' | translate }}</th>
+            <th>{{ 'archive.table.milkProducedKg' | translate }}</th>
+            <th>{{ 'archive.table.fatPercent' | translate }}</th>
+            <th>{{ 'archive.table.proteinPercent' | translate }}</th>
+            <th>{{ 'dailyEntry.fields.lactose' | translate }}</th>
+            <th>{{ 'archive.table.caseinPercent' | translate }}</th>
+            <th>{{ 'archive.table.ureaMgDl' | translate }}</th>
+            <th>{{ 'archive.table.somaticA1000' | translate }}</th>
+            <th>{{ 'archive.table.qualityBonusEur' | translate }}</th>
+
+            <!-- Robot -->
+            <th>{{ 'dailyEntry.fields.robotCows' | translate }}</th>
+            <th>{{ 'dailyEntry.fields.robotMilkKg' | translate }}</th>
+            <th>{{ 'dailyEntry.fields.robotMilkings' | translate }}</th>
+            <th>{{ 'dailyEntry.fields.robotRefusals' | translate }}</th>
+            <th>{{ 'dailyEntry.fields.robotFreeTimeMin' | translate }}</th>
+
+            <!-- Feeding (input fields only; calculated results are in Eco Archive) -->
+            <th>{{ 'archive.columns.avgFeed' | translate }}</th>
+            <th>{{ 'archive.table.milkPriceEurLitre' | translate }}</th>
+
+            <!-- Health -->
+            <th>{{ 'archive.table.mastitis' | translate }}</th>
+            <th>{{ 'archive.table.retentions' | translate }}</th>
+            <th>{{ 'archive.table.abortions' | translate }}</th>
+            <th>{{ 'archive.table.calvingsCount' | translate }}</th>
+            <th>{{ 'dailyEntry.fields.healthNotes' | translate }}</th>
+
+            <th>{{ 'archive.table.priceType' | translate }}</th>
+            <th>{{ 'common.actions' | translate }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let r of records">
+
+            <td *ngIf="isSuperAdmin">{{ r.companyName || '-' }}</td>
+            <td>{{ r.date }}</td>
+
+            <!-- Herd -->
+            <td>{{ r.gim ?? '-' }}</td>
+            <td>{{ r.dryAnimals ?? '-' }}</td>
+            <td>{{ r.firstCalving ?? '-' }}</td>
+            <td>
+              <ng-container *ngIf="getFirstCalvingPercent(r) !== null; else fcDash">
+                {{ getFirstCalvingPercent(r) | number:'1.1-1' }}%
+              </ng-container>
+              <ng-template #fcDash>-</ng-template>
+            </td>
+            <td>{{ r.secondCalving ?? '-' }}</td>
+            <td>{{ r.multiparous ?? '-' }}</td>
+            <td>{{ r.categoryCode ?? '-' }}</td>
+            <td>{{ r.totalHeads ?? '-' }}</td>
+            <td>{{ r.inLactation ?? '-' }}</td>
+
+            <!-- Fertility -->
+            <td>{{ r.pregnantCows ?? '-' }}</td>
+            <td>
+              <ng-container *ngIf="getPregnantPercent(r) !== null; else pregDash">
+                {{ getPregnantPercent(r) | number:'1.1-1' }}%
+              </ng-container>
+              <ng-template #pregDash>-</ng-template>
+            </td>
+            <td>{{ r.cowDiagnoses ?? '-' }}</td>
+            <td>{{ r.positiveCows ?? '-' }}</td>
+            <td>{{ r.heiferDiagnoses ?? '-' }}</td>
+            <td>{{ r.positiveHeifers ?? '-' }}</td>
+
+            <!-- Calves -->
+            <td>{{ r.indAnimals ?? '-' }}</td>
+            <td>{{ r.indAvgMilk ?? '-' }}</td>
+            <td>{{ r.indPowder ?? '-' }}</td>
+            <td>{{ r.indAvgFeed ?? '-' }}</td>
+            <td>{{ r.grpAnimals ?? '-' }}</td>
+            <td>{{ r.grpAvgMilk ?? '-' }}</td>
+            <td>{{ r.grpPowder ?? '-' }}</td>
+            <td>{{ r.grpAvgFeed ?? '-' }}</td>
+
+            <!-- Production -->
+            <td>{{ r.milkDeliveredKg ?? '-' }}</td>
+            <td>{{ r.milkProducedKg ?? '-' }}</td>
+            <td>{{ r.fatPercent ?? '-' }}</td>
+            <td>{{ r.proteinPercent ?? '-' }}</td>
+            <td>{{ r.lactose ?? '-' }}</td>
+            <td>{{ r.caseinPercent ?? '-' }}</td>
+            <td>{{ r.ureaMgDl ?? '-' }}</td>
+            <td>{{ r.somaticCellsThousands ?? '-' }}</td>
+            <td>{{ r.qualityBonusEur ?? '-' }}</td>
+
+            <!-- Robot -->
+            <td>{{ r.robotCows ?? '-' }}</td>
+            <td>{{ r.robotMilkKg ?? '-' }}</td>
+            <td>{{ r.robotMilkings ?? '-' }}</td>
+            <td>{{ r.robotRefusals ?? '-' }}</td>
+            <td>{{ r.robotFreeTimeMin ?? '-' }}</td>
+
+            <!-- Feeding -->
+            <td>{{ r.avgFeed ?? '-' }}</td>
+            <td>{{ r.milkPriceEurLitre ?? '-' }}</td>
+
+            <!-- Health -->
+            <td>{{ r.mastitis ?? '-' }}</td>
+            <td>{{ r.retentions ?? '-' }}</td>
+            <td>{{ r.abortions ?? '-' }}</td>
+            <td>{{ r.calvingsCount ?? '-' }}</td>
+            <td>{{ r.healthNotes ?? '-' }}</td>
+
+            <td>{{ r.priceType ?? '-' }}</td>
+
+            <td>
+              <button (click)="loadRecord(r)">
+                {{ 'archive.actions.load' | translate }}
+              </button>
+            </td>
+
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="d-flex justify-content-between align-items-center px-3 py-2 border-top" *ngIf="totalRecords > pageSize">
+      <small class="text-muted">{{ totalRecords }} {{ 'archive.pagination.totalRecords' | translate }}</small>
+      <div class="d-flex gap-1">
+        <button class="btn btn-sm btn-outline-secondary" [disabled]="pageNo === 1" (click)="onPageChange(pageNo - 1)">
+          {{ 'archive.pagination.prev' | translate }}
+        </button>
+        <span class="btn btn-sm btn-outline-secondary disabled">{{ pageNo }}</span>
+        <button class="btn btn-sm btn-outline-secondary" [disabled]="pageNo * pageSize >= totalRecords"
+          (click)="onPageChange(pageNo + 1)">
+          {{ 'archive.pagination.next' | translate }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

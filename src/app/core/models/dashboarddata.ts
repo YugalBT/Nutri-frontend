@@ -6,6 +6,7 @@ export interface DashboardData {
   totalFarms: number;
   totalRations: number;
   totalActiveFarms: number;
+  totalSuppliers: number;
 }
 
 export interface KpiTrendPoint {
@@ -13,6 +14,9 @@ export interface KpiTrendPoint {
   iofc: number;
   deaMilk: number;
   cost: number;
+  feedEfficiency?: number;
+  crep?: number;
+  avgMilkPerDay?: number;
 }
 
 export interface CompanyDashboardData {
@@ -21,6 +25,7 @@ export interface CompanyDashboardData {
   year: number;
   lastEntryDate?: string | null;
   milkPrice: number;
+  totalMilkRevenue?: number;
   iofc: number;
   deaMilk: number;
   cost: number;
@@ -32,7 +37,22 @@ export interface CompanyDashboardData {
   totalCalves?:number;
   fiber?:number;
   milkFeed?:number;
+  costPerDairyCowRation?: number;
+  costPerDryCowRation?: number;
+  heiferRearingCost?: number;
+  animalsInLactation?: number;
+  dryAnimals?: number;
+  heiferPercentage?: number;
+  milkProduced?: number;
+  fatPercent?: number;
+  proteinPercent?: number;
+  pim?: number;
+  ageAtFirstCalvingHeifers?: number;
 
+  // Calves daily entry
+  calvesTotalCost?: number;
+  calvesIndAnimals?: number;
+  calvesGrpAnimals?: number;
 }
 
 export interface CompanyComparisonData {
@@ -59,6 +79,18 @@ export interface AggregatedAnalyticsData {
   companyComparison: CompanyComparisonData[];
   rankingByIofc: CompanyRankingData[];
   monthlyTrend: KpiTrendPoint[];
+  costPerDairyCowRation?: number;
+  costPerDryCowRation?: number;
+  heiferRearingCost?: number;
+  animalsInLactation?: number;
+  dryAnimals?: number;
+  heiferPercentage?: number;
+  milkProduced?: number;
+  fatPercent?: number;
+  proteinPercent?: number;
+  pim?: number;
+  crep?: number;
+  ageAtFirstCalvingHeifers?: number;
 }
 
 export interface AggregatedArchiveItem {

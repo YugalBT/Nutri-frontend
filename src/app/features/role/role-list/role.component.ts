@@ -18,6 +18,8 @@ import { ApiResponse } from '../../../core/models/api-response';
 import { PERMISSIONS } from '../../../core/constants/permissions.constants';
 import { Constants } from '../../../shared/utils/constants/constants';
 import { CommonService } from '../../../shared/services/common.service';
+import { PermissionService } from '../../../shared/services/permission.service';
+import { selectUserRoles } from '../../../state/auth/auth.selectors';
 
 
 
@@ -42,6 +44,12 @@ export class RoleComponent implements OnInit, OnDestroy ,AfterViewInit{
   
   canManageRoles = false;
   canDeleteRoles = false;
+  canAddRole = false;
+  viewPermission = PERMISSIONS.RoleView;
+  editPermission = PERMISSIONS.RoleEdit;
+  deletePermission = PERMISSIONS.RoleDelete;
+  userRoles: string[] = [];
+  
   private subs: Subscription[] = [];
   private langSub: Subscription | undefined;
   private childSubs: Subscription[] = []; 
@@ -52,13 +60,15 @@ export class RoleComponent implements OnInit, OnDestroy ,AfterViewInit{
     private confirm: ConfirmDialogService,
     private spinner: NgxSpinnerService,
     private roleService: AddEditRoleService,
-    private commonService : CommonService
+    private commonService : CommonService,
+    private permissionService: PermissionService
   ) {
     this.setColumns();
     this.langSub = this.translate.lang$.subscribe(() => this.setColumns());
   }
 
   ngOnInit(): void {
+    this.loadUserPermissions();
     
     // this.store.select(selectCanManageRoles).pipe(take(1)).subscribe((canManage) => {
     //   this.canManageRoles = canManage;
@@ -74,6 +84,14 @@ export class RoleComponent implements OnInit, OnDestroy ,AfterViewInit{
     if(!this.commonService.checkPermission(PERMISSIONS.RoleView)) return;
     this.loadRoles();
     
+  }
+
+  private loadUserPermissions(): void {
+    const subRoles = this.store.select(selectUserRoles).subscribe(roles => {
+      this.userRoles = roles || [];
+      this.canAddRole = this.userRoles.includes(PERMISSIONS.RoleAdd);
+    });
+    this.subs.push(subRoles);
   }
 
    ngAfterViewInit(): void {

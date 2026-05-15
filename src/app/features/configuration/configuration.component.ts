@@ -18,6 +18,7 @@ export class ConfigurationComponent implements OnInit {
 
   emailForm!: FormGroup;
   showPassword = false;
+  canSave = false;
 
   constructor(
     private fb: FormBuilder,
@@ -27,6 +28,10 @@ export class ConfigurationComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    if (!this.commonService.checkPermission(PERMISSIONS.EmailConfigurationView, false)) {
+      return;
+    }
+    this.canSave = this.commonService.checkPermission(PERMISSIONS.EmailConfigurationEdit, false);
     this.buildForm();
     this.loadEmailConfiguration();
   }
@@ -62,7 +67,7 @@ export class ConfigurationComponent implements OnInit {
   }
 
   onSubmit() {
-     if(!this.commonService.checkPermission(PERMISSIONS.EmailConfigurationEdit)|| !this.commonService.checkPermission(PERMISSIONS.EmailConfigurationView))
+     if(!this.commonService.checkPermission(PERMISSIONS.EmailConfigurationEdit))
           return;
     if (this.emailForm.invalid) {
       this.emailForm.markAllAsTouched();

@@ -45,4 +45,30 @@ export class SupplierPriceService {
     return this.http.post(API_ENDPOINTS.SUPPLIERPRICE.CREATE_OR_UPDATE,payload);
     }
 
+      // =================  IMPORT / EXPORT =================
+
+  importSupplierPrices(file: File, supplierId: string | null): Observable<ApiResponse<any>> {
+    const formData = new FormData();
+    formData.append('file', file);
+    if (supplierId) {
+      formData.append('supplierId', supplierId);
+    }
+
+    return this.http.post<ApiResponse<any>>(
+      API_ENDPOINTS.SUPPLIERPRICE.IMPORT,
+      formData
+    );
+  }
+
+  exportSupplierPrices(supplierId: string | null): Observable<ApiResponse<any>> {
+    const base = API_ENDPOINTS.SUPPLIERPRICE.EXPORT;
+    const url = supplierId ? `${base}?supplierId=${supplierId}` : base;
+    return this.http.get<ApiResponse<any>>(url);
+  }
+
+  downloadSampleCSV(): Observable<ApiResponse<any>> {
+    return this.http.get<ApiResponse<any>>(API_ENDPOINTS.SUPPLIERPRICE.EXPORT_SAMPLE);
+  }
+
+
 }

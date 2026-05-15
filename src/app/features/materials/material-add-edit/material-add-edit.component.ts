@@ -18,6 +18,7 @@ import { SupplierAddEdit } from '../../../core/models/supplier-add-edit';
 import { CommonService } from '../../../shared/services/common.service';
 import { SupplierList } from '../../../core/models/supplier-list';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
+import { TokenService } from '../../../shared/services/token.service';
 
 
 declare var bootstrap: any;
@@ -30,6 +31,15 @@ declare var bootstrap: any;
 })
 export class MaterialAddEditComponent implements OnInit, OnDestroy {
 
+  unitList: string[] = [
+  'Kg',
+  'Ton',
+  'Gram',
+  'Quintal',
+  'Litre',
+  'Millilitre',
+  'Piece'
+];
   @ViewChild('materialModal') materialModal!: ElementRef;
    private CodeDebounce: any;
   form!: FormGroup;
@@ -39,6 +49,8 @@ export class MaterialAddEditComponent implements OnInit, OnDestroy {
   suppliers: SupplierList[] = [];
 
   subs: Subscription[] = [];
+  isSupplier = false;
+  supplierData: any = null;
 
   @Output() onMaterialSaved = new EventEmitter<void>();
 
@@ -47,25 +59,36 @@ export class MaterialAddEditComponent implements OnInit, OnDestroy {
     private materialService: MaterialService,
     private supplierService: SupplierService,
     private toast: ToastService,
-    private commonService: CommonService
-  ) {}
+    private commonService: CommonService,
+    private tokenservice: TokenService,
+  ) {
+    // Initialize supplier data before component init
+    this.isSupplier = !!this.tokenservice.isSupplier();
+    if (this.isSupplier) {
+      this.supplierData = this.tokenservice.getSupplierData();
+    }
+  }
 
   ngOnInit() {
     this.initializeForm();
     this.loadSuppliers();
-    this.listenToMaterialNameChange();
+    //this.listenToMaterialNameChange();
+
+    if (this.isSupplier && this.supplierData?.supplierId) {
+      this.form.patchValue({
+        supplierId: this.supplierData.supplierId
+      });
+      this.form.get('supplierId')?.disable();
+    }
   }
 
   private initializeForm() {
     this.form = this.fb.group({
       materialName: ['', [Validators.required, Validators.maxLength(200)]],
-      materialCode: [{ value: '', disabled: true }, [Validators.required, Validators.maxLength(200)]],
+     // materialCode: [{ value: '', disabled: true }, [Validators.required, Validators.maxLength(200)]],
       category: ['', [Validators.required, Validators.maxLength(100)]],
-      supplierId: ['', Validators.required],
+      // supplierId: [this.isSupplier ? this.supplierData?.supplierId : '', Validators.required],
       unit: ['', Validators.required],
-      basePrice: ['', Validators.required]
-
-      
     });
   }
 
@@ -144,48 +167,61 @@ private loadSuppliers(): void {
       this.currentId = null;
     }
 
+    // For supplier users, ensure supplierId is always set
+    if (this.isSupplier && this.supplierData?.supplierId) {
+      this.form.patchValue({
+        supplierId: this.supplierData.supplierId
+      });
+      this.form.get('supplierId')?.disable();
+    }
+
     this.modalInstance = new bootstrap.Modal(this.materialModal.nativeElement);
     this.modalInstance.show();
   }
 
   saveMaterial() {
 
-  if (!this.form.valid) {
-    this.form.markAllAsTouched();
-    return;
+    if (!this.form.valid) {
+      this.form.markAllAsTouched();
+      return;
+    }
+
+    const payload = { ...this.form.getRawValue() };
+
+    // Ensure supplierId is always included
+    if (this.isSupplier && this.supplierData?.supplierId && !payload.supplierId) {
+      payload.supplierId = this.supplierData.supplierId;
+    }
+
+    if (this.isEdit && this.currentId) {
+
+      payload.materialId = this.currentId;
+
+      this.materialService.updateMaterial(payload)
+        .subscribe(res => {
+          if (res.isSuccess) {
+            this.toast.success(res.message);
+            this.materialService.notifyMaterialsChanged();
+            this.closeModal();
+          } else {
+            this.toast.error(res.message);
+          }
+        });
+
+    } else {
+
+      this.materialService.createMaterial(payload)
+        .subscribe(res => {
+          if (res.isSuccess) {
+            this.toast.success(res.message);
+            this.materialService.notifyMaterialsChanged();
+            this.closeModal();
+          } else {
+            this.toast.error(res.message);
+          }
+        });
+    }
   }
-
-  const payload = { ...this.form.getRawValue() };
-
-  if (this.isEdit && this.currentId) {
-
-    payload.materialId = this.currentId;
-
-    this.materialService.updateMaterial(payload)
-      .subscribe(res => {
-        if (res.isSuccess) {
-          this.toast.success(res.message);
-          this.materialService.notifyMaterialsChanged();
-          this.closeModal();
-        }else{
-          this.toast.error(res.message);
-        }
-      });
-
-  } else {
-
-    this.materialService.createMaterial(payload)
-      .subscribe(res => {
-        if (res.isSuccess) {
-          this.toast.success(res.message);
-          this.materialService.notifyMaterialsChanged();
-          this.closeModal();
-        }else{
-          this.toast.error(res.message);
-        }
-      });
-  }
-}
 
 
   closeModal() {

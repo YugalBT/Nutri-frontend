@@ -1,0 +1,235 @@
+.economic-archive {
+  color: #1f3347;
+}
+
+.archive-toolbar {
+  align-items: flex-end;
+  display: flex;
+  gap: 1rem;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.eyebrow {
+  color: #2f8f83;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+}
+
+.filters {
+  align-items: flex-end;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  justify-content: flex-end;
+}
+
+.filter-control {
+  min-width: 150px;
+}
+
+.company-filter {
+  min-width: 210px;
+}
+
+.filter-control label {
+  color: #526a7f;
+  display: block;
+  font-size: 0.72rem;
+  font-weight: 700;
+  margin-bottom: 0.2rem;
+}
+
+.summary-grid {
+  display: grid;
+  gap: 0.75rem;
+  grid-template-columns: repeat(6, minmax(135px, 1fr));
+  margin-bottom: 1rem;
+}
+
+.summary-card {
+  border: 1px solid #dce8ef;
+  border-left-width: 4px;
+  border-radius: 8px;
+  background: #fff;
+  min-height: 82px;
+  padding: 0.85rem 0.9rem;
+}
+
+.summary-card span {
+  color: #60768a;
+  display: block;
+  font-size: 0.76rem;
+  font-weight: 700;
+  line-height: 1.2;
+  margin-bottom: 0.45rem;
+}
+
+.summary-card strong {
+  color: #172a3b;
+  display: block;
+  font-size: 1.05rem;
+  font-weight: 800;
+}
+
+.tone-green {
+  border-left-color: #27a26a;
+}
+
+.tone-orange {
+  border-left-color: #e77f2f;
+}
+
+.tone-blue {
+  border-left-color: #287fb9;
+}
+
+.tone-purple {
+  border-left-color: #8a62b2;
+}
+
+.tone-teal {
+  border-left-color: #1e9b95;
+}
+
+.tone-slate {
+  border-left-color: #718094;
+}
+
+.economic-table {
+  min-width: 2450px;
+  --archive-company-width: 190px;
+  --archive-date-width: 118px;
+  --archive-group-top: 0px;
+  --archive-label-top: 40px;
+}
+
+.economic-table thead th {
+  white-space: normal;
+  vertical-align: middle;
+}
+
+.economic-table .group-row th {
+  background: #edf4f2;
+  border-bottom: 0;
+  color: #4c6474;
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  padding: 0.65rem 0.5rem;
+  position: sticky;
+  text-align: center;
+  text-transform: uppercase;
+  top: var(--archive-group-top);
+  z-index: 30;
+}
+
+.economic-table .label-row th {
+  background: #f8fafc;
+  color: #23384d;
+  font-size: 0.76rem;
+  font-weight: 700;
+  line-height: 1.18;
+  min-width: 88px;
+  padding: 0.7rem 0.45rem;
+  position: sticky;
+  text-align: center;
+  top: var(--archive-label-top);
+  z-index: 25;
+}
+
+.economic-table tbody td {
+  text-align: center;
+  vertical-align: middle;
+}
+
+.economic-table tbody td.text-start {
+  text-align: left;
+}
+
+.economic-table .sticky-company {
+  background: #fff;
+  left: 0;
+  position: sticky;
+  z-index: 45;
+}
+
+.economic-table .sticky-date-with-company {
+  background: #fff;
+  left: var(--archive-company-width);
+  position: sticky;
+  z-index: 44;
+}
+
+.economic-table .sticky-date {
+  background: #fff;
+  left: 0;
+  position: sticky;
+  z-index: 44;
+}
+
+.economic-table thead .label-row .sticky-company,
+.economic-table thead .label-row .sticky-date-with-company,
+.economic-table thead .label-row .sticky-date {
+  background: #f8fafc;
+}
+
+.economic-table tbody tr:nth-child(even) td.sticky-company,
+.economic-table tbody tr:nth-child(even) td.sticky-date-with-company,
+.economic-table tbody tr:nth-child(even) td.sticky-date {
+  background: #fbfdff;
+}
+
+.company-col {
+  max-width: var(--archive-company-width);
+  min-width: var(--archive-company-width);
+  width: var(--archive-company-width);
+}
+
+.date-col {
+  max-width: var(--archive-date-width);
+  min-width: var(--archive-date-width);
+  width: var(--archive-date-width);
+}
+
+.empty-state {
+  color: #6b7f90;
+  font-weight: 600;
+  padding: 2rem;
+  text-align: center;
+}
+
+.pagination-bar {
+  align-items: center;
+  border-top: 1px solid #e5edf2;
+  display: flex;
+  justify-content: space-between;
+  padding: 0.6rem 1rem;
+}
+
+@media (max-width: 1100px) {
+  .archive-toolbar {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .filters {
+    justify-content: flex-start;
+  }
+
+  .summary-grid {
+    grid-template-columns: repeat(3, minmax(150px, 1fr));
+  }
+}
+
+@media (max-width: 680px) {
+  .summary-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .filter-control,
+  .company-filter {
+    min-width: 100%;
+  }
+}

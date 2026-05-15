@@ -7,6 +7,7 @@ import { ToastService } from '../../../../shared/services/toast.service';
 import { CommonService } from '../../../../shared/services/common.service';
 import { ManageCategoryService } from '../../../../core/services/template-builder/manage-category/manage-category.service';
 import { TemplateCategoryList } from '../../../../core/models/template-builder/template-category-list';
+import { PERMISSIONS } from '../../../../core/constants/permissions.constants';
 
 declare var bootstrap: any;
 @Component({
@@ -56,9 +57,14 @@ export class TemplateCategoryAddEditComponent {
     this.form.reset();
      this.currentcategoryId = null;
 
-    //  this.isAddEditPermission = this.isEdit
-    //   ? this.commonService.checkPermission(PERMISSIONS.AnimalLactationEdit)
-    //   : this.commonService.checkPermission(PERMISSIONS.AnimalLactationAdd);
+     this.isAddEditPermission = this.isEdit
+      ? this.commonService.checkPermission(PERMISSIONS.TemplateCategoryEdit, false)
+      : this.commonService.checkPermission(PERMISSIONS.TemplateCategoryAdd, false);
+
+    if (!this.isAddEditPermission) {
+      this.toast.error('You do not have permission');
+      return;
+    }
 
     if (edit && data) {
       this.form.patchValue({
@@ -78,19 +84,14 @@ export class TemplateCategoryAddEditComponent {
   }
 
   save() {
-    // const hasPermission = this.isEdit
-    //   ? this.commonService.checkPermission(PERMISSIONS.AnimalLactationEdit)
-    //   : this.commonService.checkPermission(PERMISSIONS.AnimalLactationAdd);
+    const hasPermission = this.isEdit
+      ? this.commonService.checkPermission(PERMISSIONS.TemplateCategoryEdit)
+      : this.commonService.checkPermission(PERMISSIONS.TemplateCategoryAdd);
 
-    // if (!hasPermission) {
-    //   this.toast.error('You do not have permission to perform this action.');
-    //   return;
-    // }
-
-    // if(!this.isAddEditPermission){
-    //   this.toast.error('You do not have permission');
-    //   return;
-    // }
+    if (!hasPermission) {
+      this.toast.error('You do not have permission to perform this action.');
+      return;
+    }
     if (!this.form.valid) {
       this.toast.warning('Please fill all required fields');
       this.form.markAllAsTouched();
@@ -105,7 +106,7 @@ export class TemplateCategoryAddEditComponent {
         if (res.isSuccess) {
           this.toast.success(res.message);
           this.closeModal();
-          this.templateCategory.templateCategoriesChanged;
+          this.templateCategory.templateCategoriesChanged();
         } else {
           this.toast.error(res.message);
         }
@@ -116,7 +117,7 @@ export class TemplateCategoryAddEditComponent {
         if (res.isSuccess) {
           this.toast.success(res.message);
           this.closeModal();
-          this.templateCategory.templateCategoriesChanged$;
+          this.templateCategory.templateCategoriesChanged();
         } else {
           this.toast.error(res.message);
         }

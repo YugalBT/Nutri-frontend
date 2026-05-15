@@ -78,6 +78,16 @@
                                 </div>
                             </div>
 
+                            <div class="col-md-2 col-12" *ngIf="isSuperAdmin">
+                                <label class="form-label">{{ 'role.roleIsSupplier' | translate }}</label>
+                                <div>
+                                    <label class="switch">
+                                        <input type="checkbox" formControlName="isSupplier" [checked]="this.form.get('isSupplier')?.value">
+                                        <span class="slider"></span>
+                                    </label>
+                                </div>
+                            </div>
+
                             <div class="col-md-12 col-12">
                                 <!-- Table Header -->
                                 <div class="pm-row pm-header">
@@ -149,7 +159,7 @@
                 <button type="button" class="btn btn-secondary" (click)="closeModal()">
                     {{ 'common.cancel' | translate }}
                 </button>
-                <button type="button" class="btn add-btn" (click)="saveRole()" [disabled]="form.invalid">
+                <button type="button" class="btn add-btn" *ngIf="canSave" (click)="saveRole()" [disabled]="form.invalid">
                     {{ 'common.save' | translate }}
                 </button>
             </div>

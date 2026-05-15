@@ -1,0 +1,198 @@
+/* Date Range Filter Component Styles */
+:host {
+  --drf-primary: var(--primary-color, #2CA28F);
+  --drf-primary-light-3: rgba(var(--primary-color-rgb, 44 162 143), 0.03);
+  --drf-primary-light-8: rgba(var(--primary-color-rgb, 44 162 143), 0.08);
+  --drf-primary-light-15: rgba(var(--primary-color-rgb, 44 162 143), 0.15);
+  --drf-primary-light-30: rgba(var(--primary-color-rgb, 44 162 143), 0.30);
+  --drf-bg: #ffffff;
+  --drf-surface: #f9fafb;
+  --drf-border: #e5e7eb;
+  --drf-text-primary: #111827;
+  --drf-text-secondary: #6b7280;
+  --drf-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --drf-shadow-md: 0 4px 6px rgba(0, 0, 0, 0.07);
+  --drf-shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.08);
+  --drf-radius-sm: 6px;
+  --drf-transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+  /* --drf-text-dark: #000229;
+  --drf-text-gray: #666;
+  --drf-border: #E0E0E0;
+  --drf-bg-light: #F8FAFB;
+  --drf-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  --drf-transition: all 0.2s ease;
+} */
+
+.drf-container {
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  overflow: visible;
+  box-shadow: none;
+  transition: var(--drf-transition);
+}
+
+.drf-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr auto auto;
+  gap: 12px;
+  align-items: flex-end;
+  margin-bottom: 0;
+}
+
+@media (max-width: 768px) {
+  .drf-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 576px) {
+  .drf-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.drf-form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.drf-label {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--drf-text-dark);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.drf-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.drf-input-wrapper i {
+  position: absolute;
+  left: 10px;
+  color: var(--drf-primary);
+  font-size: 14px;
+  pointer-events: none;
+}
+
+.drf-input {
+  width: 100%;
+  padding: 8px 10px 8px 36px;
+  border: 1px solid var(--drf-border);
+  border-radius: 6px;
+  font-size: 13px;
+  color: var(--drf-text-dark);
+  background: white;
+  font-family: inherit;
+  transition: var(--drf-transition);
+}
+
+.drf-input:hover {
+  border-color: var(--drf-primary);
+}
+
+.drf-input:focus {
+  outline: none;
+  border-color: var(--drf-primary);
+  box-shadow: 0 0 0 2px var(--drf-primary-light-8);
+  background: white;
+}
+
+.drf-input:disabled {
+  background: var(--drf-bg-light);
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.drf-actions {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+.drf-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 10px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--drf-transition);
+  border: none;
+  min-width: 36px;
+  height: 36px;
+}
+
+.drf-btn i {
+  font-size: 14px;
+}
+
+.drf-btn-secondary {
+  background: white;
+  color: var(--drf-text-dark);
+  border: 1px solid var(--drf-border);
+}
+
+.drf-btn-secondary:hover {
+  background: var(--drf-bg-light);
+  border-color: var(--drf-primary);
+  color: var(--drf-primary);
+}
+
+.drf-btn-primary {
+  background: linear-gradient(135deg, var(--drf-primary) 0%, #1f8876 100%);
+  color: white;
+}
+
+.drf-btn-primary:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px var(--drf-primary-light-30);
+}
+
+.drf-btn-primary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Dark Mode Support */
+:host(.dark-mode) {
+  --drf-text-dark: #E6EEF6;
+  --drf-text-gray: #B0C0D0;
+  --drf-border: #3A4A5A;
+  --drf-bg-light: #1A2A3A;
+}
+
+:host(.dark-mode) .drf-container {
+  background: transparent;
+  border-color: var(--drf-border);
+}
+
+:host(.dark-mode) .drf-input {
+  background: rgba(0, 0, 0, 0.2);
+  border-color: var(--drf-border);
+  color: var(--drf-text-dark);
+}
+
+:host(.dark-mode) .drf-input:focus {
+  background: rgba(0, 0, 0, 0.3);
+}
+
+:host(.dark-mode) .drf-btn-secondary {
+  background: rgba(0, 0, 0, 0.2);
+  color: var(--drf-text-dark);
+  border-color: var(--drf-border);
+}
+
+:host(.dark-mode) .drf-btn-secondary:hover {
+  background: var(--drf-primary-light-15);
+}
+

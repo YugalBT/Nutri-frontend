@@ -8,18 +8,22 @@ import {
   EventEmitter
 } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Subscription } from 'rxjs';
+import { debounceTime, Subscription } from 'rxjs';
 import { SupplierService } from '../../../core/services/supplier/supplier.service';
 import { ToastService } from '../../../shared/services/toast.service';
 import { SharedModule } from '../../../shared/shared.module';
 import { TranslatePipe } from '../../../i18n/translate.pipe';
+import { CommonService } from '../../../shared/services/common.service';
+import { RoleList } from '../../../core/models/rolelist';
+import { TranslateService } from '../../../i18n/translate.service';
+import { PERMISSIONS } from '../../../core/constants/permissions.constants';
 
 declare var bootstrap: any;
 
 @Component({
   selector: 'app-supplier-add-edit',
   standalone: true,
-  imports: [SharedModule,TranslatePipe],
+  imports: [SharedModule, TranslatePipe],
   templateUrl: './supplier-add-edit.component.html',
   styleUrls: ['./supplier-add-edit.component.css']
 })
@@ -30,16 +34,22 @@ export class SupplierAddEditComponent implements OnInit, OnDestroy {
   form!: FormGroup;
   modalInstance: any;
   isEdit = false;
+  canSave = false;
   currentId: string | null = null;
   subs: Subscription[] = [];
+  showCurrent = false;
+  roles: RoleList[] = [];
+  rolesLoading = false;
+  rolesError: string | null = null;
 
   @Output() onSupplierSaved = new EventEmitter<void>();
 
   constructor(
     private fb: FormBuilder,
     private supplierService: SupplierService,
-    private toast: ToastService
-  ) {}
+    private toast: ToastService,
+    private commonService: CommonService
+  ) { }
 
   ngOnInit() {
     this.initializeForm();
@@ -98,23 +108,32 @@ export class SupplierAddEditComponent implements OnInit, OnDestroy {
       zipCode: ['', [
         Validators.required,
         Validators.pattern(/^\d{5,6}$/)
-      ]]
+      ]],
+      password: ['', [
+        Validators.required,
+        Validators.maxLength(100),
+      ]],
     });
   }
 
-  private listenToFirstNameChange() {
+private listenToFirstNameChange() {
 
-    this.form.get('firstName')?.valueChanges
-      .subscribe(value => {
+  const debounceDelay = 300; 
 
-        if (!value || value.length < 2) {
-          this.form.patchValue({ supplierCode: '' });
-          return;
-        }
+  this.form.get('firstName')?.valueChanges
+    .pipe(debounceTime(debounceDelay))
+    .subscribe(value => {
 
-        this.generateSupplierCode(value);
-      });
-  }
+      if (!value || value.length < 2) {
+        this.form.patchValue({ supplierCode: '' });
+        return;
+      }
+
+      this.generateSupplierCode(value);
+    });
+}
+
+
 
   generateSupplierCode(firstName: string) {
     if (!firstName || firstName.length < 2) {
@@ -138,8 +157,14 @@ export class SupplierAddEditComponent implements OnInit, OnDestroy {
   }
 
   openModal(edit = false, data?: any) {
-
     this.isEdit = edit;
+    this.canSave = edit
+      ? this.commonService.checkPermission(PERMISSIONS.SuppliersEdit, false)
+      : this.commonService.checkPermission(PERMISSIONS.SuppliersAdd, false);
+    if (!this.canSave) {
+      this.toast.error('No permission');
+      return;
+    }
     this.form.reset();
 
     if (edit && data) {
@@ -148,12 +173,17 @@ export class SupplierAddEditComponent implements OnInit, OnDestroy {
     } else {
       this.currentId = null;
     }
-
+    this.form.get('password')?.clearValidators();
+    this.form.get('password')?.updateValueAndValidity();
     this.modalInstance = new bootstrap.Modal(this.supplierModal.nativeElement);
     this.modalInstance.show();
   }
 
   saveSupplier() {
+    const hasPermission = this.isEdit
+      ? this.commonService.checkPermission(PERMISSIONS.SuppliersEdit)
+      : this.commonService.checkPermission(PERMISSIONS.SuppliersAdd);
+    if (!hasPermission) return;
 
     if (!this.form.valid) {
       this.form.markAllAsTouched();

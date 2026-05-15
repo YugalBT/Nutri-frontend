@@ -1,299 +1,477 @@
-<div class="body-content">
+﻿<div class="body-content">
+  <ng-container *ngIf="!isSupplier && user?.roleName !== 'Formulator'">
+    <!-- <div *ngIf="isLoading" class="text-center py-3">
+      {{ "dashboard.loading" | translate }}
+    </div> -->
 
-  <div class="welcome-dashboard" *ngIf="user as u">
-    <h3 class="mb-2">
-      <b>
-        {{ "dashboard.welcome" | translate }}
-        <span class="link-text">{{ u.companyName }}</span>
-      </b>
-    </h3>
-  </div>
-
-  <!-- HEADER -->
-  <div class="d-flex align-items-center justify-content-between py-3">
-    <h4 class="border-start border-4 ps-3">
-      {{ "dashboard.title" | translate }}
-    </h4>
-
-    <div class="d-flex align-items-center gap-2">
-      <label class="mb-0">
-        {{ "dashboard.year" | translate }}
-      </label>
-
-      <select
-        class="form-select"
-        style="width: 120px"
-        [ngModel]="selectedYear"
-        (ngModelChange)="onYearChange($event)">
-
-        <option *ngFor="let year of yearOptions" [value]="year">
-          {{ year }}
-        </option>
-
-      </select>
-    </div>
-  </div>
-
-  <!-- LOADING -->
-  <div *ngIf="isLoading" class="text-center py-3">
-    {{ "dashboard.loading" | translate }}
-  </div>
-
-  <!-- USER DASHBOARD -->
-  <ng-container *ngIf="!isLoading && !isAdmin">
-
-    <div class="row g-3">
-
-      <!-- Last Entry -->
-      <div class="col-md-3">
-        <div class="dashboard-card">
-          <div class="card-top">
-            <span>{{ "dashboard.lastEntry" | translate }}</span>
+    <!-- <ng-container *ngIf="!isLoading"> -->
+    <ng-container *ngIf="isAdmin; else companyDashboardTpl">
+      <section class="superadmin-dashboard">
+        <div class="superadmin-titlebar">
+          <div class="superadmin-title-copy">
+            <h2>{{ 'dashboard.companyLabel' | translate }} <span>{{ user?.companyName }}</span></h2>
+            <p>{{ 'dashboard.dashboardOverview' | translate }}</p>
           </div>
 
-          <h3>
-            {{
-              companyDashboard?.lastEntryDate
-                ? (companyDashboard?.lastEntryDate | date: "mediumDate")
-                : "-"
-            }}
-          </h3>
-        </div>
-      </div>
-
-      <!-- Milk Price -->
-      <div class="col-md-3">
-        <div class="dashboard-card">
-          <div class="card-top">
-            <span>{{ "dashboard.milkPrice" | translate }}</span>
+          <div class="superadmin-title-brand">
+            <img [src]="user?.logo || '/assets/image/small-logo.png'" alt="Brand logo" class="brand-logo-preview" />
           </div>
-
-          <h3>{{ companyDashboard?.milkPrice || 0 | number: "1.2-2" }}</h3>
         </div>
-      </div>
 
-      <!-- IOFC -->
-      <div class="col-md-3">
-        <div class="dashboard-card">
-          <div class="card-top">
-            <span>{{ "dashboard.iofc" | translate }}</span>
-          </div>
-
-          <h3>{{ companyDashboard?.iofc || 0 | number: "1.2-2" }}</h3>
-        </div>
-      </div>
-
-      <!-- D&A Milk -->
-      <div class="col-md-3">
-        <div class="dashboard-card">
-          <div class="card-top">
-            <span>{{ "dashboard.deaMilk" | translate }}</span>
-          </div>
-
-          <h3>{{ companyDashboard?.deaMilk || 0 | number: "1.2-2" }}</h3>
-        </div>
-      </div>
-
-    </div>
-
-    <!-- PERFORMANCE -->
-    <h5 class="border-start border-4 ps-3 mt-4">
-      {{ "dashboard.performanceIndicators" | translate }}
-    </h5>
-
-    <div class="row dashboard-gauges">
-      <div class="col-md-3">
-        <div class="gauge-card">
-          <div echarts [options]="deaGauge" class="gauge-box"></div>
-        </div>
-      </div>
-
-      <div class="col-md-3">
-        <div class="gauge-card">
-          <div echarts [options]="milkGauge" class="gauge-box"></div>
-        </div>
-      </div>
-
-      <div class="col-md-3">
-        <div class="gauge-card">
-          <div echarts [options]="feedGauge" class="gauge-box"></div>
-        </div>
-      </div>
-
-      <div class="col-md-3">
-        <div class="gauge-card">
-          <div echarts [options]="crepGauge" class="gauge-box"></div>
-        </div>
-      </div>
-    </div>
-
-    <!-- DEA BAR -->
-    <div class="row mt-3">
-      <div class="col-12">
-        <div class="dea-performance-bar">
-
-          <div class="performance-scale">
-            <span>0.90</span>
-            <span>1.00</span>
-            <span>1.10</span>
-            <span>1.20</span>
-            <span>1.30</span>
-            <span>1.40</span>
-            <span>1.50</span>
-          </div>
-
-          <div class="performance-bar">
-            <div
-              class="cow-indicator"
-              [style.left.%]="getCowPosition(companyDashboard?.deaMilk ?? 0)">
-              🐄
+        <div class="row g-3 mt-1 superadmin-legacy-metrics">
+          <div class="col-md-3">
+            <div class="dashboard-card super-metric-card">
+              <div class="card-top">
+                <span>{{ "dashboard.totalCompanies" | translate }}</span>
+              </div>
+              <h3>{{ aggregatedAnalytics?.totalCompanies ?? dashboardData.totalCompanies }}</h3>
             </div>
           </div>
 
-          <div class="dea-value">
-            {{ companyDashboard?.deaMilk }}
+          <div class="col-md-3">
+            <div class="dashboard-card super-metric-card tone-soft-peach">
+              <div class="card-top">
+                <span>{{ "dashboard.archiveRecords" | translate }}</span>
+              </div>
+              <h3>{{ aggregatedAnalytics?.archiveRecords || 0 }}</h3>
+            </div>
+          </div>
+
+          <div class="col-md-3">
+            <div class="dashboard-card super-metric-card tone-soft-sky">
+              <div class="card-top">
+                <span>{{ "dashboard.totalUsers" | translate }}</span>
+              </div>
+
+              <h3>{{ dashboardData.totalUsers }}</h3>
+            </div>
+          </div>
+
+          <div class="col-md-3">
+            <div class="dashboard-card super-metric-card tone-soft-mint">
+              <div class="card-top">
+                <span>{{ "dashboard.Suppliers" | translate }}</span>
+              </div>
+              <h3>{{ dashboardData.totalSuppliers }}</h3>
+            </div>
+          </div>
+        </div>
+
+        <section class="ppt-dashboard-panel">
+          <div class="ppt-overview-title">{{ 'dashboard.dashboardOverview' | translate }}</div>
+
+          <div class="ppt-strip">
+            <article class="ppt-strip-card tone-feed">
+              <div class="ppt-card-title">{{ 'dashboard.feeding' | translate }}</div>
+              <div class="ppt-row">
+                <span>{{ 'dashboard.costPerDairyCowRation' | translate }}</span>
+                <strong>{{ aggregatedAnalytics?.costPerDairyCowRation || 0 | number: "1.2-2" }} €</strong>
+              </div>
+              <div class="ppt-row">
+                <span>{{ 'dashboard.costPerDryCowRation' | translate }}</span>
+                <strong>{{ aggregatedAnalytics?.costPerDryCowRation || 0 | number: "1.2-2" }} €</strong>
+              </div>
+              <div class="ppt-row">
+                <span>{{ 'dashboard.heiferRearingCost' | translate }}</span>
+                <strong>{{ aggregatedAnalytics?.heiferRearingCost || 0 | number: "1.2-2" }} €</strong>
+              </div>
+            </article>
+
+            <article class="ppt-strip-card tone-herd">
+              <div class="ppt-card-title">{{ 'dashboard.herd' | translate }}</div>
+              <div class="ppt-row">
+                <span>{{ 'dashboard.animalsInLactation' | translate }}</span>
+                <strong>{{ aggregatedAnalytics?.animalsInLactation || 0 }}</strong>
+              </div>
+              <div class="ppt-row">
+                <span>{{ 'dashboard.dryAnimals' | translate }}</span>
+                <strong>{{ aggregatedAnalytics?.dryAnimals || 0 }}</strong>
+              </div>
+              <div class="ppt-row">
+                <span>{{ 'dashboard.heifersPercentage' | translate }}</span>
+                <strong>{{ aggregatedAnalytics?.heiferPercentage || 0 | number: "1.0-2" }} %</strong>
+              </div>
+            </article>
+
+            <article class="ppt-strip-card tone-production">
+              <div class="ppt-card-title">{{ 'dashboard.production' | translate }}</div>
+              <div class="ppt-row">
+                <span>{{ 'dashboard.milkProduced' | translate }}</span>
+                <strong>{{ aggregatedAnalytics?.milkProduced || 0 | number: "1.2-2" }} {{ 'dashboard.litri' | translate
+                  }}</strong>
+              </div>
+              <div class="ppt-row">
+                <span>{{ 'dashboard.fat' | translate }}</span>
+                <strong>{{ aggregatedAnalytics?.fatPercent || 0 | number: "1.1-2" }} %</strong>
+              </div>
+              <div class="ppt-row">
+                <span>{{ 'dashboard.protein' | translate }}</span>
+                <strong>{{ aggregatedAnalytics?.proteinPercent || 0 | number: "1.1-2" }} %</strong>
+              </div>
+            </article>
+
+            <article class="ppt-strip-card tone-fertility">
+              <div class="ppt-card-title">{{ 'dashboard.fertility' | translate }}</div>
+              <div class="ppt-row">
+                <span>{{ 'dashboard.pim' | translate }}</span>
+                <strong>{{ aggregatedAnalytics?.pim || 0 }}</strong>
+              </div>
+              <div class="ppt-row">
+                <span>{{ 'dashboard.crep' | translate }}</span>
+                <strong>{{ aggregatedAnalytics?.crep || 0 | number: "1.2-2" }}</strong>
+              </div>
+              <div class="ppt-row">
+                <span>{{ 'dashboard.ageAtFirstCalvingHeifers' | translate }}</span>
+                <strong>{{ aggregatedAnalytics?.ageAtFirstCalvingHeifers || 0 | number: "1.0-2" }}</strong>
+              </div>
+            </article>
+          </div>
+        </section>
+
+        <section class="superadmin-chart-stack">
+          <article class="dashboard-chart-card">
+            <div class="dashboard-chart-head">
+              <h3>{{ 'dashboard.companiesOverview' | translate }}</h3>
+            </div>
+            <div class="dashboard-chart-body">
+              <div echarts [options]="comparisonChart" class="dashboard-chart-box"></div>
+            </div>
+          </article>
+
+          <article class="dashboard-chart-card">
+            <div class="dashboard-chart-head">
+              <h3>{{ 'dashboard.avgProductionChart' | translate }}</h3>
+            </div>
+            <div class="dashboard-chart-body">
+              <div echarts [options]="productionChart" class="dashboard-chart-box production-box"></div>
+            </div>
+          </article>
+        </section>
+      </section>
+    </ng-container>
+    <!-- </ng-container> -->
+
+    <ng-template #companyDashboardTpl>
+      <section class="company-dashboard">
+        <div class="superadmin-titlebar">
+          <div class="superadmin-title-copy">
+            <h2>{{ 'dashboard.companyLabel' | translate }} <span>{{ companyDashboard?.companyName || user?.companyName
+                }}</span></h2>
+            <p>{{ "dashboard.overview" | translate }}</p>
+          </div>
+
+          <div class="company-dashboard-actions">
+            <div class="d-flex align-items-center gap-2">
+              <label class="mb-0">
+                {{ "dashboard.year" | translate }}
+              </label>
+
+              <select class="form-select" style="width: 120px" [ngModel]="selectedYear"
+                (ngModelChange)="onYearChange($event)">
+                <option *ngFor="let year of yearOptions" [value]="year">
+                  {{ year }}
+                </option>
+              </select>
+            </div>
+
+            <img [src]="user?.logo || '/assets/image/small-logo.png'" alt="Brand logo" class="brand-logo-preview" />
+          </div>
+        </div>
+
+
+        <div class="row g-3">
+          <div class="col-md-3">
+            <div class="dashboard-card super-metric-card">
+              <div class="card-top">
+                <span>{{ "dashboard.lastEntry" | translate }}</span>
+              </div>
+
+              <h3>
+                {{
+                companyDashboard?.lastEntryDate
+                ? (companyDashboard?.lastEntryDate | date: "mediumDate")
+                : "-"
+                }}
+              </h3>
+            </div>
+          </div>
+
+          <div class="col-md-3">
+            <div class="dashboard-card super-metric-card tone-soft-peach">
+              <div class="card-top">
+                <span>{{ "dashboard.totalMilkRevenue" | translate }}</span>
+              </div>
+
+              <h3>{{ (companyDashboard?.totalMilkRevenue ?? 0) | number: "1.2-2" }}</h3>
+              <small class="text-muted">
+                {{ "dashboard.euroTotal" | translate }}
+              </small>
+            </div>
+          </div>
+
+          <div class="col-md-3">
+            <div class="dashboard-card super-metric-card tone-soft-sky">
+              <div class="card-top">
+                <span>{{ "dashboard.iofc" | translate }}</span>
+              </div>
+
+              <h3>{{ companyDashboard?.iofc || 0 | number: "1.2-2" }}</h3>
+            </div>
+          </div>
+
+          <div class="col-md-3">
+            <div class="dashboard-card super-metric-card tone-soft-mint">
+              <div class="card-top">
+                <span>{{ "dashboard.milkPrice" | translate }}</span>
+              </div>
+
+              <h3>{{ companyDashboard?.milkPrice || 0 | number: "1.2-2" }}</h3>
+              <small class="text-muted">
+                {{ "dashboard.euroPerLiterMilk" | translate }}
+              </small>
+            </div>
           </div>
 
         </div>
-      </div>
-    </div>
 
-    <!-- OVERVIEW -->
-    <div class="row g-3 mt-1">
+        <h5 class="border-start border-4 ps-3 mt-4">
+          {{ "dashboard.performanceIndicators" | translate }}
+        </h5>
 
-      <div class="col-md-4">
-        <div class="overview-card">
-          <h5>{{ "dashboard.feeding" | translate }}</h5>
-          <p>
-            {{ "dashboard.cost" | translate }}:
-            <b>{{ companyDashboard?.cost || 0 | number: "1.2-2" }}</b>
-          </p>
-          <p>{{ "dashboard.trendYear" | translate }}</p>
+       <div class="row dashboard-gauges g-3">
+
+  <!-- Fat % -->
+  <div class="col-xl-3 col-md-6">
+    <div class="gauge-card gauge-teal">
+
+      <div class="gauge-header">
+        <div>
+          <h6>{{ "dashboard.fatPercent" | translate }}</h6>
+          <span>{{ "dashboard.milkQuality" | translate }}</span>
+        </div>
+
+        <div class="gauge-icon">
+          🥛
         </div>
       </div>
 
-      <div class="col-md-4">
-        <div class="overview-card">
-          <h5>{{ "dashboard.herd" | translate }}</h5>
-          <p>
-            {{ "dashboard.herdSize" | translate }}:
-            <b>{{ companyDashboard?.herdSize || 0 }}</b>
-          </p>
-          <p>{{ "dashboard.currentHerd" | translate }}</p>
+      <div echarts [options]="deaGauge" class="gauge-box"></div>
+
+    </div>
+  </div>
+
+  <!-- Average Milk -->
+  <div class="col-xl-3 col-md-6">
+    <div class="gauge-card gauge-blue">
+
+      <div class="gauge-header">
+        <div>
+          <h6>{{ "dashboard.averageMilk" | translate }}</h6>
+          <span>{{ "dashboard.production" | translate }}</span>
+        </div>
+
+        <div class="gauge-icon">
+          🐄
         </div>
       </div>
 
-      <div class="col-md-4">
-        <div class="overview-card">
-          <h5>{{ "dashboard.production" | translate }}</h5>
-          <p>
-            {{ "dashboard.avgMilkPerDay" | translate }}:
-            <b>{{ companyDashboard?.avgMilkPerDay || 0 | number: "1.2-2" }}</b>
-          </p>
-          <p>{{ "dashboard.avgOutput" | translate }}</p>
+      <div echarts [options]="milkGauge" class="gauge-box"></div>
+
+    </div>
+  </div>
+
+  <!-- Feed Efficiency -->
+  <div class="col-xl-3 col-md-6">
+    <div class="gauge-card gauge-purple">
+
+      <div class="gauge-header">
+        <div>
+          <h6>{{ "dashboard.feedEfficiency" | translate }}</h6>
+          <span>{{ "dashboard.nutrition" | translate }}</span>
+        </div>
+
+        <div class="gauge-icon">
+          🌾
         </div>
       </div>
 
-    </div>
+      <div echarts [options]="feedGauge" class="gauge-box"></div>
 
-    <!-- GRAPH -->
-    <div class="card mt-3">
-      <div class="card-header">
-        {{ "dashboard.graphicalKpi" | translate }}
-      </div>
-      <div class="card-body">
-        <div echarts [options]="companyTrendChart" class="chart-box"></div>
-      </div>
     </div>
+  </div>
 
+  <!-- CREP -->
+  <div class="col-xl-3 col-md-6">
+    <div class="gauge-card gauge-orange">
+
+      <div class="gauge-header">
+        <div>
+          <h6>{{ "dashboard.crep" | translate }}</h6>
+          <span>{{ "dashboard.reproduction" | translate }}</span>
+        </div>
+
+        <div class="gauge-icon">
+          📈
+        </div>
+      </div>
+
+      <div echarts [options]="crepGauge" class="gauge-box"></div>
+
+    </div>
+  </div>
+
+</div>
+
+        <div class="dea-score-card mt-3">
+
+          <div class="dea-score-header">
+            <h5>{{ "dashboard.DEAMilkPerformance" | translate }}</h5>
+            <span>{{ "dashboard.EfficiencyBenchmarkScale" | translate }}</span>
+          </div>
+
+          <div class="dea-performance-bar">
+
+            <div class="performance-scale">
+              <span>0.90</span>
+              <span>1.00</span>
+              <span>1.10</span>
+              <span>1.20</span>
+              <span>1.30</span>
+              <span>1.40</span>
+              <span>1.50</span>
+            </div>
+
+            <div class="performance-bar">
+
+              <div class="cow-indicator" [style.left.%]="getCowPosition(companyDashboard?.deaMilk ?? 0)">
+
+                <div class="indicator-value">
+                  {{ companyDashboard?.deaMilk | number: "1.2-2" }}
+                </div>
+
+                <div class="cow-icon-wrapper">
+                  🐄
+                </div>
+
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+
+        <div class="row g-3 mt-1">
+          <div class="col-md-3">
+            <div class="overview-card">
+              <h5>{{ "dashboard.feeding" | translate }}</h5>
+              <p>
+                {{ "dashboard.costPerLactatingCow" | translate }}:
+                <b>{{ companyDashboard?.costPerDairyCowRation || 0 | number: "1.2-2" }} €</b>
+              </p>
+              <p>
+                {{ "dashboard.costPerDryCow" | translate }}:
+                <b>{{ companyDashboard?.costPerDryCowRation || 0 | number: "1.2-2" }} €</b>
+              </p>
+              <p>
+                {{ "dashboard.heiferRearingCost" | translate }}:
+                <b>{{ companyDashboard?.heiferRearingCost || 0 | number: "1.2-2" }} €</b>
+              </p>
+              <p>
+                {{ "dashboard.totalFeedCost" | translate }}:
+                <b>{{ companyDashboard?.cost || 0 | number: "1.2-2" }} €</b>
+              </p>
+            </div>
+          </div>
+
+          <div class="col-md-3">
+            <div class="overview-card">
+              <h5>{{ "dashboard.herd" | translate }}</h5>
+              <p>
+                {{ "dashboard.herdSize" | translate }}:
+                <b>{{ companyDashboard?.herdSize || 0 }}</b>
+              </p>
+              <p>
+                {{ "dashboard.inLactation" | translate }}:
+                <b>{{ companyDashboard?.animalsInLactation || 0 }}</b>
+              </p>
+              <p>
+                {{ "dashboard.dryAnimals" | translate }}:
+                <b>{{ companyDashboard?.dryAnimals || 0 }}</b>
+              </p>
+              <p>
+                {{ "dashboard.heiferPercentage" | translate }}:
+                <b>{{ companyDashboard?.heiferPercentage || 0 | number: "1.1-1" }} %</b>
+              </p>
+              <p>
+                {{ "dashboard.totalCalves" | translate }}:
+                <b>{{ companyDashboard?.totalCalves || 0 }}</b>
+              </p>
+            </div>
+          </div>
+
+          <div class="col-md-3">
+            <div class="overview-card">
+              <h5>{{ "dashboard.production" | translate }}</h5>
+              <p>
+                {{ "dashboard.avgMilkPerDay" | translate }}:
+                <b>{{ companyDashboard?.avgMilkPerDay || 0 | number: "1.2-2" }} kg</b>
+              </p>
+              <p>
+                {{ "dashboard.milkProduced" | translate }}:
+                <b>{{ companyDashboard?.milkProduced || 0 | number: "1.2-2" }} kg</b>
+              </p>
+              <p>
+                {{ "dashboard.fatPercent" | translate }}:
+                <b>{{ companyDashboard?.fatPercent || 0 | number: "1.2-2" }} %</b>
+              </p>
+              <p>
+                {{ "dashboard.proteinPercent" | translate }}:
+                <b>{{ companyDashboard?.proteinPercent || 0 | number: "1.2-2" }} %</b>
+              </p>
+              <p>
+                {{ "dashboard.pim" | translate }}:
+                <b>{{ companyDashboard?.pim || 0 }}</b>
+              </p>
+            </div>
+          </div>
+
+          <div class="col-md-3">
+            <div class="overview-card">
+              <h5>{{ "dashboard.calves" | translate }}</h5>
+              <p>
+                {{ "dashboard.calvesTotalCost" | translate }}:
+                <b>{{ companyDashboard?.calvesTotalCost || 0 | number: "1.2-2" }} €</b>
+              </p>
+              <p>
+                {{ "dashboard.calvesIndividualAnimals" | translate }}:
+                <b>{{ companyDashboard?.calvesIndAnimals || 0 }}</b>
+              </p>
+              <p>
+                {{ "dashboard.calvesGroupAnimals" | translate }}:
+                <b>{{ companyDashboard?.calvesGrpAnimals || 0 }}</b>
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="graph-card mt-4">
+
+          <div class="graph-card-header">
+
+            <div>
+              <h4>{{ "dashboard.graphicalKpi" | translate }}</h4>
+              <span>{{ "dashboard.KPIPerformanceAnalytics" | translate }}</span>
+            </div>
+
+          </div>
+
+          <div class="graph-card-body">
+            <div echarts [options]="companyTrendChart" class="chart-box"></div>
+          </div>
+
+        </div>
+      </section>
+    </ng-template>
   </ng-container>
-
-  <!-- ADMIN DASHBOARD -->
-  <ng-container *ngIf="!isLoading && isAdmin">
-
-    <div class="row g-3">
-
-      <div class="col-md-3">
-        <div class="dashboard-card">
-          <div class="card-top">
-            <span>{{ "dashboard.totalCompanies" | translate }}</span>
-          </div>
-          <h3>{{ aggregatedAnalytics?.totalCompanies }}</h3>
-        </div>
-      </div>
-
-      <div class="col-md-3">
-        <div class="dashboard-card">
-          <div class="card-top">
-            <span>{{ "dashboard.archiveRecords" | translate }}</span>
-          </div>
-          <h3>{{ aggregatedAnalytics?.archiveRecords || 0 }}</h3>
-        </div>
-      </div>
-
-      <div class="col-md-3">
-        <div class="dashboard-card">
-          <div class="card-top">
-            <span>{{ "dashboard.totalUsers" | translate }}</span>
-          </div>
-          <h3>{{ dashboardData.totalUsers }}</h3>
-        </div>
-      </div>
-
-      <div class="col-md-3">
-        <div class="dashboard-card">
-          <div class="card-top">
-            <span>{{ "dashboard.activeFarms" | translate }}</span>
-          </div>
-          <h3>{{ dashboardData.totalActiveFarms }}</h3>
-        </div>
-      </div>
-
-    </div>
-
-    <div class="card mt-3">
-      <div class="card-header">
-        {{ "dashboard.aggregatedTrend" | translate }}
-      </div>
-      <div class="card-body">
-        <div echarts [options]="adminTrendChart" class="chart-box"></div>
-      </div>
-    </div>
-
-    <div class="card mt-3">
-      <div class="card-header">
-        {{ "dashboard.companyComparison" | translate }}
-      </div>
-      <div class="card-body">
-        <div echarts [options]="comparisonChart" class="chart-box"></div>
-      </div>
-    </div>
-
-    <div class="card mt-3" *ngIf="aggregatedAnalytics?.rankingByIofc?.length">
-      <div class="card-header">
-        {{ "dashboard.rankingByIofc" | translate }}
-      </div>
-
-      <div class="card-body p-0">
-        <table class="table mb-0">
-          <thead>
-            <tr>
-              <th>{{ "dashboard.rank" | translate }}</th>
-              <th>{{ "dashboard.company" | translate }}</th>
-              <th>{{ "dashboard.iofc" | translate }}</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let row of aggregatedAnalytics?.rankingByIofc">
-              <td>{{ row.rank }}</td>
-              <td>{{ row.companyName }}</td>
-              <td>{{ row.iofc | number: "1.2-2" }}</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-
-  </ng-container>
-
 </div>

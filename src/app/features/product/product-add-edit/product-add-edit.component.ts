@@ -15,13 +15,17 @@ import {
   ReactiveFormsModule
 } from '@angular/forms';
 
-import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
-import { Subscription } from 'rxjs';
+import { debounceTime, distinctUntilChanged, takeUntil } from 'rxjs/operators';
+import { Subject, Subscription } from 'rxjs';
 
 import { ProductService } from '../../../core/services/product/product.service';
+import { PricingAttributeService } from '../../../core/services/pricing-rules/pricing-attribute.service';
 import { ToastService } from '../../../shared/services/toast.service';
 import { SharedModule } from '../../../shared/shared.module';
 import { TranslatePipe } from '../../../i18n/translate.pipe';
+import { CommonService } from '../../../shared/services/common.service';
+import { PricingAttribute } from '../../../core/models/pricing-attribute';
+import { PERMISSIONS } from '../../../core/constants/permissions.constants';
 
 declare var bootstrap: any;
 
@@ -34,17 +38,25 @@ declare var bootstrap: any;
 })
 export class ProductAddEditComponent implements OnInit, OnDestroy {
 
-  @ViewChild('productModal', { static: false })productModal!: ElementRef;
+  @ViewChild('productModal', { static: false }) productModal!: ElementRef;
 
   form!: FormGroup;
 
   modalInstance: any;
 
   isEdit = false;
+  canSave = false;
 
   currentId: string | null = null;
 
+  // ── Dynamic attribute lists ───────────────────────────────────────────────
+  formats:    PricingAttribute[] = [];
+  categories: PricingAttribute[] = [];
+  dosages:    PricingAttribute[] = [];
+  types:      PricingAttribute[] = [];
+
   private subs: Subscription[] = [];
+  private destroy$ = new Subject<void>();
 
   private codeDebounce: any;
 
@@ -52,24 +64,38 @@ export class ProductAddEditComponent implements OnInit, OnDestroy {
 
 
   constructor(
-    private fb: FormBuilder,
+    private fb:          FormBuilder,
     private productService: ProductService,
-    private toast: ToastService
-  ) {}
+    private attrService: PricingAttributeService,
+    private toast:       ToastService,
+    private commonService: CommonService
+  ) { }
 
 
 
   ngOnInit() {
 
     this.form = this.fb.group({
-
-      productName: ['', Validators.required],
-
-      productCode: [{ value: '', disabled: true }],
-
-      effectiveDate: ['', Validators.required]
-
+      productName:   ['', Validators.required],
+      productCode:   [{ value: '', disabled: true }],
+      effectiveDate: ['', Validators.required],
+      format:        [null, Validators.required],
+      category:      [null, Validators.required],
+      dosage:        [null, Validators.required],
+      type:          [null],
     });
+
+    // Load catalog once if not already loaded; then stay in sync reactively
+    this.attrService.loadCatalog().pipe(takeUntil(this.destroy$)).subscribe();
+
+    this.attrService.catalog$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((catalog) => {
+        this.formats    = catalog.formats.filter(f => f.isActive);
+        this.categories = catalog.categories.filter(c => c.isActive);
+        this.dosages    = catalog.dosages.filter(d => d.isActive);
+        this.types      = catalog.types.filter(t => t.isActive);
+      });
 
     this.listenProductNameChange();
 
@@ -139,6 +165,13 @@ export class ProductAddEditComponent implements OnInit, OnDestroy {
   openModal(edit = false, data?: any) {
 
     this.isEdit = edit;
+    this.canSave = edit
+      ? this.commonService.checkPermission(PERMISSIONS.ProductEdit, false)
+      : this.commonService.checkPermission(PERMISSIONS.ProductAdd, false);
+    if (!this.canSave) {
+      this.toast.error('No permission');
+      return;
+    }
 
     this.form.reset();
 
@@ -149,7 +182,10 @@ export class ProductAddEditComponent implements OnInit, OnDestroy {
 
     if (edit && data) {
 
-      this.form.patchValue(data);
+      this.form.patchValue({
+        ...data,
+        dosage: data.dosage ?? data.type ?? null
+      });
 
       this.currentId = data.productId;
 
@@ -160,13 +196,17 @@ export class ProductAddEditComponent implements OnInit, OnDestroy {
     }
 
 
-       this.modalInstance = new bootstrap.Modal(this.productModal.nativeElement);
+    this.modalInstance = new bootstrap.Modal(this.productModal.nativeElement);
     this.modalInstance.show();
   }
 
 
 
   saveProduct() {
+    const hasPermission = this.isEdit
+      ? this.commonService.checkPermission(PERMISSIONS.ProductEdit)
+      : this.commonService.checkPermission(PERMISSIONS.ProductAdd);
+    if (!hasPermission) return;
 
     if (!this.form.valid) {
 
@@ -177,6 +217,8 @@ export class ProductAddEditComponent implements OnInit, OnDestroy {
     }
 
     const payload = { ...this.form.getRawValue() };
+    // Keep legacy Product.Type populated until the backend/data migration fully retires it.
+    payload.type = payload.type ?? payload.dosage;
 
 
     if (this.isEdit && this.currentId) {
@@ -201,7 +243,6 @@ export class ProductAddEditComponent implements OnInit, OnDestroy {
           }
 
         });
-
     }
 
     else {
@@ -240,9 +281,9 @@ export class ProductAddEditComponent implements OnInit, OnDestroy {
 
 
   ngOnDestroy() {
-
+    this.destroy$.next();
+    this.destroy$.complete();
     this.subs.forEach(s => s.unsubscribe());
-
   }
 
 }

@@ -1,6 +1,6 @@
 /* login.component.css or global styles.css */
 button.btn.blue-btn:disabled {
-  background-color: #2CA28F !important; /* keep your blue color */
+  background-color: var(--primary-color, #2CA28F) !important; /* keep your blue color */
   color: #fff !important;               /* keep text white */
   opacity: 0.7;                         /* optional: show it’s disabled */
   cursor: not-allowed;                  /* show it’s disabled */
@@ -24,12 +24,12 @@ button.btn.blue-btn:disabled {
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  color: #7E7E7E;
+  color: var(--text-muted, #7E7E7E);
   border-radius: 6px;
 }
 .password-toggle:focus { outline: 2px solid rgba(0,0,0,0.08); outline-offset: 2px; }
 .password-toggle svg { display: block; width: 18px; height: 18px; }
-.password-toggle:hover { color: #333; background: rgba(0,0,0,0.02); }
+.password-toggle:hover { color: var(--text-primary, #333); background: rgba(0,0,0,0.02); }
 .dark-mode .password-toggle { color: rgba(230,238,246,0.8); }
 .dark-mode .password-toggle:hover { color: var(--text-color); background: rgba(255,255,255,0.02); }
 
@@ -46,8 +46,7 @@ button.btn.blue-btn:disabled {
   font-size: 13px;
   padding: 6px 12px;
   border-radius: 6px;
-  background-color: #ffffff;
-  color: #1f2937;
+  color: var(--text-primary, #1f2937);
   border: 1px solid rgba(0, 0, 0, 0.2);
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
   font-weight: 500;

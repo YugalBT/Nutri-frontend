@@ -3,7 +3,6 @@ import { RouterLink, RouterModule } from '@angular/router';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { Store } from '@ngrx/store';
 import { take } from 'rxjs/operators';
-
 import { TranslatePipe } from '../../i18n/translate.pipe';
 import { AuthService } from '../../core/auth/auth.service';
 import { selectAuthUser } from '../../state/auth/auth.selectors';
@@ -26,6 +25,7 @@ interface SidebarGroup {
   items: MenuItem[];
 }
 
+
 const HIDDEN_MENU_NAMES = [
   'Placeholder',
   'Category Mapping',
@@ -33,6 +33,10 @@ const HIDDEN_MENU_NAMES = [
   // 'Animal Group',
   // 'Ration',
   // 'Feed',
+];
+const TOP_MENU_NAMES = [
+  'Companies',
+  'Daily Entry'
 ];
 
 // const COMPANY_MENU_ROUTE_MAP: Record<string, string> = {
@@ -64,7 +68,7 @@ export class SidebarComponent implements OnInit {
   standaloneMenus: MenuItem[] = [];
   user: any = null;
   lang = 'en';
-
+  topMenus: MenuItem[] = [];
   constructor(
     private sanitizer: DomSanitizer,
     private authService: AuthService,
@@ -108,6 +112,16 @@ export class SidebarComponent implements OnInit {
     return this.lang;
   }
 
+  getTranslatedKey(name?: string): string {
+  if (!name) return '';
+
+  const map: any = {
+    'Companies': 'sidebarmenu.companies',
+    'Daily Entry': 'sidebarmenu.dailyEntry'
+  };
+
+  return map[name] || name;
+}
   // private buildCompanyMenu(companyMenu: string[]): void {
   //   const items: MenuItem[] = companyMenu
   //     .map((label) => ({
@@ -148,24 +162,77 @@ export class SidebarComponent implements OnInit {
   //         (this.currentLang === 'it' ? 'Pannello di controllo' : 'Dashboard'),
   //   );
   // }
-  private buildAccordionMenu(flatMenu: MenuItem[]): void {
+private buildAccordionMenu(flatMenu: MenuItem[]): void {
+
+  const roleType = (this.user?.roleType || '').toUpperCase();
+  const isAdmin = roleType === 'ADMIN';
+  const isSuperAdmin = this.user?.isSuperAdmin === true; // Assuming there's an isSuperAdmin flag in the user object
+  const isSupplier = !!this.user?.supplierDetails;// Assuming there's an isSupplier flag in the user object
+  // Check whether the current user has the SupplierPriceView permission.
+  // const hasSupplierPriceView = (this.user?.permissions as any[] ?? [])
+  //   .some((p: any) => p.roleName === 'SupplierPrice');
+  const roles = this.user?.roles || [];
+
+const hasSupplierPriceView = roles.includes('SupplierPriceView');
+
+  // Inject Deatech Raw Material Costs for Super Admin (ADMIN) only,
+  // AND only when the user has the SupplierPriceView permission.
+  // This is a frontend-only route not returned by the backend menu API.
+  // Suppliers (CLIENT) use the /supplier-price route instead.
+  if ( !isSupplier && (isAdmin || isSuperAdmin) && hasSupplierPriceView) {
+    const alreadyPresent = flatMenu.some(
+      m => m.roleDisplayName === 'Deatech Raw Material Costs'
+    );
+    if (!alreadyPresent) {
+      flatMenu = [
+        ...flatMenu,
+        {
+          roleDisplayName: 'Deatech Raw Material Costs',
+          roleDisplayNameIt: 'Costi Materie Prime Deatech',
+          roleName: 'DeatechRawMaterialCosts',
+          url: '/deatech-supplier-price',
+          safeIcon: this.sanitizeIcon(
+            `<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24"
+              fill="none" stroke="#D2D2D2" stroke-width="1.8"
+              stroke-linecap="round" stroke-linejoin="round">
+              <path d="M20 10L12 2H4v8l8 8a2 2 0 002.8 0l5.2-5.2a2 2 0 000-2.8z"/>
+              <circle cx="7.5" cy="7.5" r="1.5"/>
+              <path d="M14 14h4M16 12v4"/>
+            </svg>`
+          ),
+        } as MenuItem,
+      ];
+    }
+  }
+
+
+  if (!isSupplier && (isAdmin || isSuperAdmin)) {
+    flatMenu = flatMenu.filter(m => m.roleDisplayName !== 'Raw Material Costs');
+  }
 
   const groupedItemNames = SIDEBAR_GROUPS.flatMap(group => group.items);
+
+  this.topMenus = flatMenu.filter(m =>
+    TOP_MENU_NAMES.includes(m.roleDisplayName || '')
+  );
+
+
+  const filteredMenu = flatMenu.filter(m =>
+    !TOP_MENU_NAMES.includes(m.roleDisplayName || '')
+  );
 
   this.groupedMenus = SIDEBAR_GROUPS.map(group => {
 
     const orderedItems: MenuItem[] = [];
 
     group.items.forEach(itemName => {
-
-      const found = flatMenu.find(
+      const found = filteredMenu.find(
         m => (m.roleDisplayName || '') === itemName
       );
 
       if (found) {
         orderedItems.push(found);
       }
-
     });
 
     return {
@@ -179,16 +246,13 @@ export class SidebarComponent implements OnInit {
 
   }).filter(group => group.items.length > 0);
 
-
-  this.standaloneMenus = flatMenu.filter(
-    m =>
-      !groupedItemNames.includes(m.roleDisplayName || '') &&
-      m.roleDisplayName !==
-      (this.currentLang === 'it'
-        ? 'Pannello di controllo'
-        : 'Dashboard')
+  this.standaloneMenus = filteredMenu.filter(m =>
+    !groupedItemNames.includes(m.roleDisplayName || '') &&
+    m.roleDisplayName !==
+    (this.currentLang === 'it'
+      ? 'Pannello di controllo'
+      : 'Dashboard')
   );
-
 }
 
   logout(): void {

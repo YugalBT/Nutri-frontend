@@ -251,17 +251,17 @@
   @if (user.isSuperAdmin) {
             <div   class="col-md-4 position-relative" #companyBox>
               <label id="company" class="form-label">
-                Companies <span class="text-danger">*</span>
+                {{ "company.companies" | translate }} 
               </label>
 
               <!-- SELECT INPUT -->
               <div class="custom-multiselect" (click)="toggleCompanyDropdown()">
                 <span class="placeholder" *ngIf="!tenantIds.length">
-                  Select companies
+                  {{ "select.companies" | translate }} 
                 </span>
 
                 <div class="chips" *ngIf="tenantIds.length">
-                  {{ tenantIds.length }} selected
+                  {{ tenantIds.length }} {{ "companies.selected" | translate }}
                 </div>
 
                 <span class="arrow">&#9662;</span>
@@ -320,7 +320,7 @@
         <button class="btn btn-outline-secondary" (click)="closeModal()">
           {{ "common.cancel" | translate }}
         </button>
-        <button class="btn add-btn" (click)="saveUser()">
+        <button class="btn add-btn" *ngIf="canSave" (click)="saveUser()">
           {{ "common.save" | translate }}
         </button>
       </div>

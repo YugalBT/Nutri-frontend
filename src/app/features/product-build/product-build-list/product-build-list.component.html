@@ -1,0 +1,80 @@
+<div class="pagecls">
+
+  <!-- HEADER SECTION -->
+  <div class="pb-list-header">
+    <div class="pb-header-content">
+      <div class="pb-header-title">
+        <!-- <div class="pb-header-icon">
+          <i class="bi bi-boxes"></i>
+        </div> -->
+        <div>
+          <h1 class="pb-page-title">
+            {{ 'productBuild.heading' | translate }}
+          </h1>
+        </div>
+      </div>
+
+      <button *ngIf="canAddProductBuild" class="btn add-btn" (click)="onAddClick()" title="{{ 'productBuild.add' | translate }}">
+        <i class="bi bi-plus-lg"></i>
+        <span>{{ 'productBuild.add' | translate }}</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- FILTERS CARD -->
+  <div class="pb-filters-section">
+    <div class="pb-card">
+      <div class="pb-card-header">
+        <div class="pb-card-title">
+          <i class="bi bi-funnel"></i>
+          <span>{{ 'common.searchFilters' | translate }}</span>
+        </div>
+      </div>
+      <div class="pb-card-body">
+        <app-global-search
+          [label]="'common.searchFilters' | translate"
+          [placeholder]="'productBuild.searchPlaceholder' | translate"
+          [showStatus]="true"
+          (search)="onSearch($event)"
+          (statusChange)="onStatusChange($event)"
+          (clear)="clearFilters()">
+        </app-global-search>
+      </div>
+    </div>
+  </div>
+
+  <!-- TABLE CARD -->
+  <div class="pb-table-section">
+    <div class="pb-card">
+      <div class="pb-card-header">
+        <div class="pb-card-title">
+          <!-- <i class="bi bi-table"></i> -->
+          <!-- <span>{{ 'productBuild.buildList' | translate }}</span> -->
+        </div>
+        <div class="pb-record-count">{{ totalRecords }} {{ 'productBuild.records' | translate }}</div>
+      </div>
+      <div class="pb-card-body pb-table-wrapper">
+        <app-reusable-table
+          [columns]="columns"
+          [columnFields]="columnFields"
+          [data]="builds"
+          [showActions]="true"
+          [pageable]="true"
+          [totalRecords]="totalRecords"
+          [pageSize]="pageSize"
+          [pageIndex]="pageIndex"
+          [viewPermission]="viewPermission"
+          [editPermission]="editPermission"
+          [deletePermission]="deletePermission"
+          (pageChange)="onPageChange($event)"
+          (toggleActive)="onToggleActive($event)"
+          (viewRow)="onView($event)"
+          (deleteRow)="onDelete($event)"
+          [showView]="true"
+          (editRow)="onEditClick($event)">
+        </app-reusable-table>
+      </div>
+    </div>
+  </div>
+
+</div>

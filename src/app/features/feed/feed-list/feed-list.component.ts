@@ -1,4 +1,4 @@
-import { Component, Input, ViewChild } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { FeedService } from '../../../core/services/feed/feed.service';
 import { ToastService } from '../../../shared/services/toast.service';
@@ -9,15 +9,19 @@ import { ApiResponse } from '../../../core/models/api-response';
 import { SharedModule } from '../../../shared/shared.module';
 import { ReusableTableComponent } from '../../../shared/components/reusable-table/reusable-table.component';
 import { GlobalSearchComponent } from '../../../shared/components/global-search/global-search.component';
-import { FeedAddEditComponent } from "../feed-add-edit/feed-add-edit.component";
+import { FeedAddEditComponent } from '../feed-add-edit/feed-add-edit.component';
 import { CommonService } from '../../../shared/services/common.service';
 import { PERMISSIONS } from '../../../core/constants/permissions.constants';
 import { TranslatePipe } from '../../../i18n/translate.pipe';
+import { Store } from '@ngrx/store';
+import { selectUserRoles } from '../../../state/auth/auth.selectors';
+import { Constants } from '../../../shared/utils/constants/constants';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-feed-list',
   standalone: true,
-  imports: [SharedModule, ReusableTableComponent, GlobalSearchComponent, FeedAddEditComponent, TranslatePipe],
+  imports: [SharedModule, ReusableTableComponent, GlobalSearchComponent, FeedAddEditComponent, TranslatePipe, FormsModule],
   templateUrl: './feed-list.component.html',
   styleUrls: ['./feed-list.component.css']
 })
@@ -25,8 +29,6 @@ export class FeedListComponent {
 
   columns: string[] = [];
   columnFields: string[] = [];
-  @Input() farmId!: string;
-
   feeds: FeedList[] = [];
   totalRecords = 0;
   pageSize = 10;
@@ -34,28 +36,50 @@ export class FeedListComponent {
   searchValue = '';
   filterStatus: number | null = 2;
 
+  // Permissions
+  canAddFeed = false;
+  viewPermission = PERMISSIONS.FeedView;
+  editPermission = PERMISSIONS.FeedEdit;
+  deletePermission = PERMISSIONS.FeedDelete;
+  userRoles: string[] = [];
+
+  isSuperAdmin = false;
+  companies: { id: string; name: string }[] = [];
+  selectedCompanyId = '';
+
   subs: Subscription[] = [];
   langSub!: Subscription;
   @ViewChild(FeedAddEditComponent) feedModalRef!: FeedAddEditComponent;
-
 
   constructor(
     private translate: TranslateService,
     private feedService: FeedService,
     private toast: ToastService,
     private confirm: ConfirmDialogService,
-    private commonService: CommonService
+    private commonService: CommonService,
+    private store: Store
   ) {
     this.setColumns();
     this.langSub = this.translate.lang$.subscribe(() => this.setColumns());
   }
 
   ngOnInit(): void {
-    this.searchValue = this.farmId || '';
-    if (!this.commonService.checkPermission(PERMISSIONS.FeedView)
-      || !this.commonService.checkPermission(PERMISSIONS.FeedDelete))
+    this.loadUserPermissions();
+    this.isSuperAdmin = localStorage.getItem(Constants.IsSuperAdmin) === 'true';
+
+    if (!this.commonService.checkPermission(PERMISSIONS.FeedView, false))
       return;
-    this.loadFeeds(1, this.pageSize);
+
+    if (this.isSuperAdmin) {
+      const sub = this.commonService.getCompanyDropdown().subscribe(res => {
+        this.companies = res?.data ?? [];
+        if (this.companies.length > 0) this.selectedCompanyId = this.companies[0].id;
+        this.loadFeeds(1, this.pageSize);
+      });
+      this.subs.push(sub);
+    } else {
+      this.loadFeeds(1, this.pageSize);
+    }
 
     const sub = this.feedService.feedsChanged$.subscribe(() => {
       this.loadFeeds(this.pageIndex + 1, this.pageSize);
@@ -63,12 +87,26 @@ export class FeedListComponent {
     this.subs.push(sub);
   }
 
+  private loadUserPermissions(): void {
+    const subRoles = this.store.select(selectUserRoles).subscribe(roles => {
+      this.userRoles = roles || [];
+      this.canAddFeed = this.userRoles.includes(PERMISSIONS.FeedAdd);
+    });
+    this.subs.push(subRoles);
+  }
+
+  onCompanyChange(): void {
+    this.pageIndex = 0;
+    this.loadFeeds(1, this.pageSize);
+  }
+
   private loadFeeds(pageNo: number, recordPerPage: number): void {
-    const payload = {
+    const payload: any = {
       pageNo,
       recordPerPage,
       searchValue: this.searchValue ?? '',
-      status: this.filterStatus
+      status: this.filterStatus,
+      ...(this.isSuperAdmin && this.selectedCompanyId ? { tenantId: this.selectedCompanyId } : {})
     };
 
     const sub = this.feedService.getFeedDetails(payload).subscribe({
@@ -110,11 +148,16 @@ export class FeedListComponent {
   }
 
   onToggleActive(event: { row: any; isActive: boolean }): void {
+    if (!this.commonService.checkPermission(PERMISSIONS.FeedEdit)) {
+      return;
+    }
+
     event.row.isToggling = true;
 
     const id = event?.row?.feedId;
     if (!id) {
-      this.toast.error("Invalid feed id");
+      this.toast.error('Invalid feed id');
+      event.row.isToggling = false;
       return;
     }
 
@@ -135,16 +178,15 @@ export class FeedListComponent {
   }
 
   onDelete(row: any): void {
-
     if (!this.commonService.checkPermission(PERMISSIONS.FeedDelete))
       return;
     const id = row?.feedId;
     if (!id) {
-      this.toast.error("Invalid feed id");
+      this.toast.error('Invalid feed id');
       return;
     }
 
-    this.confirm.confirm("Are you sure you want to delete this feed?")
+    this.confirm.confirm('Are you sure you want to delete this feed?')
       .subscribe((confirmed) => {
         if (!confirmed) return;
 
@@ -160,35 +202,43 @@ export class FeedListComponent {
       });
   }
 
+  columnColorMap = {
+  category: (value: string) => {
+    switch (value) {
+      case 'Foraggi': return 'badge-green';
+      case 'Concentrati': return 'badge-blue';
+      case 'Robot': return 'badge-light-blue';
+      case 'Minerali': return 'badge-gray';
+      default: return 'badge-default';
+    }
+  },
+
+  vatApplicable: (value: boolean) => {
+    return value ? 'badge-green' : 'badge-gray';
+  }
+};
+
+  // ── Mattia's 5 columns only (Req #4)
+  // Removed: Protein, NDF, Energy, ADF, FatContent, Calcium, Phosphorus, Starch
   private setColumns(): void {
     this.columns = [
-      this.translate.instant('feed.columns.feed') ?? " ",
-      this.translate.instant('feed.columns.category') ?? " ",
-      this.translate.instant('feed.columns.dm') ?? " ",
-      this.translate.instant('feed.columns.cp') ?? " ",
-      this.translate.instant('feed.columns.ndf') ?? " ",
-      this.translate.instant('feed.columns.energy') ?? " ",
-      this.translate.instant('feed.columns.price') ?? " ",
-      this.translate.instant('feed.columns.phosphorus') ?? " ",
-      this.translate.instant('feed.columns.starch') ?? " ",
-      this.translate.instant('common.status') ?? " "
+      this.translate.instant('feed.columns.feed') ?? 'Feed Name',
+      this.translate.instant('feed.columns.category') ?? 'Category',
+      this.translate.instant('feed.columns.dm') ?? 'Dry Matter %',
+      this.translate.instant('feed.columns.price') ?? 'Price / ton',
+      'VAT',
+      this.translate.instant('common.status') ?? 'Status'
     ];
-
 
     this.columnFields = [
       'feedName',
       'category',
       'dryMatter',
-      'protein',
-      'ndf',
-      'energy',
       'pricePerKg',
-      'phosphorus',
-      'starch',
+      'vatApplicable',
       'isActive'
     ];
   }
-
 
   ngOnDestroy(): void {
     this.langSub?.unsubscribe();
@@ -196,10 +246,10 @@ export class FeedListComponent {
   }
 
   openAddFeedModal(): void {
-  this.feedModalRef.openModal(false, {
-    farmId: this.farmId
-  });
-}
+    this.feedModalRef.openModal(false, undefined, this.selectedCompanyId);
+  }
 
-  
+  openEditFeedModal(row: any): void {
+    this.feedModalRef.openModal(true, row, this.selectedCompanyId);
+  }
 }

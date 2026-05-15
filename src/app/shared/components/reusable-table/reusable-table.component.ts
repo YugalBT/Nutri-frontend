@@ -4,6 +4,8 @@ import {
   EventEmitter,
   Input,
   OnChanges,
+  OnDestroy,
+  OnInit,
   Output,
   SimpleChanges,
 } from '@angular/core';
@@ -11,6 +13,8 @@ import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { MatBadgeModule } from '@angular/material/badge';
 import { TranslatePipe } from '../../../i18n/translate.pipe';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { Subscription } from 'rxjs';
+import { PermissionService } from '../../services/permission.service';
 
 @Component({
   selector: 'app-reusable-table',
@@ -25,7 +29,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
   templateUrl: './reusable-table.component.html',
   styleUrls: ['./reusable-table.component.css'],
 })
-export class ReusableTableComponent implements OnChanges {
+export class ReusableTableComponent implements OnChanges, OnInit, OnDestroy {
   NoImagePath: string = '/assets/image/no-image.png';
   @Input() showFooter: boolean = false; //  default OFF
   @Input() footerTotals?: Record<string, number>;
@@ -46,18 +50,40 @@ export class ReusableTableComponent implements OnChanges {
 
   @Input() pageSize = 10;
   @Input() pageIndex = 0;
+  @Input() showView: boolean = false;
+  
+  @Input() viewPermission?: string;
+  @Input() editPermission?: string;
+  @Input() deletePermission?: string;
+
+  @Input() sortableColumns: string[] = [];
+  @Input() currentSortColumn: string = '';
+  @Input() currentSortDirection: 'asc' | 'desc' = 'asc';
 
   @Output() pageChange = new EventEmitter<{
     pageIndex: number;
     pageSize: number;
   }>();
+  @Output() viewRow = new EventEmitter<any>();
   @Output() editRow = new EventEmitter<any>();
   @Output() deleteRow = new EventEmitter<any>();
   @Output() toggleActive = new EventEmitter<{ row: any; isActive: boolean }>();
+  @Output() sortChange = new EventEmitter<{ column: string; direction: 'asc' | 'desc' }>();
 
   @Input() clickableField?: string;
   @Output() cellClick = new EventEmitter<{ field: string; row: any }>();
-  
+
+  userRoles: string[] = [];
+  private rolesSub: Subscription | null = null;
+  @Input() columnColorMap: Record<string, (value: any, row?: any) => string> = {};
+
+  constructor(private permissionService: PermissionService) {}
+
+  ngOnInit(): void {
+    this.rolesSub = this.permissionService.userRoles$.subscribe((roles: string[]) => {
+      this.userRoles = roles || [];
+    });
+  }
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes['pageIndex'] && !changes['pageIndex'].isFirstChange()) {
@@ -75,6 +101,17 @@ export class ReusableTableComponent implements OnChanges {
         this.pageIndex = Math.max(0, total - 1);
       }
     }
+  }
+
+  ngOnDestroy(): void {
+    if (this.rolesSub) {
+      this.rolesSub.unsubscribe();
+    }
+  }
+
+  hasPermission(permission?: string): boolean {
+    if (!permission) return true; // If no permission required, show the action
+    return this.userRoles.includes(permission);
   }
 
   get totalPages(): number {
@@ -105,6 +142,13 @@ export class ReusableTableComponent implements OnChanges {
 
     if (typeof val === 'boolean') return { type: 'boolean', value: val };
 
+  if (this.columnColorMap[field]) {
+    return {
+      type: 'dynamicColor',
+      value: val,
+      class: this.columnColorMap[field](val, row)
+    };
+  }
     return { type: 'text', value: val ?? '' };
   }
 
@@ -138,5 +182,28 @@ export class ReusableTableComponent implements OnChanges {
       pageIndex: event.pageIndex,
       pageSize: event.pageSize,
     });
+  }
+
+  onSort(columnField: string): void {
+    if (!this.sortableColumns.includes(columnField)) return;
+
+    let newDirection: 'asc' | 'desc' = 'asc';
+    if (this.currentSortColumn === columnField && this.currentSortDirection === 'asc') {
+      newDirection = 'desc';
+    }
+
+    this.sortChange.emit({
+      column: columnField,
+      direction: newDirection,
+    });
+  }
+
+  getSortIndicator(columnField: string): string {
+    if (this.currentSortColumn !== columnField) return '';
+    return this.currentSortDirection === 'asc' ? ' ↑' : ' ↓';
+  }
+
+  isSortable(columnField: string): boolean {
+    return this.sortableColumns.includes(columnField);
   }
 }

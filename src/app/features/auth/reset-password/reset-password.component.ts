@@ -14,6 +14,9 @@ import { ROUTE_CONST } from '../../../core/constants/route.constants';
 import { TranslatePipe } from '../../../i18n/translate.pipe';
 import { updateFirstLogin } from '../../../state/auth/auth.actions';
 import { Store } from '@ngrx/store';
+import { BrandingService } from '../../../shared/services/branding.service';
+import { selectAuthUser } from '../../../state/auth/auth.selectors';
+import { take } from 'rxjs/operators';
 
 @Component({
   selector: 'app-reset-password',
@@ -30,15 +33,40 @@ export class ResetPasswordComponent implements OnInit {
   isSubmitted = false;
   isLoading = false;
 
+  /** Supplier branding */
+  isSupplier = false;
+  rightHeadingKey = 'right.heading';
+  rightDescriptionKey = 'right.description';
+  rightPoint1Key = 'right.point1';
+  rightPoint2Key = 'right.point2';
+  rightPoint3Key = 'right.point3';
+
   constructor(
     private fb: FormBuilder,
     private router: Router,
     private toast: ToastrService,
     private passwordService: ChangePasswordService,
     private store: Store,
-  ) {}
+    private brandingService: BrandingService,
+  ) {
+    // Initialize branding immediately (for URL-based detection)
+    this.brandingService.initialize();
+  }
 
   ngOnInit(): void {
+    // Re-apply branding using the stored user so supplier theming works
+    // both on the public /supplier/reset-password route and when an
+    // authenticated supplier is redirected here after first login.
+    this.store.select(selectAuthUser).pipe(take(1)).subscribe(user => {
+      this.brandingService.updateBranding(user);
+      if (user?.supplierDetails) {
+        this.switchToSupplierKeys();
+      }
+    });
+
+    // URL-based check as fallback (covers public /supplier/reset-password)
+    this.checkIfSupplier();
+
     this.resetForm = this.fb.group(
       {
         passWord: [
@@ -57,6 +85,24 @@ export class ResetPasswordComponent implements OnInit {
       },
       { validators: this.passwordMatchValidator.bind(this) },
     );
+  }
+
+  /** Check if current URL is supplier */
+  private checkIfSupplier(): void {
+    const currentUrl = this.router.url.toLowerCase();
+    if (currentUrl.includes('/supplier/')) {
+      this.switchToSupplierKeys();
+    }
+  }
+
+  /** Switch to supplier translation keys */
+  private switchToSupplierKeys(): void {
+    this.isSupplier = true;
+    this.rightHeadingKey = 'supplier.right.heading';
+    this.rightDescriptionKey = 'supplier.right.description';
+    this.rightPoint1Key = 'supplier.right.point1';
+    this.rightPoint2Key = 'supplier.right.point2';
+    this.rightPoint3Key = 'supplier.right.point3';
   }
 
   passwordMatchValidator(form: FormGroup) {

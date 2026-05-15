@@ -13,11 +13,12 @@ import { TemplateCategoryAddEditComponent } from '../template-category-add-edit/
 import { ReusableTableComponent } from '../../../../shared/components/reusable-table/reusable-table.component';
 import { GlobalSearchComponent } from '../../../../shared/components/global-search/global-search.component';
 import { TranslatePipe } from '../../../../i18n/translate.pipe';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-template-category-list',
   standalone: true,
-  imports: [SharedModule, TemplateCategoryAddEditComponent, ReusableTableComponent, GlobalSearchComponent, TranslatePipe],
+  imports: [CommonModule, SharedModule, TemplateCategoryAddEditComponent, ReusableTableComponent, GlobalSearchComponent, TranslatePipe],
   templateUrl: './template-category-list.component.html',
   styleUrl: './template-category-list.component.css'
 })
@@ -31,6 +32,10 @@ export class TemplateCategoryListComponent {
   pageIndex = 0;
   searchValue = '';
   filterStatus: number | null = 2;
+  canAddTemplateCategory = false;
+  viewPermission = PERMISSIONS.TemplateCategoryView;
+  editPermission = PERMISSIONS.TemplateCategoryEdit;
+  deletePermission = PERMISSIONS.TemplateCategoryDelete;
 
   subs: Subscription[] = [];
   langSub!: Subscription;
@@ -49,9 +54,9 @@ export class TemplateCategoryListComponent {
   }
 
   ngOnInit(): void {
-    // if(!this.commonService.checkPermission(PERMISSIONS.AnimalLactationView))
-
-    //   return;
+    this.canAddTemplateCategory = this.commonService.checkPermission(PERMISSIONS.TemplateCategoryAdd, false);
+    if(!this.commonService.checkPermission(PERMISSIONS.TemplateCategoryView, false))
+      return;
 
     this.loadTemplateCategory(1, this.pageSize);
 
@@ -109,6 +114,9 @@ export class TemplateCategoryListComponent {
   }
 
   onToggleActive(event: { row: any; isActive: boolean }): void {
+    if (!this.commonService.checkPermission(PERMISSIONS.TemplateCategoryEdit)) {
+      return;
+    }
     const row = event.row;
     const previousStatus = row.isActive;
 
@@ -143,6 +151,9 @@ export class TemplateCategoryListComponent {
   }
 
   onDelete(row: any): void {
+    if (!this.commonService.checkPermission(PERMISSIONS.TemplateCategoryDelete)) {
+      return;
+    }
     const id = row?.categoryId ?? row?.categoryId;
     if (!id) {
       this.toast.error("Invalid id");

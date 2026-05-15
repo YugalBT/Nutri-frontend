@@ -104,49 +104,23 @@
           </div>
         </div>
 
-        <!-- Commission -->
+        <!-- Extra Costs -->
         <div class="col-md-4 mb-3">
           <label class="form-label">
-            {{ "pricingSettings.commissionPercent" | translate }}
-            <sup class="text-danger">*</sup>
+            {{ "pricingSettings.extraCosts" | translate }}
           </label>
 
           <input
             type="number"
             class="form-control"
-            [placeholder]="'pricingSettings.placeholder.commissionPercent' | translate"
-            formControlName="commissionPercent"
-            [class.is-invalid]="pricingForm.get('commissionPercent')?.touched && pricingForm.get('commissionPercent')?.invalid"
+            [placeholder]="'pricingSettings.placeholder.extraCosts' | translate"
+            formControlName="extraCosts"
+            [class.is-invalid]="pricingForm.get('extraCosts')?.touched && pricingForm.get('extraCosts')?.invalid"
           />
 
           <div class="invalid-feedback">
-            <small *ngIf="pricingForm.get('commissionPercent')?.errors?.['required']">
-              {{ "pricingSettings.validation.commissionRequired" | translate }}
-            </small>
-            <small *ngIf="pricingForm.get('commissionPercent')?.errors?.['max']">
-              {{ "pricingSettings.validation.max100" | translate }}
-            </small>
-          </div>
-        </div>
-
-        <!-- Margin -->
-        <div class="col-md-4 mb-3">
-          <label class="form-label">
-            {{ "pricingSettings.defaultMarginPercent" | translate }}
-            <sup class="text-danger">*</sup>
-          </label>
-
-          <input
-            type="number"
-            class="form-control"
-            [placeholder]="'pricingSettings.placeholder.marginPercent' | translate"
-            formControlName="defaultMarginPercent"
-            [class.is-invalid]="pricingForm.get('defaultMarginPercent')?.touched && pricingForm.get('defaultMarginPercent')?.invalid"
-          />
-
-          <div class="invalid-feedback">
-            <small *ngIf="pricingForm.get('defaultMarginPercent')?.errors?.['required']">
-              {{ "pricingSettings.validation.marginRequired" | translate }}
+            <small *ngIf="pricingForm.get('extraCosts')?.errors?.['min']">
+              {{ "pricingSettings.validation.minZero" | translate }}
             </small>
           </div>
         </div>
@@ -154,7 +128,7 @@
       </div>
 
       <div class="d-flex justify-content-end mt-4">
-        <button class="btn add-btn px-4">
+        <button *ngIf="canSave" class="btn add-btn px-4">
           {{ "pricingSettings.save" | translate }}
         </button>
       </div>

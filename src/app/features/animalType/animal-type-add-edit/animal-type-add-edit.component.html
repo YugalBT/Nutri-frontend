@@ -55,7 +55,7 @@
       <!-- FOOTER -->
       <div class="modal-footer">
         <button class="btn btn-outline-secondary" (click)="closeModal()">{{ 'common.cancel' | translate }}</button>
-        <button class="btn add-btn" (click)="save()">
+        <button class="btn add-btn" *ngIf="canSave" (click)="save()">
           {{ (isEdit 
     ? 'common.update' 
     : 'common.save') | translate }}

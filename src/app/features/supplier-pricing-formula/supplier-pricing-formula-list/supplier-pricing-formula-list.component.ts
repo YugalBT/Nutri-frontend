@@ -11,12 +11,16 @@ import { TranslateService } from '../../../i18n/translate.service';
 import { SupplierPricingFormulaAddEditComponent } from '../supplier-pricing-formula-add-edit/supplier-pricing-formula-add-edit.component';
 import { ExpressionAddEditComponent } from '../../expression/expression-add-edit/expression-add-edit.component';
 import { SupplierPricingFormulaService } from '../../../core/services/supplier/supplier-pricing-formula.service';
+import { CommonService } from '../../../shared/services/common.service';
+import { PERMISSIONS } from '../../../core/constants/permissions.constants';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-supplier-pricing-formula-list',
   standalone: true,
   imports: [
     SharedModule,
+        CommonModule,
         ReusableTableComponent,
         GlobalSearchComponent,
         SupplierPricingFormulaAddEditComponent,
@@ -45,17 +49,26 @@ export class SupplierPricingFormulaListComponent {
   columns: string[] = [];
   columnFields: string[] = [];
   private langSub: Subscription | undefined;
+  canAddFormula = false;
+  viewPermission = PERMISSIONS.PricingFormulaView;
+  editPermission = PERMISSIONS.PricingFormulaEdit;
+  deletePermission = PERMISSIONS.PricingFormulaDelete;
 
   constructor(
     private formulaService: SupplierPricingFormulaService,
     private toast: ToastService,
     private confirm: ConfirmDialogService,
-    private translate: TranslateService
+    private translate: TranslateService,
+    private commonService: CommonService
   ) { this.setColumns(),
     this.langSub = this.translate.lang$.subscribe(() => this.setColumns());
    }
 
   ngOnInit(): void {
+    this.canAddFormula = this.commonService.checkPermission(PERMISSIONS.PricingFormulaAdd, false);
+    if (!this.commonService.checkPermission(PERMISSIONS.PricingFormulaView, false)) {
+      return;
+    }
     this.loadExpressions(1, this.pageSize);
 
     const sub = this.formulaService.formulasChanged$
@@ -141,6 +154,9 @@ export class SupplierPricingFormulaListComponent {
   /* ================= ACTIVE / INACTIVE ================= */
 
   onToggleActive(event: { row: any; isActive: boolean }): void {
+    if (!this.commonService.checkPermission(PERMISSIONS.PricingFormulaEdit)) {
+      return;
+    }
     event.row.isToggling = true;
 
     const id = event?.row?.formulaId;
@@ -169,6 +185,9 @@ export class SupplierPricingFormulaListComponent {
   /* ================= DELETE ================= */
 
   onDelete(row: any): void {
+    if (!this.commonService.checkPermission(PERMISSIONS.PricingFormulaDelete)) {
+      return;
+    }
     const id = row?.formulaId;
     if (!id) {
       this.toast.error('Invalid formula id');

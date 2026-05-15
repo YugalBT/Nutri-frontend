@@ -5,10 +5,21 @@ import { PERMISSIONS } from './core/constants/permissions.constants';
 import { firstLoginGuard } from './core/auth/first-login.guard';
 
 export const routes: Routes = [
-  // Public Routes
+  // ── Public Routes ──────────────────────────────────────────
   {
     path: 'login',
-    // canActivate: [companyGuard],
+    loadComponent: () =>
+      import('./features/auth/login/login.component').then(
+        (m) => m.LoginComponent,
+      ),
+  },
+  {
+    path: 'supplier',
+    redirectTo: 'supplier/login',
+    pathMatch: 'full',
+  },
+  {
+    path: 'supplier/login',
     loadComponent: () =>
       import('./features/auth/login/login.component').then(
         (m) => m.LoginComponent,
@@ -22,6 +33,13 @@ export const routes: Routes = [
       ),
   },
   {
+    path: 'supplier/forgot-password',
+    loadComponent: () =>
+      import('./features/auth/forgot-password/forgot-password.component').then(
+        (m) => m.ForgotPasswordComponent,
+      ),
+  },
+  {
     path: 'reset-password',
     canActivate: [authGuard, firstLoginGuard],
     loadComponent: () =>
@@ -29,7 +47,16 @@ export const routes: Routes = [
         (m) => m.ResetPasswordComponent,
       ),
   },
+  {
+    path: 'supplier/reset-password',
+    canActivate: [authGuard, firstLoginGuard],
+    loadComponent: () =>
+      import('./features/auth/reset-password/reset-password.component').then(
+        (m) => m.ResetPasswordComponent,
+      ),
+  },
 
+  // ── Layout (authenticated) ─────────────────────────────────
   {
     path: '',
     loadComponent: () =>
@@ -60,7 +87,6 @@ export const routes: Routes = [
             (m) => m.CompanyListComponent,
           ),
       },
-
       {
         path: 'users',
         canActivate: [permissionGuard],
@@ -77,7 +103,6 @@ export const routes: Routes = [
             (m) => m.ListComponent,
           ),
       },
-
       {
         path: 'roles',
         canActivate: [permissionGuard],
@@ -94,7 +119,6 @@ export const routes: Routes = [
             (m) => m.RoleComponent,
           ),
       },
-
       {
         path: 'notifications',
         canActivate: [permissionGuard],
@@ -223,11 +247,29 @@ export const routes: Routes = [
       },
       {
         path: 'reports',
-        //canActivate: [permissionGuard],
-        // data: { requiredPermissions: [PERMISSIONS.ReportsView, PERMISSIONS.ReportsEdit, PERMISSIONS.ReportsAdd, PERMISSIONS.ReportsDelete] },
+        canActivate: [permissionGuard],
+        data: {
+          requiredPermissions: [
+            PERMISSIONS.ReportsView,
+            PERMISSIONS.ReportsEdit,
+            PERMISSIONS.ReportsAdd,
+            PERMISSIONS.ReportsDelete,
+          ],
+        },
         loadComponent: () =>
           import('./features/reports/reports/reports.component').then(
             (m) => m.ReportsComponent,
+          ),
+      },
+      {
+        path: 'benchmark-analytics',
+        canActivate: [permissionGuard],
+        data: {
+          requiredPermissions: [PERMISSIONS.ReportsView],
+        },
+        loadComponent: () =>
+          import('./features/benchmark-analytics/benchmark-analytics.component').then(
+            (m) => m.BenchmarkAnalyticsComponent,
           ),
       },
       {
@@ -246,15 +288,6 @@ export const routes: Routes = [
             (m) => m.KpiListComponent,
           ),
       },
-      // {
-      //   path: 'calvesration',
-      //   canActivate: [permissionGuard],
-      //   data: { requiredPermissions: [PERMISSIONS.CalvesRationView, PERMISSIONS.CalvesRationEdit, PERMISSIONS.CalvesRationAdd, PERMISSIONS.CalvesRationDelete] },
-      //   loadComponent: () =>
-      //     import('./features/calves/calves-list/calves-list.component')
-      //       .then(m => m.CalvesListComponent),
-      // },
-
       {
         path: 'animalType',
         canActivate: [permissionGuard],
@@ -287,7 +320,119 @@ export const routes: Routes = [
             (m) => m.AnimalLactationListComponent,
           ),
       },
-
+      // ── NEW NUTRI FARM MODULE ROUTES ────────────────────────
+      {
+        path: 'daily-entry',
+        canActivate: [permissionGuard],
+        data: {
+          requiredPermissions: [
+            PERMISSIONS.DailyEntryView,
+            PERMISSIONS.DailyEntryAdd,
+            PERMISSIONS.DailyEntryEdit,
+            PERMISSIONS.DailyEntryDelete,
+          ],
+        },
+        loadComponent: () =>
+          import('./features/daily-entry/daily-entry.component').then(
+            (m) => m.DailyEntryComponent,
+          ),
+      },
+      {
+        path: 'archive',
+        canActivate: [permissionGuard],
+        data: {
+          requiredPermissions: [
+            PERMISSIONS.ArchiveView,
+            PERMISSIONS.ArchiveAdd,
+            PERMISSIONS.ArchiveEdit,
+            PERMISSIONS.ArchiveDelete,
+          ],
+        },
+        loadComponent: () =>
+          import('./features/archive/archive.component').then(
+            (m) => m.ArchiveComponent,
+          ),
+      },
+      {
+        path: 'archive-economic',
+        canActivate: [permissionGuard],
+        data: {
+          requiredPermissions: [
+            PERMISSIONS.ArchiveView,
+            PERMISSIONS.ArchiveAdd,
+            PERMISSIONS.ArchiveEdit,
+            PERMISSIONS.ArchiveDelete,
+          ],
+        },
+        loadComponent: () =>
+          import('./features/archive-economic/archive-economic.component').then(
+            (m) => m.ArchiveEconomicComponent,
+          ),
+      },
+      {
+        path: 'parti',
+        canActivate: [permissionGuard],
+        data: {
+          requiredPermissions: [
+            PERMISSIONS.PartiView,
+            PERMISSIONS.PartiAdd,
+            PERMISSIONS.PartiEdit,
+            PERMISSIONS.PartiDelete,
+          ],
+        },
+        loadComponent: () =>
+          import('./features/parti/parti-list.component').then(
+            (m) => m.PartiListComponent,
+          ),
+      },
+      {
+        path: 'sanita',
+        canActivate: [permissionGuard],
+        data: {
+          requiredPermissions: [
+            PERMISSIONS.SanitaView,
+            PERMISSIONS.SanitaAdd,
+            PERMISSIONS.SanitaEdit,
+            PERMISSIONS.SanitaDelete,
+          ],
+        },
+        loadComponent: () =>
+          import('./features/sanita/sanita-list.component').then(
+            (m) => m.SanitaListComponent,
+          ),
+      },
+      {
+        path: 'fertilita',
+        canActivate: [permissionGuard],
+        data: {
+          requiredPermissions: [
+            PERMISSIONS.FertilitaView,
+            PERMISSIONS.FertilitaAdd,
+            PERMISSIONS.FertilitaEdit,
+            PERMISSIONS.FertilitaDelete,
+          ],
+        },
+        loadComponent: () =>
+          import('./features/fertilita/fertilita-list.component').then(
+            (m) => m.FertilitaListComponent,
+          ),
+      },
+      {
+        path: 'milk-price-history',
+        canActivate: [permissionGuard],
+        data: {
+          requiredPermissions: [
+            PERMISSIONS.MilkPriceHistoryView,
+            PERMISSIONS.MilkPriceHistoryAdd,
+            PERMISSIONS.MilkPriceHistoryEdit,
+            PERMISSIONS.MilkPriceHistoryDelete,
+          ],
+        },
+        loadComponent: () =>
+          import('./features/milk-price-history/milk-price-history.component').then(
+            (m) => m.MilkPriceHistoryComponent,
+          ),
+      },
       {
         path: 'animalGroup',
         canActivate: [permissionGuard],
@@ -322,8 +467,6 @@ export const routes: Routes = [
       },
       {
         path: 'template',
-        // canActivate: [permissionGuard],
-        // data: { requiredPermissions: [PERMISSIONS.EmailConfigurationAdd, PERMISSIONS.EmailConfigurationEdit, PERMISSIONS.EmailConfigurationView, PERMISSIONS.EmailConfigurationDelete] },
         loadComponent: () =>
           import('./features/template-builder/template-builder.component').then(
             (m) => m.TemplateBuilderComponent,
@@ -331,8 +474,15 @@ export const routes: Routes = [
       },
       {
         path: 'operators',
-        // canActivate: [permissionGuard],
-        // data: { requiredPermissions: [PERMISSIONS.EmailConfigurationAdd, PERMISSIONS.EmailConfigurationEdit, PERMISSIONS.EmailConfigurationView, PERMISSIONS.EmailConfigurationDelete] },
+        canActivate: [permissionGuard],
+        data: {
+          requiredPermissions: [
+            PERMISSIONS.OperatorView,
+            PERMISSIONS.OperatorEdit,
+            PERMISSIONS.OperatorAdd,
+            PERMISSIONS.OperatorDelete,
+          ],
+        },
         loadComponent: () =>
           import('./features/operators/operator-list/operator-list.component').then(
             (m) => m.OperatorListComponent,
@@ -356,8 +506,6 @@ export const routes: Routes = [
       },
       {
         path: 'technicalReport',
-        // canActivate: [permissionGuard],
-        // data: { requiredPermissions: [PERMISSIONS.FormulaAdd, PERMISSIONS.formulasEdit, PERMISSIONS.formulasView, PERMISSIONS.formulasDelete] },
         loadComponent: () =>
           import('./features/technicalReport/technical-report-list/technical-report-list.component').then(
             (m) => m.TechnicalReportListComponent,
@@ -365,8 +513,15 @@ export const routes: Routes = [
       },
       {
         path: 'language',
-        // canActivate: [permissionGuard],
-        // data: { requiredPermissions: [PERMISSIONS.FormulaAdd, PERMISSIONS.formulasEdit, PERMISSIONS.formulasView, PERMISSIONS.formulasDelete] },
+        canActivate: [permissionGuard],
+        data: {
+          requiredPermissions: [
+            PERMISSIONS.LanguageView,
+            PERMISSIONS.LanguageEdit,
+            PERMISSIONS.LanguageAdd,
+            PERMISSIONS.LanguageDelete,
+          ],
+        },
         loadComponent: () =>
           import('./features/language/language-list/language-list.component').then(
             (m) => m.LanguageListComponent,
@@ -374,8 +529,6 @@ export const routes: Routes = [
       },
       {
         path: 'economic-report',
-        // canActivate: [permissionGuard],
-        // data: { requiredPermissions: [PERMISSIONS.FormulaAdd, PERMISSIONS.formulasEdit, PERMISSIONS.formulasView, PERMISSIONS.formulasDelete] },
         loadComponent: () =>
           import('./features/economic-report/economic-report-list/economic-report-list.component').then(
             (m) => m.EconomicReportListComponent,
@@ -383,8 +536,6 @@ export const routes: Routes = [
       },
       {
         path: 'nutrition',
-        // canActivate: [permissionGuard],
-        // data: { requiredPermissions: [PERMISSIONS.FormulaAdd, PERMISSIONS.formulasEdit, PERMISSIONS.formulasView, PERMISSIONS.formulasDelete] },
         loadComponent: () =>
           import('./features/nutrition/nutrition/nutrition.component').then(
             (m) => m.NutritionComponent,
@@ -416,6 +567,7 @@ export const routes: Routes = [
             PERMISSIONS.MaterialsView,
             PERMISSIONS.MaterialsDelete,
           ],
+          mode: 'all',
         },
         loadComponent: () =>
           import('./features/materials/material-list/material-list.component').then(
@@ -423,6 +575,25 @@ export const routes: Routes = [
           ),
       },
       {
+        // Deatech-owned materials only (SupplierId IS NULL) — office / Super Admin view
+        path: 'deatech-materials',
+        canActivate: [permissionGuard],
+        data: {
+          requiredPermissions: [
+            PERMISSIONS.MaterialsAdd,
+            PERMISSIONS.MaterialsEdit,
+            PERMISSIONS.MaterialsView,
+            PERMISSIONS.MaterialsDelete,
+          ],
+          mode: 'deatech',
+        },
+        loadComponent: () =>
+          import('./features/materials/material-list/material-list.component').then(
+            (m) => m.MaterialListComponent,
+          ),
+      },
+      {
+        // Supplier's own material prices — accessible to supplier (CLIENT) users only
         path: 'supplier-price',
         canActivate: [permissionGuard],
         data: {
@@ -432,37 +603,89 @@ export const routes: Routes = [
             PERMISSIONS.SupplierPriceView,
             PERMISSIONS.SupplierPriceDelete,
           ],
+          requiredRoleTypes: ['CLIENT'],
+          mode: 'supplier',
         },
         loadComponent: () =>
           import('./features/supplier-price/supplier-price-list/supplier-price-list.component').then(
             (m) => m.SupplierPriceListComponent,
           ),
       },
-
+      {
+        // Deatech raw material costs — accessible to Super Admin (ADMIN) users only
+        path: 'deatech-supplier-price',
+        canActivate: [permissionGuard],
+        data: {
+          requiredPermissions: [
+            PERMISSIONS.SupplierPriceAdd,
+            PERMISSIONS.SupplierPriceEdit,
+            PERMISSIONS.SupplierPriceView,
+            PERMISSIONS.SupplierPriceDelete,
+          ],
+          requiredRoleTypes: ['ADMIN'],
+          mode: 'deatech',
+        },
+        loadComponent: () =>
+          import('./features/supplier-price/supplier-price-list/supplier-price-list.component').then(
+            (m) => m.SupplierPriceListComponent,
+          ),
+      },
       {
         path: 'supplier-pricing-formula',
-        // canActivate: [permissionGuard],
-        // data: { requiredPermissions: [PERMISSIONS.SupplierPriceAdd, PERMISSIONS.SupplierPriceEdit, PERMISSIONS.SupplierPriceView, PERMISSIONS.SupplierPriceDelete] },
+        canActivate: [permissionGuard],
+        data: {
+          requiredPermissions: [
+            PERMISSIONS.PricingFormulaView,
+            PERMISSIONS.PricingFormulaEdit,
+            PERMISSIONS.PricingFormulaAdd,
+            PERMISSIONS.PricingFormulaDelete,
+          ],
+        },
         loadComponent: () =>
           import('./features/supplier-pricing-formula/supplier-pricing-formula-list/supplier-pricing-formula-list.component').then(
             (m) => m.SupplierPricingFormulaListComponent,
           ),
       },
-
       {
         path: 'calfbarn',
-        // canActivate: [permissionGuard],
-        // data: { requiredPermissions: [PERMISSIONS.SupplierPriceAdd, PERMISSIONS.SupplierPriceEdit, PERMISSIONS.SupplierPriceView, PERMISSIONS.SupplierPriceDelete] },
+        canActivate: [permissionGuard],
+        data: {
+          requiredPermissions: [
+            PERMISSIONS.CalfBarnView,
+            PERMISSIONS.CalfBarnEdit,
+            PERMISSIONS.CalfBarnAdd,
+            PERMISSIONS.CalfBarnDelete,
+          ],
+        },
         loadComponent: () =>
           import('./features/calfbarn/calfbarn-list/calfbarn-list.component').then(
             (m) => m.CalfbarnListComponent,
           ),
       },
-
+      {
+        path: 'calves-entry',
+        canActivate: [permissionGuard],
+        data: {
+          requiredPermissions: [
+            PERMISSIONS.DailyEntryView,
+            PERMISSIONS.DailyEntryAdd,
+            PERMISSIONS.DailyEntryEdit,
+          ],
+        },
+        loadComponent: () =>
+          import('./features/calves-entry/calves-entry.component').then(
+            (m) => m.CalvesEntryComponent,
+          ),
+      },
       {
         path: 'pricingSetting',
-        // canActivate: [permissionGuard],
-        // data: { requiredPermissions: [PERMISSIONS.SupplierPriceAdd, PERMISSIONS.SupplierPriceEdit, PERMISSIONS.SupplierPriceView, PERMISSIONS.SupplierPriceDelete] },
+        canActivate: [permissionGuard],
+        data: {
+          requiredPermissions: [
+            PERMISSIONS.PricingSettingView,
+            PERMISSIONS.PricingSettingEdit,
+          ],
+        },
         loadComponent: () =>
           import('./features/supplier-pricing-setting/supplier-pricing-setting/supplier-pricing-setting.component').then(
             (m) => m.SupplierPricingSettingComponent,
@@ -470,8 +693,15 @@ export const routes: Routes = [
       },
       {
         path: 'product',
-        // canActivate: [permissionGuard],
-        // data: { requiredPermissions: [PERMISSIONS.SupplierPriceAdd, PERMISSIONS.SupplierPriceEdit, PERMISSIONS.SupplierPriceView, PERMISSIONS.SupplierPriceDelete] },
+        canActivate: [permissionGuard],
+        data: {
+          requiredPermissions: [
+            PERMISSIONS.ProductView,
+            PERMISSIONS.ProductEdit,
+            PERMISSIONS.ProductAdd,
+            PERMISSIONS.ProductDelete,
+          ],
+        },
         loadComponent: () =>
           import('./features/product/product-list/product-list.component').then(
             (m) => m.ProductListComponent,
@@ -479,13 +709,82 @@ export const routes: Routes = [
       },
       {
         path: 'productpricing',
-        // canActivate: [permissionGuard],
-        // data: { requiredPermissions: [PERMISSIONS.SupplierPriceAdd, PERMISSIONS.SupplierPriceEdit, PERMISSIONS.SupplierPriceView, PERMISSIONS.SupplierPriceDelete] },
+        canActivate: [permissionGuard],
+        data: {
+          requiredPermissions: [
+            PERMISSIONS.ProductPricingView,
+            PERMISSIONS.ProductPricingEdit,
+            PERMISSIONS.ProductPricingAdd,
+            PERMISSIONS.ProductPricingDelete,
+          ],
+        },
         loadComponent: () =>
           import('./features/product-price/product-price-list/product-price-list.component').then(
             (m) => m.ProductPriceListComponent,
           ),
       },
+      {
+        path: 'productbuild',
+        canActivate: [permissionGuard],
+        data: {
+          requiredPermissions: [
+            PERMISSIONS.ProductBuildView,
+            PERMISSIONS.ProductBuildEdit,
+            PERMISSIONS.ProductBuildAdd,
+            PERMISSIONS.ProductBuildDelete,
+          ],
+        },
+        children: [
+          {
+            path: '',
+            loadComponent: () =>
+              import('./features/product-build/product-build-list/product-build-list.component').then(
+                (m) => m.ProductBuildListComponent,
+              ),
+          },
+          {
+            path: 'add',
+            loadComponent: () =>
+              import('./features/product-build/product-build-form-page/product-build-form-page.component').then(
+                (m) => m.ProductBuildFormPageComponent,
+              ),
+          },
+          {
+            path: ':id/edit',
+            loadComponent: () =>
+              import('./features/product-build/product-build-form-page/product-build-form-page.component').then(
+                (m) => m.ProductBuildFormPageComponent,
+              ),
+          },
+          {
+            path: ':id/detail',
+            loadComponent: () =>
+              import('./features/product-build/product-build-detail/product-build-detail.component').then(
+                (m) => m.ProductBuildDetailComponent,
+              ),
+          },
+        ],
+      },
+
+      
+      // ── Pricing Rules Manager ────────────────────────────────
+      {
+        path: 'pricing-rules',
+        canActivate: [permissionGuard],
+        data: {
+          requiredPermissions: [
+            PERMISSIONS.PricingRulesView,
+            PERMISSIONS.PricingRulesEdit,
+            PERMISSIONS.PricingRulesAdd,
+            PERMISSIONS.PricingRulesDelete,
+          ],
+        },
+        loadComponent: () =>
+          import('./features/pricing-rules/pricing-rules-list/pricing-rules-list.component').then(
+            (m) => m.PricingRulesListComponent,
+          ),
+      },
+      // ────────────────────────────────────────────────────────
 
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
     ],
@@ -498,10 +797,5 @@ export const routes: Routes = [
         (m) => m.NotFoundComponent,
       ),
   },
-  {
-    path: '**',
-    redirectTo: '404',
-  },
+  { path: '**', redirectTo: '404' },
 ];
-
-

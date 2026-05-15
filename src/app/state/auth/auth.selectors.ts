@@ -24,5 +24,13 @@ export const selectIsFirstLogin = createSelector(
   selectAuthUser,
   (user) => user?.isFirstLogin
 );
+export const selectSupplier = createSelector(
+  selectAuthState,
+  (state) => state?.supplier
+);
 
+export const selectUserRoleType = createSelector(
+  selectAuthUser,
+  (user) => (user?.roleType || '').toUpperCase()
+);
 

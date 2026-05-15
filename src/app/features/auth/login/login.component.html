@@ -2,8 +2,6 @@
     <div class="container-fluid">
         <div class="row align-items-center">
             <div class="col-lg-7">
-
-
                 <div class="inner_content_one ">
                     <div class="login-left-content login-left-card">
                         <h1>{{ 'auth.signIn' | translate }}</h1>
@@ -50,7 +48,8 @@
                                         </div>
                                     </div>
                                     <div class="d-flex align-items-center justify-content-end remember_div mt-3"><a
-                                            class="link_forget" [routerLink]="'/forgot-password'" data-discover="true">{{
+                                            class="link_forget" [routerLink]="forgotPasswordRoute"
+                                            data-discover="true">{{
                                             'auth.forgotPassword' | translate }}</a></div>
                                 </div>
                                 <div class="col-lg-12 mb-lg-4 mb-md-4 mt-30">
@@ -67,59 +66,92 @@
                     </div>
                 </div>
             </div>
-             <div class="col-lg-5 gradient_bg">
-                 <div class="language-switcher-right">
-                    <div class="dropdown">
-                        <button class="btn btn-light dropdown-toggle" data-bs-toggle="dropdown">
-                            {{ currentLanguageName }}
-                        </button>
+            <div class="col-lg-5 gradient_bg">
+                <div class="language-switcher-right">
+  <div class="dropdown">
 
-                        <ul class="dropdown-menu dropdown-menu-end">
-                            <li *ngFor="let lang of languages">
-                                <button class="dropdown-item" (click)="changeLanguage(lang.languageCode)">
-                                    {{ lang.languageName }}
-                                </button>
-                            </li>
-                        </ul>
+    <!-- ✅ Button with selected icon -->
+    <button class="btn btn-light dropdown-toggle d-flex align-items-center gap-2"
+            data-bs-toggle="dropdown">
+
+      <!-- 🌐 English -->
+      <svg *ngIf="currentLang === 'en'" width="20" height="20" viewBox="0 0 24 24" fill="none">
+        <circle cx="12" cy="12" r="10" stroke="#555" stroke-width="1.5"/>
+        <path d="M2 12h20" stroke="#555" stroke-width="1.5"/>
+        <path d="M12 2c3 3 3 17 0 20M12 2c-3 3-3 17 0 20" stroke="#555" stroke-width="1.5"/>
+      </svg>
+
+      <!-- 🇮🇹 Italian -->
+      <svg *ngIf="currentLang === 'it'" width="20" height="20" viewBox="0 0 3 2">
+        <rect width="1" height="2" x="0" fill="#009246"/>
+        <rect width="1" height="2" x="1" fill="#ffffff"/>
+        <rect width="1" height="2" x="2" fill="#CE2B37"/>
+      </svg>
+
+      {{ currentLanguageName }}
+    </button>
+
+    <ul class="dropdown-menu dropdown-menu-end">
+      <li *ngFor="let lang of languages">
+        <button class="dropdown-item d-flex align-items-center gap-2"
+                (click)="changeLanguage(lang.languageCode)">
+
+          <!-- 🌐 English -->
+          <svg *ngIf="lang.languageCode === 'en'" width="20" height="20" viewBox="0 0 24 24" fill="none">
+            <circle cx="12" cy="12" r="10" stroke="#555" stroke-width="1.5"/>
+            <path d="M2 12h20" stroke="#555" stroke-width="1.5"/>
+            <path d="M12 2c3 3 3 17 0 20M12 2c-3 3-3 17 0 20" stroke="#555" stroke-width="1.5"/>
+          </svg>
+
+          <!-- 🇮🇹 Italian -->
+          <svg *ngIf="lang.languageCode === 'it'" width="20" height="20" viewBox="0 0 3 2">
+            <rect width="1" height="2" x="0" fill="#009246"/>
+            <rect width="1" height="2" x="1" fill="#ffffff"/>
+            <rect width="1" height="2" x="2" fill="#CE2B37"/>
+          </svg>
+
+          {{ lang.languageName }}
+        </button>
+      </li>
+    </ul>
+
+  </div>
+</div>
+
+                <div class="inner_content_two">
+                    <a class="auth-brand-logo">
+                        <img class="img-fluid brand-logo" alt="logo" src="assets/image/logo.png" />
+                    </a>
+
+                    <div class="login-right-content">
+                        <h2 class="login-right-heading">
+                            {{ rightHeadingKey | translate }}
+                        </h2>
+
+                        <p class="para_18 my-3">
+                            {{ rightDescriptionKey | translate }}
+                        </p>
+
+                        <div class="mt-5">
+                            <div class="d-flex gap-3 mb-3">
+                                <span><img alt="" src="assets/image/check.png" /></span>
+                                <p class="para_18">{{ rightPoint1Key | translate }}</p>
+                            </div>
+
+                            <div class="d-flex gap-3 mb-3">
+                                <span><img alt="" src="assets/image/check.png" /></span>
+                                <p class="para_18">{{ rightPoint2Key | translate }}</p>
+                            </div>
+
+                            <div class="d-flex gap-3 mb-3">
+                                <span><img alt="" src="assets/image/check.png" /></span>
+                                <p class="para_18">{{ rightPoint3Key | translate }}</p>
+                            </div>
+                        </div>
+
                     </div>
-
-
                 </div>
-
-        <div class="inner_content_two">
-          <a>
-            <img class="img-fluid" alt="logo" src="assets/image/logo.png" />
-          </a>
-
-          <div class="login-right-content">
-            <h2 class="login-right-heading">
-              {{ 'right.heading' | translate }}
-            </h2>
-
-            <p class="para_18 my-3">
-              {{ 'right.description' | translate }}
-            </p>
-
-            <div class="mt-5">
-              <div class="d-flex gap-3 mb-3">
-                <span><img alt="" src="assets/image/check.png" /></span>
-                <p class="para_18">{{ 'right.point1' | translate }}</p>
-              </div>
-
-              <div class="d-flex gap-3 mb-3">
-                <span><img alt="" src="assets/image/check.png" /></span>
-                <p class="para_18">{{ 'right.point2' | translate }}</p>
-              </div>
-
-              <div class="d-flex gap-3 mb-3">
-                <span><img alt="" src="assets/image/check.png" /></span>
-                <p class="para_18">{{ 'right.point3' | translate }}</p>
-              </div>
             </div>
-
-          </div>
-        </div>
-      </div>
         </div>
     </div>
 </section>

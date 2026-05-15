@@ -18,6 +18,7 @@ import { PERMISSIONS } from '../../../core/constants/permissions.constants';
 export class SupplierPricingSettingComponent implements OnInit {
 
   pricingForm!: FormGroup;
+  canSave = false;
 
   constructor(
     private fb: FormBuilder,
@@ -27,13 +28,10 @@ export class SupplierPricingSettingComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-
-    // if (
-    //   !this.commonService.checkPermission(PERMISSIONS.PricingSettingEdit) ||
-    //   !this.commonService.checkPermission(PERMISSIONS.PricingSettingView)
-    // ) {
-    //   return;
-    // }
+    if (!this.commonService.checkPermission(PERMISSIONS.PricingSettingView, false)) {
+      return;
+    }
+    this.canSave = this.commonService.checkPermission(PERMISSIONS.PricingSettingEdit, false);
     
     this.initializeForm();
     this.getPricingSetting();
@@ -63,14 +61,9 @@ export class SupplierPricingSettingComponent implements OnInit {
         [Validators.required, Validators.min(0)]
       ],
 
-      commissionPercent: [
-        null,
-        [Validators.required, Validators.min(0), Validators.max(100)]
-      ],
-
-      defaultMarginPercent: [
-        null,
-        [Validators.required, Validators.min(0), Validators.max(100)]
+      extraCosts: [
+        0,
+        [Validators.min(0)]
       ]
 
     });
@@ -87,7 +80,21 @@ export class SupplierPricingSettingComponent implements OnInit {
 
           if (res?.isSuccess && res?.data) {
 
-            this.pricingForm.patchValue(res.data);
+            const {
+              bulkProcessingCost,
+              bagProcessingCost,
+              bulkTransportCost,
+              sackTransportCost,
+              extraCosts
+            } = res.data;
+
+            this.pricingForm.patchValue({
+              bulkProcessingCost,
+              bagProcessingCost,
+              bulkTransportCost,
+              sackTransportCost,
+              extraCosts: extraCosts ?? 0
+            });
 
           } else {
 
@@ -109,6 +116,9 @@ export class SupplierPricingSettingComponent implements OnInit {
   }
 
   onSubmit() {
+    if (!this.commonService.checkPermission(PERMISSIONS.PricingSettingEdit)) {
+      return;
+    }
 
     if (this.pricingForm.invalid) {
 

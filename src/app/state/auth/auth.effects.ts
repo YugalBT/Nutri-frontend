@@ -8,6 +8,7 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import * as AuthActions from './auth.actions';
 import { AuthService } from '../../core/auth/auth.service';
 import { TokenService } from '../../shared/services/token.service';
+import { BrandingService } from '../../shared/services/branding.service';
 import { LoginRequest } from '../../core/models/login-request';
 import { ToastService } from '../../shared/services/toast.service';
 import { UpdateProfileService } from '../../core/services/profile/update-profile.service';
@@ -36,16 +37,17 @@ export class AuthEffects {
     private toast: ToastService,
     private spinner: NgxSpinnerService,
     private updateProfileService: UpdateProfileService,
-    private translate: TranslateService
-
+    private translate: TranslateService,
+    private brandingService: BrandingService
   ) {
     this.login$ = createEffect(() =>
       this.actions$.pipe(
         ofType(AuthActions.login),
-        switchMap(({ username, password}) => {
+        switchMap(({ username, password, IsSupplierLogin }) => {
           const payload: LoginRequest = {
             username,
-            password
+            password,
+            IsSupplierLogin
           };
 
           return this.authService.login(payload).pipe(
@@ -82,10 +84,25 @@ export class AuthEffects {
             this.tokenService.setUserData(JSON.stringify(user));
             this.tokenService.setUserName(user?.username ?? '');
             this.tokenService.setIsSuperAdmin(user?.isSuperAdmin ?? false);
+            
+            // Determine login portal URL and apply branding based on user data
+            if (user?.supplierDetails) {
+              this.tokenService.setSupplierData(user.supplierDetails);
+              this.tokenService.setLoginPortalUrl('/supplier/login');
+            } else {
+              this.tokenService.removeSupplierData();
+              this.tokenService.setLoginPortalUrl('/login');
+            }
+            
+            // Update branding to apply supplier colors if needed
+            this.brandingService.updateBranding(user);
 
             try {
               if (typeof document !== 'undefined' && user) {
                 const root = document.documentElement;
+                // Always reset first so stale colors from a previous session don't bleed in.
+                root.style.removeProperty('--primary-color');
+                root.style.removeProperty('--secondary-color');
                 if (user?.primaryColor) {
                   root.style.setProperty('--primary-color', user.primaryColor);
                 }
@@ -131,9 +148,13 @@ export class AuthEffects {
           ofType(AuthActions.logout),
           switchMap(() => {
             this.spinner.show();
+            
+            // Get stored login portal URL BEFORE clearing all
+            const loginPortalUrl = this.tokenService.getLoginPortalUrl();
+            
             this.tokenService.clearAll();
 
-            return from(this.router.navigate([ROUTE_CONST.LOGIN])).pipe(
+            return from(this.router.navigate([loginPortalUrl])).pipe(
               finalize(() => {
                 this.spinner.hide();
               })
