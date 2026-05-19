@@ -232,7 +232,12 @@
           </div>
 
           <div *ngSwitchCase="'milk'" class="table-card">
-            <div class="table-card-header">{{ 'dailyEntry.sections.milk' | translate }}</div>
+            <div class="table-card-header d-flex justify-content-between align-items-center">
+              <span>{{ 'dailyEntry.sections.milk' | translate }}</span>
+              <button type="button" class="btn btn-sm btn-outline-secondary" (click)="toggleMilkUnit()" title="Toggle unit">
+                <i class="bi bi-arrow-left-right me-1"></i>{{ milkUnit === 'kg' ? 'kg → L' : 'L → kg' }}
+              </button>
+            </div>
             <div class="form-section">
               <div class="row g-3 herd-composition-row">
                 <div class="col form-group-item">
@@ -241,17 +246,17 @@
                     [placeholder]="'dailyEntry.placeholders.count' | translate">
                 </div>
                 <div class="col form-group-item">
-                  <label>{{ 'dailyEntry.fields.milkDelivered' | translate }}</label>
+                  <label>{{ 'dailyEntry.fields.milkDelivered' | translate }} ({{ milkUnit }})</label>
                   <input type="number" step="0.1" class="form-control" formControlName="milkDeliveredKg"
-                    [placeholder]="'dailyEntry.placeholders.litres' | translate">
+                    [placeholder]="milkUnit">
                 </div>
                 <div class="col form-group-item">
-                  <label>{{ 'dailyEntry.fields.milkProduced' | translate }}</label>
+                  <label>{{ 'dailyEntry.fields.milkProduced' | translate }} ({{ milkUnit }})</label>
                   <input type="number" step="0.1" class="form-control" formControlName="milkProducedKg"
-                    [placeholder]="'dailyEntry.placeholders.litres' | translate">
+                    [placeholder]="milkUnit">
                 </div>
                 <div class="col form-group-item">
-                  <label>{{ 'dailyEntry.fields.avgMilkPerHead' | translate }}</label>
+                  <label>{{ 'dailyEntry.fields.avgMilkPerHead' | translate }} ({{ milkUnit }})</label>
                   <input type="number" step="0.01" class="form-control" formControlName="avgMilkPerHead"
                     [placeholder]="'dailyEntry.placeholders.decimal' | translate" >
                 </div>
@@ -264,6 +269,13 @@
                   <label>{{ 'dailyEntry.fields.qualityBonus' | translate }}</label>
                   <input type="number" step="0.001" class="form-control" formControlName="qualityBonusEur"
                     [placeholder]="'dailyEntry.placeholders.decimal' | translate">
+                </div>
+                <div class="col form-group-item">
+                  <label>{{ 'dailyEntry.fields.prezzoLatteFinito' | translate }}</label>
+                  <div class="form-control-plaintext fw-bold text-success">
+                    {{ ((form.get('milkPriceEurLitre')?.value ?? 0) + (form.get('qualityBonusEur')?.value ?? 0)) * 1.1 | number:'1.3-3' }}
+                  </div>
+                  <small class="text-muted">= (prezzo + bonus) × 1.1</small>
                 </div>
               </div>
               <div class="row g-3 mt-2 herd-composition-row">
@@ -555,68 +567,9 @@
                   <input [placeholder]="'dailyEntry.placeholders.months' | translate" type="number" step="0.01" class="form-control" formControlName="ageAtCalving">
                 </div>
 
-              </div>
-            </div>
-          </div>
-
-          <div *ngSwitchCase="'calves'" class="table-card">
-            <div class="table-card-header">{{ 'dailyEntry.sections.calves' | translate }}</div>
-
-            <div class="form-section">
-              <div class="row g-3">
-                <!-- Individual -->
-                <div class="col-12">
-                  <h6>{{ 'dailyEntry.subsections.individual' | translate }}</h6>
-                </div>
-
                 <div class="col form-group-item">
-                  <label>{{ 'dailyEntry.fields.numberOfAnimals' | translate }}</label>
-                  <input [placeholder]="'dailyEntry.placeholders.count' | translate" type="number" class="form-control"
-                    formControlName="indAnimals">
-                </div>
-
-                <div class="col form-group-item">
-                  <label>{{ 'dailyEntry.fields.avgMilk' | translate }}</label>
-                  <input [placeholder]="'dailyEntry.placeholders.milkKg' | translate" type="number" class="form-control"
-                    formControlName="indAvgMilk">
-                </div>
-
-                <div class="col form-group-item">
-                  <label>{{ 'dailyEntry.fields.powderPercentage' | translate }}</label>
-                  <input [placeholder]="'dailyEntry.placeholders.percentage' | translate" type="number"
-                    class="form-control" formControlName="indPowder">
-                </div>
-
-                <div class="col form-group-item">
-                  <label>{{ 'dailyEntry.fields.avgFeed' | translate }}</label>
-                  <input [placeholder]="'dailyEntry.placeholders.feedKg' | translate" type="number" class="form-control"
-                    formControlName="indAvgFeed">
-                </div>
-
-                <!-- Group -->
-                <div class="col-12 mt-3">
-                  <h6>{{ 'dailyEntry.subsections.group' | translate }}</h6>
-                </div>
-
-                <div class="col form-group-item">
-                  <label>{{ 'dailyEntry.fields.numberOfAnimals' | translate }}</label>
-                  <input [placeholder]="'dailyEntry.placeholders.count' | translate" type="number" class="form-control"
-                    formControlName="grpAnimals">
-                </div>
-
-                <div class="col form-group-item">
-                  <label>{{ 'dailyEntry.fields.avgMilk' | translate }}</label>
-                  <input type="number" class="form-control" formControlName="grpAvgMilk">
-                </div>
-
-                <div class="col form-group-item">
-                  <label>{{ 'dailyEntry.fields.powderPercentage' | translate }}</label>
-                  <input type="number" class="form-control" formControlName="grpPowder">
-                </div>
-
-                <div class="col form-group-item">
-                  <label>{{ 'dailyEntry.fields.avgFeed' | translate }}</label>
-                  <input type="number" class="form-control" formControlName="grpAvgFeed">
+                  <label>{{ 'dailyEntry.fields.manzeGravide' | translate }}</label>
+                  <input [placeholder]="'dailyEntry.placeholders.count' | translate" type="number" class="form-control" formControlName="manzeGravide">
                 </div>
 
               </div>

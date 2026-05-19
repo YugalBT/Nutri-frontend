@@ -12,6 +12,12 @@ import { TranslatePipe } from '../../i18n/translate.pipe';
 import { TranslateService } from '../../i18n/translate.service';
 import { Constants } from '../../shared/utils/constants/constants';
 
+interface PartiRow {
+  monthNumber: number;
+  calvingsCount: number;
+  previstVacche: number | null;
+  previsteManze: number | null;
+}
 
 @Component({
   selector: 'app-parti-list',
@@ -32,6 +38,9 @@ import { Constants } from '../../shared/utils/constants/constants';
           <select class="form-select form-select-sm" style="width:100px" [(ngModel)]="year" (change)="load()">
             <option *ngFor="let y of years" [value]="y">{{ y }}</option>
           </select>
+          <button class="btn add-btn btn-sm" (click)="savePrevisti()">
+            <i class="bi bi-floppy me-1"></i>{{ 'common.save' | translate }}
+          </button>
         </div>
       </div>
 
@@ -47,6 +56,9 @@ import { Constants } from '../../shared/utils/constants/constants';
                 <tr>
                   <th>{{ 'common.month' | translate }}</th>
                   <th class="text-center">{{ 'parti.columns.calvings' | translate }}</th>
+                  <th class="text-center" style="width:130px">{{ 'parti.columns.previstVacche' | translate }}</th>
+                  <th class="text-center" style="width:130px">{{ 'parti.columns.previsteManze' | translate }}</th>
+                  <th class="text-center">{{ 'common.total' | translate }}</th>
                 </tr>
               </thead>
               <tbody>
@@ -57,10 +69,28 @@ import { Constants } from '../../shared/utils/constants/constants';
                       {{ row.calvingsCount }}
                     </span>
                   </td>
+                  <td class="text-center">
+                    <input type="number" min="0" class="form-control form-control-sm text-center"
+                      style="width:90px;margin:auto"
+                      [(ngModel)]="row.previstVacche"
+                      (ngModelChange)="buildChart()">
+                  </td>
+                  <td class="text-center">
+                    <input type="number" min="0" class="form-control form-control-sm text-center"
+                      style="width:90px;margin:auto"
+                      [(ngModel)]="row.previsteManze"
+                      (ngModelChange)="buildChart()">
+                  </td>
+                  <td class="text-center fw-bold">
+                    {{ (row.previstVacche ?? 0) + (row.previsteManze ?? 0) }}
+                  </td>
                 </tr>
                 <tr class="fw-bold table-light">
                   <td>{{ 'common.total' | translate }}</td>
                   <td class="text-center">{{ total }}</td>
+                  <td class="text-center">{{ totalPrevistVacche }}</td>
+                  <td class="text-center">{{ totalPrevisteManze }}</td>
+                  <td class="text-center">{{ grandTotal }}</td>
                 </tr>
               </tbody>
             </table>
@@ -78,7 +108,7 @@ import { Constants } from '../../shared/utils/constants/constants';
 export class PartiListComponent implements OnInit, OnDestroy {
   year = new Date().getFullYear();
   years: number[] = [];
-  rows: { monthNumber: number; monthLabel: string; calvingsCount: number }[] = [];
+  rows: PartiRow[] = [];
   isLoading = false;
   chartOption: EChartsOption = {};
   isSuperAdmin = false;
@@ -93,7 +123,7 @@ export class PartiListComponent implements OnInit, OnDestroy {
     private translate: TranslateService
   ) {
     const cur = new Date().getFullYear();
-    this.years = [cur - 2, cur - 1, cur];
+    this.years = [cur - 2, cur - 1, cur, cur + 1];
   }
 
   ngOnInit(): void {
@@ -123,6 +153,18 @@ export class PartiListComponent implements OnInit, OnDestroy {
     return this.rows.reduce((s, r) => s + r.calvingsCount, 0);
   }
 
+  get totalPrevistVacche(): number {
+    return this.rows.reduce((s, r) => s + (r.previstVacche ?? 0), 0);
+  }
+
+  get totalPrevisteManze(): number {
+    return this.rows.reduce((s, r) => s + (r.previsteManze ?? 0), 0);
+  }
+
+  get grandTotal(): number {
+    return this.totalPrevistVacche + this.totalPrevisteManze;
+  }
+
   monthLabel(m: number): string {
     return new Intl.DateTimeFormat(undefined, { month: 'short' })
       .format(new Date(2000, m - 1, 1));
@@ -130,6 +172,26 @@ export class PartiListComponent implements OnInit, OnDestroy {
 
   onCompanyChange(): void {
     this.load();
+  }
+
+  private storageKey(): string {
+    return `parti_previsti_${this.year}_${this.selectedCompanyId || 'mine'}`;
+  }
+
+  private loadPrevisti(): Record<number, { vacche: number | null; manze: number | null }> {
+    try {
+      return JSON.parse(localStorage.getItem(this.storageKey()) || '{}');
+    } catch {
+      return {};
+    }
+  }
+
+  savePrevisti(): void {
+    const data: Record<number, { vacche: number | null; manze: number | null }> = {};
+    this.rows.forEach(r => {
+      data[r.monthNumber] = { vacche: r.previstVacche, manze: r.previsteManze };
+    });
+    localStorage.setItem(this.storageKey(), JSON.stringify(data));
   }
 
   load(): void {
@@ -141,16 +203,21 @@ export class PartiListComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (res) => {
           const data: any[] = res?.data ?? [];
-          this.rows = data.map(d => ({
-            monthNumber: d.monthNumber,
-            monthLabel: d.monthLabel,
-            calvingsCount: d.calvingsCount ?? 0
-          }));
-          if (this.rows.length === 0) {
-            this.rows = Array.from({ length: 12 }, (_, i) => ({
-              monthNumber: i + 1, monthLabel: '', calvingsCount: 0
-            }));
-          }
+          const previsti = this.loadPrevisti();
+          const baseRows: PartiRow[] = data.length > 0
+            ? data.map(d => ({
+                monthNumber: d.monthNumber,
+                calvingsCount: d.calvingsCount ?? 0,
+                previstVacche: previsti[d.monthNumber]?.vacche ?? null,
+                previsteManze: previsti[d.monthNumber]?.manze ?? null,
+              }))
+            : Array.from({ length: 12 }, (_, i) => ({
+                monthNumber: i + 1,
+                calvingsCount: 0,
+                previstVacche: previsti[i + 1]?.vacche ?? null,
+                previsteManze: previsti[i + 1]?.manze ?? null,
+              }));
+          this.rows = baseRows;
           this.buildChart();
           this.isLoading = false;
         },
@@ -158,19 +225,25 @@ export class PartiListComponent implements OnInit, OnDestroy {
       });
   }
 
-  private buildChart(): void {
+  buildChart(): void {
     const labels = this.rows.map((_, i) => this.monthLabel(i + 1));
     const values = this.rows.map(r => r.calvingsCount);
+    const prevVacche = this.rows.map(r => r.previstVacche ?? 0);
+    const prevManze = this.rows.map(r => r.previsteManze ?? 0);
     this.chartOption = {
       tooltip: { trigger: 'axis' },
+      legend: { data: [
+        this.translate.instant('parti.columns.calvings'),
+        this.translate.instant('parti.columns.previstVacche'),
+        this.translate.instant('parti.columns.previsteManze'),
+      ]},
       xAxis: { type: 'category', data: labels },
       yAxis: { type: 'value', minInterval: 1 },
-      series: [{
-        name: this.translate.instant('parti.columns.calvings'),
-        type: 'bar',
-        data: values,
-        itemStyle: { color: '#4caf50' }
-      }]
+      series: [
+        { name: this.translate.instant('parti.columns.calvings'), type: 'bar', data: values, itemStyle: { color: '#4caf50' } },
+        { name: this.translate.instant('parti.columns.previstVacche'), type: 'bar', data: prevVacche, itemStyle: { color: '#1d6b8f' } },
+        { name: this.translate.instant('parti.columns.previsteManze'), type: 'bar', data: prevManze, itemStyle: { color: '#f28c38' } },
+      ]
     };
   }
 

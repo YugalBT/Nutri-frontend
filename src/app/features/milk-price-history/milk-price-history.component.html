@@ -67,6 +67,8 @@
             <th>{{ 'milkPriceHistory.columns.aziendali' | translate }}</th>
             <th>{{ 'milkPriceHistory.columns.mercato' | translate }}</th>
             <th>{{ 'milkPriceHistory.columns.qualityBonus' | translate }}</th>
+            <th>{{ 'milkPriceHistory.columns.prezzoLatteFinito' | translate }}</th>
+            <th>{{ 'milkPriceHistory.columns.prezzoLatteFinitoBranded' | translate }}</th>
             <th>{{ 'milkPriceHistory.columns.status' | translate }}</th>
           </tr>
         </thead>
@@ -76,6 +78,12 @@
             <td>{{ h.priceAziendali | number:'1.3-3' }}</td>
             <td>{{ h.priceMercato != null ? (h.priceMercato | number:'1.3-3') : '-' }}</td>
             <td>{{ h.qualityBonus != null ? (h.qualityBonus | number:'1.3-3') : '-' }}</td>
+            <td class="fw-bold text-success">
+              {{ ((h.priceAziendali ?? 0) + (h.qualityBonus ?? 0)) * 1.1 | number:'1.3-3' }}
+            </td>
+            <td class="fw-bold text-primary">
+              {{ h.priceMercato != null ? (((h.priceMercato ?? 0) + (h.qualityBonus ?? 0)) * 1.1 | number:'1.3-3') : '-' }}
+            </td>
             <td>
               <span class="badge" [ngClass]="h.isFinalized ? 'bg-success' : 'bg-warning text-dark'">
                 {{ h.isFinalized ? ('milkPriceHistory.status.finalized' | translate) : ('milkPriceHistory.status.draft' | translate) }}
@@ -83,7 +91,7 @@
             </td>
           </tr>
           <tr *ngIf="history.length === 0">
-            <td colspan="5" class="text-center text-muted py-3">{{ 'milkPriceHistory.messages.noData' | translate }}</td>
+            <td colspan="7" class="text-center text-muted py-3">{{ 'milkPriceHistory.messages.noData' | translate }}</td>
           </tr>
         </tbody>
       </table>

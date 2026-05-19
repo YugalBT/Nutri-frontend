@@ -257,6 +257,18 @@ export class RationListComponent implements OnInit, OnDestroy {
     });
   }
 
+  duplicateRation(group: RationMatrixGroup): void {
+    if (!group.rationId) return;
+    const sub = this.http.post<any>(`${API_ENDPOINTS.RATION.DUPLICATE}?rationId=${group.rationId}`, {}).subscribe({
+      next: (res: any) => {
+        res.isSuccess ? this.toast.success(res.message) : this.toast.error(res.message);
+        if (res.isSuccess) this.loadMatrix();
+      },
+      error: () => this.toast.error(this.translate.instant('common.error') ?? 'Error')
+    });
+    this.subs.push(sub);
+  }
+
   fmt(value: number, digits = 2): string {
     return value == null ? '-' : value.toLocaleString('it-IT', {
       minimumFractionDigits: digits,

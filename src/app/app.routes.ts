@@ -418,6 +418,20 @@ export const routes: Routes = [
           ),
       },
       {
+        path: 'registri-produzione',
+        loadComponent: () =>
+          import('./features/registri-produzione/registri-produzione.component').then(
+            (m) => m.RegistriProduzioneComponent,
+          ),
+      },
+      {
+        path: 'registri-capi',
+        loadComponent: () =>
+          import('./features/registri-capi/registri-capi.component').then(
+            (m) => m.RegistriCapiComponent,
+          ),
+      },
+      {
         path: 'milk-price-history',
         canActivate: [permissionGuard],
         data: {

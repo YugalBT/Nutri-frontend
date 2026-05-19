@@ -69,6 +69,8 @@ export class DashboardComponent implements OnInit {
   milkGauge!: EChartsOption;
   feedGauge!: EChartsOption;
   crepGauge!: EChartsOption;
+  ricavoGauge!: EChartsOption;
+  milkPriceGauge!: EChartsOption;
   isSupplier = false;
 
   constructor(
@@ -156,6 +158,8 @@ export class DashboardComponent implements OnInit {
           this.milkGauge = this.createGauge(this.t('dashboard.avgMilk'), d.avgMilkPerDay ?? 0, 30, 55);
           this.feedGauge = this.createGauge(this.t('dashboard.feedEfficiency'), d.feedEfficiency ?? 0, 1, 2.4);
           this.crepGauge = this.createGauge(this.t('dashboard.crep'), d.crep ?? 0, 2, 5);
+          this.ricavoGauge = this.createGauge(this.t('dashboard.ricavoTotale'), d.totalMilkRevenue ?? 0, 0, 5000);
+          this.milkPriceGauge = this.createGauge(this.t('dashboard.euroLitroLatte'), d.milkPrice ?? 0, 0.20, 0.70);
         }
 
         this.companyTrendChart = {

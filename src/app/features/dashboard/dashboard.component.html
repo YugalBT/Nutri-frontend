@@ -241,7 +241,7 @@
        <div class="row dashboard-gauges g-3">
 
   <!-- Fat % -->
-  <div class="col-xl-3 col-md-6">
+  <div class="col-xl-2 col-md-4">
     <div class="gauge-card gauge-teal">
 
       <div class="gauge-header">
@@ -261,7 +261,7 @@
   </div>
 
   <!-- Average Milk -->
-  <div class="col-xl-3 col-md-6">
+  <div class="col-xl-2 col-md-4">
     <div class="gauge-card gauge-blue">
 
       <div class="gauge-header">
@@ -281,7 +281,7 @@
   </div>
 
   <!-- Feed Efficiency -->
-  <div class="col-xl-3 col-md-6">
+  <div class="col-xl-2 col-md-4">
     <div class="gauge-card gauge-purple">
 
       <div class="gauge-header">
@@ -301,7 +301,7 @@
   </div>
 
   <!-- CREP -->
-  <div class="col-xl-3 col-md-6">
+  <div class="col-xl-2 col-md-4">
     <div class="gauge-card gauge-orange">
 
       <div class="gauge-header">
@@ -316,6 +316,46 @@
       </div>
 
       <div echarts [options]="crepGauge" class="gauge-box"></div>
+
+    </div>
+  </div>
+
+  <!-- Ricavo Totale -->
+  <div class="col-xl-2 col-md-4">
+    <div class="gauge-card gauge-green">
+
+      <div class="gauge-header">
+        <div>
+          <h6>{{ "dashboard.ricavoTotale" | translate }}</h6>
+          <span>{{ "dashboard.economico" | translate }}</span>
+        </div>
+
+        <div class="gauge-icon">
+          💶
+        </div>
+      </div>
+
+      <div echarts [options]="ricavoGauge" class="gauge-box"></div>
+
+    </div>
+  </div>
+
+  <!-- € Litro Latte -->
+  <div class="col-xl-2 col-md-4">
+    <div class="gauge-card gauge-red">
+
+      <div class="gauge-header">
+        <div>
+          <h6>{{ "dashboard.euroLitroLatte" | translate }}</h6>
+          <span>{{ "dashboard.prezzoLatte" | translate }}</span>
+        </div>
+
+        <div class="gauge-icon">
+          🥛
+        </div>
+      </div>
+
+      <div echarts [options]="milkPriceGauge" class="gauge-box"></div>
 
     </div>
   </div>

@@ -93,6 +93,7 @@ export const API_ENDPOINTS = {
     GET_ALL: '/Ration/GetAll',
     GET_MATRIX: '/Ration/GetRationMatrix',
     ARCHIVE: '/Ration/Archive',
+    DUPLICATE: '/Ration/Duplicate',
   },
   FEED: {
     CREATE: '/Feed/Create',
@@ -222,6 +223,8 @@ export const API_ENDPOINTS = {
     EXPORT_AGGREGATED_REPORT_CSV: '/Dashboard/AggregatedReportExportCsv',
     UPDATE_COMPANY_ARCHIVE: '/Dashboard/CompanyArchiveUpdate',
     GET_HEALTH_MONTHLY: '/Dashboard/HealthMonthly',
+    GET_PRODUCTION_MONTHLY: '/Dashboard/ProductionMonthly',
+    GET_HERD_MONTHLY: '/Dashboard/HerdMonthly',
   },
 
   SUPPLIER: {

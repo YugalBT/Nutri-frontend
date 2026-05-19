@@ -66,7 +66,6 @@ export class DailyEntryComponent implements OnInit, OnDestroy {
     { id: 'robot' },
     { id: 'health' },
     { id: 'herd' },
-    { id: 'calves' },
     { id: 'fertility' }
   ];
 
@@ -89,6 +88,9 @@ export class DailyEntryComponent implements OnInit, OnDestroy {
   filteredRations: any[] = [];
   openRationDropdownIndex: number | null = null;
   private lastEditedMilkField: 'delivered' | 'produced' | 'avg' | null = null;
+
+  milkUnit: 'kg' | 'litri' = 'kg';
+  toggleMilkUnit() { this.milkUnit = this.milkUnit === 'kg' ? 'litri' : 'kg'; }
 
   get groupData(): FormArray {
     return this.form.get('groupData') as FormArray;
@@ -533,6 +535,7 @@ export class DailyEntryComponent implements OnInit, OnDestroy {
       conceptionAtCalving: [null],
       calvingInterval: [null],
       ageAtCalving: [null],
+      manzeGravide: [null],
       cowDiagnosesPct: [null],
       heiferDiagnosesPct: [null],
     });
@@ -615,6 +618,7 @@ export class DailyEntryComponent implements OnInit, OnDestroy {
       conceptionAtCalving: data.conceptionAtCalving,
       calvingInterval: data.calvingInterval,
       ageAtCalving: data.ageAtCalving,
+      manzeGravide: data.manzeGravide,
     });
 
     if (data.groupData?.length) {

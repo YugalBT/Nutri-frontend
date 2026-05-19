@@ -30,6 +30,7 @@ const HIDDEN_MENU_NAMES = [
   'Placeholder',
   'Category Mapping',
   'Template Category',
+  'Calf Barn',
   // 'Animal Group',
   // 'Ration',
   // 'Feed',
@@ -69,6 +70,7 @@ export class SidebarComponent implements OnInit {
   user: any = null;
   lang = 'en';
   topMenus: MenuItem[] = [];
+  isSupplier = false;
   constructor(
     private sanitizer: DomSanitizer,
     private authService: AuthService,
@@ -166,8 +168,9 @@ private buildAccordionMenu(flatMenu: MenuItem[]): void {
 
   const roleType = (this.user?.roleType || '').toUpperCase();
   const isAdmin = roleType === 'ADMIN';
-  const isSuperAdmin = this.user?.isSuperAdmin === true; // Assuming there's an isSuperAdmin flag in the user object
-  const isSupplier = !!this.user?.supplierDetails;// Assuming there's an isSupplier flag in the user object
+  const isSuperAdmin = this.user?.isSuperAdmin === true;
+  this.isSupplier = !!this.user?.supplierDetails;
+  const isSupplier = this.isSupplier;
   // Check whether the current user has the SupplierPriceView permission.
   // const hasSupplierPriceView = (this.user?.permissions as any[] ?? [])
   //   .some((p: any) => p.roleName === 'SupplierPrice');

@@ -4,6 +4,7 @@ import {
 import {
   AbstractControl, FormArray, FormBuilder, FormGroup, Validators
 } from '@angular/forms';
+import { FormsModule } from '@angular/forms';
 import { Observable, of, Subscription } from 'rxjs';
 import { catchError, finalize, map, tap } from 'rxjs/operators';
 import { SharedModule } from '../../../shared/shared.module';
@@ -25,7 +26,7 @@ declare var bootstrap: any;
 @Component({
   selector: 'app-ration-add-edit',
   standalone: true,
-  imports: [SharedModule, TranslatePipe],
+  imports: [SharedModule, TranslatePipe, FormsModule],
   templateUrl: './ration-add-edit.component.html',
   styleUrls: ['./ration-add-edit.component.css'],
 })
@@ -49,8 +50,19 @@ export class RationAddEditComponent implements OnInit, OnDestroy {
 
   animalGroupsLoading = false;
   feedsLoading = false;
+  categoryFilter = '';
 
   subs: Subscription[] = [];
+
+  get uniqueCategories(): string[] {
+    const cats = this.feeds.map(f => f.category ?? '').filter(c => c !== '');
+    return [...new Set(cats)].sort();
+  }
+
+  get filteredFeeds(): FeedList[] {
+    if (!this.categoryFilter) return this.feeds;
+    return this.feeds.filter(f => (f.category ?? '') === this.categoryFilter);
+  }
 
   constructor(
     private fb: FormBuilder,
@@ -149,6 +161,7 @@ export class RationAddEditComponent implements OnInit, OnDestroy {
     this.currentRationId = null;
     this.animalGroups = [];
     this.feeds = [];
+    this.categoryFilter = '';
     this.form.reset();
     this.resetRationItems();
     this.updateCanSave(); // Update canSave based on isEdit mode

@@ -90,6 +90,31 @@
                             </a>
                         </div>
                     </div>
+
+                    <div class="side-menus mt-1" *ngIf="!isSupplier">
+                        <div class="side-menu-item">
+                            <a routerLink="/registri-produzione" routerLinkActive="active">
+                                <span class="side-item-icon">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#D2D2D2" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                        <rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/>
+                                    </svg>
+                                </span>
+                                {{ currentLang === 'it' ? 'Registri Produzione' : 'Production Register' }}
+                            </a>
+                        </div>
+                    </div>
+                    <div class="side-menus mt-1" *ngIf="!isSupplier">
+                        <div class="side-menu-item">
+                            <a routerLink="/registri-capi" routerLinkActive="active">
+                                <span class="side-item-icon">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#D2D2D2" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                        <circle cx="12" cy="7" r="4"/><path d="M5 20a7 7 0 0 1 14 0"/>
+                                    </svg>
+                                </span>
+                                {{ currentLang === 'it' ? 'Registri Capi' : 'Herd Register' }}
+                            </a>
+                        </div>
+                    </div>
                     <div class="side-menus">
                         <div class="side-menu-item">
                             <a (click)="logout()" style="cursor: pointer;" routerLinkActive="active"

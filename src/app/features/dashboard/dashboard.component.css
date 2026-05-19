@@ -302,6 +302,14 @@
   letter-spacing: 0.08em;
 }
 
+.gauge-green .gauge-header {
+  border-left: 4px solid #52c41a;
+}
+
+.gauge-red .gauge-header {
+  border-left: 4px solid #f97316;
+}
+
 .superadmin-title-brand {
   display: flex;
   align-items: center;

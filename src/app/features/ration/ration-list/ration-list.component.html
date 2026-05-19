@@ -136,6 +136,13 @@
                     <i class="bi bi-pencil-fill"></i>
                   </button>
 
+                  <button *ngIf="canAdd"
+                    class="matrix-action-btn"
+                    title="{{ 'ration.duplicate' | translate }}"
+                    (click)="duplicateRation(g)">
+                    <i class="bi bi-copy"></i>
+                  </button>
+
                   <button *ngIf="canDelete"
                     class="matrix-action-btn delete"
                     title="{{ 'common.delete' | translate }}"
